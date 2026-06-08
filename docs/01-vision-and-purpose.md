@@ -1,0 +1,262 @@
+# CFFP Vision and Purpose
+
+Version: Draft 1
+Status: Living Document
+Last Updated: June 2026
+
+## Introduction
+
+CFFP (CFF Platform) is a long-term software engineering project intended to serve as a practical platform for learning, experimentation, architectural exploration, and professional development.
+
+The project is not intended to be a university assignment, a quick prototype, or a narrowly focused application. Instead, it is intended to evolve into a modular software platform that demonstrates modern software engineering practices, enterprise architecture principles, AI-assisted software engineering, human-computer interaction (HCI), automation, testing, and long-term maintainability.
+
+This document describes the vision, purpose, goals, and guiding principles of the project.
+
+---
+
+# Why CFFP Exists
+
+The primary purpose of CFFP is to combine several areas of interest and expertise into a single coherent platform:
+
+* Software Engineering
+* Software Architecture
+* Enterprise Architecture
+* Human-Computer Interaction (HCI)
+* Artificial Intelligence (AI)
+* AI-Assisted Software Engineering
+* Test Automation
+* DevOps and CI/CD
+* Automation and Scripting
+
+The project serves as a practical environment where these disciplines can be explored together rather than in isolation.
+
+---
+
+# Personal Motivation
+
+The project reflects the desire to combine:
+
+* More than two decades of professional software engineering experience.
+* Software architecture and enterprise system experience.
+* Academic studies in Human-Computer Interaction.
+* Growing interest in Artificial Intelligence and AI-assisted development.
+* Long-standing interest in automation and quality engineering.
+
+Rather than treating these topics as separate disciplines, CFFP aims to demonstrate how they can work together within a real software product.
+
+---
+
+# Core Vision
+
+The vision of CFFP is:
+
+To create a modular software platform that demonstrates how modern software systems can be designed, developed, tested, maintained, and evolved using a combination of enterprise architecture principles, HCI principles, automation, and AI-assisted software engineering.
+
+The platform itself becomes the primary product.
+
+The individual modules hosted by the platform serve as demonstrations of the platform's capabilities.
+
+---
+
+# What CFFP Is
+
+CFFP is:
+
+* A modular software platform.
+* A long-term architecture project.
+* A practical learning environment.
+* A showcase for AI-assisted software engineering.
+* A showcase for software architecture and design.
+* A showcase for automation and quality engineering.
+* A showcase for modern development workflows.
+* A platform designed with HCI principles in mind.
+
+---
+
+# What CFFP Is Not
+
+CFFP is not:
+
+* A university assignment.
+* A temporary prototype.
+* A single-purpose application.
+* A framework experiment.
+* A technology demonstration built solely around a particular tool.
+* A project driven by deadlines.
+
+The project prioritizes quality, maintainability, learning, and architectural integrity over speed of delivery.
+
+---
+
+# Platform Philosophy
+
+CFFP is designed as a platform rather than an application.
+
+The platform consists of:
+
+* A shared core module.
+* Multiple business modules.
+* Shared services.
+* Shared infrastructure.
+* Shared user experience components.
+
+The platform should support the addition and removal of modules with minimal impact on the rest of the system.
+
+Modularity is therefore considered a first-class architectural principle.
+
+---
+
+# Initial Platform Structure
+
+The initial platform is expected to contain:
+
+## CCore
+
+The shared platform core.
+
+Responsibilities include:
+
+* Organizations
+* Users
+* Authentication
+* Authorization
+* Roles
+* Permissions
+* Module management
+* Menu management
+* User preferences
+* Themes
+* Shared navigation
+* Search
+* Shared platform services
+
+CCore forms the foundation upon which all other modules are built.
+
+---
+
+## CTime
+
+A timesheet and time-reporting module.
+
+Purpose:
+
+* Demonstrate platform modularity.
+* Demonstrate CRUD workflows.
+* Demonstrate permissions and organization ownership.
+* Provide realistic business functionality.
+
+---
+
+## CLearn (working name)
+
+An evolution of concepts developed during the LLA project.
+
+Purpose:
+
+* Demonstrate educational functionality.
+* Demonstrate user interaction patterns.
+* Demonstrate AI-related possibilities.
+* Demonstrate that very different business domains can coexist within the same platform.
+
+---
+
+# Human-Computer Interaction (HCI)
+
+HCI is a central pillar of the project.
+
+The goal is not simply to make the platform functional.
+
+The goal is to make the platform:
+
+* Understandable
+* Discoverable
+* Efficient
+* Flexible
+* Pleasant to use
+
+Examples already identified include:
+
+* Global platform search
+* User preferences
+* Themes
+* Consistent navigation
+* Configurable user experience
+
+HCI considerations should influence architectural decisions from the beginning.
+
+---
+
+# AI-Assisted Software Engineering
+
+One of the most important goals of CFFP is to explore AI-assisted software engineering.
+
+AI is viewed as a collaborative development partner rather than merely a feature of the final product.
+
+Examples include:
+
+* Architecture discussions
+* Requirement refinement
+* Code generation
+* Test generation
+* Documentation generation
+* Refactoring support
+* Code review support
+* Development automation
+
+Human ownership of architecture and design decisions remains essential.
+
+AI serves as an assistant rather than the decision-maker.
+
+---
+
+# Automation Philosophy
+
+Automation is considered a foundational principle.
+
+Whenever a repetitive process is identified, the project should evaluate whether that process can be automated.
+
+Examples include:
+
+* Build automation
+* Test automation
+* Documentation generation
+* Validation scripts
+* Database setup
+* Environment setup
+* Code inspections
+* Quality checks
+
+Automation should be implemented incrementally throughout the project.
+
+---
+
+# Python as a Strategic Technology
+
+Python is expected to be the primary language used within the project.
+
+Reasons include:
+
+* Strong AI ecosystem
+* Strong automation ecosystem
+* Excellent scripting support
+* Good backend support
+* Excellent testing support
+* Alignment with project goals
+
+Python will be used not only for backend development but also for automation, tooling, testing, and AI-related functionality.
+
+---
+
+# Long-Term Goal
+
+The long-term goal is that CFFP becomes a practical demonstration of:
+
+* Enterprise software architecture
+* AI-assisted software engineering
+* Human-computer interaction principles
+* Automated quality engineering
+* Modern software development practices
+
+The platform should ultimately demonstrate how these disciplines can be combined within a single coherent software product.
+
+This objective is considered more important than any individual module or feature.
