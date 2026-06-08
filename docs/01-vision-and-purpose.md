@@ -1,6 +1,6 @@
 # CFFP Vision and Purpose
 
-Version: Draft 1
+Version: Draft 2
 Status: Living Document
 Last Updated: June 2026
 
@@ -94,43 +94,48 @@ CFFP is designed as a platform rather than an application.
 
 The platform consists of:
 
-* A shared core module.
+* A shared platform core.
 * Multiple business modules.
 * Shared services.
 * Shared infrastructure.
 * Shared user experience components.
 
-The platform should support the addition and removal of modules with minimal impact on the rest of the system.
+The platform should support the addition and removal of modules with minimal impact on the rest of the platform.
 
-Modularity is therefore considered a first-class architectural principle.
+Modularity is therefore considered a first-class principle.
+
+---
+
+# Platform Capabilities
+
+The platform is expected to provide a set of shared capabilities that can be used consistently across modules.
+
+Examples include:
+
+* User management
+* Authentication
+* Authorization
+* Roles and permissions
+* Organization management
+* Search
+* User preferences
+* Themes
+* Shared navigation
+* Module management
+
+The implementation and architecture of these capabilities are discussed in separate architectural documentation.
 
 ---
 
 # Initial Platform Structure
 
-The initial platform is expected to contain:
+The initial platform is expected to contain the following major areas.
 
 ## CCore
 
 The shared platform core.
 
-Responsibilities include:
-
-* Organizations
-* Users
-* Authentication
-* Authorization
-* Roles
-* Permissions
-* Module management
-* Menu management
-* User preferences
-* Themes
-* Shared navigation
-* Search
-* Shared platform services
-
-CCore forms the foundation upon which all other modules are built.
+CCore provides foundational platform capabilities that are shared by all other modules.
 
 ---
 
@@ -141,13 +146,13 @@ A timesheet and time-reporting module.
 Purpose:
 
 * Demonstrate platform modularity.
-* Demonstrate CRUD workflows.
-* Demonstrate permissions and organization ownership.
-* Provide realistic business functionality.
+* Demonstrate realistic business functionality.
+* Demonstrate organization ownership concepts.
+* Demonstrate role-based functionality.
 
 ---
 
-## CLearn (working name)
+## CLearn (Working Name)
 
 An evolution of concepts developed during the LLA project.
 
@@ -174,15 +179,15 @@ The goal is to make the platform:
 * Flexible
 * Pleasant to use
 
-Examples already identified include:
+Examples of capabilities that support these goals include:
 
-* Global platform search
+* Search
 * User preferences
 * Themes
 * Consistent navigation
-* Configurable user experience
+* Configurable user experiences
 
-HCI considerations should influence architectural decisions from the beginning.
+HCI considerations should influence platform evolution from the beginning.
 
 ---
 
@@ -194,7 +199,7 @@ The platform may support additional languages in the future if required by platf
 
 At this stage, native multilingual support is not considered a core requirement. Modern browser translation capabilities are considered sufficient for early versions of the platform.
 
-However, future language support should remain a possible platform capability and should not be unnecessarily restricted by design decisions made during early development.
+However, future language support should remain a possible platform capability and should not be unnecessarily restricted by early design decisions.
 
 ---
 
@@ -206,10 +211,11 @@ The primary user experience is expected to target desktop and laptop environment
 
 The platform may also demonstrate alternative interaction styles, such as a simplified mobile interface.
 
-The purpose of such interfaces is not to provide complete feature parity with the desktop experience, but rather to demonstrate that platform functionality can be exposed through multiple user interfaces using shared backend services and APIs.
+The purpose of such interfaces is not to provide complete feature parity with the desktop experience, but rather to demonstrate that platform functionality can be exposed through multiple user interfaces using shared platform capabilities.
 
 Initial mobile support, if implemented, is expected to be limited in scope and serve primarily as a proof of concept rather than a fully featured mobile experience.
 
+---
 
 # AI-Assisted Software Engineering
 
@@ -252,23 +258,6 @@ Examples include:
 * Quality checks
 
 Automation should be implemented incrementally throughout the project.
-
----
-
-# Python as a Strategic Technology
-
-Python is expected to be the primary language used within the project.
-
-Reasons include:
-
-* Strong AI ecosystem
-* Strong automation ecosystem
-* Excellent scripting support
-* Good backend support
-* Excellent testing support
-* Alignment with project goals
-
-Python will be used not only for backend development but also for automation, tooling, testing, and AI-related functionality.
 
 ---
 
