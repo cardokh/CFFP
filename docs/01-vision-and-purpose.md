@@ -186,6 +186,31 @@ HCI considerations should influence architectural decisions from the beginning.
 
 ---
 
+# Language Support
+
+The initial version of CFFP is expected to use English as its primary language.
+
+The platform may support additional languages in the future if required by platform growth, module requirements, or broader adoption.
+
+At this stage, native multilingual support is not considered a core requirement. Modern browser translation capabilities are considered sufficient for early versions of the platform.
+
+However, future language support should remain a possible platform capability and should not be unnecessarily restricted by design decisions made during early development.
+
+---
+
+# Interaction Styles and Device Support
+
+CFFP is primarily a desktop-first platform.
+
+The primary user experience is expected to target desktop and laptop environments where users can most effectively perform learning, planning, administration, development, and other productivity-oriented activities.
+
+The platform may also demonstrate alternative interaction styles, such as a simplified mobile interface.
+
+The purpose of such interfaces is not to provide complete feature parity with the desktop experience, but rather to demonstrate that platform functionality can be exposed through multiple user interfaces using shared backend services and APIs.
+
+Initial mobile support, if implemented, is expected to be limited in scope and serve primarily as a proof of concept rather than a fully featured mobile experience.
+
+
 # AI-Assisted Software Engineering
 
 One of the most important goals of CFFP is to explore AI-assisted software engineering.
