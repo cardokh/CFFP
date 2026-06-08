@@ -1,0 +1,91 @@
+/*
+ * Shared table toolbar styles.
+ *
+ * Responsibilities:
+ * - Provide reusable toolbar layout for CRUD table/list pages.
+ * - Standardize left navigation, center search/pagination, and right actions.
+ * - Intended pattern:
+ *   Left:   Back / Exit
+ *   Center: Search + Pagination
+ *   Right:  Delete Selected + Add
+ */
+
+.shared-table-toolbar {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 14px;
+}
+
+.shared-table-toolbar-left,
+.shared-table-toolbar-center,
+.shared-table-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.shared-table-toolbar-left {
+    justify-content: flex-start;
+}
+
+.shared-table-toolbar-center {
+    justify-content: center;
+    gap: 16px;
+}
+
+.shared-table-toolbar-right {
+    justify-content: flex-end;
+}
+
+.shared-table-toolbar-search {
+    width: 210px;
+}
+
+.shared-table-toolbar-pagination {
+    margin-top: 0;
+}
+
+.shared-table-toolbar-action {
+    min-width: 100px;
+}
+
+@media (max-width: 1000px) {
+
+    .shared-table-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .shared-table-toolbar-left,
+    .shared-table-toolbar-center,
+    .shared-table-toolbar-right {
+        justify-content: stretch;
+        flex-wrap: wrap;
+    }
+
+    .shared-table-toolbar-search,
+    .shared-table-toolbar-action {
+        width: 100%;
+    }
+
+    .shared-table-toolbar-pagination {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+
+.shared-table-toolbar .shared-button,
+.shared-table-toolbar .shared-search-box {
+    min-height: 30px;
+}
+
+.shared-table-toolbar .shared-table-pagination {
+    margin-top: 0;
+}
+
+.shared-table-toolbar .shared-table-pagination .shared-button {
+    min-height: 30px;
+}

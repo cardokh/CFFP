@@ -1,0 +1,36 @@
+{
+    "ruleSetName": "api-contract-rules",
+    "description": "Defines API contract rules for frontend/backend alignment, payload naming, and endpoint governance.",
+    "rules": [
+        {
+            "ruleId": "API-001",
+            "name": "API JSON uses camelCase",
+            "description": "External API request and response JSON fields must use camelCase.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "API-002",
+            "name": "Frontend endpoints must match backend routes",
+            "description": "Frontend endpoint registry entries must match backend API path constants and registered routes.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "API-003",
+            "name": "API paths are centralized",
+            "description": "Backend API path strings must be defined in centralized API path files.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "API-004",
+            "name": "Response envelopes are consistent",
+            "description": "API responses should use consistent success/error/message/data envelope patterns.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "API-005",
+            "name": "Backend and frontend endpoint contracts must be inspectable",
+            "description": "Frontend and backend endpoint definitions should be structured so they can be extracted, compared, and validated automatically by inspection scripts.",
+            "severity": "WARNING"
+        }
+    ]
+}

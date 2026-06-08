@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lesson | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-messages.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+
+    <link rel="stylesheet" href="./css/lesson-edit.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="lesson-edit-content">
+
+                    <div class="lesson-edit-scroll-panel">
+
+                        <fieldset class="lesson-details-panel">
+                            <legend>Lesson Details</legend>
+
+                            <form id="lessonEditForm" class="lesson-edit-form">
+
+                                <input type="hidden" id="lessonId">
+
+                                <div class="form-row title-row">
+                                    <label for="title">Title</label>
+                                    <input type="text" id="title" required>
+                                </div>
+
+                                <div class="form-row description-row">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" rows="2"></textarea>
+                                </div>
+
+                                <div class="form-row checkbox-row active-row">
+                                    <label>
+                                        <input type="checkbox" id="isActive">
+                                        Active
+                                    </label>
+                                </div>
+
+                                <div class="form-row category-row">
+                                    <label for="categoryId">Category</label>
+
+                                    <select id="categoryId" required disabled>
+                                        <option value="">Loading categories...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row lesson-type-row">
+                                    <label for="lessonTypeId">Lesson Type</label>
+
+                                    <select id="lessonTypeId" required disabled>
+                                        <option value="">Loading lesson types...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row embodiment-row">
+                                    <label for="embodimentTypeId">Embodiment</label>
+
+                                    <select id="embodimentTypeId" required disabled>
+                                        <option value="">Loading embodiment types...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row interaction-style-row">
+                                    <label for="interactionStyleId">Interaction Style</label>
+
+                                    <select id="interactionStyleId" required disabled>
+                                        <option value="">Loading interaction styles...</option>
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </fieldset>
+
+                        <section class="lesson-tabs">
+
+                            <div class="lesson-tab-buttons">
+                                <button id="learningItemsTabButton" class="lesson-tab-button active" type="button">
+                                    Learning Items
+                                </button>
+
+                                <button id="quizQuestionsTabButton" class="lesson-tab-button" type="button">
+                                    Quiz Questions
+                                </button>
+                            </div>
+
+                            <div id="learningItemsTabPanel" class="lesson-tab-panel">
+
+                                <fieldset class="lesson-composition-panel">
+                                    <legend>Assigned Learning Items</legend>
+
+                                    <div class="lesson-composition-toolbar">
+                                        <select id="availableLearningItemSelect" disabled>
+                                            <option value="">Loading learning items...</option>
+                                        </select>
+
+                                        <button id="addLearningItemButton" class="lesson-edit-button secondary"
+                                            type="button" disabled>
+                                            Add learning item
+                                        </button>
+                                    </div>
+
+                                    <div class="shared-table-wrapper lesson-composition-table-wrapper">
+                                        <table class="shared-table lesson-composition-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Order</th>
+                                                    <th>Type</th>
+                                                    <th>Content</th>
+                                                    <th>Translation</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="assignedLearningItemsTableBody">
+                                                <tr>
+                                                    <td colspan="5">
+                                                        Loading assigned learning items...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+                            <div id="quizQuestionsTabPanel" class="lesson-tab-panel hidden">
+
+                                <fieldset class="lesson-composition-panel">
+                                    <legend>Assigned Quiz Questions</legend>
+
+                                    <div class="lesson-composition-toolbar">
+                                        <select id="availableQuizQuestionSelect" disabled>
+                                            <option value="">Loading quiz questions...</option>
+                                        </select>
+
+                                        <button id="addQuizQuestionButton" class="lesson-edit-button secondary"
+                                            type="button" disabled>
+                                            Add quiz question
+                                        </button>
+                                    </div>
+
+                                    <div class="shared-table-wrapper lesson-composition-table-wrapper">
+                                        <table class="shared-table lesson-composition-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Order</th>
+                                                    <th>Active</th>
+                                                    <th>Category</th>
+                                                    <th>Question</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="assignedQuizQuestionsTableBody">
+                                                <tr>
+                                                    <td colspan="5">
+                                                        Loading assigned quiz questions...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+                        </section>
+
+                    </div>
+
+                    <section class="shared-message-panel">
+                        <div id="lessonEditMessage" class="form-message hidden"></div>
+                    </section>
+
+                    <section class="lesson-edit-toolbar-panel">
+
+                        <div class="lesson-edit-toolbar-left">
+
+                            <button id="backToLessonsButton" class="lesson-edit-button secondary" type="button">
+                                Back to lessons
+                            </button>
+
+                        </div>
+
+                        <div class="lesson-edit-toolbar-right">
+
+                            <button id="addLessonButton" class="lesson-edit-button secondary" type="button">
+                                Add lesson
+                            </button>
+
+                            <button id="deleteLessonButton" class="lesson-edit-button delete" type="button">
+                                Delete lesson
+                            </button>
+
+                            <button id="saveLessonButton" class="lesson-edit-button primary" type="submit"
+                                form="lessonEditForm">
+                                Save
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+    <script src="/desktop/shared/js/table-sorter.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/lesson-edit.js?v=223";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,659 @@
+{
+    "scriptName": "sqlite_seed_data",
+    "mode": "seed_data",
+    "databaseConfigPath": "scripts/db/config/database.json",
+    "seedGroups": [
+        {
+            "table": "users",
+            "rows": [
+                {
+                    "user_id": 1,
+                    "display_name": "Admin User",
+                    "email": "admin@hejsan.local",
+                    "password_hash": {
+                        "transform": "hashPassword",
+                        "value": "secret"
+                    },
+                    "is_active": 1,
+                    "is_verified": 1,
+                    "is_admin": 1
+                },
+                {
+                    "user_id": 2,
+                    "display_name": "Demo User",
+                    "email": "demo@hejsan.local",
+                    "password_hash": {
+                        "transform": "hashPassword",
+                        "value": "DemoPassword123"
+                    },
+                    "is_active": 1,
+                    "is_verified": 1,
+                    "is_admin": 0
+                },
+                {
+                    "user_id": 3,
+                    "display_name": "Student User",
+                    "email": "student@hejsan.local",
+                    "password_hash": {
+                        "transform": "hashPassword",
+                        "value": "Student123"
+                    },
+                    "is_active": 1,
+                    "is_verified": 1,
+                    "is_admin": 0
+                },
+                {
+                    "user_id": 4,
+                    "display_name": "Inactive User",
+                    "email": "inactive@hejsan.local",
+                    "password_hash": {
+                        "transform": "hashPassword",
+                        "value": "Inactive123"
+                    },
+                    "is_active": 0,
+                    "is_verified": 1,
+                    "is_admin": 0
+                }
+            ]
+        },
+        {
+            "table": "lesson_categories",
+            "rows": [
+                {
+                    "category_id": 1,
+                    "name": "Swedish Basics",
+                    "description": "Basic Swedish vocabulary and phrases.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "category_id": 2,
+                    "name": "Swedish Travel",
+                    "description": "Useful Swedish for travel situations.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "category_id": 3,
+                    "name": "Swedish Caf\u00e9 and Restaurant",
+                    "description": "Food, drinks, ordering, and caf\u00e9 phrases.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "category_id": 4,
+                    "name": "HRI Tutor Demo",
+                    "description": "Swedish robot tutor experiment content.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "lesson_types",
+            "rows": [
+                {
+                    "lesson_type_id": 1,
+                    "name": "Vocabulary",
+                    "description": "Vocabulary-focused lesson.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_type_id": 2,
+                    "name": "Quiz",
+                    "description": "Quiz-focused lesson.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_type_id": 3,
+                    "name": "Dialogue",
+                    "description": "Dialogue-based lesson.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "lesson_status_types",
+            "rows": [
+                {
+                    "lesson_status_type_id": 1,
+                    "code": "NOT_STARTED",
+                    "name": "Not Started",
+                    "description": "Lesson has not been started.",
+                    "display_order": 1,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_status_type_id": 2,
+                    "code": "IN_PROGRESS",
+                    "name": "In Progress",
+                    "description": "Lesson is currently in progress.",
+                    "display_order": 2,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_status_type_id": 3,
+                    "code": "COMPLETED",
+                    "name": "Completed",
+                    "description": "Lesson has been completed.",
+                    "display_order": 3,
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "embodiment_types",
+            "rows": [
+                {
+                    "embodiment_type_id": 1,
+                    "code": "FURHAT",
+                    "name": "Furhat",
+                    "description": "Furhat robot embodiment.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "embodiment_type_id": 2,
+                    "code": "REACHY",
+                    "name": "Reachy Mini",
+                    "description": "Reachy Mini robot embodiment.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "embodiment_type_id": 3,
+                    "code": "VIRTUAL",
+                    "name": "Virtual Robot",
+                    "description": "Virtual robot embodiment.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "interaction_styles",
+            "rows": [
+                {
+                    "interaction_style_id": 1,
+                    "code": "NEUTRAL",
+                    "name": "Neutral",
+                    "description": "Neutral interaction style.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "interaction_style_id": 2,
+                    "code": "ENCOURAGING",
+                    "name": "Encouraging",
+                    "description": "Encouraging interaction style.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "interaction_style_id": 3,
+                    "code": "FRIENDLY",
+                    "name": "Friendly",
+                    "description": "Friendly interaction style.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "learning_items",
+            "rows": [
+                {
+                    "item_id": 1,
+                    "category_id": 1,
+                    "item_type": "word",
+                    "source_text": "Hej",
+                    "english_translation": "Hello",
+                    "pronunciation": "hey",
+                    "example_text": "Hej, hur m\u00e5r du?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 2,
+                    "category_id": 1,
+                    "item_type": "word",
+                    "source_text": "Tack",
+                    "english_translation": "Thank you",
+                    "pronunciation": "tack",
+                    "example_text": "Tack s\u00e5 mycket.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 3,
+                    "category_id": 1,
+                    "item_type": "word",
+                    "source_text": "Hejd\u00e5",
+                    "english_translation": "Goodbye",
+                    "pronunciation": "hey-doh",
+                    "example_text": "Hejd\u00e5, vi ses senare.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 4,
+                    "category_id": 1,
+                    "item_type": "word",
+                    "source_text": "Ja",
+                    "english_translation": "Yes",
+                    "pronunciation": "yah",
+                    "example_text": "Ja, det st\u00e4mmer.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 5,
+                    "category_id": 1,
+                    "item_type": "word",
+                    "source_text": "Nej",
+                    "english_translation": "No",
+                    "pronunciation": "nay",
+                    "example_text": "Nej, tack.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 6,
+                    "category_id": 2,
+                    "item_type": "phrase",
+                    "source_text": "Var ligger hotellet?",
+                    "english_translation": "Where is the hotel?",
+                    "pronunciation": "var ligger hotell-et",
+                    "example_text": "Urs\u00e4kta, var ligger hotellet?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 7,
+                    "category_id": 2,
+                    "item_type": "phrase",
+                    "source_text": "Jag beh\u00f6ver hj\u00e4lp",
+                    "english_translation": "I need help",
+                    "pronunciation": "yah beh\u00f6ver j\u00e4lp",
+                    "example_text": "Jag beh\u00f6ver hj\u00e4lp, tack.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 8,
+                    "category_id": 2,
+                    "item_type": "phrase",
+                    "source_text": "Hur mycket kostar det?",
+                    "english_translation": "How much does it cost?",
+                    "pronunciation": "hur mycket kostar de",
+                    "example_text": "Hur mycket kostar det h\u00e4r?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 9,
+                    "category_id": 3,
+                    "item_type": "word",
+                    "source_text": "Vatten",
+                    "english_translation": "Water",
+                    "pronunciation": "vatten",
+                    "example_text": "Jag vill ha vatten.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 10,
+                    "category_id": 3,
+                    "item_type": "word",
+                    "source_text": "Kaffe",
+                    "english_translation": "Coffee",
+                    "pronunciation": "kaffe",
+                    "example_text": "Jag vill ha kaffe, tack.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 11,
+                    "category_id": 3,
+                    "item_type": "phrase",
+                    "source_text": "Notan, tack",
+                    "english_translation": "The bill, please",
+                    "pronunciation": "notan tack",
+                    "example_text": "Kan jag f\u00e5 notan, tack?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "item_id": 12,
+                    "category_id": 4,
+                    "item_type": "phrase",
+                    "source_text": "Upprepa efter mig",
+                    "english_translation": "Repeat after me",
+                    "pronunciation": "upprepa efter mig",
+                    "example_text": "Roboten s\u00e4ger: upprepa efter mig.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "quiz_questions",
+            "rows": [
+                {
+                    "question_id": 1,
+                    "category_id": 1,
+                    "question_text": "What does 'Hej' mean?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "question_id": 2,
+                    "category_id": 1,
+                    "question_text": "What does 'Tack' mean?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "question_id": 3,
+                    "category_id": 2,
+                    "question_text": "What does 'Jag beh\u00f6ver hj\u00e4lp' mean?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "question_id": 4,
+                    "category_id": 3,
+                    "question_text": "What does 'Vatten' mean?",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "quiz_question_options",
+            "rows": [
+                {
+                    "option_id": 1,
+                    "question_id": 1,
+                    "option_text": "Hello",
+                    "is_correct": 1,
+                    "display_order": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 2,
+                    "question_id": 1,
+                    "option_text": "Goodbye",
+                    "is_correct": 0,
+                    "display_order": 2,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 3,
+                    "question_id": 1,
+                    "option_text": "Thank you",
+                    "is_correct": 0,
+                    "display_order": 3,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 4,
+                    "question_id": 2,
+                    "option_text": "Thank you",
+                    "is_correct": 1,
+                    "display_order": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 5,
+                    "question_id": 2,
+                    "option_text": "Yes",
+                    "is_correct": 0,
+                    "display_order": 2,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 6,
+                    "question_id": 2,
+                    "option_text": "No",
+                    "is_correct": 0,
+                    "display_order": 3,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 7,
+                    "question_id": 3,
+                    "option_text": "I need help",
+                    "is_correct": 1,
+                    "display_order": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 8,
+                    "question_id": 3,
+                    "option_text": "Where is the hotel?",
+                    "is_correct": 0,
+                    "display_order": 2,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 9,
+                    "question_id": 3,
+                    "option_text": "How much does it cost?",
+                    "is_correct": 0,
+                    "display_order": 3,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 10,
+                    "question_id": 4,
+                    "option_text": "Water",
+                    "is_correct": 1,
+                    "display_order": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 11,
+                    "question_id": 4,
+                    "option_text": "Coffee",
+                    "is_correct": 0,
+                    "display_order": 2,
+                    "updated_by": "system"
+                },
+                {
+                    "option_id": 12,
+                    "question_id": 4,
+                    "option_text": "Bill",
+                    "is_correct": 0,
+                    "display_order": 3,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "lessons",
+            "rows": [
+                {
+                    "lesson_id": 1,
+                    "category_id": 1,
+                    "lesson_type_id": 1,
+                    "embodiment_type_id": 1,
+                    "interaction_style_id": 1,
+                    "title": "Swedish Greetings",
+                    "description": "Learn basic Swedish greetings and simple responses.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_id": 2,
+                    "category_id": 2,
+                    "lesson_type_id": 1,
+                    "embodiment_type_id": 2,
+                    "interaction_style_id": 2,
+                    "title": "Travel Swedish",
+                    "description": "Useful Swedish phrases for hotels, help, and prices.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_id": 3,
+                    "category_id": 3,
+                    "lesson_type_id": 3,
+                    "embodiment_type_id": 1,
+                    "interaction_style_id": 3,
+                    "title": "Caf\u00e9 Basics",
+                    "description": "Learn simple Swedish caf\u00e9 and restaurant phrases.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "lesson_id": 4,
+                    "category_id": 4,
+                    "lesson_type_id": 1,
+                    "embodiment_type_id": 3,
+                    "interaction_style_id": 2,
+                    "title": "Robot Tutor Demo",
+                    "description": "A short HRI-style Swedish robot tutor lesson.",
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        },
+        {
+            "table": "lesson_learning_items",
+            "rows": [
+                {
+                    "lesson_id": 1,
+                    "item_id": 1,
+                    "display_order": 1
+                },
+                {
+                    "lesson_id": 1,
+                    "item_id": 2,
+                    "display_order": 2
+                },
+                {
+                    "lesson_id": 1,
+                    "item_id": 3,
+                    "display_order": 3
+                },
+                {
+                    "lesson_id": 1,
+                    "item_id": 4,
+                    "display_order": 4
+                },
+                {
+                    "lesson_id": 1,
+                    "item_id": 5,
+                    "display_order": 5
+                },
+                {
+                    "lesson_id": 2,
+                    "item_id": 6,
+                    "display_order": 1
+                },
+                {
+                    "lesson_id": 2,
+                    "item_id": 7,
+                    "display_order": 2
+                },
+                {
+                    "lesson_id": 2,
+                    "item_id": 8,
+                    "display_order": 3
+                },
+                {
+                    "lesson_id": 3,
+                    "item_id": 9,
+                    "display_order": 1
+                },
+                {
+                    "lesson_id": 3,
+                    "item_id": 10,
+                    "display_order": 2
+                },
+                {
+                    "lesson_id": 3,
+                    "item_id": 11,
+                    "display_order": 3
+                },
+                {
+                    "lesson_id": 4,
+                    "item_id": 12,
+                    "display_order": 1
+                }
+            ]
+        },
+        {
+            "table": "lesson_quiz_questions",
+            "rows": [
+                {
+                    "lesson_id": 1,
+                    "question_id": 1,
+                    "display_order": 1
+                },
+                {
+                    "lesson_id": 1,
+                    "question_id": 2,
+                    "display_order": 2
+                },
+                {
+                    "lesson_id": 2,
+                    "question_id": 3,
+                    "display_order": 1
+                },
+                {
+                    "lesson_id": 3,
+                    "question_id": 4,
+                    "display_order": 1
+                }
+            ]
+        },
+        {
+            "table": "user_lessons",
+            "rows": [
+                {
+                    "user_id": 2,
+                    "lesson_id": 1,
+                    "lesson_status_type_id": 2,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "user_id": 2,
+                    "lesson_id": 2,
+                    "lesson_status_type_id": 1,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "user_id": 3,
+                    "lesson_id": 1,
+                    "lesson_status_type_id": 3,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "user_id": 3,
+                    "lesson_id": 3,
+                    "lesson_status_type_id": 2,
+                    "is_active": 1,
+                    "updated_by": "system"
+                },
+                {
+                    "user_id": 3,
+                    "lesson_id": 4,
+                    "lesson_status_type_id": 1,
+                    "is_active": 1,
+                    "updated_by": "system"
+                }
+            ]
+        }
+    ]
+}

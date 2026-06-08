@@ -1,0 +1,40 @@
+.learning-items-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+}
+
+.learning-items-card {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.learning-items-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.learning-items-table-inner {
+    width: 100%;
+    max-width: 100%;
+}
+
+.learning-items-table tbody tr[data-learning-item-id] {
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+
+    .learning-items-table-inner {
+        width: 100%;
+    }
+}

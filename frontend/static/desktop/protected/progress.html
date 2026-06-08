@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+
+    <link rel="stylesheet" href="./css/progress.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="progress-content">
+
+                    <fieldset class="shared-panel progress-summary-panel">
+                        <legend>Progress Summary</legend>
+
+                        <div class="progress-summary-grid">
+
+                            <article class="progress-summary-card">
+                                <span class="progress-summary-label">
+                                    Assigned Lessons
+                                </span>
+
+                                <strong id="progressTotalLessons">
+                                    -
+                                </strong>
+                            </article>
+
+                            <article class="progress-summary-card">
+                                <span class="progress-summary-label">
+                                    Completed
+                                </span>
+
+                                <strong id="progressCompletedLessons">
+                                    -
+                                </strong>
+                            </article>
+
+                            <article class="progress-summary-card">
+                                <span class="progress-summary-label">
+                                    In Progress
+                                </span>
+
+                                <strong id="progressInProgressLessons">
+                                    -
+                                </strong>
+                            </article>
+
+                            <article class="progress-summary-card">
+                                <span class="progress-summary-label">
+                                    Completion
+                                </span>
+
+                                <strong id="progressCompletionPercentage">
+                                    -
+                                </strong>
+                            </article>
+
+                        </div>
+
+                    </fieldset>
+
+                    <fieldset class="shared-panel progress-card">
+                        <legend>My Lessons</legend>
+
+                        <div class="progress-table-inner">
+
+                            <div class="shared-table-wrapper">
+
+                                <table class="shared-table progress-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="0"
+                                                    type="button">
+                                                    Lesson
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="1"
+                                                    type="button">
+                                                    Status
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="2"
+                                                    type="button">
+                                                    Score
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="3"
+                                                    type="button">
+                                                    Completed
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="progressLessonsTableBody">
+                                        <tr>
+                                            <td colspan="4">Loading progress...</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar progress-toolbar">
+
+                        <div class="shared-table-toolbar-left"></div>
+
+                        <div class="shared-table-toolbar-center">
+
+                            <div class="shared-search-box shared-table-toolbar-search">
+                                <span class="shared-search-icon">⌕</span>
+
+                                <input id="progressSearchInput" class="shared-search-input" type="text"
+                                    placeholder="Search lessons..." disabled>
+                            </div>
+
+                            <div class="shared-table-pagination shared-table-toolbar-pagination">
+                                <button id="progressPreviousPageButton" class="shared-button secondary" type="button"
+                                    disabled>
+                                    ‹ Prev
+                                </button>
+
+                                <span id="progressPaginationStatus" class="shared-table-pagination-status">
+                                    Page 1 of 1
+                                </span>
+
+                                <button id="progressNextPageButton" class="shared-button secondary" type="button"
+                                    disabled>
+                                    Next ›
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="shared-table-toolbar-right"></div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+    <script src="/desktop/shared/js/table-sorter.js"></script>
+    <script src="/desktop/shared/js/table-search.js"></script>
+
+    <script>
+        loadProtectedWorkspace("progress")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/progress.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

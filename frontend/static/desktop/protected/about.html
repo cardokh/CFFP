@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="./css/about.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="about-content">
+
+                    <fieldset class="about-card about-hero-card">
+                        <legend>About HejSan</legend>
+
+                        <div class="about-hero">
+                            <div class="about-logo">
+                                H
+                            </div>
+
+                            <div class="about-hero-copy">
+                                <h1>
+                                    HejSan
+                                </h1>
+
+                                <p>
+                                    HejSan is a Swedish learning companion built for
+                                    short, focused language practice across desktop
+                                    and mobile experiences.
+                                </p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="about-grid">
+
+                        <fieldset class="about-card">
+                            <legend>Project</legend>
+
+                            <p>
+                                This application was developed as part of the
+                                User Interface Programming and Evaluation course
+                                at Uppsala University.
+                            </p>
+
+                            <p>
+                                The platform supports lessons, learning items,
+                                quizzes, progress tracking, and robot-inspired
+                                interaction styles.
+                            </p>
+                        </fieldset>
+
+                        <fieldset class="about-card">
+                            <legend>Version</legend>
+
+                            <div class="about-version-box">
+                                <span class="about-version-label">
+                                    Current version
+                                </span>
+
+                                <strong id="aboutVersionNumber">
+                                    1.0.6
+                                </strong>
+                            </div>
+
+                            <p>
+                                Please use this page to verify that you are running
+                                the latest project version.
+                            </p>
+                        </fieldset>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("about");
+    </script>
+
+    <script src="./js/about.js"></script>
+
+</body>
+
+</html>

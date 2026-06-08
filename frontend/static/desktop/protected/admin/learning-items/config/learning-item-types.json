@@ -1,0 +1,14 @@
+[
+    {
+        "id": "word",
+        "displayName": "Word"
+    },
+    {
+        "id": "phrase",
+        "displayName": "Phrase"
+    },
+    {
+        "id": "sentence",
+        "displayName": "Sentence"
+    }
+]

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Contact | HejSan
+    </title>
+
+    <link rel="stylesheet" href="./css/project-guide.css">
+
+</head>
+
+<body>
+    <main class="mobile-protected-layout">
+        <section class="mobile-main-content">
+            <div id="mobile-top-panel-container"></div>
+            <div class="container">
+                <div class="lesson-card">
+                    <h4 id="phrase">
+                        project-guide page not implemented yet
+                    </h4>
+                </div>
+
+            </div>
+            <div id="mobile-bottom-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+
+    <script src="../shared/components/top-panel/top-panel.js"></script>
+
+    <script src="../shared/components/bottom-panel/bottom-panel.js"></script>
+
+    <script>
+        loadMobileTopPanel("project-guide");
+
+        loadMobileBottomPanel({
+            desktopTarget:
+                window.LLA_PATHS.desktop.protected.contact
+        });
+    </script>
+
+    <script src="./js/project-guide.js"></script>
+
+</body>
+
+</html>

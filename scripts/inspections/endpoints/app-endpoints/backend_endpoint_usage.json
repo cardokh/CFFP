@@ -1,0 +1,274 @@
+{
+    "scriptName": "analyze_backend_endpoint_usage",
+    "mode": "analyze",
+    "status": "PASSED",
+    "backendEndpointCount": 31,
+    "frontendEndpointCount": 9,
+    "usedByFrontendCount": 17,
+    "expectedBackendOnlyCount": 5,
+    "possiblyUnusedOrFutureEndpointCount": 9,
+    "usedByFrontend": [
+        {
+            "path": "/api/admin/learning-items",
+            "normalizedPath": "/api/admin/learning-items",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/learning-items/",
+            "normalizedPath": "/api/admin/learning-items",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/lesson-categories",
+            "normalizedPath": "/api/admin/lesson-categories",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/lesson-categories/",
+            "normalizedPath": "/api/admin/lesson-categories",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/lessons",
+            "normalizedPath": "/api/admin/lessons",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/lessons/",
+            "normalizedPath": "/api/admin/lessons",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/quiz-questions",
+            "normalizedPath": "/api/admin/quiz-questions",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/quiz-questions/",
+            "normalizedPath": "/api/admin/quiz-questions",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/reference-data/lesson-form-options",
+            "normalizedPath": "/api/admin/reference-data/lesson-form-options",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/users",
+            "normalizedPath": "/api/admin/users",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/admin/users/",
+            "normalizedPath": "/api/admin/users",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/auth/forgot-password",
+            "normalizedPath": "/api/auth/forgot-password",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/auth/login",
+            "normalizedPath": "/api/auth/login",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/auth/register",
+            "normalizedPath": "/api/auth/register",
+            "declaredInFrontendContract": true,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/student/lessons/",
+            "normalizedPath": "/api/student/lessons",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": true,
+            "frontendUsageFiles": [
+                "frontend/static/desktop/protected/js/student-lesson-details.js",
+                "frontend/static/mobile/protected/js/available-lessons.js",
+                "frontend/static/mobile/protected/js/student-lesson-details.js"
+            ],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/student/lessons/remove/",
+            "normalizedPath": "/api/student/lessons/remove",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": true,
+            "frontendUsageFiles": [
+                "frontend/static/desktop/protected/js/student-lesson-details.js",
+                "frontend/static/mobile/protected/js/student-lesson-details.js"
+            ],
+            "classification": "usedByFrontend"
+        },
+        {
+            "path": "/api/student/lessons/signup/",
+            "normalizedPath": "/api/student/lessons/signup",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": true,
+            "frontendUsageFiles": [
+                "frontend/static/desktop/protected/js/student-lesson-details.js",
+                "frontend/static/mobile/protected/js/student-lesson-details.js"
+            ],
+            "classification": "usedByFrontend"
+        }
+    ],
+    "expectedBackendOnly": [
+        {
+            "path": "/api/ai/speech/generate",
+            "normalizedPath": "/api/ai/speech/generate",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "expectedBackendOnly"
+        },
+        {
+            "path": "/api/echo",
+            "normalizedPath": "/api/echo",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "expectedBackendOnly"
+        },
+        {
+            "path": "/api/health",
+            "normalizedPath": "/api/health",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "expectedBackendOnly"
+        },
+        {
+            "path": "/api/lesson",
+            "normalizedPath": "/api/lesson",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "expectedBackendOnly"
+        },
+        {
+            "path": "/api/tts",
+            "normalizedPath": "/api/tts",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "expectedBackendOnly"
+        }
+    ],
+    "possiblyUnusedOrFutureEndpoint": [
+        {
+            "path": "/api/admin/learning-items/examples/",
+            "normalizedPath": "/api/admin/learning-items/examples",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/lessons-learning-items/",
+            "normalizedPath": "/api/admin/lessons-learning-items",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/lessons-quiz-questions/",
+            "normalizedPath": "/api/admin/lessons-quiz-questions",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/quiz-question-options",
+            "normalizedPath": "/api/admin/quiz-question-options",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/quiz-question-options/",
+            "normalizedPath": "/api/admin/quiz-question-options",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/quiz-questions-options/",
+            "normalizedPath": "/api/admin/quiz-questions-options",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/user-lessons/",
+            "normalizedPath": "/api/admin/user-lessons",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/user-lessons/completed/",
+            "normalizedPath": "/api/admin/user-lessons/completed",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        },
+        {
+            "path": "/api/admin/user-lessons/in-progress/",
+            "normalizedPath": "/api/admin/user-lessons/in-progress",
+            "declaredInFrontendContract": false,
+            "usedByFrontendSource": false,
+            "frontendUsageFiles": [],
+            "classification": "possiblyUnusedOrFutureEndpoint"
+        }
+    ]
+}

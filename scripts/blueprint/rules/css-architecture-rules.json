@@ -1,0 +1,36 @@
+{
+    "ruleSetName": "css-architecture-rules",
+    "description": "Defines CSS architecture rules for shared layout, reusable components, page-specific styling, and future theming.",
+    "rules": [
+        {
+            "ruleId": "CSS-001",
+            "name": "Prefer shared CSS for reusable UI patterns",
+            "description": "Reusable layout, tables, forms, buttons, panels, cards, spacing, and theme primitives should live in shared CSS files.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "CSS-002",
+            "name": "Page CSS is only for page-specific styling",
+            "description": "Page-level CSS should only contain styling that is genuinely unique to that page.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "CSS-003",
+            "name": "Avoid duplicated page overrides",
+            "description": "Repeated page-level overrides should be moved into shared CSS or design-system files.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "CSS-004",
+            "name": "Use content-driven protected layouts where appropriate",
+            "description": "Protected desktop content panels should generally be content-driven in width unless there is a clear layout reason to stretch.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "CSS-005",
+            "name": "Avoid inline styles",
+            "description": "Inline styles should be avoided except for dynamic runtime-calculated styling that cannot reasonably live in CSS classes.",
+            "severity": "WARNING"
+        }
+    ]
+}

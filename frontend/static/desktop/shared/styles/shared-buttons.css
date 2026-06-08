@@ -1,0 +1,91 @@
+/*
+ * Shared button styles.
+ *
+ * Responsibilities:
+ * - Provide reusable button styling for desktop pages.
+ * - Keep page-specific CSS free from duplicated button rules.
+ */
+
+.shared-button {
+    min-height: 30px;
+    padding: 5px 10px;
+
+    border: 1px solid #355c86;
+    border-radius: 8px;
+
+    background: #101d2d;
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.shared-button:hover {
+    background: #1b2f49;
+}
+
+.shared-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.shared-button.primary {
+    min-width: 100px;
+
+    border-color: #4d78a8;
+}
+
+.shared-button.secondary {
+    border-color: #2b415f;
+    color: #d7e2ee;
+}
+
+.shared-button.accent {
+    border-color: #6757bf;
+    background: rgba(75, 54, 139, 0.35);
+    color: #c9b8ff;
+}
+
+.shared-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 26px;
+    height: 26px;
+
+    border: 1px solid #3d638f;
+    border-radius: 999px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.shared-icon-button:hover {
+    background: #1b2f49;
+}
+
+.shared-icon-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.shared-button.delete,
+.shared-button-delete {
+    border-color: #5f2a2a;
+    color: #ffb4b4;
+}
+
+.shared-button.delete:hover,
+.shared-button-delete:hover {
+    background: #351b1b;
+    color: #ffffff;
+}

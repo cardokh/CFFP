@@ -1,0 +1,48 @@
+/*
+ * Shared search styles.
+ *
+ * Responsibilities:
+ * - Provide reusable compact search box styling.
+ * - Support table and toolbar search inputs.
+ */
+
+.shared-search-box {
+    width: 190px;
+    max-width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    border: 1px solid #2a3f5f;
+    border-radius: 999px;
+
+    background: #101d2d;
+
+    padding: 6px 12px;
+}
+
+.shared-search-icon {
+    color: #8fa2b8;
+    font-size: 14px;
+}
+
+.shared-search-input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: #d7e2ee;
+
+    font-size: 12px;
+}
+
+.shared-search-input::placeholder {
+    color: #8fa2b8;
+}
+
+.shared-search-input:disabled {
+    cursor: not-allowed;
+}

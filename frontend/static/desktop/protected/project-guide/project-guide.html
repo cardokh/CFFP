@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Guide | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/protected/css/student-protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="./css/project-guide.css?v=22">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div class="project-guide-content">
+
+                <div id="header-panel-container"></div>
+
+                <div class="protected-content-panel">
+
+                    <fieldset class="project-guide-card">
+
+                        <legend>Project Guide</legend>
+
+                        <div class="project-guide-scroll-area">
+
+                            <div class="project-guide-page">
+
+                                <header class="project-guide-intro">
+                                    <p>
+                                        A concise guide to what HejSan became:
+                                        the application, its architecture and technology,
+                                        the user evaluation, and the future direction.
+                                    </p>
+
+                                </header>
+
+                                <nav class="project-guide-tabs" aria-label="Project guide sections">
+
+                                    <button class="project-guide-tab is-active" type="button"
+                                        data-guide-section="overview">
+                                        Overview
+                                    </button>
+
+                                    <button class="project-guide-tab" type="button" data-guide-section="application">
+                                        Application
+                                    </button>
+
+                                    <button class="project-guide-tab" type="button" data-guide-section="architecture">
+                                        Architecture &amp; Technology
+                                    </button>
+
+                                    <button class="project-guide-tab" type="button" data-guide-section="future">
+                                        Future Direction
+                                    </button>
+
+                                    <button class="project-guide-tab" type="button" data-guide-section="evaluation">
+                                        User Evaluation
+                                    </button>
+
+                                </nav>
+
+                                <section class="project-guide-section is-active" data-guide-panel="overview">
+
+                                    <h2>Overview</h2>
+
+                                    <p>
+                                        HejSan is a Swedish language learning prototype developed as part of the
+                                        User Interface Programming and Evaluation course. The project combines a
+                                        student learning experience with administrative content management tools,
+                                        providing a complete educational platform prototype.
+                                    </p>
+
+                                    <p>
+                                        The delivered solution includes a protected student workspace, lesson-based
+                                        learning flows, and an administration area for managing users, categories,
+                                        lessons, learning items, and quiz questions. The project also establishes
+                                        a reusable foundation for future educational, AI, and HRI-related work.
+                                    </p>
+
+                                    <div class="project-guide-feature-grid">
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Language Learning</h3>
+                                            <p>
+                                                Students can browse lessons, review lesson details,
+                                                start learning sessions, and complete guided activities.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Content Management</h3>
+                                            <p>
+                                                Teachers and administrators can manage educational content,
+                                                users, lessons, learning items, and quiz questions.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Reusable Platform</h3>
+                                            <p>
+                                                The architecture and design provide a foundation for future
+                                                educational applications, AI-assisted learning, and HRI research.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Interaction Styles</h3>
+                                            <p>
+                                                As part of the course requirements, HejSan supports two visual
+                                                interaction styles, allowing users to personalise the learning
+                                                experience through the interface.
+                                            </p>
+                                        </article>
+
+                                    </div>
+
+                                </section>
+
+                                <section class="project-guide-section" data-guide-panel="application">
+
+                                    <h2>Application</h2>
+
+                                    <p>
+                                        HejSan consists of two main areas: a student workspace focused on
+                                        Swedish language learning and an administration workspace used to
+                                        manage educational content and users.
+                                    </p>
+
+                                    <div class="project-guide-feature-grid">
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Lesson Library</h3>
+                                            <p>
+                                                Students browse available lessons, review lesson information,
+                                                and select learning activities based on their current goals.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Lesson Flow</h3>
+                                            <p>
+                                                The learning experience guides students through lesson details,
+                                                lesson preparation, and the lesson player where learning
+                                                activities are completed.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Progress Tracking</h3>
+                                            <p>
+                                                Student progress is recorded and presented through the
+                                                protected workspace, providing visibility into learning
+                                                activity and lesson completion.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Interaction Styles</h3>
+                                            <p>
+                                                Users can personalise the experience through multiple
+                                                interaction styles, allowing different interface
+                                                presentations while maintaining the same functionality.
+                                            </p>
+                                        </article>
+
+                                    </div>
+
+                                    <h3>Administration Workspace</h3>
+
+                                    <p>
+                                        Teachers and administrators manage the educational platform through
+                                        a collection of content management tools.
+                                    </p>
+
+                                    <div class="project-guide-feature-grid">
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Users</h3>
+                                            <p>
+                                                Create, edit, assign, and manage student accounts.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Categories & Lessons</h3>
+                                            <p>
+                                                Organise educational content and structure learning paths.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Learning Items</h3>
+                                            <p>
+                                                Manage vocabulary, phrases, and other lesson content used
+                                                during learning activities.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Quiz Questions</h3>
+                                            <p>
+                                                Create and maintain assessment content used to evaluate
+                                                student understanding.
+                                            </p>
+                                        </article>
+
+                                    </div>
+
+                                </section>
+
+                                <section class="project-guide-section" data-guide-panel="architecture">
+
+                                    <h2>Architecture &amp; Technology</h2>
+
+                                    <p>
+                                        HejSan uses an MVC-inspired layered web architecture. The interface is
+                                        implemented as HTML, CSS, and JavaScript views, API endpoints act as
+                                        controller-like entry points, services coordinate application logic,
+                                        repositories isolate database access, and SQLite stores the application data.
+                                    </p>
+
+                                    <div class="project-guide-feature-grid">
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>MVC-Inspired Layers</h3>
+                                            <p>
+                                                The project separates views, request handling, business logic,
+                                                persistence, and data storage so each layer has a clear
+                                                responsibility.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Technology Stack</h3>
+                                            <p>
+                                                The application uses HTML, CSS, JavaScript, Python, SQLite,
+                                                REST APIs, and JSON to keep the data flow and implementation
+                                                understandable.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Reusable UI Foundation</h3>
+                                            <p>
+                                                Shared layout files, protected workspace components, table styles,
+                                                toolbars, and repeated CRUD patterns support consistency across
+                                                the student and administration areas.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Course Concepts Applied</h3>
+                                            <p>
+                                                The UI applies consistency, visibility, feedback, user control,
+                                                learnability, and interaction styles through repeated patterns,
+                                                clear navigation, and predictable page behaviour.
+                                            </p>
+                                        </article>
+
+                                    </div>
+
+                                </section>
+
+                                <section class="project-guide-section" data-guide-panel="evaluation">
+
+
+                                    <nav class="project-guide-tabs project-guide-evaluation-tabs"
+                                        aria-label="User evaluation sections">
+
+                                        <button class="project-guide-tab is-active" type="button"
+                                            data-evaluation-section="overview">
+                                            Overview
+                                        </button>
+
+                                        <button class="project-guide-tab" type="button"
+                                            data-evaluation-section="results">
+                                            Results
+                                        </button>
+
+                                    </nav>
+
+                                    <div class="project-guide-evaluation-panel is-active"
+                                        data-evaluation-panel="overview">
+
+                                        <h2>User Evaluation Overview</h2>
+                                        <p>
+                                            The user evaluation was planned as a lightweight task-based usability test
+                                            before the final project presentation. The goal is to evaluate whether users
+                                            can understand the application, navigate between the main sections, complete
+                                            the lesson flow, and provide useful feedback about the learning experience.
+                                        </p>
+
+                                        <p>
+                                            The evaluation focuses on practical use rather than formal research results.
+                                            Participants are asked to complete realistic tasks with minimal instruction,
+                                            then answer short post-test questions about usability, navigation, lesson
+                                            controls, quiz completion, progress tracking, and possible improvements.
+                                        </p>
+
+                                        <div class="project-guide-feature-grid">
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Student Test 1</h3>
+                                                <p>
+                                                    A new student user creates an account, explores the application,
+                                                    signs up for a lesson, completes the lesson and quiz, and reviews
+                                                    their progress.
+                                                </p>
+                                            </article>
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Student Test 2</h3>
+                                                <p>
+                                                    A second new student user follows the same task flow so that the
+                                                    group can compare navigation, lesson flow, and usability feedback
+                                                    across multiple first-time users.
+                                                </p>
+                                            </article>
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Student Test 3</h3>
+                                                <p>
+                                                    A third new student user completes the student workflow, giving the
+                                                    group another independent view of account creation, lesson
+                                                    discovery,
+                                                    task completion, and progress visibility.
+                                                </p>
+                                            </article>
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Demo User Test</h3>
+                                                <p>
+                                                    One participant uses an existing demo account to evaluate the
+                                                    experience from a returning-user perspective without the account
+                                                    creation step.
+                                                </p>
+                                            </article>
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Admin Test</h3>
+                                                <p>
+                                                    One participant tests the administration workflow, focusing on how
+                                                    content and user management can be understood and used from the
+                                                    teacher or administrator side.
+                                                </p>
+                                            </article>
+
+                                            <article class="project-guide-feature-card">
+                                                <h3>Evaluation Data</h3>
+                                                <p>
+                                                    Each test case is stored as a separate JSON file. Placeholder data
+                                                    can be used before testing, then replaced with the real participant
+                                                    responses before the final demonstration.
+                                                </p>
+                                            </article>
+
+                                        </div>
+
+                                        <h3>Tasks Tested</h3>
+
+                                        <p>
+                                            Student participants are asked to create an account, spend a few minutes
+                                            exploring the application, find the lesson library, sign up for a lesson,
+                                            complete the lesson, change the speech speed during the lesson, complete
+                                            the quiz, and view their progress.
+                                        </p>
+
+                                        <h3>Post-Test Questions</h3>
+
+                                        <p>
+                                            After completing the tasks, participants answer 1–5 scale questions where
+                                            1 means strongly disagree and 5 means strongly agree. The questions cover
+                                            account creation, navigation, lesson library discovery, lesson sign-up,
+                                            lesson controls, speech speed, quiz completion, progress visibility, and
+                                            overall ease of use.
+                                        </p>
+
+                                        <h3>Open Feedback</h3>
+
+                                        <p>
+                                            Participants are also asked what they liked most, whether any navigation
+                                            was confusing, what felt most difficult, whether any task was hard to
+                                            complete, and what they would improve in a future version.
+                                        </p>
+
+                                        <h3>Expected Outcome</h3>
+
+                                        <p>
+                                            The evaluation is intended to identify strengths, usability problems,
+                                            confusing areas, and improvement opportunities. The results will support
+                                            the final presentation and show how feedback was collected from real use
+                                            of the prototype.
+                                        </p>
+
+                                    </div>
+
+                                    <div class="project-guide-evaluation-panel" data-evaluation-panel="results">
+
+                                        <section class="evaluation-results-layout" aria-label="Evaluation results"
+                                            data-evaluation-results-container>
+
+
+
+                                            <section class="project-guide-evaluation-summary">
+                                                <h3>Evaluation Results Summary</h3>
+
+                                                <p>
+                                                    The evaluation was completed by five participants, including
+                                                    student,
+                                                    demo, and administrator perspectives. All participants were able to
+                                                    complete their assigned evaluation flow.
+                                                </p>
+
+                                                <p>
+                                                    The results show strong overall usability, with all recorded tasks
+                                                    completed successfully and an average rating of 4.9 out of 5.
+                                                    Participants described the application as clear, straightforward,
+                                                    and easy to navigate.
+                                                </p>
+
+                                                <p>
+                                                    The main improvement areas were the lesson experience, speech
+                                                    feedback,
+                                                    and making it clearer when speech input has been detected. Detailed
+                                                    ratings, task completion data, and open-ended responses are
+                                                    available
+                                                    in the Results tab below.
+                                                </p>
+                                            </section>
+
+
+                                            <fieldset class="evaluation-panel evaluation-summary-panel"
+                                                data-evaluation-summary-panel>
+
+                                                <legend>Summary Analysis</legend>
+
+                                                <p>
+                                                    Evaluation summary will be loaded from the JSON files.
+                                                </p>
+
+                                            </fieldset>
+
+                                            <fieldset class="evaluation-panel evaluation-participants-panel">
+
+                                                <legend>Evaluation Participants</legend>
+
+                                                <div class="evaluation-table-wrapper shared-table-wrapper">
+
+                                                    <table class="shared-table evaluation-participants-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Participant</th>
+                                                                <th scope="col">Type</th>
+                                                                <th scope="col">Status</th>
+                                                                <th scope="col">Tasks</th>
+                                                                <th scope="col">Avg Rating</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody data-evaluation-participant-table-body>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </fieldset>
+
+                                            <fieldset class="evaluation-panel evaluation-details-panel"
+                                                data-evaluation-details-panel>
+
+                                                <legend>Selected Participant Details</legend>
+
+                                                <p>
+                                                    Select a participant to review tasks, post-test ratings,
+                                                    and open-ended feedback.
+                                                </p>
+
+                                            </fieldset>
+
+                                        </section>
+
+                                    </div>
+
+                                </section>
+
+                                <section class="project-guide-section" data-guide-panel="future">
+
+                                    <h2>Future Direction</h2>
+
+                                    <p>
+                                        HejSan delivers the core learning experience, administration tools,
+                                        reusable layout foundation, and interaction-style support required for
+                                        the course project. Some ideas were intentionally left for future work
+                                        because of the limited project scope, available time, and focus on
+                                        delivering a stable prototype for the final course presentation.
+                                    </p>
+
+                                    <p>
+                                        The future direction below describes how the prototype could grow beyond
+                                        the delivered course version while still building on the same educational
+                                        platform foundation.
+                                    </p>
+
+                                    <div class="project-guide-feature-grid">
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>AI-Supported Learning</h3>
+                                            <p>
+                                                Future versions could provide personalised practice suggestions,
+                                                adaptive lesson sequencing, hints, explanations, and feedback
+                                                based on learner performance.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Speech &amp; Pronunciation</h3>
+                                            <p>
+                                                Speech recognition and pronunciation feedback could support
+                                                listening, speaking, and conversational Swedish practice.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Human-Robot Interaction</h3>
+                                            <p>
+                                                The lesson flow could be extended into HRI scenarios with robot
+                                                tutors, embodied language practice, and controlled learning
+                                                experiments.
+                                            </p>
+                                        </article>
+
+                                        <article class="project-guide-feature-card">
+                                            <h3>Platform Expansion</h3>
+                                            <p>
+                                                The platform could grow with larger content libraries, additional
+                                                languages, richer learning activities, teacher analytics, and
+                                                stronger reusable components.
+                                            </p>
+                                        </article>
+
+                                    </div>
+
+                                </section>
+
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+
+                <div id="footer-panel-container"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("project-guide");
+    </script>
+
+    <script src="./js/project-guide.js?v=222"></script>
+
+</body>
+
+</html>

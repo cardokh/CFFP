@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="./css/settings.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div class="settings-content">
+
+                <div id="header-panel-container"></div>
+
+                <div class="protected-content-panel">
+
+                    <div class="settings-page-content-panel">
+
+                        <section class="settings-content-panel">
+
+                            <fieldset class="settings-card">
+
+                                <legend>Settings</legend>
+
+                                <div class="settings-scroll-area">
+
+                                    <section class="settings-section">
+
+                                        <fieldset class="settings-panel">
+
+                                            <legend>Learning profile</legend>
+
+                                            <div class="settings-grid">
+
+                                                <div class="setting-item">
+                                                    <label for="learningLanguageSelect">Learning language</label>
+                                                    <select id="learningLanguageSelect">
+                                                        <option value="spanish">Spanish</option>
+                                                        <option value="swedish">Swedish</option>
+                                                        <option value="english">English</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="nativeLanguageSelect">Native language</label>
+                                                    <select id="nativeLanguageSelect">
+                                                        <option value="english">English</option>
+                                                        <option value="swedish">Swedish</option>
+                                                        <option value="spanish">Spanish</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="speechSpeedSelect">Speech speed</label>
+                                                    <select id="speechSpeedSelect">
+                                                        <option value="slow">Slow</option>
+                                                        <option value="normal">Normal</option>
+                                                        <option value="fast">Fast</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="rowsPerPageSelect">Rows per page</label>
+                                                    <select id="rowsPerPageSelect">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </fieldset>
+
+                                    </section>
+
+                                    <section class="settings-section">
+
+                                        <fieldset class="settings-panel">
+
+                                            <legend>AI and interaction style</legend>
+
+                                            <div class="settings-grid">
+
+                                                <div class="setting-item">
+                                                    <label for="interactionStyleSelect">Interaction style</label>
+                                                    <select id="interactionStyleSelect">
+                                                        <option value="encouraging">Encouraging coach</option>
+                                                        <option value="neutral">Neutral tutor</option>
+                                                        <option value="challenge">Challenge mode</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="embodimentTypeSelect">Embodiment type</label>
+                                                    <select id="embodimentTypeSelect">
+                                                        <option value="none">No avatar</option>
+                                                        <option value="robot">Robot tutor</option>
+                                                        <option value="human">Human-like tutor</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="pronunciationHintsSelect">Pronunciation hints</label>
+                                                    <select id="pronunciationHintsSelect">
+                                                        <option value="enabled">Enabled</option>
+                                                        <option value="disabled">Disabled</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="autoPlayPronunciationSelect">Auto-play
+                                                        pronunciation</label>
+                                                    <select id="autoPlayPronunciationSelect">
+                                                        <option value="enabled">Enabled</option>
+                                                        <option value="disabled">Disabled</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </fieldset>
+
+                                    </section>
+
+                                    <section class="settings-section">
+
+                                        <fieldset class="settings-panel">
+
+                                            <legend>Experience</legend>
+
+                                            <div class="settings-grid">
+
+                                                <div class="setting-item">
+                                                    <label for="themePreviewSelect">Theme preview</label>
+                                                    <select id="themePreviewSelect">
+                                                        <option value="hejSanDark">HejSan dark</option>
+                                                        <option value="calmBlue">Calm blue</option>
+                                                        <option value="highContrast">High contrast</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="setting-item">
+                                                    <label for="preferredDeviceSelect">Preferred experience</label>
+                                                    <select id="preferredDeviceSelect">
+                                                        <option value="desktop">Desktop learning</option>
+                                                        <option value="mobile">Mobile learning</option>
+                                                        <option value="auto">Auto-detect</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </fieldset>
+
+                                    </section>
+
+                                </div>
+
+                            </fieldset>
+
+                        </section>
+
+                        <div id="settingsMessage" class="form-message hidden">
+                        </div>
+
+                        <section class="settings-toolbar-panel">
+
+                            <section class="settings-actions">
+
+                                <div class="settings-action-buttons">
+
+                                    <button id="resetSettingsButton" class="settings-button" type="button">
+                                        Reset
+                                    </button>
+
+                                    <button id="saveSettingsButton" class="settings-button primary" type="button">
+                                        Save settings
+                                    </button>
+
+                                </div>
+
+                            </section>
+
+                        </section>
+
+                    </div>
+
+                </div>
+
+                <div id="footer-panel-container"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("settings")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/settings.js?v=4";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

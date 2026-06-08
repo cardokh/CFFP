@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Lesson | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-cards.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-toolbars.css">
+
+    <link rel="stylesheet" href="./css/start-lesson.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="start-lesson-content">
+
+                    <fieldset class="shared-panel start-lesson-card">
+
+                        <legend>
+                            Prepare lesson
+                        </legend>
+
+                        <div class="start-lesson-scroll-area">
+
+                            <div id="startLessonMessage" class="start-lesson-message hidden">
+                            </div>
+
+                            <section id="lessonPreviewPanel" class="lesson-preview-panel">
+
+                                <fieldset class="shared-panel lesson-preview-title-panel">
+
+                                    <legend>
+                                        You are about to start
+                                    </legend>
+
+                                    <div class="lesson-preview-title-row">
+
+                                        <div class="lesson-preview-heading">
+
+                                            <h1 id="lessonTitle">
+                                                Loading lesson...
+                                            </h1>
+
+                                            <p id="lessonDescription" class="lesson-preview-description">
+                                                Please wait while we prepare your lesson.
+                                            </p>
+
+                                        </div>
+
+                                        <div class="lesson-preview-robot">
+                                            🤖
+                                        </div>
+
+                                    </div>
+
+                                    <div class="lesson-preview-info-grid">
+
+                                        <div class="lesson-preview-info-item">
+                                            <span class="lesson-preview-info-label">
+                                                Learning items
+                                            </span>
+
+                                            <span id="learningItemCount" class="lesson-preview-info-value">
+                                                -
+                                            </span>
+                                        </div>
+
+                                        <div class="lesson-preview-info-item">
+                                            <span class="lesson-preview-info-label">
+                                                Lesson mode
+                                            </span>
+
+                                            <span class="lesson-preview-info-value">
+                                                Practice
+                                            </span>
+                                        </div>
+
+                                        <div class="lesson-preview-info-item">
+                                            <span class="lesson-preview-info-label">
+                                                Estimated time
+                                            </span>
+
+                                            <span class="lesson-preview-info-value">
+                                                3–5 min
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </fieldset>
+
+                                <fieldset class="shared-panel lesson-preview-instructions">
+
+                                    <legend>
+                                        How this lesson works
+                                    </legend>
+
+                                    <ul>
+                                        <li>
+                                            You will review one Swedish learning item
+                                            at a time.
+                                        </li>
+
+                                        <li>
+                                            Each item includes Swedish text,
+                                            English meaning, and pronunciation support.
+                                        </li>
+
+                                        <li>
+                                            Use Next and Previous to move through
+                                            the lesson at your own pace.
+                                        </li>
+
+                                        <li>
+                                            Use Listen to hear the pronunciation.
+                                        </li>
+
+                                        <li>
+                                            Use Slow to hear a slower pronunciation
+                                            when available.
+                                        </li>
+
+                                        <li>
+                                            Use Favorite to mark useful learning items.
+                                        </li>
+
+                                        <li>
+                                            Use Know it and Needs practice to track
+                                            your progress during the lesson.
+                                        </li>
+
+                                        <li>
+                                            Practice pronunciation is planned as a
+                                            guided speaking feature.
+                                        </li>
+
+                                        <li>
+                                            When you finish, your lesson progress
+                                            can be reviewed from Lesson Library.
+                                        </li>
+                                    </ul>
+
+                                </fieldset>
+
+                            </section>
+
+                        </div>
+
+                        <section class="shared-toolbar start-lesson-actions">
+
+                            <div class="shared-toolbar-section left">
+
+                                <button id="backToMyLessonsButton" class="shared-button secondary start-lesson-button"
+                                    type="button">
+                                    Back to lesson library
+                                </button>
+
+                            </div>
+
+                            <div class="shared-toolbar-section right">
+
+                                <button id="continueToLessonPlayerButton"
+                                    class="shared-button primary start-lesson-button" type="button">
+                                    Continue to lesson player
+                                </button>
+
+                            </div>
+
+                        </section>
+
+                    </fieldset>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("available-lessons")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/start-lesson.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

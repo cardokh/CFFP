@@ -1,0 +1,55 @@
+{
+    "ruleSetName": "scripting-blueprint-rules",
+    "description": "Defines the standard architecture for project scripts.",
+    "rules": [
+        {
+            "ruleId": "SCRIPT-001",
+            "name": "Scripts must use BaseScript",
+            "description": "Project scripts must extend the shared BaseScript class unless there is a documented reason not to.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SCRIPT-002",
+            "name": "Scripts must read from config",
+            "description": "Script behavior must be driven by a config file in the script's config folder.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SCRIPT-003",
+            "name": "Scripts must write reports to output",
+            "description": "Scripts must write detailed execution output to their own output folder.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SCRIPT-004",
+            "name": "Console output must be concise",
+            "description": "Scripts should print one concise success or failure message to the terminal.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "SCRIPT-005",
+            "name": "Scripts must use shared utilities",
+            "description": "Scripts should use shared utilities for JSON, paths, config loading, and console output.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SCRIPT-006",
+            "name": "Scripts should separate configuration, execution, and reporting",
+            "description": "Script configuration, execution logic, runtime state, and reporting/output generation should remain separated to support reusable script infrastructure and future framework evolution.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "SCRIPT-007",
+            "name": "Scripts must not contain hardcoded output path fragments",
+            "description": "Scripts must avoid hardcoded output path fragments and should use BaseScript output architecture instead.",
+            "severity": "ERROR",
+            "config": {
+                "disallowedPathFragments": [
+                    "scripts/blueprint/governed/output",
+                    "output/",
+                    "\\output\\"
+                ]
+            }
+        }
+    ]
+}

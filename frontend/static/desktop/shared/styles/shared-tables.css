@@ -1,0 +1,186 @@
+/*
+ * Shared table styles.
+ *
+ * Responsibilities:
+ * - Provide reusable desktop table styling.
+ * - Standardize table wrappers, headers, rows, actions, badges, and empty states.
+ * - Support sortable table headers.
+ */
+
+.shared-table-panel {
+    width: 100%;
+    overflow: hidden;
+}
+
+.shared-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+.shared-table-toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.shared-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+
+    border: 1px solid #243a57;
+    border-radius: 12px;
+
+    background: #0c1725;
+}
+
+.shared-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    font-size: 12px;
+}
+
+.shared-table th,
+.shared-table td {
+    border-bottom: 1px solid #1b2b40;
+
+    text-align: left;
+    vertical-align: middle;
+}
+
+.shared-table th {
+    padding: 9px 10px;
+
+    color: #eaf3ff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+
+    background: #1b3552;
+}
+
+.shared-table td {
+    padding: 5px 10px;
+}
+
+.shared-table tbody tr:nth-child(odd) {
+    background: #101d2d;
+}
+
+.shared-table tbody tr:nth-child(even) {
+    background: #132235;
+}
+
+.shared-table tbody tr:hover {
+    background: #1b3552;
+}
+
+.shared-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.shared-table-sort-button {
+    width: 100%;
+
+    padding: 0;
+
+    border: none;
+    background: transparent;
+    color: inherit;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+
+    font: inherit;
+    font-weight: inherit;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.shared-table-sort-button::after {
+    content: "↕";
+
+    opacity: 0.65;
+    font-size: 10px;
+}
+
+.shared-table-sort-button.sorted-asc::after {
+    content: "↑";
+    opacity: 1;
+}
+
+.shared-table-sort-button.sorted-desc::after {
+    content: "↓";
+    opacity: 1;
+}
+
+.shared-table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.shared-table-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 64px;
+
+    padding: 3px 8px;
+
+    border: 1px solid #2b415f;
+    border-radius: 999px;
+
+    background: #16263a;
+    color: #dbeafe;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.shared-table-empty-state {
+    padding: 18px 12px;
+
+    color: #9bb0c8;
+    font-size: 13px;
+    text-align: center;
+}
+
+.shared-table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.shared-table-pagination-status {
+    color: #9bb0c8;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
+
+    .shared-table-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .shared-table-pagination {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}

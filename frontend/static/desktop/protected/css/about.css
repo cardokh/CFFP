@@ -1,0 +1,236 @@
+/* =========================================================
+   ABOUT PAGE
+========================================================= */
+
+.about-content {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--protected-panel-gap);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.about-card {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    padding: 22px;
+
+    background: #0c1725;
+
+    border: 1px solid #1b2b40;
+    border-radius: 18px;
+
+    box-sizing: border-box;
+}
+
+.about-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.about-card p {
+    margin: 0 0 12px;
+
+    color: #b9cde2;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.about-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.about-hero-card {
+    padding: 24px;
+}
+
+.about-hero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.about-logo {
+    width: 72px;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 22px;
+
+    background:
+        radial-gradient(circle at 35% 30%, #66c7ff, #1d6ed1 72%);
+
+    color: #061321;
+
+    font-size: 34px;
+    font-weight: 900;
+
+    box-shadow:
+        0 0 22px rgba(79, 195, 247, 0.35),
+        inset 0 0 14px rgba(255, 255, 255, 0.18);
+}
+
+.about-hero-copy h1 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: 900;
+}
+
+.about-hero-copy p {
+    max-width: 720px;
+
+    color: #c3d6ea;
+    font-size: 15px;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: var(--protected-panel-gap);
+}
+
+/* =========================================================
+   VERSION
+========================================================= */
+
+.about-version-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    margin-bottom: 14px;
+    padding: 18px;
+
+    background: #101d2d;
+
+    border: 1px solid #2b415f;
+    border-radius: 16px;
+}
+
+.about-version-label {
+    color: #9bb0c8;
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.about-version-box strong {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   TEAM
+========================================================= */
+
+.about-team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.about-team-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    min-height: 76px;
+    padding: 16px;
+
+    background:
+        linear-gradient(145deg, #101d2d, #13263b);
+
+    border: 1px solid #2b415f;
+    border-radius: 16px;
+}
+
+.about-team-avatar {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background:
+        radial-gradient(circle at 35% 30%, #66c7ff, #1d6ed1 72%);
+
+    color: #061321;
+
+    font-size: 20px;
+    font-weight: 900;
+
+    box-shadow:
+        0 0 16px rgba(79, 195, 247, 0.25),
+        inset 0 0 10px rgba(255, 255, 255, 0.14);
+}
+
+.about-team-card strong {
+    display: block;
+
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.about-team-card span {
+    display: block;
+    margin-top: 4px;
+
+    color: #9bb0c8;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .about-content {
+        height: auto;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-hero {
+        align-items: flex-start;
+    }
+}

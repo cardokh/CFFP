@@ -1,0 +1,18 @@
+{
+    "entities": [
+        "users",
+        "lesson_categories",
+        "lesson_types",
+        "lesson_status_types",
+        "embodiment_types",
+        "interaction_styles",
+        "learning_items",
+        "quiz_questions",
+        "quiz_question_options",
+        "lessons",
+        "lesson_learning_items",
+        "lesson_quiz_questions",
+        "user_lessons",
+        "lesson_results"
+    ]
+}

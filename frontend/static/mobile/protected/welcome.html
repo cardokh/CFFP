@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Mobile Welcome | HejSan
+    </title>
+
+    <link rel="stylesheet" href="./css/welcome.css">
+
+</head>
+
+<body>
+
+    <main class="mobile-welcome-layout">
+
+        <section class="mobile-welcome-shell">
+
+            <div id="mobile-top-panel-container"></div>
+
+            <section class="mobile-animation-panel">
+
+                <div class="animation-orbit">
+
+                    <div class="orbit-ring orbit-ring-one"></div>
+                    <div class="orbit-ring orbit-ring-two"></div>
+                    <div class="orbit-ring orbit-ring-three"></div>
+
+                    <div class="floating-bubble bubble-one">Hej!</div>
+                    <div class="floating-bubble bubble-two">Tack!</div>
+                    <div class="floating-bubble bubble-three">Bra!</div>
+
+                    <div class="robot-core">
+                        🤖
+                    </div>
+
+                    <div class="sound-bars">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="desktop-experience-note">
+
+                <p>
+                    The full interactive lesson experience is currently
+                    available in the desktop version of HejSan.
+                </p>
+
+            </section>
+
+            <div id="mobile-bottom-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+    <script src="/shared/interaction-style.js"></script>
+    <script src="/shared/session-manager.js"></script>
+
+    <script src="/mobile/shared/components/top-panel/top-panel.js"></script>
+    <script src="/mobile/shared/components/bottom-panel/bottom-panel.js"></script>
+
+    <script>
+        loadMobileTopPanel("dashboard");
+
+        loadMobileBottomPanel({
+            desktopTarget:
+                window.LLA_PATHS.desktop.protected.dashboard
+        });
+    </script>
+
+    <script src="./js/welcome.js"></script>
+
+</body>
+
+</html>

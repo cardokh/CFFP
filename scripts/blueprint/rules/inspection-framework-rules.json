@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "inspection-framework-rules",
+    "description": "Defines architecture rules for inspection scripts, governance checks, and future rule-engine evolution.",
+    "rules": [
+        {
+            "ruleId": "INSPECTION-001",
+            "name": "Inspection scripts use rule catalogues",
+            "description": "Inspection scripts should read rule definitions from JSON rule catalogues rather than embedding rule metadata only in code.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "INSPECTION-002",
+            "name": "Entity-specific deviations use overrides",
+            "description": "Entity-specific CRUD deviations must be represented through ruleOverrides rather than hardcoded exceptions.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "INSPECTION-003",
+            "name": "Disabled rules are reported",
+            "description": "Disabled rules must produce structured findings explaining that the rule is disabled and why.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "INSPECTION-004",
+            "name": "Console output stays concise",
+            "description": "Inspection scripts should print one-line terminal summaries and write detailed reports to output folders.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "INSPECTION-005",
+            "name": "Inspection framework evolves toward generic rule evaluation",
+            "description": "Inspection scripts should move toward reusable rule evaluation infrastructure rather than isolated ad-hoc checks.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "INSPECTION-006",
+            "name": "Inspection scripts must separate rule definitions from rule execution",
+            "description": "Rule metadata/configuration should remain externalized from rule execution logic so the framework can evolve toward reusable rule engines and DSL-style inspection architectures.",
+            "severity": "WARNING"
+        }
+    ]
+}

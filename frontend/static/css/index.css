@@ -1,0 +1,556 @@
+/*
+ * Landing page styling.
+ *
+ * Responsibilities:
+ * - Public application landing page
+ * - Interaction style selection
+ * - AI / HRI inspired welcome experience
+ */
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+body {
+    margin: 0;
+    padding: 24px;
+
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(circle at top left,
+            rgba(40, 95, 170, 0.35),
+            transparent 30%),
+        linear-gradient(135deg,
+            #07111d 0%,
+            #0d1b2c 45%,
+            #102a44 100%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   LANDING PAGE
+========================================================= */
+
+.landing-page {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.landing-panel {
+    position: relative;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 220px;
+    gap: 30px;
+    align-items: center;
+
+    padding: 40px;
+
+    border-radius: 28px;
+
+    background:
+        radial-gradient(circle at 20% 25%,
+            rgba(88, 166, 255, 0.24),
+            transparent 28%),
+        radial-gradient(circle at 80% 20%,
+            rgba(255, 205, 86, 0.18),
+            transparent 26%),
+        linear-gradient(135deg,
+            #07111d 0%,
+            #0d1b2c 48%,
+            #102a44 100%);
+
+    border: 1px solid #2a4f78;
+
+    box-shadow:
+        0 0 35px rgba(63, 145, 255, 0.18),
+        inset 0 0 45px rgba(93, 173, 255, 0.08);
+}
+
+.landing-glow {
+    position: absolute;
+    inset: -120px;
+
+    background:
+        conic-gradient(from 180deg,
+            transparent,
+            rgba(82, 173, 255, 0.18),
+            transparent,
+            rgba(255, 210, 91, 0.14),
+            transparent);
+
+    animation: rotateGlow 18s linear infinite;
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   ROBOT
+========================================================= */
+
+.robot-orbit-zone {
+    position: relative;
+    z-index: 1;
+
+    width: 240px;
+    height: 240px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orbit-ring {
+    position: absolute;
+
+    border-radius: 50%;
+    border: 1px solid rgba(91, 172, 255, 0.42);
+
+    box-shadow:
+        0 0 22px rgba(74, 156, 255, 0.2),
+        inset 0 0 22px rgba(74, 156, 255, 0.12);
+}
+
+.ring-one {
+    width: 116px;
+    height: 116px;
+
+    animation: pulseRing 2.8s ease-in-out infinite;
+}
+
+.ring-two {
+    width: 168px;
+    height: 168px;
+
+    border-style: dashed;
+
+    animation: rotateRing 14s linear infinite;
+}
+
+.ring-three {
+    width: 220px;
+    height: 220px;
+
+    border-color: rgba(255, 214, 94, 0.34);
+
+    animation: rotateRingReverse 20s linear infinite;
+}
+
+.robot-core {
+    position: relative;
+
+    width: 96px;
+    height: 96px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 28px;
+
+    background:
+        radial-gradient(circle at 35% 30%,
+            #2e8fff,
+            #10243a 68%);
+
+    border: 1px solid #5aaeff;
+
+    box-shadow:
+        0 0 28px rgba(75, 167, 255, 0.75),
+        inset 0 0 18px rgba(255, 255, 255, 0.12);
+
+    animation: floatRobot 3.8s ease-in-out infinite;
+}
+
+.robot-face {
+    z-index: 2;
+    font-size: 42px;
+}
+
+.robot-pulse {
+    position: absolute;
+    inset: -14px;
+
+    border-radius: 36px;
+    border: 1px solid rgba(92, 176, 255, 0.45);
+
+    animation: robotPulse 1.8s ease-out infinite;
+}
+
+.floating-token {
+    position: absolute;
+    z-index: 3;
+
+    padding: 6px 10px;
+
+    color: #d9efff;
+    font-size: 12px;
+    font-weight: 800;
+
+    background: rgba(9, 21, 36, 0.86);
+
+    border: 1px solid rgba(95, 176, 255, 0.6);
+    border-radius: 999px;
+
+    box-shadow: 0 0 16px rgba(83, 168, 255, 0.35);
+}
+
+.token-one {
+    top: 32px;
+    left: 26px;
+}
+
+.token-two {
+    top: 82px;
+    right: 18px;
+}
+
+.token-three {
+    bottom: 38px;
+    left: 54px;
+}
+
+/* =========================================================
+   COPY
+========================================================= */
+
+.landing-copy {
+    position: relative;
+    z-index: 1;
+}
+
+.landing-eyebrow {
+    margin: 0 0 10px;
+
+    color: #ffd76b;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.landing-copy h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 56px;
+    line-height: 1.05;
+}
+
+.landing-description {
+    max-width: 620px;
+
+    margin-top: 20px;
+
+    color: #c3d6ea;
+
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.interaction-buttons {
+    margin-top: 35px;
+
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.style-button {
+    min-width: 220px;
+
+    padding: 16px 24px;
+
+    border-radius: 999px;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.primary-button {
+    color: white;
+
+    background: linear-gradient(135deg,
+            #57b0ff,
+            #1f6fd1);
+
+    border: 1px solid #8dd0ff;
+
+    box-shadow:
+        0 0 22px rgba(67, 156, 255, 0.42);
+}
+
+.secondary-button {
+    color: #dceeff;
+
+    background: rgba(10, 25, 42, 0.86);
+
+    border: 1px solid #4b7cab;
+}
+
+.style-button:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   SIGNAL PANEL
+========================================================= */
+
+.signal-panel {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.signal-card {
+    padding: 14px;
+
+    border-radius: 16px;
+
+    background: rgba(8, 20, 34, 0.78);
+
+    border: 1px solid rgba(84, 160, 231, 0.55);
+}
+
+.signal-label {
+    display: block;
+
+    color: #8fb0ce;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+.signal-card strong {
+    display: block;
+    margin-top: 6px;
+
+    color: white;
+}
+
+.signal-bars {
+    height: 56px;
+
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 12px;
+
+    border-radius: 16px;
+
+    background: rgba(8, 20, 34, 0.62);
+
+    border: 1px solid rgba(84, 160, 231, 0.38);
+}
+
+.signal-bars span {
+    width: 7px;
+
+    border-radius: 999px;
+
+    background: linear-gradient(180deg,
+            #9bd8ff,
+            #3d91ff);
+
+    box-shadow: 0 0 14px rgba(83, 171, 255, 0.6);
+
+    animation: signalBars 1.2s ease-in-out infinite;
+}
+
+.signal-bars span:nth-child(1) {
+    height: 18px;
+}
+
+.signal-bars span:nth-child(2) {
+    height: 32px;
+    animation-delay: 0.1s;
+}
+
+.signal-bars span:nth-child(3) {
+    height: 42px;
+    animation-delay: 0.2s;
+}
+
+.signal-bars span:nth-child(4) {
+    height: 28px;
+    animation-delay: 0.3s;
+}
+
+.signal-bars span:nth-child(5) {
+    height: 16px;
+    animation-delay: 0.4s;
+}
+
+@keyframes signalBars {
+
+    0%,
+    100% {
+        transform: scaleY(0.72);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+
+
+.signal-bars span:nth-child(1) {
+    height: 18px;
+}
+
+.signal-bars span:nth-child(2) {
+    height: 32px;
+}
+
+.signal-bars span:nth-child(3) {
+    height: 42px;
+}
+
+.signal-bars span:nth-child(4) {
+    height: 28px;
+}
+
+.signal-bars span:nth-child(5) {
+    height: 16px;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes rotateGlow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateRing {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateRingReverse {
+    from {
+        transform: rotate(360deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes pulseRing {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes floatRobot {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes robotPulse {
+    from {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+
+    to {
+        transform: scale(1.24);
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .landing-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .robot-orbit-zone {
+        margin: 0 auto;
+    }
+
+    .signal-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 16px;
+    }
+
+    .landing-panel {
+        padding: 24px;
+    }
+
+    .landing-copy h1 {
+        font-size: 40px;
+    }
+
+    .style-button {
+        width: 100%;
+        min-width: auto;
+    }
+}

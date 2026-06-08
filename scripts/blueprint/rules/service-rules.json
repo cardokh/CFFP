@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "service-rules",
+    "description": "Defines service-layer responsibilities and prevents business orchestration from leaking into transport or persistence concerns.",
+    "rules": [
+        {
+            "ruleId": "SERVICE-001",
+            "name": "Services must not build raw API response dictionaries",
+            "description": "Services must not construct frontend/API transport payload dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SERVICE-002",
+            "name": "Services must not contain SQL",
+            "description": "Services must not contain SQL statements or direct database cursor operations.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SERVICE-003",
+            "name": "Services must not parse raw request dictionaries",
+            "description": "Services must receive DTOs/domain objects from route/mapper boundaries rather than raw HTTP payload dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SERVICE-004",
+            "name": "Services must not manually define API/frontend field names",
+            "description": "Services must not know camelCase frontend/API field names or manually construct transport fields.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SERVICE-005",
+            "name": "Services return domain-level results",
+            "description": "Services should return domain objects, DTOs, booleans, lists, or use-case result objects rather than HTTP responses.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "SERVICE-006",
+            "name": "Services should coordinate use cases, not infrastructure",
+            "description": "Services should orchestrate business use cases and coordinate repositories, validators, domain operations, and infrastructure abstractions without becoming infrastructure implementations themselves.",
+            "severity": "WARNING"
+        }
+    ]
+}

@@ -1,0 +1,213 @@
+/* =========================================================
+   LEARNING ITEM DETAILS PAGE
+========================================================= */
+
+.main-content {
+    min-width: 0;
+    padding: 20px 10px;
+}
+
+.learning-item-details-content {
+    --learning-items-admin-width: var(--admin-content-width);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.learning-item-details-card {
+    width: var(--learning-items-admin-width);
+    max-width: 100%;
+
+    margin: 0;
+
+    background: #0c1725;
+
+    border: 1px solid #1b2b40;
+    border-radius: 16px;
+
+    padding: 18px;
+}
+
+.learning-item-details-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   INNER CONTENT WIDTH (CICP)
+========================================================= */
+
+.learning-item-details-inner {
+    width: 820px;
+    max-width: 100%;
+}
+
+/* =========================================================
+   DETAILS GRID
+========================================================= */
+
+.learning-item-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.learning-item-details-row {
+    display: grid;
+    gap: 18px;
+}
+
+.learning-item-details-row-primary {
+    grid-template-columns: 90px 130px minmax(220px, 1fr) 90px;
+}
+
+.learning-item-details-row-language,
+.learning-item-details-row-learning-support {
+    grid-template-columns: 1fr 1fr;
+}
+
+.learning-item-details-row-audit {
+    grid-template-columns: 200px 200px 140px;
+}
+
+.learning-item-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.learning-item-detail-label {
+    color: #8fa2b8;
+    font-size: 11px;
+}
+
+.learning-item-detail-value {
+    min-height: 36px;
+
+    display: flex;
+    align-items: center;
+
+    border: 1px solid #1b2b40;
+    border-radius: 10px;
+
+    padding: 9px 12px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 14px;
+
+    overflow-wrap: break-word;
+}
+
+.learning-item-detail-value.multiline {
+    min-height: 52px;
+    align-items: flex-start;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.learning-item-details-actions {
+    margin-top: 18px;
+    padding-top: 16px;
+
+    border-top: 1px solid #1b2b40;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.learning-item-details-actions button:first-child {
+    margin-right: auto;
+}
+
+.learning-item-details-button {
+    border: 1px solid #2a3f5f;
+    border-radius: 999px;
+
+    padding: 7px 14px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.learning-item-details-button:hover {
+    background: #1b2f49;
+}
+
+.learning-item-details-button.delete {
+    border-color: #5f2a2a;
+    color: #ffb4b4;
+}
+
+.learning-item-details-button.delete:hover {
+    background: #351b1b;
+}
+
+/* =========================================================
+   DISABLED BUTTONS
+========================================================= */
+
+.learning-item-details-button:disabled,
+.learning-item-details-button:disabled:hover {
+    border-color: #273142;
+    background: #111a27;
+    color: #5f6f82;
+
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.learning-item-details-button.delete:disabled,
+.learning-item-details-button.delete:disabled:hover {
+    border-color: #3a2a2a;
+    background: #111a27;
+    color: #735858;
+
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .learning-item-details-content {
+        --learning-items-admin-width: 100%;
+    }
+
+    .learning-item-details-inner {
+        width: 100%;
+    }
+
+    .learning-item-details-row-primary,
+    .learning-item-details-row-language,
+    .learning-item-details-row-learning-support,
+    .learning-item-details-row-audit {
+        grid-template-columns: 1fr;
+    }
+}

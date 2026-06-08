@@ -1,0 +1,30 @@
+{
+    "projectRoot": ".",
+    "frontendSourceRootPaths": [
+        "frontend"
+    ],
+    "frontendIncludedFileExtensions": [
+        ".js",
+        ".html",
+        ".css"
+    ],
+    "ignoredFolders": [
+        "__pycache__",
+        ".venv",
+        "node_modules",
+        "output"
+    ],
+    "excludedFrontendUsageFiles": [
+        "frontend/static/shared/api-endpoints.js"
+    ],
+    "frontendEndpointsPath": "scripts/inspections/endpoints/app-endpoints/frontend_endpoints.json",
+    "backendEndpointsPath": "scripts/inspections/endpoints/app-endpoints/backend_endpoints.json",
+    "outputFilePath": "scripts/inspections/endpoints/app-endpoints/backend_endpoint_usage.json",
+    "expectedBackendOnlyEndpoints": [
+        "/api/health",
+        "/api/echo",
+        "/api/ai/speech/generate",
+        "/api/tts",
+        "/api/lesson"
+    ]
+}

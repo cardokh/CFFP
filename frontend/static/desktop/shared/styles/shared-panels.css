@@ -1,0 +1,107 @@
+/*
+ * Shared panel and card styles.
+ *
+ * Responsibilities:
+ * - Provide reusable desktop card/panel styling.
+ * - Standardize borders, backgrounds, legends, and spacing.
+ */
+
+.shared-panel,
+.shared-card {
+    background:
+        radial-gradient(circle at top right,
+            rgba(48, 88, 140, 0.14),
+            transparent 38%),
+        #0c1725;
+
+    border: 1px solid #243a57;
+    border-radius: 14px;
+}
+
+.shared-panel {
+    padding: 10px 12px;
+}
+
+.shared-panel.compact {
+    padding: 8px 12px 10px;
+}
+
+.shared-panel legend,
+.shared-card legend {
+    padding: 0 6px;
+
+    color: #dbeafe;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.shared-card {
+    padding: 10px 12px;
+
+    background-color: #101d2d;
+}
+
+.shared-card-title {
+    margin: 0 0 6px;
+
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+.shared-card-text {
+    margin: 0;
+
+    color: #b9c8d8;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.shared-tag {
+    display: inline-flex;
+
+    padding: 3px 8px;
+
+    border-radius: 7px;
+
+    background: #16263a;
+    color: #dbeafe;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ==========================================================
+   Shared Form Messages
+   ========================================================== */
+
+.form-message {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.form-message.hidden {
+    display: none;
+}
+
+.form-message.success {
+    color: #8ef0b5;
+    background: rgba(20, 90, 50, 0.45);
+    border: 1px solid rgba(70, 180, 110, 0.45);
+}
+
+.form-message.error {
+    color: #ffb4b4;
+    background: rgba(100, 30, 30, 0.45);
+    border: 1px solid rgba(200, 80, 80, 0.45);
+}
+
+.form-message.info {
+    color: #b9d8ff;
+    background: rgba(30, 60, 100, 0.45);
+    border: 1px solid rgba(80, 130, 200, 0.45);
+}

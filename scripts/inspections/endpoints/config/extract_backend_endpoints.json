@@ -1,0 +1,12 @@
+{
+    "projectRoot": ".",
+    "routeRegistryFiles": [
+        "backend/src/api/route_registry.py",
+        "backend/src/api/modules/lla/routes/lla_route_registry.py"
+    ],
+    "apiPathFiles": [
+        "backend/src/api/api_paths.py",
+        "backend/src/api/modules/lla/lla_api_paths.py"
+    ],
+    "outputFilePath": "scripts/inspections/endpoints/app-endpoints/backend_endpoints.json"
+}

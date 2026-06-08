@@ -1,0 +1,20 @@
+{
+    "targetFolder": "docs/blueprint/rules",
+    "outputFileName": "write_blueprint_rules_result.json",
+    "ruleFiles": [
+        "naming-convention-rules.json",
+        "hardcoding-rules.json",
+        "scripting-blueprint-rules.json",
+        "layering-rules.json",
+        "route-conventions-rules.json",
+        "dto-rules.json",
+        "repository-rules.json",
+        "service-rules.json",
+        "mapper-rules.json",
+        "validator-rules.json",
+        "frontend-architecture-rules.json",
+        "css-architecture-rules.json",
+        "api-contract-rules.json",
+        "inspection-framework-rules.json"
+    ]
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Learning Item | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-messages.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/learning-item-fields.css">
+    <link rel="stylesheet" href="./css/learning-item-create.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="learning-item-create-content">
+
+                    <div class="learning-item-create-scroll-panel">
+
+                        <fieldset class="learning-item-details-panel">
+                            <legend>Learning Item Details</legend>
+
+                            <form id="learningItemCreateForm" class="learning-item-create-form">
+
+                                <div class="form-row item-type-row">
+                                    <label for="itemType">Type</label>
+                                    <select id="itemType" required>
+                                        <option value="">Loading types...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row category-row">
+                                    <label for="categoryId">Category</label>
+
+                                    <select id="categoryId" required>
+                                        <option value="">Select category</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row active-row checkbox-row">
+                                    <label>
+                                        <input type="checkbox" id="isActive" checked>
+                                        Active
+                                    </label>
+                                </div>
+
+                                <div class="form-row source-text-row">
+                                    <label for="sourceText">Swedish</label>
+                                    <textarea id="sourceText" rows="3" required></textarea>
+                                </div>
+
+                                <div class="form-row english-translation-row">
+                                    <label for="englishTranslation">English</label>
+                                    <textarea id="englishTranslation" rows="3" required></textarea>
+                                </div>
+
+                                <div class="form-row pronunciation-row">
+                                    <label for="pronunciation">Pronunciation</label>
+                                    <textarea id="pronunciation" rows="3"></textarea>
+                                </div>
+
+                                <div class="form-row example-text-row">
+                                    <label for="exampleText">Example sentence</label>
+                                    <textarea id="exampleText" rows="3"></textarea>
+                                </div>
+
+                            </form>
+
+                        </fieldset>
+
+                    </div>
+
+                    <section class="shared-message-panel">
+                        <div id="learningItemCreateMessage" class="form-message hidden"></div>
+                    </section>
+
+                    <section class="learning-item-create-toolbar-panel">
+
+                        <div class="learning-item-create-toolbar-left">
+
+                            <button id="backToLearningItemsButton" class="learning-item-create-button secondary"
+                                type="button">
+                                Back to learning items
+                            </button>
+
+                        </div>
+
+                        <div class="learning-item-create-toolbar-right">
+
+                            <button id="createLearningItemButton" class="learning-item-create-button primary"
+                                type="submit" form="learningItemCreateForm">
+                                Create learning item
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/learning-item-create.js?v=2";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{
+    "ruleSetName": "validator-rules",
+    "description": "Defines validation responsibilities and placement.",
+    "rules": [
+        {
+            "ruleId": "VALIDATOR-001",
+            "name": "Validators validate external input",
+            "description": "Incoming request payloads must be validated before they are mapped into service request DTOs.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "VALIDATOR-002",
+            "name": "Validators use API boundary names",
+            "description": "Payload validators at the route/API boundary must validate camelCase JSON field names.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "VALIDATOR-003",
+            "name": "Validators centralize reusable validation",
+            "description": "Reusable validation logic must live in validator modules/classes rather than being duplicated in route handlers.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "VALIDATOR-004",
+            "name": "Validators do not perform persistence",
+            "description": "Validators must not contain SQL or direct repository persistence logic.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "VALIDATOR-005",
+            "name": "Validators should remain rule-focused",
+            "description": "Validators should focus on validation concerns only and should not perform orchestration, transport formatting, persistence coordination, or business workflow execution.",
+            "severity": "WARNING"
+        }
+    ]
+}

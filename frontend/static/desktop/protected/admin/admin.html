@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="./css/admin.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="admin-dashboard-content">
+
+                    <header class="admin-dashboard-header">
+
+                        <h1>Admin Workspace</h1>
+
+                        <p>
+                            Manage users, lessons, categories, learning items,
+                            quiz questions, and future learning analytics.
+                        </p>
+                    </header>
+
+                    <section class="admin-dashboard-grid" aria-label="Admin modules">
+
+                        <a class="admin-dashboard-card" href="/desktop/protected/admin/users/users.html">
+                            <span class="admin-dashboard-card-icon">👥</span>
+                            <h2>Users</h2>
+                            <p>Manage learner accounts, admin access, and platform users.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="admin-dashboard-card" href="/desktop/protected/admin/lessons/lessons.html">
+                            <span class="admin-dashboard-card-icon">📚</span>
+                            <h2>Lessons</h2>
+                            <p>Create and maintain Swedish lesson structures and learning flows.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="admin-dashboard-card"
+                            href="/desktop/protected/admin/lesson-categories/lesson-categories.html">
+                            <span class="admin-dashboard-card-icon">🧩</span>
+                            <h2>Categories</h2>
+                            <p>Organize lessons into reusable learning groups and themes.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="admin-dashboard-card"
+                            href="/desktop/protected/admin/learning-items/learning-items.html">
+                            <span class="admin-dashboard-card-icon">📝</span>
+                            <h2>Learning Items</h2>
+                            <p>Manage vocabulary, examples, pronunciation, and practice content.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="admin-dashboard-card"
+                            href="/desktop/protected/admin/quiz-questions/quiz-questions.html">
+                            <span class="admin-dashboard-card-icon">❓</span>
+                            <h2>Quiz Questions</h2>
+                            <p>Maintain quiz prompts, answers, scoring, and evaluation content.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="admin-dashboard-card" href="/desktop/protected/admin/statistics/statistics.html">
+                            <span class="admin-dashboard-card-icon">📊</span>
+                            <h2>Statistics</h2>
+                            <p>Future analytics for learning progress, usage, and platform activity.</p>
+                            <span class="admin-dashboard-card-action">Open module →</span>
+                        </a>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin");
+    </script>
+
+</body>
+
+</html>

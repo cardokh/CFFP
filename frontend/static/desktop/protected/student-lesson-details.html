@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Details | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/protected/css/student-protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+
+    <link rel="stylesheet" href="./css/student-lesson-details.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <section class="protected-content-panel">
+
+                <div class="student-lesson-details-content">
+
+                    <div id="studentLessonDetailsMessage" class="form-message hidden"></div>
+
+                    <section class="student-lesson-page-content-panel">
+
+                        <section class="student-lesson-content-panel">
+
+                            <section class="student-lesson-instructions-panel">
+
+                                <div class="student-lesson-instructions-content">
+
+                                    <p class="student-lesson-instructions-eyebrow">
+                                        Before you begin
+                                    </p>
+
+                                    <h1 class="student-lesson-instructions-title">
+                                        You are about to start this lesson.
+                                    </h1>
+
+                                    <p class="student-lesson-instructions-description">
+                                        Review the lesson details and learning items below.<br>
+                                        The lesson consists of learning items followed by a short quiz.<br>
+                                        Complete the lesson and quiz to track your progress.
+                                    </p>
+
+                                </div>
+
+                                <div class="student-lesson-instructions-steps">
+
+                                    <div class="student-lesson-step">
+                                        <span>01</span>
+                                        Review
+                                    </div>
+
+                                    <div class="student-lesson-step">
+                                        <span>02</span>
+                                        Sign up
+                                    </div>
+
+                                    <div class="student-lesson-step">
+                                        <span>03</span>
+                                        Start lesson
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+                            <fieldset class="lesson-metadata-panel">
+                                <legend>Lesson details</legend>
+
+                                <div id="studentLessonDetailsCard">
+                                    <p>Loading lesson details...</p>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="shared-panel student-lesson-learning-items-card">
+                                <legend>Learning Items</legend>
+
+                                <div class="student-lesson-learning-items-table-inner">
+
+                                    <div class="shared-table-wrapper">
+
+                                        <table class="shared-table student-lesson-learning-items-table">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <button class="shared-table-sort-button" data-sort-column="0"
+                                                            data-sort-type="number" type="button">
+                                                            Order
+                                                        </button>
+                                                    </th>
+
+                                                    <th>
+                                                        <button class="shared-table-sort-button" data-sort-column="1"
+                                                            type="button">
+                                                            Swedish
+                                                        </button>
+                                                    </th>
+
+                                                    <th>
+                                                        <button class="shared-table-sort-button" data-sort-column="2"
+                                                            type="button">
+                                                            English
+                                                        </button>
+                                                    </th>
+
+                                                    <th>
+                                                        <button class="shared-table-sort-button" data-sort-column="3"
+                                                            type="button">
+                                                            Type
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="lessonLearningItemsTableBody">
+                                                <tr>
+                                                    <td colspan="4">
+                                                        Loading learning items...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+                        </section>
+
+                        <section class="shared-toolbar-panel shared-table-toolbar student-lesson-toolbar-panel">
+
+                            <div class="shared-table-toolbar-left">
+
+                                <button id="backToMyLessonsButton"
+                                    class="shared-button secondary shared-table-toolbar-action" type="button">
+                                    Back to lessons
+                                </button>
+
+                            </div>
+
+                            <div class="shared-table-toolbar-right">
+
+                                <button id="signUpLessonButton"
+                                    class="shared-button primary shared-table-toolbar-action" type="button">
+                                    Sign up
+                                </button>
+
+                                <button id="withdrawLessonButton"
+                                    class="shared-button danger shared-table-toolbar-action" type="button">
+                                    Withdraw
+                                </button>
+
+                                <button id="startLessonButton" class="shared-button primary shared-table-toolbar-action"
+                                    type="button">
+                                    Start lesson
+                                </button>
+
+                            </div>
+
+                        </section>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+    <script src="/desktop/shared/js/table-sorter.js"></script>
+
+    <script>
+        loadProtectedWorkspace("available-lessons")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/student-lesson-details.js?v=1";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

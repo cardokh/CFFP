@@ -1,0 +1,40 @@
+.quiz-questions-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+}
+
+.quiz-questions-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+.quiz-questions-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.quiz-questions-table-inner {
+    width: 100%;
+    max-width: 100%;
+}
+
+.quiz-questions-table tbody tr[data-quiz-question-id] {
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+
+    .quiz-questions-table-inner {
+        width: 100%;
+    }
+}

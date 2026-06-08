@@ -1,0 +1,45 @@
+:root {
+    --welcome-shell-width: 1180px;
+    --welcome-shell-height: 700px;
+
+    --welcome-sidebar-width: 150px;
+    --welcome-sidebar-height: 700px;
+
+    --welcome-main-width: 1030px;
+    --welcome-main-height: 700px;
+
+    --welcome-main-padding-top: 18px;
+    --welcome-main-padding-right: 5px;
+    --welcome-main-padding-bottom: 16px;
+    --welcome-main-padding-left: 5px;
+
+    --welcome-panel-gap: 14px;
+
+    --welcome-panel-stack-width: 1020px;
+    --welcome-panel-stack-height: 666px;
+
+    --welcome-header-width: 1020px;
+    --welcome-header-height: 92px;
+
+    --welcome-content-width: 1020px;
+    --welcome-content-height: 511px;
+
+    --welcome-footer-width: 1020px;
+    --welcome-footer-height: 35px;
+
+    --protected-sidebar-width: 150px;
+    --protected-sidebar-height: 700px;
+
+    --protected-header-width: 1020px;
+    --protected-header-height: 92px;
+
+    --protected-content-width: 1020px;
+    --protected-content-height: 511px;
+
+    --protected-footer-width: 1020px;
+    --protected-footer-height: 35px;
+
+    --protected-panel-gap: 14px;
+    --protected-content-padding-x: 5px;
+    --protected-content-padding-y: 5px;
+}

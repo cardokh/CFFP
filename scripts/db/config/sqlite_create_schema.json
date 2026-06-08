@@ -1,0 +1,869 @@
+{
+    "scriptName": "sqlite_create_schema",
+    "mode": "create_schema",
+    "databaseConfigPath": "scripts/db/config/database.json",
+    "entitiesConfigPath": "scripts/db/config/entities.json",
+    "tables": {
+        "users": {
+            "columns": [
+                {
+                    "name": "user_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "display_name",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "email",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "password_hash",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "is_verified",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "is_admin",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "0"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        "lesson_categories": {
+            "columns": [
+                {
+                    "name": "category_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ]
+        },
+        "lesson_types": {
+            "columns": [
+                {
+                    "name": "lesson_type_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ]
+        },
+        "lesson_status_types": {
+            "columns": [
+                {
+                    "name": "lesson_status_type_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "code",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "display_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ]
+        },
+        "embodiment_types": {
+            "columns": [
+                {
+                    "name": "embodiment_type_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "code",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ]
+        },
+        "interaction_styles": {
+            "columns": [
+                {
+                    "name": "interaction_style_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "code",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ]
+        },
+        "learning_items": {
+            "columns": [
+                {
+                    "name": "item_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "category_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "item_type",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "source_text",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "english_translation",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "pronunciation",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "example_text",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "category_id"
+                    ],
+                    "references": {
+                        "table": "lesson_categories",
+                        "columns": [
+                            "category_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "quiz_questions": {
+            "columns": [
+                {
+                    "name": "question_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "category_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "question_text",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "category_id"
+                    ],
+                    "references": {
+                        "table": "lesson_categories",
+                        "columns": [
+                            "category_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "quiz_question_options": {
+            "columns": [
+                {
+                    "name": "option_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "question_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "option_text",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "is_correct",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "0"
+                },
+                {
+                    "name": "display_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "question_id"
+                    ],
+                    "references": {
+                        "table": "quiz_questions",
+                        "columns": [
+                            "question_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                }
+            ]
+        },
+        "lessons": {
+            "columns": [
+                {
+                    "name": "lesson_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "category_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "lesson_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "embodiment_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "interaction_style_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "title",
+                    "type": "TEXT",
+                    "nullable": false
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "category_id"
+                    ],
+                    "references": {
+                        "table": "lesson_categories",
+                        "columns": [
+                            "category_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_type_id"
+                    ],
+                    "references": {
+                        "table": "lesson_types",
+                        "columns": [
+                            "lesson_type_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "embodiment_type_id"
+                    ],
+                    "references": {
+                        "table": "embodiment_types",
+                        "columns": [
+                            "embodiment_type_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "interaction_style_id"
+                    ],
+                    "references": {
+                        "table": "interaction_styles",
+                        "columns": [
+                            "interaction_style_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "lesson_learning_items": {
+            "columns": [
+                {
+                    "name": "lesson_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "item_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "display_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "primaryKey",
+                    "columns": [
+                        "lesson_id",
+                        "item_id"
+                    ]
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_id"
+                    ],
+                    "references": {
+                        "table": "lessons",
+                        "columns": [
+                            "lesson_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "item_id"
+                    ],
+                    "references": {
+                        "table": "learning_items",
+                        "columns": [
+                            "item_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "lesson_quiz_questions": {
+            "columns": [
+                {
+                    "name": "lesson_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "question_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "display_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "primaryKey",
+                    "columns": [
+                        "lesson_id",
+                        "question_id"
+                    ]
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_id"
+                    ],
+                    "references": {
+                        "table": "lessons",
+                        "columns": [
+                            "lesson_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "question_id"
+                    ],
+                    "references": {
+                        "table": "quiz_questions",
+                        "columns": [
+                            "question_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "user_lessons": {
+            "columns": [
+                {
+                    "name": "user_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "lesson_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "lesson_status_type_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "assigned_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "started_at",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "completed_at",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "1"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_by",
+                    "type": "TEXT"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "primaryKey",
+                    "columns": [
+                        "user_id",
+                        "lesson_id"
+                    ]
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "user_id"
+                    ],
+                    "references": {
+                        "table": "users",
+                        "columns": [
+                            "user_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_id"
+                    ],
+                    "references": {
+                        "table": "lessons",
+                        "columns": [
+                            "lesson_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_status_type_id"
+                    ],
+                    "references": {
+                        "table": "lesson_status_types",
+                        "columns": [
+                            "lesson_status_type_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "lesson_results": {
+            "columns": [
+                {
+                    "name": "result_id",
+                    "type": "INTEGER",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                {
+                    "name": "user_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "lesson_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "score",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "total_questions",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "completed_at",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "user_id"
+                    ],
+                    "references": {
+                        "table": "users",
+                        "columns": [
+                            "user_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "lesson_id"
+                    ],
+                    "references": {
+                        "table": "lessons",
+                        "columns": [
+                            "lesson_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "scriptName": "extract_frontend_endpoints",
+    "mode": "extract",
+    "sourceFile": "frontend/static/shared/api-endpoints.js",
+    "endpointCount": 9,
+    "endpoints": [
+        "/api/admin/learning-items",
+        "/api/admin/lesson-categories",
+        "/api/admin/lessons",
+        "/api/admin/quiz-questions",
+        "/api/admin/reference-data/lesson-form-options",
+        "/api/admin/users",
+        "/api/auth/forgot-password",
+        "/api/auth/login",
+        "/api/auth/register"
+    ]
+}

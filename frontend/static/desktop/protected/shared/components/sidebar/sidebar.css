@@ -1,0 +1,95 @@
+.sidebar {
+    width: var(--protected-sidebar-width);
+    height: var(--protected-sidebar-height);
+    min-height: var(--protected-sidebar-height);
+
+    background: #0c1725;
+    border-right: 1px solid #182638;
+
+    padding: 28px 14px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 36px;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    color: #eef7ff;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #4fc3f7;
+    color: #07111d;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    font-weight: 900;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu a,
+.sidebar-action-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    text-decoration: none;
+    text-align: left;
+    max-width: 120px;
+}
+
+.menu a {
+    color: #9bb0c8;
+}
+
+.menu a:hover,
+.menu a.active,
+.sidebar-action-button:hover {
+    background: #142234;
+    color: #ffffff;
+    border-color: #263952;
+}
+
+.sidebar-system-actions {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-secondary-menu {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-top: 10px;
+
+    border-top: 1px solid #182638;
+}
+
+.logout-button {
+    color: #ffb4b4;
+}

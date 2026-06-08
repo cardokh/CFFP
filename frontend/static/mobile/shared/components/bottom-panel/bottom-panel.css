@@ -1,0 +1,75 @@
+.mobile-bottom-panel {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    padding:
+        0.9rem 0.7rem calc(0.9rem + env(safe-area-inset-bottom));
+
+    background: rgba(255, 255, 255, 0.82);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+
+    box-shadow:
+        0 -10px 28px rgba(92, 136, 201, 0.12);
+}
+
+.mobile-bottom-panel-button {
+    border: none;
+    background: transparent;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+
+    color: #4c5f92;
+
+    cursor: pointer;
+
+    min-width: 64px;
+
+    transition:
+        transform 0.15s ease,
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+.mobile-bottom-panel-button:hover {
+    transform: translateY(-1px);
+    color: #2f7cf6;
+}
+
+.mobile-bottom-panel-button.active {
+    color: #1f5fd1;
+
+    background:
+        rgba(92, 142, 246, 0.12);
+
+    border-radius: 16px;
+
+    padding:
+        0.35rem 0.55rem;
+}
+
+.mobile-bottom-panel-icon {
+    font-size: 1.2rem;
+}
+
+.mobile-bottom-panel-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.mobile-bottom-panel-logout {
+    color: #d05656;
+}

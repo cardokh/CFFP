@@ -1,0 +1,11 @@
+{
+    "outputDirectory": "scripts/setup/output",
+    "summaryFileName": "bootstrap_project_summary.json",
+    "logFileName": "bootstrap_project.log",
+    "steps": {
+        "createVirtualEnvironment": true,
+        "installDependencies": true,
+        "createDatabaseSchema": true,
+        "seedDatabase": true
+    }
+}

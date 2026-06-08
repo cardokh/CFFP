@@ -1,0 +1,7 @@
+{
+    "scriptName": "inspect_frontend_endpoint_usage",
+    "mode": "inspect",
+    "status": "PASSED",
+    "violationCount": 0,
+    "findings": []
+}

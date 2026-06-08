@@ -1,0 +1,115 @@
+/* =========================================================
+   CONTACT PAGE
+========================================================= */
+
+.contact-content {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--protected-panel-gap);
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.contact-card {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    padding: 22px;
+
+    background: #0c1725;
+
+    border: 1px solid #1b2b40;
+    border-radius: 18px;
+
+    box-sizing: border-box;
+}
+
+.contact-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   CONTACT OPTIONS
+========================================================= */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.contact-option-card {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 20px;
+
+    background: #101d2d;
+
+    border: 1px solid #2b415f;
+    border-radius: 16px;
+}
+
+.contact-icon {
+    font-size: 34px;
+}
+
+.contact-option-card h2 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.contact-option-card p {
+    margin: 0;
+
+    color: #9bb0c8;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.contact-button {
+    margin-top: auto;
+
+    border: 1px solid #4d78a8;
+    border-radius: 999px;
+
+    padding: 8px 14px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.contact-button:hover {
+    background: #1b2f49;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}

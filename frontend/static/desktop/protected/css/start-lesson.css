@@ -1,0 +1,330 @@
+/* =========================================================
+   START LESSON PREVIEW PAGE
+========================================================= */
+
+.start-lesson-content {
+    --start-lesson-inner-width: 100%;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--protected-panel-gap);
+}
+
+/* =========================================================
+   SCROLL LAYOUT
+========================================================= */
+
+.start-lesson-scroll-area {
+    flex: 1;
+    min-height: 0;
+
+    padding-right: 10px;
+
+    overflow-y: auto;
+
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.start-lesson-scroll-area::-webkit-scrollbar {
+    width: 10px;
+}
+
+.start-lesson-scroll-area::-webkit-scrollbar-track {
+    background: #0f1b2b;
+    border-radius: 10px;
+}
+
+.start-lesson-scroll-area::-webkit-scrollbar-thumb {
+    background: #35557a;
+    border-radius: 10px;
+}
+
+.start-lesson-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #4a6f98;
+}
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.start-lesson-card {
+    width: 100%;
+    max-width: 100%;
+
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 4px 18px 0 18px;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    background: #0c1725;
+
+    border: 1px solid #1b2b40;
+    border-radius: 16px;
+}
+
+.start-lesson-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   PREVIEW PANEL
+========================================================= */
+
+.lesson-preview-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding-top: 10px;
+}
+
+/* =========================================================
+   INNER PANELS
+========================================================= */
+
+.lesson-preview-title-panel,
+.lesson-preview-instructions,
+.start-lesson-actions {
+    width: 100%;
+
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+.lesson-preview-title-panel legend,
+.lesson-preview-instructions legend {
+    padding: 0 8px;
+
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   TITLE PANEL
+========================================================= */
+
+.lesson-preview-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    margin-top: 8px;
+}
+
+.lesson-preview-heading {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    flex: 1;
+}
+
+.lesson-preview-heading h1 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 1.25;
+}
+
+.lesson-preview-description {
+    max-width: 620px;
+
+    margin: 0;
+
+    color: #9bb0c8;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.lesson-preview-robot {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background: #101d2d;
+    border: 1px solid #2b415f;
+
+    font-size: 29px;
+}
+
+/* =========================================================
+   INFO GRID
+========================================================= */
+
+.lesson-preview-info-grid {
+    margin-top: 14px;
+
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.lesson-preview-info-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    min-height: 34px;
+
+    padding: 7px 10px;
+
+    background: #101d2d;
+
+    border: 1px solid #2b415f;
+    border-radius: 10px;
+}
+
+.lesson-preview-info-label {
+    color: #8fa2b8;
+    font-size: 11px;
+}
+
+.lesson-preview-info-value {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   INSTRUCTIONS
+========================================================= */
+
+.lesson-preview-instructions ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+
+    color: #b9c8d8;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.lesson-preview-instructions li {
+    margin-bottom: 4px;
+}
+
+.lesson-preview-instructions li:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.start-lesson-message {
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+    padding: 12px 14px;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.start-lesson-message.hidden {
+    display: none;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.start-lesson-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+
+    flex-shrink: 0;
+
+    margin-top: auto;
+    padding: 10px 0 12px 0;
+
+    border-top: 1px solid #1b2b40;
+
+    background: #0c1725;
+}
+
+.start-lesson-actions button:first-child {
+    margin-right: auto;
+}
+
+.start-lesson-button {
+    min-width: 150px;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .lesson-preview-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .start-lesson-content {
+        height: auto;
+    }
+
+    .start-lesson-card {
+        overflow: visible;
+        padding: 18px;
+    }
+
+    .start-lesson-scroll-area {
+        overflow: visible;
+    }
+
+    .lesson-preview-title-row {
+        align-items: flex-start;
+    }
+
+    .start-lesson-actions {
+        position: static;
+
+        margin-top: 14px;
+        padding: 10px 0 0 0;
+
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    .start-lesson-button {
+        width: 100%;
+    }
+}

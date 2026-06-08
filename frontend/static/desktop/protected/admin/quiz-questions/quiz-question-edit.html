@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quiz Question | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-messages.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+
+    <link rel="stylesheet" href="./css/quiz-questions-edit.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="quiz-question-edit-content">
+
+                    <div class="quiz-question-edit-scroll-panel">
+
+                        <fieldset class="quiz-question-details-panel">
+                            <legend>Quiz Question Details</legend>
+
+                            <form id="quizQuestionEditForm" class="quiz-question-edit-form">
+
+                                <input type="hidden" id="questionId">
+
+                                <div class="form-row question-row">
+                                    <label for="questionText">Question</label>
+                                    <textarea id="questionText" rows="2" required></textarea>
+                                </div>
+
+                                <div class="form-row category-row">
+                                    <label for="categoryId">Category</label>
+                                    <select id="categoryId" required></select>
+                                </div>
+
+                                <div class="form-row checkbox-row active-row">
+                                    <label>
+                                        <input type="checkbox" id="isActive">
+                                        Active
+                                    </label>
+                                </div>
+
+                            </form>
+
+                        </fieldset>
+
+                        <fieldset class="quiz-question-option-details-panel">
+                            <legend>Add Answer Option</legend>
+
+                            <div class="quiz-question-option-details-form">
+
+                                <div class="form-row option-text-row">
+                                    <label for="answerOptionText">Option Text</label>
+                                    <input id="answerOptionText" type="text" placeholder="Option text">
+                                </div>
+
+                                <div class="form-row checkbox-row correct-row">
+                                    <label>
+                                        <input type="checkbox" id="answerOptionIsCorrect">
+                                        Correct
+                                    </label>
+                                </div>
+
+                                <button id="addQuizQuestionOptionButton" class="quiz-question-edit-button secondary"
+                                    type="button">
+                                    Add
+                                </button>
+
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="quiz-question-options-panel">
+                            <legend>Answer Options</legend>
+
+                            <div class="shared-table-wrapper quiz-question-options-table-wrapper">
+
+                                <table class="shared-table quiz-question-options-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Order</th>
+                                            <th>Option Text</th>
+                                            <th>Correct</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="quizQuestionOptionsTableBody">
+                                        <tr>
+                                            <td colspan="4">Loading answer options...</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+
+                    <section class="shared-message-panel">
+                        <div id="quizQuestionEditMessage" class="form-message hidden"></div>
+                    </section>
+
+                    <section class="quiz-question-edit-toolbar-panel">
+
+                        <div class="quiz-question-edit-toolbar-left">
+
+                            <button id="backToQuizQuestionsButton" class="quiz-question-edit-button secondary"
+                                type="button">
+                                Back to quiz questions
+                            </button>
+
+                        </div>
+
+                        <div class="quiz-question-edit-toolbar-right">
+
+                            <button id="deleteQuizQuestionButton" class="quiz-question-edit-button secondary delete"
+                                type="button">
+                                Delete
+                            </button>
+
+                            <button id="saveQuizQuestionButton" class="quiz-question-edit-button primary" type="submit"
+                                form="quizQuestionEditForm">
+                                Save
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/quiz-questions-edit.js?v=7";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

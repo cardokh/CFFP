@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LLA Mobile Login</title>
+
+    <link rel="stylesheet" href="./css/mobile.css">
+</head>
+
+<body>
+
+    <!--
+        Mobile login page.
+
+        Responsibilities:
+        - Present the login flow in the mobile interaction style
+        - Collect user credentials
+        - Provide access to registration, password recovery, and demo flow
+        - Delegate login behavior to js/login.js
+    -->
+
+    <div class="page-shell">
+
+        <div class="phone-frame">
+
+            <div class="status-bar">
+                <span>09:40</span>
+                <span class="status-icons">📶 📡 🔋</span>
+            </div>
+
+            <div id="interaction-toolbar-container"></div>
+
+            <div class="login-card">
+
+                <div class="login-header">
+                    <h1>Interactive Learning<br>Assistant <span>// Login</span></h1>
+                </div>
+
+                <div class="robot-hero">
+                    <div class="robot-circle robot-circle-1"></div>
+                    <div class="robot-circle robot-circle-2"></div>
+                    <div class="robot-circle robot-circle-3"></div>
+                    <div class="robot-avatar">🤖</div>
+                </div>
+
+                <div class="form-panel">
+
+                    <div class="panel-handle"></div>
+
+                    <form id="loginForm" novalidate>
+
+                        <div class="input-group">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="email" placeholder="Email">
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" placeholder="Password">
+                        </div>
+
+                        <button type="submit" class="primary-button">
+                            Login
+                        </button>
+
+                    </form>
+
+                    <button type="button" id="tryDemoButton" class="secondary-button">
+                        Try demo account
+                    </button>
+
+                    <p id="error" class="error"></p>
+
+                    <p class="helper-link">
+                        <span id="forgotPasswordLink">Forgot password?</span>
+                    </p>
+
+                    <p class="signup-text">
+                        Don’t have an account? <span id="goToRegisterButton">Sign up</span>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="/shared/frontend-paths.js"></script>
+    <script src="/shared/interaction-style.js"></script>
+    <script src="/shared/api-endpoints.js"></script>
+    <script src="/shared/api.js"></script>
+    <script src="/shared/authentication-api.js"></script>
+    <script src="/shared/session-manager.js"></script>
+    <script src="/shared/auth-messages.js"></script>
+
+    <script src="/mobile/shared/components/interaction-toolbar/interaction-toolbar.js"></script>
+    <script src="./js/login.js"></script>
+
+</body>
+
+</html>

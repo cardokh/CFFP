@@ -1,0 +1,6 @@
+{
+    "databaseType": "sqlite",
+    "backendPathKey": "backendPath",
+    "databasePathKey": "database",
+    "enableForeignKeys": true
+}

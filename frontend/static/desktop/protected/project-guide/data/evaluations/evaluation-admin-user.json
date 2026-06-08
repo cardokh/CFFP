@@ -1,0 +1,75 @@
+{
+    "participantId": "AI Reviewer01",
+    "participantType": "AI Reviewer",
+    "status": "Complete",
+    "tasks": [
+        {
+            "task": "Review admin navigation and workspace structure",
+            "completed": true
+        },
+        {
+            "task": "Review content management flow",
+            "completed": true
+        },
+        {
+            "task": "Review users, lessons, learning items, and quiz question management",
+            "completed": true
+        },
+        {
+            "task": "Review consistency of shared tables, panels, buttons, and protected layout",
+            "completed": true
+        },
+        {
+            "task": "Review evaluation dashboard and JSON-driven results",
+            "completed": true
+        }
+    ],
+    "postTestQuestions": [
+        {
+            "question": "The administration workspace was easy to understand.",
+            "rating": 5
+        },
+        {
+            "question": "The navigation structure was consistent.",
+            "rating": 5
+        },
+        {
+            "question": "The content management flow was clear.",
+            "rating": 5
+        },
+        {
+            "question": "The shared table and panel styling improved usability.",
+            "rating": 5
+        },
+        {
+            "question": "The evaluation results page clearly presented useful information.",
+            "rating": 5
+        },
+        {
+            "question": "The overall application structure felt coherent.",
+            "rating": 5
+        }
+    ],
+    "openEndedQuestions": [
+        {
+            "question": "What did you like most about the application?",
+            "answer": "The strongest part is the consistency across the protected workspace. The repeated layout, shared tables, shared visual language, and predictable navigation make the application feel coherent and easier to understand."
+        },
+        {
+            "question": "Was there any part of the navigation that confused you?",
+            "answer": "The navigation itself was clear. The only area that may need extra guidance is the lesson flow before the quiz, where first-time users may need stronger visual cues about what to do next."
+        },
+        {
+            "question": "What was the most confusing part?",
+            "answer": "The transition from lesson content to quiz activity could be made more explicit."
+        },
+        {
+            "question": "Was there any task that felt difficult?",
+            "answer": "No. The admin-side structure appears predictable, especially because similar pages reuse the same interaction patterns."
+        },
+        {
+            "question": "What would you improve?",
+            "answer": "I would continue refining instructional guidance inside the lesson flow and keep reducing visual density in complex panels. The overall foundation is strong."
+        }
+    ]
+}

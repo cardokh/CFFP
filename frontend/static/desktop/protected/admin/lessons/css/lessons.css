@@ -1,0 +1,27 @@
+/* =========================================================
+   LESSONS PAGE
+========================================================= */
+
+.lessons-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.lessons-card {
+    width: 100%;
+}
+
+.lessons-table-inner {
+    width: 100%;
+}
+
+.lessons-table {
+    width: 100%;
+}
+
+.lessons-table td,
+.lessons-table th {
+    white-space: nowrap;
+}

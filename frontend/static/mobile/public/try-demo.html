@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LLA Demo Access</title>
+
+    <link rel="stylesheet" href="./css/mobile.css">
+</head>
+
+<body>
+
+    <!--
+        Mobile demo access page.
+
+        Responsibilities:
+        - Present the shared demo account in the mobile interaction style
+        - Allow users to explore the app without registration
+        - Delegate demo login behavior to js/try-demo.js
+        - Provide navigation back to the mobile login page
+    -->
+
+    <div class="page-shell">
+
+        <div class="phone-frame">
+
+            <div class="status-bar">
+                <span>09:40</span>
+                <span class="status-icons">📶 📡 🔋</span>
+            </div>
+
+            <div id="interaction-toolbar-container"></div>
+
+            <div class="login-card">
+
+                <div class="login-header">
+                    <h1>Interactive Learning<br>Assistant <span>// Demo</span></h1>
+                </div>
+
+                <div class="robot-hero">
+                    <div class="robot-circle robot-circle-1"></div>
+                    <div class="robot-circle robot-circle-2"></div>
+                    <div class="robot-circle robot-circle-3"></div>
+                    <div class="robot-avatar">🤖</div>
+                </div>
+
+                <div class="form-panel">
+
+                    <div class="panel-handle"></div>
+
+                    <p class="mobile-demo-intro">
+                        Explore the learning experience using our shared demo account.
+                    </p>
+
+                    <div class="input-group">
+                        <span class="input-icon">📧</span>
+                        <input type="text" value="demo@hejsan.local" readonly>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-icon">🔒</span>
+                        <input type="text" value="DemoPassword123" readonly>
+                    </div>
+
+                    <button id="startDemoButton" class="primary-button" type="button">
+                        Start demo
+                    </button>
+
+                    <button id="backToLoginButton" class="secondary-button" type="button">
+                        Back to login
+                    </button>
+
+                    <p id="demoMessage" class="error"></p>
+
+                    <p class="signup-text">
+                        Demo credentials may be reset periodically.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="/shared/frontend-paths.js"></script>
+    <script src="/shared/interaction-style.js"></script>
+    <script src="/shared/api-endpoints.js"></script>
+    <script src="/shared/api.js"></script>
+    <script src="/shared/authentication-api.js"></script>
+    <script src="/shared/session-manager.js"></script>
+
+    <script src="/mobile/shared/components/interaction-toolbar/interaction-toolbar.js"></script>
+    <script src="./js/try-demo.js"></script>
+
+</body>
+
+</html>

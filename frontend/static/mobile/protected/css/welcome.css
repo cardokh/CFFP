@@ -1,0 +1,224 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #26345f;
+}
+
+body {
+    background: linear-gradient(180deg, #d7e9ff, #b9d7ff 45%, #eaf4ff);
+}
+
+.mobile-welcome-layout {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+}
+
+.mobile-welcome-shell {
+    width: 100%;
+    max-width: 430px;
+    min-height: 760px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: 26px 18px 110px;
+    background: linear-gradient(180deg, rgba(118, 185, 255, 0.55), rgba(255, 255, 255, 0.18));
+    box-shadow: 0 20px 48px rgba(92, 136, 201, 0.22);
+}
+
+.mobile-animation-panel {
+    margin-top: 24px;
+    min-height: 360px;
+    border-radius: 30px;
+    background: linear-gradient(180deg, rgba(235, 246, 255, 0.60), rgba(255, 255, 255, 0.20));
+    box-shadow: 0 16px 34px rgba(92, 136, 201, 0.14);
+    position: relative;
+    overflow: hidden;
+}
+
+.animation-orbit {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.44);
+    box-shadow: inset 0 0 24px rgba(255, 255, 255, 0.24);
+    animation: pulseRing 4s ease-in-out infinite;
+}
+
+.orbit-ring-one {
+    width: 220px;
+    height: 220px;
+}
+
+.orbit-ring-two {
+    width: 160px;
+    height: 160px;
+    animation-delay: 0.7s;
+}
+
+.orbit-ring-three {
+    width: 100px;
+    height: 100px;
+    animation-delay: 1.4s;
+}
+
+.robot-core {
+    position: relative;
+    z-index: 4;
+    font-size: 88px;
+    line-height: 1;
+    filter: drop-shadow(0 14px 22px rgba(80, 131, 216, 0.28));
+    animation: floatRobot 3.8s ease-in-out infinite;
+}
+
+.floating-bubble {
+    position: absolute;
+    z-index: 5;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #26345f;
+    font-size: 12px;
+    font-weight: 900;
+    box-shadow: 0 8px 18px rgba(92, 136, 201, 0.16);
+    animation: floatBubble 4.5s ease-in-out infinite;
+}
+
+.bubble-one {
+    top: 78px;
+    left: 48px;
+}
+
+.bubble-two {
+    top: 86px;
+    right: 44px;
+    animation-delay: 0.8s;
+}
+
+.bubble-three {
+    bottom: 88px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 1.5s;
+}
+
+.sound-bars {
+    position: absolute;
+    z-index: 5;
+    bottom: 58px;
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+.sound-bars span {
+    width: 7px;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #5baeff, #2f7cf6);
+    box-shadow: 0 0 12px rgba(47, 124, 246, 0.28);
+    animation: soundPulse 1s ease-in-out infinite;
+}
+
+.sound-bars span:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+.sound-bars span:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+.sound-bars span:nth-child(4) {
+    animation-delay: 0.36s;
+}
+
+.sound-bars span:nth-child(5) {
+    animation-delay: 0.48s;
+}
+
+.desktop-experience-note {
+    margin-top: 16px;
+    border-radius: 22px;
+    padding: 16px 18px;
+    background: linear-gradient(180deg, rgba(235, 246, 255, 0.66), rgba(255, 255, 255, 0.26));
+    box-shadow: 0 10px 24px rgba(92, 136, 201, 0.10);
+    text-align: center;
+}
+
+.desktop-experience-note p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    font-weight: 700;
+    color: #38538c;
+}
+
+@keyframes floatRobot {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-12px) scale(1.03);
+    }
+}
+
+@keyframes pulseRing {
+
+    0%,
+    100% {
+        opacity: 0.42;
+        transform: scale(0.96);
+    }
+
+    50% {
+        opacity: 0.95;
+        transform: scale(1.04);
+    }
+}
+
+@keyframes floatBubble {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.82;
+    }
+
+    50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+@keyframes soundPulse {
+
+    0%,
+    100% {
+        height: 16px;
+        opacity: 0.55;
+    }
+
+    50% {
+        height: 34px;
+        opacity: 1;
+    }
+}

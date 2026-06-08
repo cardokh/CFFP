@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Lesson Player | HejSan
+    </title>
+
+    <link
+            rel="stylesheet"
+            href="./css/lesson-player.css"
+    >
+
+</head>
+
+<body>
+
+<main class="mobile-protected-layout">
+
+    <section class="mobile-main-content">
+
+        <div id="mobile-top-panel-container"></div>
+
+        <div class="container">
+
+            <!-- MESSAGE -->
+
+            <div
+                    id="lessonPlayerMessage"
+                    class="lesson-player-message hidden"
+            >
+            </div>
+
+            <!-- LESSON HEADER -->
+
+            <section class="lesson-header-card">
+
+                <div class="lesson-header-content">
+
+                    <div>
+
+                        <span class="lesson-badge">
+                            Current lesson
+                        </span>
+
+                        <h1 id="lessonPlayerTitle">
+                            Loading lesson...
+                        </h1>
+
+                    </div>
+
+                    <div class="lesson-robot">
+                        🤖
+                    </div>
+
+                </div>
+
+                <div
+                        id="lessonPlayerProgressText"
+                        class="progress-pill"
+                >
+                    Item 1 of 1
+                </div>
+
+            </section>
+
+            <!-- MAIN WORD CARD -->
+
+            <section class="card word-card">
+
+                <span class="card-label">
+                    Swedish
+                </span>
+
+                <div class="phrase-row">
+
+                    <div>
+
+                        <h2 id="sourceText">
+                            —
+                        </h2>
+
+                        <p
+                                id="pronunciationText"
+                                class="hidden-section pronunciation-text"
+                        >
+                            —
+                        </p>
+
+                    </div>
+
+                    <button
+                            id="playSoundButton"
+                            class="sound-btn"
+                            type="button"
+                    >
+                        🔊
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- QUICK LEARNING ACTIONS -->
+
+            <section class="lesson-toggles">
+
+                <button
+                        id="toggleTranslationBtn"
+                        class="toggle-btn"
+                        type="button"
+                >
+                    Reveal meaning
+                </button>
+
+                <button
+                        id="toggleExamplesBtn"
+                        class="toggle-btn"
+                        type="button"
+                >
+                    Examples
+                </button>
+
+            </section>
+
+            <!-- TRANSLATION -->
+
+            <section
+                    id="translationSection"
+                    class="info-card hidden-section"
+            >
+
+                <span class="card-label">
+                    English
+                </span>
+
+                <div class="info-row">
+
+                    <p id="englishTranslation">
+                        —
+                    </p>
+
+                    <button
+                            id="playEnglishSoundButton"
+                            class="sound-btn"
+                            type="button"
+                    >
+                        🔊
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- EXAMPLES -->
+
+            <section
+                    id="examplesSection"
+                    class="info-card hidden-section"
+            >
+
+                <div class="example-top">
+
+                    <span class="card-label">
+                        Example
+                    </span>
+
+                    <button
+                            id="playExampleSoundButton"
+                            class="sound-btn"
+                            type="button"
+                    >
+                        🔊
+                    </button>
+
+                </div>
+
+                <h3 id="exampleText">
+                    —
+                </h3>
+
+                <p id="exampleTranslationText">
+                    Practice this phrase in context.
+                </p>
+
+            </section>
+
+            <!-- QUICK ACTIONS -->
+
+            <section class="quick-actions">
+
+                <button
+                        id="togglePronunciationBtn"
+                        class="quick-icon-btn"
+                        type="button"
+                >
+                    🗣
+                </button>
+
+                <button
+                        class="quick-icon-btn"
+                        type="button"
+                >
+                    ♡
+                </button>
+
+                <button
+                        class="quick-icon-btn"
+                        type="button"
+                >
+                    ✓
+                </button>
+
+                <button
+                        class="quick-icon-btn"
+                        type="button"
+                >
+                    ⟳
+                </button>
+
+            </section>
+
+            <!-- PRIMARY ACTION -->
+
+            <section class="primary-action-section">
+
+                <button
+                        id="startPracticeButton"
+                        class="practice-btn"
+                        type="button"
+                >
+                    Start Practice
+                </button>
+
+
+            </section>
+
+            <!-- NAVIGATION -->
+
+            <section class="navigation-buttons">
+
+                <button
+                        id="previousLearningItemButton"
+                        class="secondary-btn"
+                        type="button"
+                >
+                    Previous
+                </button>
+
+                <button
+                        id="nextLearningItemButton"
+                        class="primary-btn"
+                        type="button"
+                >
+                    Next
+                </button>
+
+            </section>
+
+            <!-- SETTINGS -->
+
+            <button
+                    class="settings-btn"
+                    type="button"
+            >
+                ⚙ Pronunciation settings
+            </button>
+
+            <!-- EXIT -->
+
+            <button
+                    id="backToStartLessonButton"
+                    class="exit-btn"
+                    type="button"
+            >
+                Exit lesson
+            </button>
+
+        </div>
+
+        <div id="mobile-bottom-panel-container"></div>
+
+    </section>
+
+</main>
+
+<script src="/shared/frontend-paths.js"></script>
+
+<script src="/shared/session-manager.js"></script>
+<script src="/shared/api-endpoints.js"></script>
+<script src="/shared/api.js"></script>
+<script src="/shared/ui-render.js"></script>
+
+<script src="../shared/components/top-panel/top-panel.js"></script>
+
+<script src="../shared/components/bottom-panel/bottom-panel.js"></script>
+
+<script>
+
+    loadMobileTopPanel(
+        "my-lessons"
+    );
+
+    loadMobileBottomPanel({
+        desktopTarget:
+        window.LLA_PATHS.desktop.protected.myLessons
+    });
+
+</script>
+
+<script src="./js/lesson-player.js"></script>
+
+</body>
+
+</html>
+```

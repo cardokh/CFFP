@@ -1,0 +1,21 @@
+{
+    "projectRoot": ".",
+    "backendPath": "{projectRoot}/backend",
+    "backendSrcPath": "{backendPath}/src",
+    "environmentFilePath": "{backendPath}/.env",
+    "frontendPath": "{projectRoot}/frontend",
+    "frontendStaticPath": "{frontendPath}/static",
+    "dbFolderPath": "{backendPath}/data",
+    "database": "{dbFolderPath}/auth.db",
+    "scriptsPath": "{projectRoot}/scripts",
+    "databaseScriptsPath": "{scriptsPath}/db",
+    "sharedScriptsPath": "{scriptsPath}/shared",
+    "inspectionsPath": "{scriptsPath}/inspections",
+    "inspectionSharedPath": "{inspectionsPath}/shared",
+    "inspectionRulesPath": "{inspectionsPath}/blueprint_rules",
+    "inspectionConfigPath": "{inspectionsPath}/config",
+    "inspectionOutputPath": "{inspectionsPath}/output",
+    "crudsPath": "{scriptsPath}/cruds",
+    "testsPath": "{scriptsPath}/tests",
+    "fixesPath": "{scriptsPath}/fixes"
+}

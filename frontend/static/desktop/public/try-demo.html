@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LLA Demo Access</title>
+
+    <link rel="stylesheet" href="./css/desktop.css">
+</head>
+
+<body>
+
+    <div id="interaction-toolbar-container"></div>
+
+    <main class="desktop-login">
+
+        <section class="left-panel">
+
+            <header class="top-bar">
+                <div class="brand-mark">H</div>
+                <span>HejSan</span>
+            </header>
+
+            <div class="robot-area">
+
+                <div class="robot-large">🤖</div>
+
+                <div class="speech-bubble">
+                    Explore the learning experience using our shared demo account.
+                    <span>✨</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="right-panel">
+
+            <div class="login-card">
+
+                <h1>Try the demo</h1>
+
+                <p class="subtitle">
+                    Start a demo session using the shared learning account.
+                </p>
+
+                <div class="demo-credentials">
+
+                    <label>Email</label>
+
+                    <input type="text" value="demo@hejsan.local" readonly>
+
+                    <label>Password</label>
+
+                    <input type="text" value="DemoPassword123" readonly>
+
+                </div>
+
+                <button id="startDemoButton" class="login-button demo-login-button" type="button">
+                    Start demo
+                </button>
+
+                <p id="demoMessage" class="login-message"></p>
+
+                <p class="terms">
+                    Demo credentials may be reset periodically.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+    <script src="/shared/interaction-style.js"></script>
+    <script src="/shared/api-endpoints.js"></script>
+    <script src="/shared/api.js"></script>
+    <script src="/shared/authentication-api.js"></script>
+    <script src="/shared/session-manager.js"></script>
+
+    <script src="/desktop/shared/components/interaction-toolbar/interaction-toolbar.js"></script>
+    <script src="./js/try-demo.js"></script>
+
+    <script>
+        loadInteractionToolbar("tryDemo");
+    </script>
+
+</body>
+
+</html>

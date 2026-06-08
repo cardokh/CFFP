@@ -1,0 +1,26 @@
+{
+    "scriptName": "inspect_script_governance",
+    "mode": "inspect",
+    "blueprintRuleFiles": [
+        "scripts/inspections/governed/config/scripting-blueprint-rules.json"
+    ],
+    "failOnMissingBaseScript": true,
+    "failOnHardcodedPaths": true,
+    "failOnDirectPrintUsage": false,
+    "failOnMissingSharedUtilities": true,
+    "failOnMissingConfigDrivenExecution": true,
+    "failOnMissingOutputArchitecture": true,
+    "failOnNonConciseTerminalOutput": true,
+    "targetScripts": [
+        "scripts/inspections/governed/inspect_script_governance.py",
+        "scripts/inspections/governed/script_blueprint.py",
+        "scripts/db/sqlite_create_schema.py",
+        "scripts/db/sqlite_seed_data.py",
+        "scripts/inspections/endpoints/extract_backend_endpoints.py",
+        "scripts/inspections/endpoints/extract_frontend_endpoints.py",
+        "scripts/inspections/endpoints/compare_endpoint_contracts.py",
+        "scripts/inspections/endpoints/inspect_frontend_endpoint_usage.py",
+        "scripts/inspections/endpoints/analyze_backend_endpoint_usage.py",
+        "scripts/inspections/endpoints/run_endpoint_inspection.py"
+    ]
+}

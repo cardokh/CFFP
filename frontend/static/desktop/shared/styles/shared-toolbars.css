@@ -1,0 +1,90 @@
+/*
+ * Shared toolbar and action-row styles.
+ *
+ * Responsibilities:
+ * - Provide reusable horizontal action layouts.
+ * - Standardize toolbar spacing/alignment.
+ * - Support left/center/right grouped actions.
+ */
+
+.shared-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.shared-toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.shared-toolbar-section.left {
+    justify-content: flex-start;
+}
+
+.shared-toolbar-section.center {
+    justify-content: center;
+}
+
+.shared-toolbar-section.right {
+    justify-content: flex-end;
+}
+
+.shared-toolbar.compact {
+    gap: 8px;
+}
+
+.shared-toolbar.vertical-mobile {
+    flex-wrap: wrap;
+}
+
+.shared-action-bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+
+    padding-top: 8px;
+
+    border-top: 1px solid #1b2b40;
+}
+
+.shared-progress-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 96px;
+
+    padding: 5px 10px;
+
+    background: #101d2d;
+
+    border: 1px solid #2b415f;
+    border-radius: 8px;
+
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
+
+    .shared-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .shared-action-bar {
+        grid-template-columns: 1fr;
+    }
+
+    .shared-toolbar-section.left,
+    .shared-toolbar-section.center,
+    .shared-toolbar-section.right {
+        justify-content: flex-start;
+    }
+}

@@ -1,0 +1,99 @@
+{
+    "participantId": "student-01",
+    "participantType": "Student",
+    "status": "Complete",
+    "tasks": [
+        {
+            "task": "Create an account",
+            "completed": true
+        },
+        {
+            "task": "Spend 2–3 minutes exploring the application",
+            "completed": true
+        },
+        {
+            "task": "Find the lesson library",
+            "completed": true
+        },
+        {
+            "task": "Sign up for a lesson",
+            "completed": true
+        },
+        {
+            "task": "Complete the lesson",
+            "completed": true
+        },
+        {
+            "task": "Change the speech speed during the lesson",
+            "completed": true
+        },
+        {
+            "task": "Complete the quiz",
+            "completed": true
+        },
+        {
+            "task": "View their progress",
+            "completed": true
+        }
+    ],
+    "postTestQuestions": [
+        {
+            "question": "It was easy to create an account.",
+            "rating": 5
+        },
+        {
+            "question": "The navigation menu was easy to understand.",
+            "rating": 5
+        },
+        {
+            "question": "The lesson library was easy to find.",
+            "rating": 5
+        },
+        {
+            "question": "Signing up for a lesson was straightforward.",
+            "rating": 5
+        },
+        {
+            "question": "The lesson controls were easy to understand.",
+            "rating": 4
+        },
+        {
+            "question": "Changing the speech speed was easy.",
+            "rating": 5
+        },
+        {
+            "question": "The quiz was easy to complete.",
+            "rating": 5
+        },
+        {
+            "question": "The progress page was easy to find and understand.",
+            "rating": 5
+        },
+        {
+            "question": "Overall, the application was easy to use.",
+            "rating": 5
+        }
+    ],
+    "openEndedQuestions": [
+        {
+            "question": "What did you like most about the application?",
+            "answer": "Den var väldigt tydlig och lättnavigerad, man hittade lätt och förstod vad allt innebar och var man skulle trycka och så."
+        },
+        {
+            "question": "Was there any part of the navigation that confused you?",
+            "answer": "Lektionsdelen innan man kom vidare till quizfrågorna. Hon la inte märke till information i headern. När det kom till quizet klickade det dock."
+        },
+        {
+            "question": "What was the most confusing part?",
+            "answer": "Lektionsdelen innan quizet var också det som var mest förvirrande."
+        },
+        {
+            "question": "Was there any task that felt difficult?",
+            "answer": "Nej."
+        },
+        {
+            "question": "What would you improve?",
+            "answer": "Lektionen känns lite oinspirerande, men annars inte."
+        }
+    ]
+}

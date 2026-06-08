@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "repository-rules",
+    "description": "Defines repository responsibilities, persistence boundaries, and forbidden repository dependencies.",
+    "rules": [
+        {
+            "ruleId": "REPOSITORY-001",
+            "name": "Repositories own SQL",
+            "description": "SQL statements and direct database operations must live in repositories or dedicated persistence infrastructure.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "REPOSITORY-002",
+            "name": "Repositories do not know HTTP",
+            "description": "Repositories must not import route utilities, handlers, frontend field names, or HTTP request/response concepts.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "REPOSITORY-003",
+            "name": "Repositories return domain-level data",
+            "description": "Repositories should return domain objects, DTOs, booleans, or repository-level results, not transport response dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "REPOSITORY-004",
+            "name": "Repositories map rows centrally",
+            "description": "Database row to domain object conversion should be centralized through mapper functions or repository-owned mapping helpers.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "REPOSITORY-005",
+            "name": "Repositories accept typed inputs",
+            "description": "Repository methods should accept DTOs or domain objects rather than primitive parameter lists when a use case has structured input.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "REPOSITORY-006",
+            "name": "Repositories should avoid business orchestration",
+            "description": "Repositories should focus on persistence operations and data retrieval/update logic and should not coordinate multi-step business workflows or application orchestration.",
+            "severity": "WARNING"
+        }
+    ]
+}

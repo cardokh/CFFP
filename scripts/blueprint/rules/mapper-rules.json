@@ -1,0 +1,36 @@
+{
+    "ruleSetName": "mapper-rules",
+    "description": "Defines mapper responsibilities for conversion between API payloads, DTOs, domain objects, rows, and response dictionaries.",
+    "rules": [
+        {
+            "ruleId": "MAPPER-001",
+            "name": "Mappers convert API payloads to DTOs",
+            "description": "Request payload and path data must be converted to DTOs through mapper functions.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "MAPPER-002",
+            "name": "Mappers convert domain objects to responses",
+            "description": "API response dictionaries should be produced through mapper or contract utilities.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "MAPPER-003",
+            "name": "Mappers own naming conversion",
+            "description": "camelCase to snake_case and snake_case to camelCase conversion must happen at mapper/contract boundaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "MAPPER-004",
+            "name": "Mappers should be reusable",
+            "description": "Mapping logic should be centralized and reusable rather than duplicated in routes, services, or repositories.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "MAPPER-005",
+            "name": "Mappers must remain transformation-focused",
+            "description": "Mappers should only perform structural/data transformation and must not contain orchestration logic, persistence logic, or business decision-making.",
+            "severity": "ERROR"
+        }
+    ]
+}

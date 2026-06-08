@@ -1,0 +1,62 @@
+/* =========================================================
+   MY LESSONS PAGE
+========================================================= */
+
+.my-lessons-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================================
+   TABLE PANEL
+========================================================= */
+
+.my-lessons-card {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+.my-lessons-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.my-lessons-table-inner {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.my-lessons-button {
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .my-lessons-table-inner {
+        width: 100%;
+    }
+
+    .shared-search-box {
+        width: 100%;
+    }
+}

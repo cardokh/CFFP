@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #26345f;
+}
+
+body {
+    background: linear-gradient(180deg, #d7e9ff, #b9d7ff 45%, #eaf4ff);
+}
+
+.mobile-protected-layout {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+}
+
+.mobile-main-content {
+    width: 100%;
+    max-width: 430px;
+    min-height: 700px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: 26px 18px 110px;
+    background: linear-gradient(180deg, rgba(118, 185, 255, 0.55), rgba(255, 255, 255, 0.18));
+    box-shadow: 0 20px 48px rgba(92, 136, 201, 0.22);
+}
+
+.container {
+    width: 100%;
+}
+
+.lesson-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.lesson-category {
+    background: rgba(255, 255, 255, 0.42);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    color: #26345f;
+}
+
+.robot-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.robot {
+    font-size: 34px;
+}
+
+.robot-text {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.72);
+    padding: 12px 16px;
+    border-radius: 20px;
+    color: #26345f;
+    font-size: 15px;
+    text-align: center;
+}
+
+.lesson-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    padding: 28px 20px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.lesson-number {
+    color: #7c8ab0;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.lesson-card h1 {
+    font-size: 34px;
+    margin: 16px 0 8px;
+}
+
+.pronunciation {
+    color: #7c8ab0;
+    margin-bottom: 18px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.audio-btn {
+    border-radius: 999px;
+    padding: 12px 18px;
+    background: rgba(92, 142, 246, 0.12);
+    color: #2f7cf6;
+    font-weight: 800;
+}
+
+.translation-hidden {
+    background: rgba(92, 142, 246, 0.08);
+    padding: 14px;
+    border-radius: 16px;
+    color: #7c8ab0;
+    margin-top: 18px;
+}
+
+.bottom-btn {
+    width: 100%;
+    min-height: 52px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #5baeff, #2f7cf6);
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 10px 20px rgba(70, 130, 234, 0.24);
+}
+
+.bottom-btn+.bottom-btn {
+    margin-top: 10px;
+    background: transparent;
+    border: 2px solid #5c8ef6;
+    color: #5c8ef6;
+    box-shadow: none;
+}

@@ -1,0 +1,328 @@
+/* =========================================================
+   LEARNING ITEM EDIT PAGE
+========================================================= */
+
+.learning-item-edit-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.learning-item-edit-scroll-panel {
+    align-self: stretch;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    flex: 0 1 auto;
+    max-height: calc(100% - 52px);
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.learning-item-edit-scroll-panel::-webkit-scrollbar {
+    width: 10px;
+}
+
+.learning-item-edit-scroll-panel::-webkit-scrollbar-track {
+    background: #0f1b2b;
+    border-radius: 999px;
+}
+
+.learning-item-edit-scroll-panel::-webkit-scrollbar-thumb {
+    background: #35557a;
+    border-radius: 999px;
+    border: 2px solid #0f1b2b;
+}
+
+.learning-item-edit-scroll-panel::-webkit-scrollbar-thumb:hover {
+    background: #4d78a8;
+}
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.learning-item-details-panel {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    padding: 18px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 16px;
+
+    background: #0c1725;
+}
+
+.learning-item-details-panel legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.learning-item-edit-form {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px;
+    align-items: end;
+}
+
+.form-row {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    color: #8fa2b8;
+    font-size: 11px;
+}
+
+.form-row input[type="text"] {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    min-height: 36px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 10px;
+
+    padding: 9px 12px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.form-row input[type="text"]:disabled {
+    color: #9bb0c8;
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.form-row input[type="text"]:focus {
+    outline: none;
+    border-color: #4d78a8;
+}
+
+/* =========================================================
+   FIELD PLACEMENT
+========================================================= */
+
+.item-id-row {
+    grid-column: 1 / span 1;
+    grid-row: 1;
+}
+
+.item-type-row {
+    grid-column: 2 / span 3;
+    grid-row: 1;
+}
+
+.category-row {
+    grid-column: 5 / span 6;
+    grid-row: 1;
+}
+
+.active-row {
+    grid-column: 11 / span 2;
+    grid-row: 1;
+}
+
+.source-text-row {
+    grid-column: 1 / span 6;
+    grid-row: 2;
+}
+
+.english-translation-row {
+    grid-column: 7 / span 6;
+    grid-row: 2;
+}
+
+.pronunciation-row {
+    grid-column: 1 / span 6;
+    grid-row: 3;
+}
+
+.example-text-row {
+    grid-column: 7 / span 6;
+    grid-row: 3;
+}
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.checkbox-row {
+    justify-content: flex-end;
+}
+
+.checkbox-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 36px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 10px;
+
+    padding: 9px 10px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 13px;
+}
+
+.checkbox-row input {
+    cursor: pointer;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.learning-item-edit-button {
+    border: 1px solid #4d78a8;
+    border-radius: 999px;
+
+    padding: 7px 14px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.learning-item-edit-button:hover {
+    background: #1b2f49;
+}
+
+.learning-item-edit-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.learning-item-edit-button.primary {
+    border-color: #6f9fd3;
+}
+
+.learning-item-edit-button.secondary {
+    border-color: #4d78a8;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.learning-item-edit-toolbar-panel {
+    width: 100%;
+    max-width: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    overflow: hidden;
+}
+
+.learning-item-edit-toolbar-left,
+.learning-item-edit-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.learning-item-edit-toolbar-left {
+    justify-content: flex-start;
+}
+
+.learning-item-edit-toolbar-right {
+    justify-content: flex-end;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .learning-item-edit-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .item-id-row,
+    .item-type-row,
+    .category-row,
+    .active-row,
+    .source-text-row,
+    .english-translation-row,
+    .pronunciation-row,
+    .example-text-row {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .learning-item-edit-form {
+        grid-template-columns: 1fr;
+    }
+
+    .learning-item-edit-toolbar-panel,
+    .learning-item-edit-toolbar-left,
+    .learning-item-edit-toolbar-right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .learning-item-edit-button {
+        width: 100%;
+    }
+}

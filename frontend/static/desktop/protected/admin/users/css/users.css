@@ -1,0 +1,56 @@
+/* =========================================================
+   USERS PAGE
+========================================================= */
+
+.users-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+}
+
+/* =========================================================
+   TABLE PANEL
+========================================================= */
+
+.users-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+.users-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.users-table-inner {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* =========================================================
+   TABLE PAGE-SPECIFIC BEHAVIOR
+========================================================= */
+
+.users-table tbody tr[data-user-id] {
+    cursor: pointer;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .users-table-inner {
+        width: 100%;
+    }
+}

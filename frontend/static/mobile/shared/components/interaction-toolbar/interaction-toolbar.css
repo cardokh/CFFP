@@ -1,0 +1,35 @@
+.mobile-interaction-toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-toolbar-button {
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+
+    padding: 0.65rem 1.2rem;
+
+    background: rgba(255, 255, 255, 0.32);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    color: #26345f;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow: 0 8px 18px rgba(92, 136, 201, 0.18);
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.mobile-toolbar-button:hover {
+    background: rgba(255, 255, 255, 0.48);
+    transform: translateY(-1px);
+}

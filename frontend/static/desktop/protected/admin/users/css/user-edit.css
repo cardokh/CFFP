@@ -1,0 +1,326 @@
+/* =========================================================
+   USER EDIT PAGE
+========================================================= */
+
+.user-edit-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.user-edit-scroll-panel {
+    align-self: stretch;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    flex: 0 1 auto;
+    max-height: calc(100% - 52px);
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 0;
+}
+
+.user-edit-toolbar-panel {
+    width: 100%;
+    max-width: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    overflow: hidden;
+}
+
+.user-edit-toolbar-left,
+.user-edit-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-edit-toolbar-left {
+    justify-content: flex-start;
+}
+
+.user-edit-toolbar-right {
+    justify-content: flex-end;
+}
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.user-details-panel,
+.user-composition-panel {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+    padding: 18px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 16px;
+
+    background: #0c1725;
+}
+
+.user-details-panel legend,
+.user-composition-panel legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.user-edit-form {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    gap: 14px;
+    align-items: end;
+}
+
+.form-row {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    color: #8fa2b8;
+    font-size: 11px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="email"],
+.user-composition-toolbar select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    min-height: 36px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 10px;
+
+    padding: 9px 12px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+.form-row input:focus,
+.user-composition-toolbar select:focus {
+    outline: none;
+    border-color: #4d78a8;
+}
+
+.checkbox-row {
+    justify-content: flex-end;
+}
+
+.checkbox-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 36px;
+
+    border: 1px solid #1b2b40;
+    border-radius: 10px;
+
+    padding: 9px 10px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 13px;
+}
+
+.checkbox-row input {
+    cursor: pointer;
+}
+
+/* =========================================================
+   COMPOSITION PANEL
+========================================================= */
+
+.user-composition-toolbar {
+    width: 100%;
+
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    margin-bottom: 14px;
+}
+
+.user-composition-toolbar select {
+    flex: 1;
+}
+
+.user-composition-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.user-composition-table th:nth-child(4),
+.user-composition-table td:nth-child(4),
+.user-composition-table th:nth-child(5),
+.user-composition-table td:nth-child(5) {
+    width: 95px;
+    text-align: center;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.user-edit-button {
+    border: 1px solid #4d78a8;
+    border-radius: 999px;
+
+    padding: 7px 14px;
+
+    background: #132235;
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.user-edit-button:hover {
+    background: #1b2f49;
+}
+
+.user-edit-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.user-edit-button.primary {
+    border-color: #6f9fd3;
+}
+
+.user-edit-button.secondary {
+    border-color: #4d78a8;
+}
+
+.user-edit-button.delete {
+    border-color: #5f2a2a;
+    color: #ffb4b4;
+}
+
+.user-edit-button.delete:hover {
+    background: #351b1b;
+    color: #ffffff;
+}
+
+/* =========================================================
+   TABLE BUTTONS
+========================================================= */
+
+.user-composition-table .user-table-action-button {
+    min-width: 42px;
+    width: 42px;
+    height: 30px;
+
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #4d78a8;
+    border-radius: 999px;
+
+    background: #132235;
+    color: #ffdddd;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.user-composition-table .user-table-action-button:hover {
+    background: #1b2f49;
+}
+
+.user-composition-table .user-table-action-button.remove-action-button:hover {
+    border-color: #ff6b6b;
+    background: #351b1b;
+    color: #ffffff;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .user-edit-form {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .user-edit-form {
+        grid-template-columns: 1fr;
+    }
+
+    .user-composition-toolbar,
+    .user-edit-toolbar-panel,
+    .user-edit-toolbar-left,
+    .user-edit-toolbar-right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-edit-button {
+        width: 100%;
+    }
+
+    .user-composition-table td:nth-child(5) .user-table-action-button {
+        width: 100%;
+    }
+}

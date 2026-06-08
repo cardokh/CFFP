@@ -1,0 +1,206 @@
+/*
+ * Desktop protected shell layout styles.
+ *
+ * Responsibilities:
+ * - Define the protected desktop application shell.
+ * - Own shell-level width and height.
+ * - Own sidebar/workspace sizing.
+ * - Prepare shared variables for header, content, and footer panels.
+ *
+ * Architectural rules:
+ * - This file owns protected desktop shell geometry.
+ * - Sidebar, header, footer, and page components must not own shell sizing.
+ * - Page-specific CSS must only style content inside .main-content.
+ */
+
+:root {
+    --protected-shell-width: 1180px;
+    --protected-shell-height: calc(100vh - 40px);
+
+    --protected-sidebar-width: 150px;
+    --protected-sidebar-height: var(--protected-shell-height);
+
+    --protected-workspace-width:
+        calc(var(--protected-shell-width) - var(--protected-sidebar-width));
+
+    --protected-workspace-height:
+        var(--protected-shell-height);
+
+    --protected-content-padding-x: 5px;
+    --protected-content-padding-y: 5px;
+
+    --protected-workspace-side-padding:
+        var(--protected-content-padding-x);
+
+    --protected-panel-gap: 14px;
+
+    --protected-header-width:
+        calc(var(--protected-workspace-width) - (var(--protected-workspace-side-padding) * 2));
+
+    --protected-header-height: 92px;
+
+    --protected-footer-width:
+        var(--protected-header-width);
+
+    --protected-footer-height: 35px;
+
+    --protected-workspace-padding-top: 18px;
+    --protected-workspace-padding-bottom: 16px;
+
+    --protected-content-width:
+        var(--protected-header-width);
+
+    --protected-content-height:
+        calc(var(--protected-workspace-height) - var(--protected-workspace-padding-top) - var(--protected-workspace-padding-bottom) - var(--protected-header-height) - var(--protected-footer-height) - (var(--protected-panel-gap) * 2));
+
+    --admin-content-width: 960px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    padding-top: 10px;
+    padding-left: 10px;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #07111d;
+    color: #eef7ff;
+}
+
+.dashboard-layout {
+    width: var(--protected-shell-width);
+    height: var(--protected-shell-height);
+
+    display: grid;
+
+    grid-template-columns:
+        var(--protected-sidebar-width) var(--protected-workspace-width);
+
+    overflow: hidden;
+
+    background: #0d1724;
+
+    border: 1px solid #2b3d55;
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.45);
+}
+
+#desktop-sidebar-container {
+    width: var(--protected-sidebar-width);
+    min-width: var(--protected-sidebar-width);
+    max-width: var(--protected-sidebar-width);
+
+    height: var(--protected-sidebar-height);
+    min-height: var(--protected-sidebar-height);
+    max-height: var(--protected-sidebar-height);
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.main-content {
+    width: var(--protected-workspace-width);
+    height: var(--protected-workspace-height);
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--protected-panel-gap);
+
+    padding-top: var(--protected-workspace-padding-top);
+    padding-bottom: var(--protected-workspace-padding-bottom);
+    padding-left: var(--protected-workspace-side-padding);
+    padding-right: var(--protected-workspace-side-padding);
+
+    overflow: hidden;
+}
+
+.protected-content-panel {
+    width: var(--protected-content-width);
+    height: var(--protected-content-height);
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding:
+        var(--protected-content-padding-y) var(--protected-content-padding-x);
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+#footer-panel-container {
+    width: var(--protected-footer-width);
+    height: var(--protected-footer-height);
+
+    min-width: 0;
+    overflow: hidden;
+}
+
+
+@media (max-width: 1000px) {
+
+    body {
+        display: block;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .dashboard-layout {
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+
+        display: block;
+
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    #desktop-sidebar-container {
+        display: none;
+    }
+
+    .main-content {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+
+        padding: 24px;
+
+        overflow: visible;
+    }
+}

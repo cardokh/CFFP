@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Start Lesson | HejSan
+    </title>
+
+    <link rel="stylesheet" href="./css/start-lesson.css">
+
+</head>
+
+<body>
+
+    <main class="mobile-protected-layout">
+
+        <section class="mobile-main-content">
+
+            <div id="mobile-top-panel-container"></div>
+
+            <div class="container">
+
+                <div id="startLessonMessage" class="start-lesson-message hidden"></div>
+
+                <section id="lessonPreviewPanel" class="lesson-preview-card">
+
+                    <div class="lesson-preview-top">
+
+                        <div>
+
+                            <span class="lesson-badge">
+                                Lesson preview
+                            </span>
+
+                            <h1 id="lessonTitle">
+                                Loading lesson...
+                            </h1>
+
+                            <p id="lessonDescription" class="lesson-description">
+                                Please wait while we prepare
+                                your lesson.
+                            </p>
+
+                        </div>
+
+                        <div class="lesson-robot">
+                            🤖
+                        </div>
+
+                    </div>
+
+                    <div class="lesson-info-grid">
+
+                        <div class="lesson-info-item">
+
+                            <span class="info-label">
+                                Learning items
+                            </span>
+
+                            <span id="learningItemCount" class="info-value">
+                                -
+                            </span>
+
+                        </div>
+
+                        <div class="lesson-info-item">
+
+                            <span class="info-label">
+                                Mode
+                            </span>
+
+                            <span class="info-value">
+                                Practice
+                            </span>
+
+                        </div>
+
+                        <div class="lesson-info-item">
+
+                            <span class="info-label">
+                                Desktop
+                            </span>
+
+                            <span class="info-value">
+                                Available
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="start-lesson-actions">
+
+                    <button id="backToLessonDetailsButton" class="start-lesson-action-button" type="button">
+                        Back
+                    </button>
+
+                    <button id="startLessonPlayerButton" class="start-lesson-action-button" type="button">
+                        Start Lesson
+                    </button>
+
+                </section>
+
+            </div>
+
+            <div id="mobile-bottom-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+
+    <script src="/shared/session-manager.js"></script>
+    <script src="/shared/api-endpoints.js"></script>
+    <script src="/shared/api.js"></script>
+    <script src="/shared/ui-render.js"></script>
+
+    <script src="../shared/components/top-panel/top-panel.js"></script>
+
+    <script src="../shared/components/bottom-panel/bottom-panel.js"></script>
+
+    <script>
+        loadMobileTopPanel("lesson-library");
+
+        loadMobileBottomPanel({
+            desktopTarget:
+                window.LLA_PATHS.desktop.protected.availableLessons
+        });
+    </script>
+
+    <script src="./js/start-lesson.js"></script>
+
+</body>
+
+</html>

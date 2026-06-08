@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-messages.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+
+    <link rel="stylesheet" href="./css/user-edit.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="user-edit-content">
+
+                    <div class="user-edit-scroll-panel">
+
+                        <fieldset class="user-details-panel">
+                            <legend>User Details</legend>
+
+                            <form id="userEditForm" class="user-edit-form">
+
+                                <input type="hidden" id="userId">
+
+                                <div class="form-row">
+                                    <label for="displayName">Display name</label>
+                                    <input type="text" id="displayName" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" required>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <label>
+                                        <input type="checkbox" id="isActive">
+                                        Active
+                                    </label>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <label>
+                                        <input type="checkbox" id="isVerified">
+                                        Verified
+                                    </label>
+                                </div>
+
+                            </form>
+
+                        </fieldset>
+
+                        <fieldset class="user-composition-panel">
+                            <legend>Assigned Lessons</legend>
+
+                            <div class="user-composition-toolbar">
+                                <select id="availableLessonSelect" disabled>
+                                    <option value="">Loading lessons...</option>
+                                </select>
+
+                                <button id="addLessonButton" class="user-edit-button secondary" type="button" disabled>
+                                    Add Lesson
+                                </button>
+                            </div>
+
+                            <div class="shared-table-wrapper user-composition-table-wrapper">
+                                <table class="shared-table user-composition-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Lesson</th>
+                                            <th>Category</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="assignedLessonsTableBody">
+                                        <tr>
+                                            <td colspan="5">
+                                                Loading assigned lessons...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+
+                    </div>
+
+                    <section class="shared-message-panel">
+                        <div id="userEditMessage" class="form-message hidden"></div>
+                    </section>
+
+                    <section class="user-edit-toolbar-panel">
+
+                        <div class="user-edit-toolbar-left">
+
+                            <button id="backToUsersButton" class="user-edit-button secondary" type="button">
+                                Back to Users
+                            </button>
+
+                        </div>
+
+                        <div class="user-edit-toolbar-right">
+
+                            <button id="addUserButton" class="user-edit-button secondary" type="button">
+                                Add User
+                            </button>
+
+                            <button id="deleteUserButton" class="user-edit-button delete" type="button">
+                                Delete User
+                            </button>
+
+                            <button id="saveUserButton" class="user-edit-button primary" type="submit"
+                                form="userEditForm">
+                                Save
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+    <script src="/desktop/shared/js/table-sorter.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/user-edit.js?v=4";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

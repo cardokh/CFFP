@@ -1,0 +1,365 @@
+{
+    "scriptName": "extract_backend_endpoints",
+    "mode": "extract",
+    "routeRegistryFiles": [
+        "backend/src/api/route_registry.py",
+        "backend/src/api/modules/lla/routes/lla_route_registry.py"
+    ],
+    "apiPathFiles": [
+        "backend/src/api/api_paths.py",
+        "backend/src/api/modules/lla/lla_api_paths.py"
+    ],
+    "endpointCount": 50,
+    "endpoints": [
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/learning-items",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEMS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/admin/learning-items",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEMS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/learning-items/",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEMS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/learning-items/",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEMS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/learning-items/",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEMS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/learning-items/examples/",
+            "pathConstant": "API_PATH_ADMIN_LEARNING_ITEM_EXAMPLES_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/lesson-categories",
+            "pathConstant": "API_PATH_ADMIN_LESSON_CATEGORIES",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/admin/lesson-categories",
+            "pathConstant": "API_PATH_ADMIN_LESSON_CATEGORIES",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/lesson-categories/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_CATEGORIES_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/lesson-categories/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_CATEGORIES_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/lesson-categories/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_CATEGORIES_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/lessons",
+            "pathConstant": "API_PATH_ADMIN_LESSONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/admin/lessons",
+            "pathConstant": "API_PATH_ADMIN_LESSONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons-learning-items/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_LEARNING_ITEMS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons-learning-items/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_LEARNING_ITEMS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons-quiz-questions/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_QUIZ_QUESTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons-quiz-questions/",
+            "pathConstant": "API_PATH_ADMIN_LESSON_QUIZ_QUESTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons/",
+            "pathConstant": "API_PATH_ADMIN_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons/",
+            "pathConstant": "API_PATH_ADMIN_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/lessons/",
+            "pathConstant": "API_PATH_ADMIN_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/admin/quiz-question-options",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTION_OPTIONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-question-options/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTION_OPTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-question-options/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTION_OPTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/quiz-questions",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTIONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/admin/quiz-questions",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTIONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-questions-options/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTION_OPTIONS_BY_QUESTION_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-questions-options/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTION_OPTIONS_BY_QUESTION_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-questions/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-questions/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/quiz-questions/",
+            "pathConstant": "API_PATH_ADMIN_QUIZ_QUESTIONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/reference-data/lesson-form-options",
+            "pathConstant": "API_PATH_ADMIN_LESSON_FORM_OPTIONS",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/user-lessons/",
+            "pathConstant": "API_PATH_ADMIN_USER_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/user-lessons/",
+            "pathConstant": "API_PATH_ADMIN_USER_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "prefix",
+            "path": "/api/admin/user-lessons/completed/",
+            "pathConstant": "API_PATH_ADMIN_USER_LESSONS_COMPLETED_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "prefix",
+            "path": "/api/admin/user-lessons/in-progress/",
+            "pathConstant": "API_PATH_ADMIN_USER_LESSONS_IN_PROGRESS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/admin/users",
+            "pathConstant": "API_PATH_ADMIN_USERS",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/admin/users/",
+            "pathConstant": "API_PATH_ADMIN_USERS_PREFIX",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/admin/users/",
+            "pathConstant": "API_PATH_ADMIN_USERS_PREFIX",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "PUT",
+            "routeType": "prefix",
+            "path": "/api/admin/users/",
+            "pathConstant": "API_PATH_ADMIN_USERS_PREFIX",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/ai/speech/generate",
+            "pathConstant": "API_PATH_AI_SPEECH_GENERATE",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/auth/forgot-password",
+            "pathConstant": "API_PATH_AUTH_FORGOT_PASSWORD",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/auth/login",
+            "pathConstant": "API_PATH_AUTH_LOGIN",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "exact",
+            "path": "/api/auth/register",
+            "pathConstant": "API_PATH_AUTH_REGISTER",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/echo",
+            "pathConstant": "API_PATH_ECHO_PREFIX",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/health",
+            "pathConstant": "API_PATH_HEALTH",
+            "sourceFile": "backend/src/api/route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "exact",
+            "path": "/api/lesson",
+            "pathConstant": "API_PATH_LESSON_INTERACTION",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/student/lessons/",
+            "pathConstant": "API_PATH_STUDENT_LESSONS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "DELETE",
+            "routeType": "prefix",
+            "path": "/api/student/lessons/remove/",
+            "pathConstant": "API_PATH_STUDENT_LESSONS_REMOVE_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "POST",
+            "routeType": "prefix",
+            "path": "/api/student/lessons/signup/",
+            "pathConstant": "API_PATH_STUDENT_LESSONS_SIGNUP_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        },
+        {
+            "method": "GET",
+            "routeType": "prefix",
+            "path": "/api/tts",
+            "pathConstant": "API_PATH_TTS_PREFIX",
+            "sourceFile": "backend/src/api/modules/lla/routes/lla_route_registry.py"
+        }
+    ]
+}

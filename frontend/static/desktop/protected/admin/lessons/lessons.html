@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lessons | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+
+    <link rel="stylesheet" href="./css/lessons.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="lessons-content">
+
+                    <div id="lessonsMessage" class="form-message hidden"></div>
+
+                    <fieldset class="shared-panel lessons-card">
+                        <legend>Lessons</legend>
+
+                        <div class="lessons-table-inner">
+
+                            <div class="shared-table-wrapper">
+
+                                <table class="shared-table lessons-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="0"
+                                                    data-sort-type="number" type="button">
+                                                    ID
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="1"
+                                                    type="button">
+                                                    Title
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="2"
+                                                    type="button">
+                                                    Category
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="3"
+                                                    type="button">
+                                                    Lesson Type
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="4"
+                                                    type="button">
+                                                    Embodiment
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="5"
+                                                    type="button">
+                                                    Interaction Style
+                                                </button>
+                                            </th>
+
+                                            <th>
+                                                <button class="shared-table-sort-button" data-sort-column="6"
+                                                    type="button">
+                                                    Active
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="lessonsTableBody">
+                                        <tr>
+                                            <td colspan="7">
+                                                Loading lessons...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar">
+
+                        <div class="shared-table-toolbar-left">
+
+                            <button id="backToAdminButton" class="shared-button secondary shared-table-toolbar-action"
+                                type="button">
+                                Back to Admin
+                            </button>
+
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+
+                            <div class="shared-search-box shared-table-toolbar-search">
+                                <span class="shared-search-icon">⌕</span>
+
+                                <input id="lessonsSearchInput" class="shared-search-input" type="text"
+                                    placeholder="Search lessons..." disabled>
+                            </div>
+
+                            <div class="shared-table-pagination shared-table-toolbar-pagination">
+                                <button id="lessonsPreviousPageButton" class="shared-button secondary" type="button"
+                                    disabled>
+                                    ‹ Prev
+                                </button>
+
+                                <span id="lessonsPaginationStatus" class="shared-table-pagination-status">
+                                    Page 1 of 1
+                                </span>
+
+                                <button id="lessonsNextPageButton" class="shared-button secondary" type="button"
+                                    disabled>
+                                    Next ›
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+
+                            <button id="addLessonButton" class="shared-button primary shared-table-toolbar-action"
+                                type="button">
+                                Add Lesson
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script src="/desktop/shared/js/table-sorter.js"></script>
+    <script src="/desktop/shared/js/table-search.js"></script>
+    <script src="/desktop/shared/js/table-pagination.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/lessons.js?v=3";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

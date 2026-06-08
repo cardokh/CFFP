@@ -1,0 +1,19 @@
+{
+    "projectRoot": ".",
+    "frontendSourceRootPaths": [
+        "frontend"
+    ],
+    "includedFileExtensions": [
+        ".js"
+    ],
+    "ignoredFolders": [
+        "__pycache__",
+        ".venv",
+        "node_modules",
+        "output"
+    ],
+    "allowedEndpointRegistryFiles": [
+        "frontend/static/shared/api-endpoints.js"
+    ],
+    "outputFilePath": "scripts/inspections/endpoints/app-endpoints/frontend_endpoint_usage_inspection.json"
+}

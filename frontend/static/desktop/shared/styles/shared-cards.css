@@ -1,0 +1,77 @@
+/*
+ * Shared content card layouts.
+ *
+ * Responsibilities:
+ * - Provide reusable card/grid layouts.
+ * - Standardize compact desktop content sections.
+ */
+
+.shared-info-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: 8px;
+}
+
+.shared-info-card {
+    min-height: 64px;
+}
+
+.shared-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.shared-info-text {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1.25;
+}
+
+.shared-examples-grid {
+    margin-top: 10px;
+
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.shared-example-card {
+    position: relative;
+
+    min-height: 88px;
+
+    padding: 12px 44px 10px 12px;
+
+    background: #101d2d;
+
+    border: 1px solid #243a57;
+    border-radius: 12px;
+}
+
+.shared-example-card.compact {
+    min-height: 0;
+}
+
+.shared-example-card .example-sound-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+@media (max-width: 1000px) {
+
+    .shared-examples-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .shared-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

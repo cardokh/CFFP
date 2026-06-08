@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "dto-rules",
+    "description": "Defines DTO responsibilities, boundaries, naming, and usage rules across routes, services, repositories, and API contracts.",
+    "rules": [
+        {
+            "ruleId": "DTO-001",
+            "name": "Routes must use DTOs",
+            "description": "Route handlers must map request payloads and path parameters into typed request DTOs before calling services.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "DTO-002",
+            "name": "Services must receive DTOs",
+            "description": "Service methods must receive typed DTO/request objects instead of primitive parameter lists or raw request dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "DTO-003",
+            "name": "Repositories must receive DTOs or domain objects",
+            "description": "Repositories must receive typed request DTOs or domain objects instead of raw transport payload dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "DTO-004",
+            "name": "DTOs use snake_case internally",
+            "description": "DTO properties must use snake_case internally in Python/backend code.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "DTO-005",
+            "name": "DTO mapping belongs to mapper layer",
+            "description": "Conversion between API payloads, DTOs, domain objects, and response dictionaries must be centralized in mapper classes/functions.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "DTO-006",
+            "name": "DTOs must be responsibility-specific",
+            "description": "DTOs should represent a specific use case or operation and should avoid becoming large generic transport objects reused across unrelated operations.",
+            "severity": "WARNING"
+        }
+    ]
+}

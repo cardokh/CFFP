@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "naming-convention-rules",
+    "description": "Defines naming conventions across frontend, API boundary, backend internals, database, and routes.",
+    "rules": [
+        {
+            "ruleId": "NAMING-001",
+            "name": "Frontend uses camelCase",
+            "description": "Frontend JavaScript variables, functions, request payload fields, response payload fields, and query parameters must use camelCase.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "NAMING-002",
+            "name": "Backend internals use snake_case",
+            "description": "Python variables, methods, functions, DTO properties, domain object properties, and database fields must use snake_case internally.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "NAMING-003",
+            "name": "Routes use kebab-case",
+            "description": "URL path segments must use kebab-case.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "NAMING-004",
+            "name": "Constants use UPPER_SNAKE_CASE",
+            "description": "Constants in frontend and backend code must use UPPER_SNAKE_CASE.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "NAMING-005",
+            "name": "Mapping boundary owns naming conversion",
+            "description": "camelCase API payloads must be converted to snake_case internal objects at the mapper/contract boundary, and snake_case internals must be converted back to camelCase only at the API response boundary.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "NAMING-006",
+            "name": "Entity and module names should remain semantically consistent",
+            "description": "Singular/plural naming, module ownership, and entity terminology should remain consistent across frontend, backend, routes, repositories, DTOs, and database structures.",
+            "severity": "WARNING"
+        }
+    ]
+}

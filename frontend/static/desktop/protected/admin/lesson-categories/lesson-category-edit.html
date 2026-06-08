@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lesson Category | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-messages.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+
+    <link rel="stylesheet" href="./css/lesson-category-edit.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="lesson-category-edit-content">
+
+                    <div class="lesson-category-edit-scroll-panel">
+
+                        <fieldset class="lesson-category-details-panel">
+                            <legend>Lesson Category Details</legend>
+
+                            <form id="lessonCategoryEditForm" class="lesson-category-edit-form">
+
+                                <input type="hidden" id="categoryId">
+
+                                <div class="form-row name-row">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" required>
+                                </div>
+
+                                <div class="form-row checkbox-row active-row">
+                                    <label>
+                                        <input type="checkbox" id="isActive">
+                                        Active
+                                    </label>
+                                </div>
+
+                                <div class="form-row description-row">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" rows="2"></textarea>
+                                </div>
+
+                            </form>
+
+                        </fieldset>
+
+                    </div>
+
+                    <section class="shared-message-panel">
+                        <div id="lessonCategoryEditMessage" class="form-message hidden"></div>
+                    </section>
+
+                    <section class="lesson-category-edit-toolbar-panel">
+
+                        <div class="lesson-category-edit-toolbar-left">
+
+                            <button id="backToLessonCategoriesButton" class="lesson-category-edit-button secondary"
+                                type="button">
+                                Back to categories
+                            </button>
+
+                        </div>
+
+                        <div class="lesson-category-edit-toolbar-right">
+
+                            <button id="deleteLessonCategoryButton" class="lesson-category-edit-button delete"
+                                type="button">
+                                Delete
+                            </button>
+
+                            <button id="saveLessonCategoryButton" class="lesson-category-edit-button primary"
+                                type="submit" form="lessonCategoryEditForm">
+                                Save
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("admin")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/lesson-category-edit.js?v=3";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

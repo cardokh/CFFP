@@ -1,0 +1,2 @@
+
+requireAuthentication();

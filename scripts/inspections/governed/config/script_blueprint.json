@@ -1,0 +1,11 @@
+{
+    "message": "Blueprint script inherited BaseScript successfully.",
+    "purpose": "Read this config through BaseScript and write it unchanged to the output folder.",
+    "status": "ready",
+    "outputFileName": "test_output.json",
+    "tests": [
+        "test1",
+        "test2",
+        "test3"
+    ]
+}

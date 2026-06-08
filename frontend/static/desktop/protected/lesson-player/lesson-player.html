@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Player | HejSan</title>
+
+    <link rel="stylesheet" href="/desktop/protected/css/student-protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-toolbars.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-cards.css">
+
+    <link rel="stylesheet" href="./lesson-player-header/lesson-player-header.css">
+    <link rel="stylesheet" href="./css/lesson-player.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div class="lesson-player-content">
+
+                <div id="header-panel-container"></div>
+
+                <section class="protected-content-panel">
+
+                    <div id="lessonPlayerMessage" class="lesson-player-message hidden"></div>
+
+                    <section class="lesson-player-page-content-panel">
+
+                        <section class="lesson-player-content-panel">
+
+                            <fieldset class="shared-panel learning-item-panel"
+                                data-lesson-player-panel="learning-item-panel">
+
+                                <legend id="lessonPlayerCardLegend">
+                                    Lesson player
+                                </legend>
+
+                                <div class="learning-item-grid">
+
+                                    <fieldset class="shared-panel compact lesson-info-card"
+                                        data-lesson-player-panel="swedish-panel">
+
+                                        <legend>Swedish</legend>
+
+                                        <div class="shared-info-row">
+
+                                            <span id="sourceText" class="phrase-inline-text">
+                                                —
+                                            </span>
+
+                                            <button id="playSoundButton" class="shared-icon-button" type="button">
+                                                🔊
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset class="shared-panel compact lesson-info-card"
+                                        data-lesson-player-panel="english-panel">
+
+                                        <legend>English</legend>
+
+                                        <div class="shared-info-row">
+
+                                            <p id="englishTranslation">
+                                                —
+                                            </p>
+
+                                            <button id="playEnglishSoundButton" class="shared-icon-button"
+                                                type="button">
+                                                🔊
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset class="shared-panel compact lesson-info-card"
+                                        data-lesson-player-panel="pronunciation-panel">
+
+                                        <legend>Pronunciation</legend>
+
+                                        <p id="pronunciationText">
+                                            —
+                                        </p>
+
+                                    </fieldset>
+
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="shared-panel examples-panel" data-lesson-player-panel="practice-panel">
+
+                                <legend>Practice</legend>
+
+                                <div class="shared-examples-grid">
+
+                                    <fieldset data-lesson-player-panel="main-example-panel"
+                                        class="shared-panel compact lesson-info-card">
+
+                                        <legend>Example</legend>
+
+                                        <div class="shared-info-row">
+
+                                            <h3 id="exampleText" class="shared-card-title">
+                                                —
+                                            </h3>
+
+                                            <button id="playExampleSoundButton" class="shared-icon-button"
+                                                type="button">
+                                                🔊
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset data-lesson-player-panel="second-example-panel"
+                                        class="shared-panel compact lesson-info-card">
+
+                                        <legend>Speak</legend>
+
+                                        <div class="shared-info-row">
+
+                                            <div>
+
+                                                <h3 id="secondExampleText" class="shared-card-title">
+                                                    Say it slowly first.
+                                                </h3>
+
+                                                <p id="speechRecognitionResultText" class="shared-card-text">
+                                                    You said: —
+                                                </p>
+
+                                            </div>
+
+                                            <div class="speak-practice-actions">
+
+                                                <button id="playSecondExampleSoundButton" class="shared-icon-button"
+                                                    type="button">
+                                                    🔊
+                                                </button>
+
+                                                <button id="startSpeechRecognitionButton" class="shared-icon-button"
+                                                    type="button">
+                                                    🎤
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset data-lesson-player-panel="third-example-panel"
+                                        class="shared-panel compact lesson-info-card">
+
+                                        <legend>AI Examples</legend>
+
+                                        <button id="moreExamplesButton" class="shared-button accent ai-roadmap-button"
+                                            type="button" disabled>
+                                            ✨ AI examples roadmap
+                                        </button>
+
+                                    </fieldset>
+
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset id="quizPanel" class="shared-panel lesson-quiz-panel hidden"
+                                data-lesson-player-panel="quiz-panel">
+                                <legend>Quiz</legend>
+
+                                <div class="lesson-quiz-content">
+
+                                    <h2 id="quizQuestionText" class="lesson-quiz-question">
+                                        Quiz question
+                                    </h2>
+
+                                    <div id="quizAnswerOptions" class="lesson-quiz-options">
+                                    </div>
+
+                                    <div class="lesson-quiz-status-section">
+
+                                        <div id="quizScoreText" class="lesson-quiz-score">
+                                        </div>
+
+                                        <div id="quizFeedbackText" class="lesson-quiz-feedback">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset id="lessonCompletedPanel" class="shared-panel hidden"
+                                data-lesson-player-panel="lesson-completed-panel">
+
+                                <legend>Lesson completed</legend>
+
+                                <div class="lesson-completed-content">
+
+                                    <h2 id="lessonCompletedTitle">
+                                        Congratulations!
+                                    </h2>
+
+                                    <p id="lessonCompletedMessage">
+                                        You have completed this lesson
+                                    </p>
+
+                                    <p id="lessonCompletedLessonTitle" class="lesson-completed-lesson-title">
+                                        Swedish Greetings
+                                    </p>
+
+                                    <p id="lessonCompletedQuizResult" class="lesson-completed-quiz-result">
+                                        Quiz result: 2 / 2
+                                    </p>
+
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="shared-panel pronunciation-options-panel"
+                                data-lesson-player-panel="pronunciation-options-panel">
+
+                                <legend>Pronunciation options</legend>
+
+                                <div class="pronunciation-options-top-row">
+
+                                    <fieldset class="shared-panel compact pronunciation-sub-panel"
+                                        data-lesson-player-panel="tone-panel">
+
+                                        <legend>Tone</legend>
+
+                                        <div class="pronunciation-option-buttons">
+
+                                            <button id="toneNeutralButton"
+                                                class="shared-button primary compact pronunciation-button"
+                                                type="button">
+                                                Neutral
+                                            </button>
+
+                                            <button id="toneEncouragingButton"
+                                                class="shared-button secondary compact pronunciation-button"
+                                                type="button">
+                                                Encouraging
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset class="shared-panel compact pronunciation-sub-panel"
+                                        data-lesson-player-panel="speed-panel">
+
+                                        <legend>Speed</legend>
+
+                                        <div class="pronunciation-option-buttons">
+
+                                            <button id="speedSlowButton"
+                                                class="shared-button secondary compact pronunciation-button"
+                                                type="button">
+                                                Slow
+                                            </button>
+
+                                            <button id="speedNormalButton"
+                                                class="shared-button primary compact pronunciation-button"
+                                                type="button">
+                                                Normal
+                                            </button>
+
+                                            <button id="speedFastButton"
+                                                class="shared-button secondary compact pronunciation-button"
+                                                type="button">
+                                                Fast
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset class="shared-panel compact pronunciation-sub-panel"
+                                        data-lesson-player-panel="accent-panel">
+
+                                        <legend>Accent</legend>
+
+                                        <div class="pronunciation-option-buttons">
+
+                                            <button class="shared-button primary compact pronunciation-button"
+                                                type="button">
+                                                Standard
+                                            </button>
+
+                                            <button
+                                                class="shared-button secondary compact pronunciation-button disabled"
+                                                type="button" disabled>
+                                                Uppsala
+                                            </button>
+
+                                            <button
+                                                class="shared-button secondary compact pronunciation-button disabled"
+                                                type="button" disabled>
+                                                Gothenburg
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                </div>
+
+                                <div class="pronunciation-options-bottom-row">
+
+                                    <fieldset class="shared-panel compact pronunciation-sub-panel"
+                                        data-lesson-player-panel="speech-provider-panel">
+
+                                        <legend>AI provider</legend>
+
+                                        <div class="pronunciation-option-buttons">
+
+                                            <button class="shared-button primary compact pronunciation-button"
+                                                type="button">
+                                                Browser speech
+                                            </button>
+
+                                            <button
+                                                class="shared-button secondary compact pronunciation-button disabled"
+                                                type="button" disabled>
+                                                OpenAI
+                                            </button>
+
+                                            <button
+                                                class="shared-button secondary compact pronunciation-button disabled"
+                                                type="button" disabled>
+                                                Azure AI
+                                            </button>
+
+                                            <button
+                                                class="shared-button secondary compact pronunciation-button disabled"
+                                                type="button" disabled>
+                                                Google AI
+                                            </button>
+
+                                        </div>
+
+                                    </fieldset>
+
+                                    <fieldset class="shared-panel compact pronunciation-sub-panel"
+                                        data-lesson-player-panel="ai-roadmap-panel">
+
+                                        <legend>AI roadmap</legend>
+
+                                        <div id="pronunciationRoadmapMessage" class="pronunciation-roadmap-content">
+                                        </div>
+
+                                    </fieldset>
+
+                                </div>
+
+                            </fieldset>
+
+                        </section>
+
+                        <section class="lesson-player-toolbar-panel">
+
+                            <section class="shared-action-bar lesson-player-actions">
+
+                                <div class="lesson-player-actions-left">
+
+                                    <button id="backToStartLessonButton" class="shared-button secondary" type="button">
+                                        Exit lesson
+                                    </button>
+
+                                </div>
+
+                                <div class="lesson-player-actions-center">
+
+                                    <button id="previousLearningItemButton" class="shared-button secondary compact"
+                                        type="button">
+                                        Previous
+                                    </button>
+
+                                    <div class="shared-progress-pill" id="lessonPlayerProgressText">
+                                        Item 1 of 1
+                                    </div>
+
+                                    <button id="nextLearningItemButton" class="shared-button primary compact"
+                                        type="button">
+                                        Next
+                                    </button>
+
+                                    <button id="nextQuizQuestionButton" class="shared-button secondary compact hidden"
+                                        type="button">
+                                        Next question
+                                    </button>
+
+                                </div>
+
+                                <div class="lesson-player-actions-right">
+
+                                    <button id="favoriteLearningItemButton" class="shared-button secondary"
+                                        type="button">
+                                        ♡ Favorite
+                                    </button>
+
+                                    <button id="knowLearningItemButton" class="shared-button secondary" type="button">
+                                        ✓ Know it
+                                    </button>
+
+                                    <button id="needsPracticeLearningItemButton" class="shared-button secondary"
+                                        type="button">
+                                        ⟳ Needs practice
+                                    </button>
+
+                                    <button id="submitQuizAnswerButton" class="shared-button primary hidden"
+                                        type="button">
+                                        Submit answer
+                                    </button>
+
+                                </div>
+
+                            </section>
+
+                        </section>
+
+                    </section>
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        function loadLessonPlayerScript(scriptPath) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+
+                script.src = scriptPath;
+
+                script.onload = resolve;
+
+                script.onerror = () => reject(
+                    new Error(
+                        `Failed to load lesson player script: ${scriptPath}`
+                    )
+                );
+
+                document.body.appendChild(script);
+            });
+        }
+
+        async function loadLessonPlayerScripts(scriptPaths) {
+            for (const scriptPath of scriptPaths) {
+                await loadLessonPlayerScript(scriptPath);
+            }
+        }
+
+        loadProtectedWorkspace("available-lessons")
+            .then((authenticatedUser) => {
+                if (!authenticatedUser) {
+                    return;
+                }
+
+                const lessonPlayerScripts = [
+                    "./lesson-player-header/lesson-player-header.js",
+                    "./js/lesson-player-constants.js",
+                    "./js/lesson-player-state.js",
+                    "./js/lesson-player-speech.js",
+                    "./js/lesson-player-progress.js",
+                    "./js/lesson-player-examples.js",
+                    "./js/lesson-player-renderer.js",
+                    "./js/lesson-player-navigation.js",
+                    "./js/lesson-player-quiz.js",
+                    "./js/lesson-player-controller.js"
+                ];
+
+                return loadLessonPlayerScripts(
+                    lessonPlayerScripts
+                );
+            })
+            .catch((error) => {
+                console.error(
+                    "Failed to initialize lesson player:",
+                    error
+                );
+            });
+    </script>
+
+</body>
+
+</html>

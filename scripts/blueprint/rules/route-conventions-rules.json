@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "route-conventions-rules",
+    "description": "Defines route naming, route-handler responsibilities, and API path ownership.",
+    "rules": [
+        {
+            "ruleId": "ROUTE-001",
+            "name": "Route paths use centralized constants",
+            "description": "Backend route registries must use centralized API path constants instead of hardcoded route strings.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "ROUTE-002",
+            "name": "Route handlers use mapper-created DTOs",
+            "description": "Route handlers must convert path parameters and payloads into request DTOs through mapper functions before calling services.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "ROUTE-003",
+            "name": "Routes return consistent JSON envelopes",
+            "description": "Routes should return consistent JSON envelopes containing success, message/error, and resource-specific response fields.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "ROUTE-004",
+            "name": "Module routes stay in module registries",
+            "description": "Module-owned routes must be registered in the module route registry rather than the core/platform route registry.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "ROUTE-005",
+            "name": "Route paths use kebab-case",
+            "description": "API URL path segments must use kebab-case.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "ROUTE-006",
+            "name": "Routes should remain transport-focused",
+            "description": "Route handlers should focus on HTTP transport concerns such as request reading, validation coordination, DTO mapping, authentication/authorization integration, and response sending, while delegating business workflows to services.",
+            "severity": "ERROR"
+        }
+    ]
+}

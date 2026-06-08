@@ -1,0 +1,42 @@
+{
+    "projectRoot": ".",
+    "scripts": [
+        {
+            "name": "extract_backend_endpoints",
+            "module": "scripts.inspections.endpoints.extract_backend_endpoints",
+            "enabled": true,
+            "dependsOn": []
+        },
+        {
+            "name": "extract_frontend_endpoints",
+            "module": "scripts.inspections.endpoints.extract_frontend_endpoints",
+            "enabled": true,
+            "dependsOn": []
+        },
+        {
+            "name": "compare_endpoint_contracts",
+            "module": "scripts.inspections.endpoints.compare_endpoint_contracts",
+            "enabled": true,
+            "dependsOn": [
+                "extract_backend_endpoints",
+                "extract_frontend_endpoints"
+            ]
+        },
+        {
+            "name": "analyze_backend_endpoint_usage",
+            "module": "scripts.inspections.endpoints.analyze_backend_endpoint_usage",
+            "enabled": true,
+            "dependsOn": [
+                "extract_backend_endpoints",
+                "extract_frontend_endpoints"
+            ]
+        },
+        {
+            "name": "inspect_frontend_endpoint_usage",
+            "module": "scripts.inspections.endpoints.inspect_frontend_endpoint_usage",
+            "enabled": true,
+            "dependsOn": []
+        }
+    ],
+    "outputFilePath": "scripts/inspections/endpoints/output/endpoint_inspection_summary.json"
+}

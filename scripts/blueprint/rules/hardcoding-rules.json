@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "hardcoding-rules",
+    "description": "Defines rules for avoiding hardcoded paths, endpoints, field names, statuses, and magic values.",
+    "rules": [
+        {
+            "ruleId": "HARDCODING-001",
+            "name": "Do not hardcode API endpoints in page controllers",
+            "description": "Frontend page controllers must use shared API endpoint constants or endpoint builders.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "HARDCODING-002",
+            "name": "Do not hardcode frontend navigation paths",
+            "description": "Frontend navigation must use the shared frontend path registry.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "HARDCODING-003",
+            "name": "Do not hardcode script paths",
+            "description": "Scripts must use shared path utilities and configuration files for paths and folders.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "HARDCODING-004",
+            "name": "Do not hardcode transport field names in services",
+            "description": "Services must not know frontend/API field names or build raw transport dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "HARDCODING-005",
+            "name": "Avoid magic business values",
+            "description": "Business statuses, numeric codes, and reusable labels should come from constants, reference data, or centralized configuration.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "HARDCODING-006",
+            "name": "Do not hardcode SQL outside repositories",
+            "description": "SQL statements must only exist in repositories or dedicated persistence infrastructure.",
+            "severity": "ERROR"
+        }
+    ]
+}

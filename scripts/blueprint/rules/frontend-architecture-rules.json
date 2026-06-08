@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "frontend-architecture-rules",
+    "description": "Defines frontend architecture rules for page controllers, shared utilities, endpoint usage, and modularity.",
+    "rules": [
+        {
+            "ruleId": "FRONTEND-001",
+            "name": "Page controllers use shared API utilities",
+            "description": "Frontend page controllers must use shared API helper functions rather than raw fetch calls where project utilities exist.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "FRONTEND-002",
+            "name": "Page controllers use shared endpoint registry",
+            "description": "Frontend page controllers must use LLA_API_ENDPOINTS or equivalent shared endpoint registries for backend calls.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "FRONTEND-003",
+            "name": "Page controllers use shared path registry",
+            "description": "Frontend navigation should use the shared frontend path registry instead of hardcoded page URLs when a path exists there.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "FRONTEND-004",
+            "name": "Frontend files should remain responsibility-focused",
+            "description": "Large frontend files should be split into smaller responsibility-based modules when they become difficult to maintain.",
+            "severity": "WARNING"
+        },
+        {
+            "ruleId": "FRONTEND-005",
+            "name": "Frontend must escape rendered data",
+            "description": "Dynamic data rendered into HTML strings must be escaped using shared escaping utilities.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "FRONTEND-006",
+            "name": "Frontend pages should separate rendering from orchestration",
+            "description": "DOM rendering, state management, navigation, API communication, and interaction orchestration should be separated into focused modules/helpers when frontend complexity grows.",
+            "severity": "WARNING"
+        }
+    ]
+}

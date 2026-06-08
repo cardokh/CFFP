@@ -1,0 +1,116 @@
+{
+    "ruleTodos": [
+        {
+            "targetFile": "docs/blueprint/rules/api-contract-rules.json",
+            "ruleId": "API-005",
+            "name": "Backend and frontend endpoint contracts must be inspectable",
+            "description": "Frontend and backend endpoint definitions should be structured so they can be extracted, compared, and validated automatically by inspection scripts.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/css-architecture-rules.json",
+            "ruleId": "CSS-005",
+            "name": "Avoid inline styles",
+            "description": "Inline styles should be avoided except for dynamic runtime-calculated styling that cannot reasonably live in CSS classes.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/dto-rules.json",
+            "ruleId": "DTO-006",
+            "name": "DTOs must be responsibility-specific",
+            "description": "DTOs should represent a specific use case or operation and should avoid becoming large generic transport objects reused across unrelated operations.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/frontend-architecture-rules.json",
+            "ruleId": "FRONTEND-006",
+            "name": "Frontend pages should separate rendering from orchestration",
+            "description": "DOM rendering, state management, navigation, API communication, and interaction orchestration should be separated into focused modules/helpers when frontend complexity grows.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/hardcoding-rules.json",
+            "ruleId": "HARDCODING-006",
+            "name": "Do not hardcode SQL outside repositories",
+            "description": "SQL statements must only exist in repositories or dedicated persistence infrastructure.",
+            "severity": "ERROR",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/inspection-framework-rules.json",
+            "ruleId": "INSPECTION-006",
+            "name": "Inspection scripts must separate rule definitions from rule execution",
+            "description": "Rule metadata/configuration should remain externalized from rule execution logic so the framework can evolve toward reusable rule engines and DSL-style inspection architectures.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/layering-rules.json",
+            "ruleId": "LAYER-006",
+            "name": "Frontend must not bypass backend architecture",
+            "description": "Frontend code must communicate through approved API/service boundaries and must not directly access persistence, infrastructure, or internal backend implementation details.",
+            "severity": "ERROR",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/mapper-rules.json",
+            "ruleId": "MAPPER-005",
+            "name": "Mappers must remain transformation-focused",
+            "description": "Mappers should only perform structural/data transformation and must not contain orchestration logic, persistence logic, or business decision-making.",
+            "severity": "ERROR",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/naming-convention-rules.json",
+            "ruleId": "NAMING-006",
+            "name": "Entity and module names should remain semantically consistent",
+            "description": "Singular/plural naming, module ownership, and entity terminology should remain consistent across frontend, backend, routes, repositories, DTOs, and database structures.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/repository-rules.json",
+            "ruleId": "REPOSITORY-006",
+            "name": "Repositories should avoid business orchestration",
+            "description": "Repositories should focus on persistence operations and data retrieval/update logic and should not coordinate multi-step business workflows or application orchestration.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/route-conventions-rules.json",
+            "ruleId": "ROUTE-006",
+            "name": "Routes should remain transport-focused",
+            "description": "Route handlers should focus on HTTP transport concerns such as request reading, validation coordination, DTO mapping, authentication/authorization integration, and response sending, while delegating business workflows to services.",
+            "severity": "ERROR",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/scripting-blueprint-rules.json",
+            "ruleId": "SCRIPT-006",
+            "name": "Scripts should separate configuration, execution, and reporting",
+            "description": "Script configuration, execution logic, runtime state, and reporting/output generation should remain separated to support reusable script infrastructure and future framework evolution.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/service-rules.json",
+            "ruleId": "SERVICE-006",
+            "name": "Services should coordinate use cases, not infrastructure",
+            "description": "Services should orchestrate business use cases and coordinate repositories, validators, domain operations, and infrastructure abstractions without becoming infrastructure implementations themselves.",
+            "severity": "WARNING",
+            "status": "pending"
+        },
+        {
+            "targetFile": "docs/blueprint/rules/validator-rules.json",
+            "ruleId": "VALIDATOR-005",
+            "name": "Validators should remain rule-focused",
+            "description": "Validators should focus on validation concerns only and should not perform orchestration, transport formatting, persistence coordination, or business workflow execution.",
+            "severity": "WARNING",
+            "status": "pending"
+        }
+    ]
+}

@@ -1,0 +1,653 @@
+/* =========================================================
+   PROJECT GUIDE - WELCOME STYLE COMPACT
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    padding-top: 10px;
+    padding-left: 10px;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #07111d;
+    color: #eef7ff;
+}
+
+/* =========================================================
+   SHELL
+========================================================= */
+
+.dashboard-layout {
+    width: var(--welcome-shell-width);
+    height: var(--welcome-shell-height);
+
+    display: grid;
+    grid-template-columns: 150px 1030px;
+
+    overflow: hidden;
+
+    background: #0d1724;
+
+    border: 1px solid #2b3d55;
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.45);
+}
+
+#desktop-sidebar-container {
+    width: var(--welcome-sidebar-width);
+    min-width: var(--welcome-sidebar-width);
+    max-width: var(--welcome-sidebar-width);
+
+    height: var(--welcome-sidebar-height);
+    min-height: var(--welcome-sidebar-height);
+    max-height: var(--welcome-sidebar-height);
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    width: var(--welcome-main-width);
+    height: var(--welcome-main-height);
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding-top: var(--welcome-main-padding-top);
+    padding-right: var(--welcome-main-padding-right);
+    padding-bottom: var(--welcome-main-padding-bottom);
+    padding-left: var(--welcome-main-padding-left);
+
+    overflow: hidden;
+}
+
+.project-guide-content {
+    width: var(--welcome-panel-stack-width);
+    height: var(--welcome-panel-stack-height);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--welcome-panel-gap);
+
+    overflow: hidden;
+}
+
+#header-panel-container {
+    width: var(--welcome-header-width);
+    height: var(--welcome-header-height);
+
+    min-width: var(--welcome-header-width);
+    max-width: var(--welcome-header-width);
+
+    min-height: var(--welcome-header-height);
+    max-height: var(--welcome-header-height);
+
+    overflow: hidden;
+    flex: 0 0 var(--welcome-header-height);
+}
+
+.protected-content-panel {
+    width: var(--welcome-content-width);
+    height: var(--welcome-content-height);
+
+    min-width: var(--welcome-content-width);
+    max-width: var(--welcome-content-width);
+
+    min-height: var(--welcome-content-height);
+    max-height: var(--welcome-content-height);
+
+    display: flex;
+    flex-direction: column;
+
+    padding:
+        var(--protected-content-padding-y) var(--protected-content-padding-x);
+
+    overflow: hidden;
+    flex: 0 0 var(--welcome-content-height);
+}
+
+#footer-panel-container {
+    width: var(--welcome-footer-width);
+    height: var(--welcome-footer-height);
+
+    min-width: var(--welcome-footer-width);
+    max-width: var(--welcome-footer-width);
+
+    min-height: var(--welcome-footer-height);
+    max-height: var(--welcome-footer-height);
+
+    overflow: hidden;
+    flex: 0 0 var(--welcome-footer-height);
+}
+
+/* =========================================================
+   MAIN PANEL - MATCHES WELCOME STYLE
+========================================================= */
+
+.project-guide-card {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    margin: 0;
+    padding: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 78% 28%, rgba(88, 166, 255, 0.22), transparent 28%),
+        radial-gradient(circle at 34% 80%, rgba(255, 215, 107, 0.12), transparent 32%),
+        linear-gradient(135deg, #091624 0%, #10243a 48%, #14385c 100%);
+
+    border: 1px solid #2a4f78;
+    border-radius: 26px;
+
+    box-shadow:
+        inset 0 0 40px rgba(93, 173, 255, 0.08),
+        0 0 24px rgba(63, 145, 255, 0.14);
+}
+
+.project-guide-card::before {
+    content: "";
+    position: absolute;
+    inset: auto -120px -170px auto;
+
+    width: 460px;
+    height: 460px;
+
+    background: radial-gradient(circle, rgba(80, 170, 255, 0.24), transparent 68%);
+
+    pointer-events: none;
+}
+
+.project-guide-card>legend {
+    position: relative;
+    z-index: 2;
+
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.project-guide-scroll-area {
+    position: relative;
+    z-index: 2;
+
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 10px;
+
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.project-guide-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+
+    padding: 0.25rem 0.35rem 0.8rem;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.project-guide-intro {
+    max-width: 920px;
+}
+
+.project-guide-intro p,
+.project-guide-section p {
+    max-width: 920px;
+
+    color: #c3d6ea;
+    line-height: 1.5;
+}
+
+.project-guide-intro p {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+}
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.project-guide-tabs {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 0.5rem;
+}
+
+.project-guide-tab {
+    min-height: 34px;
+
+    padding: 6px 13px;
+
+    border: 1px solid #4b7cab;
+    border-radius: 999px;
+
+    background: rgba(10, 25, 42, 0.78);
+
+    color: #dceeff;
+    font-size: 13px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.project-guide-tab:hover {
+    transform: translateY(-2px);
+
+    background: rgba(20, 45, 72, 0.95);
+}
+
+.project-guide-tab.is-active {
+    color: #ffffff;
+
+    background: linear-gradient(135deg, #57b0ff, #1f6fd1);
+
+    border-color: #8dd0ff;
+
+    box-shadow: 0 0 18px rgba(67, 156, 255, 0.36);
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.project-guide-section {
+    display: none;
+}
+
+.project-guide-section.is-active {
+    display: block;
+}
+
+.project-guide-section h2 {
+    margin-top: 0;
+    margin-bottom: 0.55rem;
+
+    color: #ffffff;
+    font-size: 1.45rem;
+}
+
+.project-guide-section h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.45rem;
+
+    color: #ffffff;
+}
+
+/* =========================================================
+   EVALUATION SUB PANELS
+========================================================= */
+
+.project-guide-evaluation-tabs {
+    margin-top: 0.35rem;
+    margin-bottom: 0.65rem;
+}
+
+.project-guide-evaluation-panel {
+    display: none;
+
+    margin-top: 0.7rem;
+}
+
+.project-guide-evaluation-panel.is-active {
+    display: block;
+}
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.project-guide-feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 0.75rem;
+
+    margin-top: 1rem;
+}
+
+.project-guide-feature-card {
+    min-height: 78px;
+
+    padding: 12px;
+
+    background:
+        linear-gradient(145deg, rgba(10, 27, 46, 0.86), rgba(12, 35, 58, 0.68));
+
+    border: 1px solid rgba(84, 160, 231, 0.38);
+    border-radius: 16px;
+
+    box-shadow:
+        inset 0 0 16px rgba(84, 160, 231, 0.06),
+        0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.project-guide-feature-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.55rem;
+
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.project-guide-feature-card p {
+    margin: 0;
+
+    color: #b9cde2;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.project-guide-feature-card p+p {
+    margin-top: 0.45rem;
+}
+
+/* =========================================================
+   EVALUATION RESULTS
+========================================================= */
+
+.evaluation-results-layout {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.75rem;
+
+    margin-top: 0.15rem;
+}
+
+.evaluation-panel {
+    width: 100%;
+
+    margin: 0;
+    padding: 0.85rem;
+
+    background:
+        linear-gradient(145deg, rgba(10, 27, 46, 0.78), rgba(12, 35, 58, 0.58));
+
+    border: 1px solid rgba(84, 160, 231, 0.34);
+    border-radius: 16px;
+
+    box-shadow:
+        inset 0 0 16px rgba(84, 160, 231, 0.05),
+        0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.evaluation-panel legend {
+    padding: 0 0.6rem;
+
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+/* =========================================================
+   SUMMARY ANALYSIS
+========================================================= */
+
+.evaluation-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 0.65rem;
+}
+
+.evaluation-summary-metric {
+    min-height: 58px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.22rem;
+
+    padding: 0.55rem;
+
+    background: rgba(10, 25, 42, 0.72);
+
+    border: 1px solid rgba(95, 176, 255, 0.32);
+    border-radius: 14px;
+
+    box-shadow:
+        inset 0 0 10px rgba(83, 168, 255, 0.06);
+}
+
+.evaluation-summary-value {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.evaluation-summary-label {
+    color: #b9cde2;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.evaluation-table-wrapper {
+    width: 100%;
+}
+
+.evaluation-participant-row {
+    cursor: pointer;
+}
+
+.evaluation-participant-row.is-active td:first-child {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+/* =========================================================
+   TASK RESULTS
+========================================================= */
+
+.evaluation-task-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: 0.75rem;
+
+    margin: 0.25rem 0;
+
+    color: #c3d6ea;
+    line-height: 1.35;
+}
+
+.evaluation-task-text {
+    min-width: 0;
+
+    font-size: 0.88rem;
+    color: #c3d6ea;
+}
+
+.evaluation-task-status {
+    color: #ffffff;
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    text-align: right;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+.evaluation-details-panel {
+    min-height: 260px;
+}
+
+.evaluation-details-panel h3 {
+    margin-top: 0.1rem;
+    margin-bottom: 0.5rem;
+
+    color: #ffffff;
+    font-size: 1.05rem;
+}
+
+.evaluation-details-panel h4 {
+    margin-top: 0.7rem;
+    margin-bottom: 0.45rem;
+
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.evaluation-panel p,
+.evaluation-details-panel p {
+    margin: 0;
+
+    color: #c3d6ea;
+    line-height: 1.45;
+}
+
+.evaluation-panel p+p,
+.evaluation-details-panel p+p {
+    margin-top: 0.35rem;
+}
+
+.evaluation-detail-section {
+    margin-top: 0.85rem;
+    padding-top: 0.7rem;
+
+    border-top: 1px solid rgba(119, 183, 255, 0.2);
+}
+
+.evaluation-detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+
+    color: #ffffff;
+}
+
+.evaluation-detail-section p {
+    margin: 0.3rem 0;
+
+    color: #c3d6ea;
+    line-height: 1.4;
+}
+
+.evaluation-open-answer {
+    margin-top: 0.55rem;
+    padding: 0.6rem;
+
+    background: rgba(10, 25, 42, 0.58);
+
+    border: 1px solid rgba(95, 176, 255, 0.22);
+    border-radius: 12px;
+}
+
+.evaluation-open-question {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.evaluation-open-response {
+    margin-top: 0.25rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .project-guide-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .evaluation-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.evaluation-participant-heading {
+    margin-top: 0.1rem;
+    margin-bottom: 0.4rem;
+
+    font-size: 0.95rem;
+}
+
+.evaluation-heading-label {
+    color: #9bb0c8;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.evaluation-heading-value {
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+
+.evaluation-open-answer .evaluation-heading-label {
+    color: #9bb0c8;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.evaluation-open-answer .evaluation-heading-value {
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+}

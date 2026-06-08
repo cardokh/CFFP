@@ -1,0 +1,42 @@
+{
+    "ruleSetName": "layering-rules",
+    "description": "Defines allowed responsibilities and dependencies between frontend, routes, mappers, services, repositories, and database.",
+    "rules": [
+        {
+            "ruleId": "LAYER-001",
+            "name": "Routes delegate business work",
+            "description": "Route handlers must handle HTTP concerns, validation, mapping, and response sending, then delegate use cases to services.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "LAYER-002",
+            "name": "Services orchestrate only",
+            "description": "Services must coordinate validators, repositories, and domain operations without SQL, raw HTTP payload parsing, or response dictionary construction.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "LAYER-003",
+            "name": "Repositories own persistence",
+            "description": "Repositories must own SQL/database access and return domain objects, DTOs, booleans, or repository-level results.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "LAYER-004",
+            "name": "Mappers own conversion",
+            "description": "Mappers must own conversion between API payloads, DTOs, domain objects, database rows, and response dictionaries.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "LAYER-005",
+            "name": "No upward dependency leakage",
+            "description": "Lower layers must not depend on frontend, HTTP handlers, route utilities, or UI field names.",
+            "severity": "ERROR"
+        },
+        {
+            "ruleId": "LAYER-006",
+            "name": "Frontend must not bypass backend architecture",
+            "description": "Frontend code must communicate through approved API/service boundaries and must not directly access persistence, infrastructure, or internal backend implementation details.",
+            "severity": "ERROR"
+        }
+    ]
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Lesson Details | HejSan
+    </title>
+
+    <link rel="stylesheet" href="./css/student-lesson-details.css">
+
+</head>
+
+<body>
+
+    <main class="mobile-protected-layout">
+
+        <section class="mobile-main-content">
+
+            <div id="mobile-top-panel-container"></div>
+
+            <div class="container">
+
+                <div id="studentLessonDetailsMessage" class="form-message hidden"></div>
+
+                <fieldset class="mobile-student-lesson-details-card">
+
+                    <div class="mobile-student-lesson-details-scroll-area">
+
+                        <fieldset class="mobile-lesson-metadata-panel">
+
+                            <legend>Lesson details</legend>
+
+                            <div id="studentLessonDetailsCard">
+                                <p>Loading lesson details...</p>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+
+                    <section class="mobile-student-lesson-details-actions">
+
+                        <button id="backToMyLessonsButton" class="mobile-student-lesson-details-button" type="button">
+                            Back
+                        </button>
+
+                        <button id="signUpLessonButton" class="mobile-student-lesson-details-button" type="button">
+                            Sign up
+                        </button>
+
+                        <button id="withdrawLessonButton" class="mobile-student-lesson-details-button" type="button">
+                            Withdraw
+                        </button>
+
+                        <button id="startLessonButton" class="mobile-student-lesson-details-button" type="button">
+                            Start
+                        </button>
+
+                    </section>
+
+                </fieldset>
+
+            </div>
+
+            <div id="mobile-bottom-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+
+    <script src="/shared/session-manager.js"></script>
+
+    <script src="/shared/api.js"></script>
+
+    <script src="/shared/ui-render.js"></script>
+
+    <script src="/shared/api-endpoints.js"></script>
+
+    <script src="../shared/components/top-panel/top-panel.js"></script>
+
+    <script src="../shared/components/bottom-panel/bottom-panel.js"></script>
+
+    <script>
+        loadMobileTopPanel("lesson-library");
+
+        loadMobileBottomPanel({
+            desktopTarget:
+                window.LLA_PATHS.desktop.protected.availableLessons
+        });
+    </script>
+
+    <script src="./js/student-lesson-details.js"></script>
+
+</body>
+
+</html>

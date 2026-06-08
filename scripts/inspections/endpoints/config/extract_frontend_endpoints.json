@@ -1,0 +1,5 @@
+{
+    "projectRoot": ".",
+    "sourceFilePath": "frontend/static/shared/api-endpoints.js",
+    "outputFilePath": "scripts/inspections/endpoints/app-endpoints/frontend_endpoints.json"
+}

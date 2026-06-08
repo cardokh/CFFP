@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LLA Desktop Login</title>
+
+    <link rel="stylesheet" href="./css/desktop.css">
+</head>
+
+<body>
+
+    <div id="interaction-toolbar-container"></div>
+
+    <main class="desktop-login">
+
+        <section class="left-panel">
+
+            <header class="top-bar">
+                <div class="brand-mark">H</div>
+                <span>HejSan</span>
+            </header>
+
+            <div class="robot-area">
+                <div class="robot-large">🤖</div>
+
+                <div class="speech-bubble">
+                    Välkommen tillbaka! Ready for today's five minutes?
+                    <span>🌱</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="right-panel">
+
+            <div class="login-card">
+
+                <h1>Welcome back</h1>
+
+                <p class="subtitle">
+                    Pick up your phrases right where you left off.
+                </p>
+
+                <div class="tab-row">
+                    <button id="goToLoginButton" type="button" class="tab active">
+                        Sign in
+                    </button>
+
+                    <button id="goToRegisterButton" type="button" class="tab">
+                        Sign up
+                    </button>
+                </div>
+
+                <form id="loginForm">
+
+                    <label for="email">Email</label>
+
+                    <input id="email" name="email" type="email">
+
+                    <label for="password">Password</label>
+
+                    <input id="password" name="password" type="password">
+
+                    <button id="loginButton" class="login-button" type="submit">
+                        Sign in
+                    </button>
+
+                </form>
+
+                <p id="loginMessage" class="login-message"></p>
+
+                <p class="helper-link">
+                    <span id="forgotPasswordLink">Forgot password?</span>
+                </p>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button id="tryDemoButton" type="button" class="guest-button">
+                    Try demo account
+                </button>
+
+                <p class="terms">
+                    By continuing, you agree to our friendly Terms and Privacy.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/shared/frontend-paths.js"></script>
+    <script src="/shared/interaction-style.js"></script>
+    <script src="/shared/api-endpoints.js"></script>
+    <script src="/shared/api.js"></script>
+    <script src="/shared/authentication-api.js"></script>
+    <script src="/shared/session-manager.js"></script>
+    <script src="/shared/auth-messages.js"></script>
+
+    <script src="/desktop/shared/components/interaction-toolbar/interaction-toolbar.js"></script>
+    <script src="./js/login.js"></script>
+
+    <script>
+        loadInteractionToolbar("login");
+    </script>
+</body>
+
+</html>

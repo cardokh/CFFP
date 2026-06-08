@@ -1,0 +1,40 @@
+.lesson-categories-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+}
+
+.lesson-categories-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+.lesson-categories-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.lesson-categories-table-inner {
+    width: 100%;
+    max-width: 100%;
+}
+
+.lesson-categories-table tbody tr[data-category-id] {
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+
+    .lesson-categories-table-inner {
+        width: 100%;
+    }
+}

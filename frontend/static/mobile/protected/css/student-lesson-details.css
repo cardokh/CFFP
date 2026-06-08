@@ -1,0 +1,187 @@
+/* =========================================================
+   MOBILE STUDENT LESSON DETAILS PAGE
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #26345f;
+}
+
+body {
+    background: linear-gradient(180deg, #d7e9ff, #b9d7ff 45%, #eaf4ff);
+}
+
+.mobile-protected-layout {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+}
+
+.mobile-main-content {
+    width: 100%;
+    max-width: 430px;
+    min-height: 700px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: 26px 18px 110px;
+    background: linear-gradient(180deg, rgba(118, 185, 255, 0.55), rgba(255, 255, 255, 0.18));
+    box-shadow: 0 20px 48px rgba(92, 136, 201, 0.22);
+}
+
+.container {
+    width: 100%;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.form-message {
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #001f5c;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.form-message.hidden {
+    display: none;
+}
+
+.form-message.error {
+    background: rgba(255, 230, 230, 0.95);
+    border: 1px solid rgba(220, 53, 69, 0.35);
+    color: #a01825;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.mobile-student-lesson-details-card {
+    margin-top: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 24px;
+    padding: 16px;
+    background: linear-gradient(180deg, rgba(221, 237, 255, 0.46), rgba(255, 255, 255, 0.20));
+    box-shadow: 0 10px 22px rgba(92, 136, 201, 0.10);
+}
+
+.mobile-student-lesson-details-card legend {
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #10245a;
+}
+
+.mobile-student-lesson-details-scroll-area {
+    width: 100%;
+}
+
+/* =========================================================
+   METADATA PANEL
+========================================================= */
+
+.mobile-lesson-metadata-panel {
+    margin: 0 0 14px 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 18px;
+}
+
+.mobile-lesson-metadata-panel legend {
+    padding: 0 8px;
+    color: #001f5c;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   DETAILS LIST
+========================================================= */
+
+.student-lesson-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.student-lesson-detail-row {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(120, 170, 230, 0.35);
+    border-radius: 12px;
+    color: #001f5c;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.student-lesson-detail-label {
+    flex-shrink: 0;
+    color: #42628f;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.student-lesson-detail-value {
+    color: #001f5c;
+    font-size: 13px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.mobile-student-lesson-details-actions {
+    margin-top: 14px;
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    border-top: 1px solid rgba(120, 170, 230, 0.35);
+}
+
+.mobile-student-lesson-details-button {
+    min-height: 38px;
+    border: 1px solid rgba(60, 125, 210, 0.55);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #60b2ff, #2f7dff);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mobile-student-lesson-details-button:disabled {
+    background: rgba(120, 170, 230, 0.35);
+
+    color: rgba(0, 31, 92, 0.55);
+
+    border-color: rgba(120, 170, 230, 0.45);
+
+    cursor: not-allowed;
+}
+
+.mobile-student-lesson-details-button.hidden {
+    display: none;
+}

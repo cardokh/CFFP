@@ -1,0 +1,4 @@
+bcrypt==5.0.0
+gTTS==2.5.4
+openai==1.86.0
+requests==2.33.1

@@ -1,0 +1,6 @@
+{
+    "projectRoot": ".",
+    "frontendEndpointsPath": "scripts/inspections/endpoints/app-endpoints/frontend_endpoints.json",
+    "backendEndpointsPath": "scripts/inspections/endpoints/app-endpoints/backend_endpoints.json",
+    "outputFilePath": "scripts/inspections/endpoints/app-endpoints/endpoint_contract_comparison.json"
+}
