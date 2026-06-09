@@ -1,0 +1,135 @@
+{
+    "scriptName": "create_workspace_structure_endpoint",
+    "mode": "generate",
+    "folders": [
+        {
+            "path": "backend/src/core/automation"
+        },
+        {
+            "path": "backend/src/core/automation/workspaces"
+        }
+    ],
+    "files": [
+        {
+            "path": "backend/src/core/automation/__init__.py",
+            "content": "",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/__init__.py",
+            "content": "",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_contracts.py",
+            "content": "\"\"\"\nWorkspace structure API contracts.\n\nResponsibilities:\n- Centralize request and response field names for workspace structure creation.\n- Keep transport contract strings out of route and service logic.\n\"\"\"\n\nWORKSPACE_STRUCTURE_REQUEST_BASE_PATH = \"basePath\"\nWORKSPACE_STRUCTURE_REQUEST_FOLDERS = \"folders\"\nWORKSPACE_STRUCTURE_REQUEST_FILES = \"files\"\nWORKSPACE_STRUCTURE_REQUEST_FILE_PATH = \"path\"\nWORKSPACE_STRUCTURE_REQUEST_FILE_CONTENT = \"content\"\nWORKSPACE_STRUCTURE_REQUEST_OVERWRITE_FILES = \"overwriteFiles\"\n\nWORKSPACE_STRUCTURE_RESPONSE_SUCCESS = \"success\"\nWORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDERS = \"createdFolders\"\nWORKSPACE_STRUCTURE_RESPONSE_CREATED_FILES = \"createdFiles\"\nWORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILES = \"skippedFiles\"\nWORKSPACE_STRUCTURE_RESPONSE_ERRORS = \"errors\"\nWORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDER_PATHS = \"createdFolderPaths\"\nWORKSPACE_STRUCTURE_RESPONSE_CREATED_FILE_PATHS = \"createdFilePaths\"\nWORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILE_PATHS = \"skippedFilePaths\"\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_messages.py",
+            "content": "\"\"\"\nWorkspace structure messages.\n\"\"\"\n\nINVALID_JSON_BODY = \"Invalid JSON body.\"\nWORKSPACE_STRUCTURE_CREATE_FAILED = \"Workspace structure creation failed.\"\nBASE_PATH_REQUIRED = \"basePath must be a non-empty string.\"\nFOLDERS_MUST_BE_LIST = \"folders must be a list.\"\nFILES_MUST_BE_LIST = \"files must be a list.\"\nFOLDER_PATH_MUST_BE_STRING = \"Folder path must be a non-empty string.\"\nFILE_ENTRY_MUST_BE_OBJECT = \"File entry must be an object.\"\nFILE_PATH_MUST_BE_STRING = \"File path must be a non-empty string.\"\nFILE_CONTENT_MUST_BE_STRING = \"File content must be a string.\"\nOVERWRITE_FILES_MUST_BE_BOOLEAN = \"overwriteFiles must be a boolean.\"\nABSOLUTE_PATH_NOT_ALLOWED = \"Absolute paths are not allowed.\"\nPARENT_TRAVERSAL_NOT_ALLOWED = \"Parent path traversal is not allowed.\"\nPATH_ESCAPES_WORKSPACE_ROOT = \"Path escapes the configured workspace root.\"\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_validator.py",
+            "content": "\"\"\"\nWorkspace structure request validation.\n\nResponsibilities:\n- Validate the transport request before the service performs filesystem work.\n- Keep route handlers thin.\n- Enforce basic contract shape and safe relative path rules.\n\"\"\"\n\nfrom pathlib import Path\n\nfrom src.core.automation.workspaces.workspace_structure_contracts import (\n    WORKSPACE_STRUCTURE_REQUEST_BASE_PATH,\n    WORKSPACE_STRUCTURE_REQUEST_FILES,\n    WORKSPACE_STRUCTURE_REQUEST_FILE_CONTENT,\n    WORKSPACE_STRUCTURE_REQUEST_FILE_PATH,\n    WORKSPACE_STRUCTURE_REQUEST_FOLDERS,\n    WORKSPACE_STRUCTURE_REQUEST_OVERWRITE_FILES,\n)\nfrom src.core.automation.workspaces.workspace_structure_messages import (\n    ABSOLUTE_PATH_NOT_ALLOWED,\n    BASE_PATH_REQUIRED,\n    FILES_MUST_BE_LIST,\n    FILE_CONTENT_MUST_BE_STRING,\n    FILE_ENTRY_MUST_BE_OBJECT,\n    FILE_PATH_MUST_BE_STRING,\n    FOLDERS_MUST_BE_LIST,\n    FOLDER_PATH_MUST_BE_STRING,\n    OVERWRITE_FILES_MUST_BE_BOOLEAN,\n    PARENT_TRAVERSAL_NOT_ALLOWED,\n)\n\n\nclass WorkspaceStructureValidator:\n    \"\"\"\n    Validates workspace structure creation requests.\n    \"\"\"\n\n    def validate(self, request_data: dict) -> None:\n        base_path = request_data.get(WORKSPACE_STRUCTURE_REQUEST_BASE_PATH)\n        folders = request_data.get(WORKSPACE_STRUCTURE_REQUEST_FOLDERS, [])\n        files = request_data.get(WORKSPACE_STRUCTURE_REQUEST_FILES, [])\n        overwrite_files = request_data.get(\n            WORKSPACE_STRUCTURE_REQUEST_OVERWRITE_FILES,\n            False,\n        )\n\n        if not isinstance(base_path, str) or not base_path.strip():\n            raise ValueError(BASE_PATH_REQUIRED)\n\n        self._validate_relative_path(base_path)\n\n        if not isinstance(folders, list):\n            raise ValueError(FOLDERS_MUST_BE_LIST)\n\n        if not isinstance(files, list):\n            raise ValueError(FILES_MUST_BE_LIST)\n\n        if not isinstance(overwrite_files, bool):\n            raise ValueError(OVERWRITE_FILES_MUST_BE_BOOLEAN)\n\n        for folder_path in folders:\n            if not isinstance(folder_path, str) or not folder_path.strip():\n                raise ValueError(FOLDER_PATH_MUST_BE_STRING)\n\n            self._validate_relative_path(folder_path)\n\n        for file_entry in files:\n            if not isinstance(file_entry, dict):\n                raise ValueError(FILE_ENTRY_MUST_BE_OBJECT)\n\n            file_path = file_entry.get(WORKSPACE_STRUCTURE_REQUEST_FILE_PATH)\n            content = file_entry.get(WORKSPACE_STRUCTURE_REQUEST_FILE_CONTENT)\n\n            if not isinstance(file_path, str) or not file_path.strip():\n                raise ValueError(FILE_PATH_MUST_BE_STRING)\n\n            if not isinstance(content, str):\n                raise ValueError(FILE_CONTENT_MUST_BE_STRING)\n\n            self._validate_relative_path(file_path)\n\n    def _validate_relative_path(self, value: str) -> None:\n        candidate_path = Path(value)\n\n        if candidate_path.is_absolute():\n            raise ValueError(ABSOLUTE_PATH_NOT_ALLOWED)\n\n        if any(path_part == \"..\" for path_part in candidate_path.parts):\n            raise ValueError(PARENT_TRAVERSAL_NOT_ALLOWED)\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/local_workspace_file_system.py",
+            "content": "\"\"\"\nLocal workspace filesystem adapter.\n\nResponsibilities:\n- Perform filesystem writes for workspace automation.\n- Keep filesystem operations isolated from route handling and service orchestration.\n\"\"\"\n\nfrom pathlib import Path\n\n\nclass LocalWorkspaceFileSystem:\n    \"\"\"\n    Adapter for local filesystem operations inside a controlled workspace root.\n    \"\"\"\n\n    def create_folder(self, folder_path: Path) -> None:\n        folder_path.mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def write_file(\n        self,\n        file_path: Path,\n        content: str,\n        overwrite: bool,\n    ) -> bool:\n        if file_path.exists() and not overwrite:\n            return False\n\n        file_path.parent.mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n        file_path.write_text(\n            content,\n            encoding=\"utf-8\",\n        )\n\n        return True\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_result.py",
+            "content": "\"\"\"\nWorkspace structure execution result.\n\"\"\"\n\nfrom src.core.automation.workspaces.workspace_structure_contracts import (\n    WORKSPACE_STRUCTURE_RESPONSE_CREATED_FILES,\n    WORKSPACE_STRUCTURE_RESPONSE_CREATED_FILE_PATHS,\n    WORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDERS,\n    WORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDER_PATHS,\n    WORKSPACE_STRUCTURE_RESPONSE_ERRORS,\n    WORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILES,\n    WORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILE_PATHS,\n    WORKSPACE_STRUCTURE_RESPONSE_SUCCESS,\n)\n\n\nclass WorkspaceStructureResult:\n    \"\"\"\n    Mutable execution result for workspace structure creation.\n    \"\"\"\n\n    def __init__(self):\n        self.created_folder_paths = []\n        self.created_file_paths = []\n        self.skipped_file_paths = []\n        self.errors = []\n\n    def add_created_folder(self, path: str) -> None:\n        self.created_folder_paths.append(path)\n\n    def add_created_file(self, path: str) -> None:\n        self.created_file_paths.append(path)\n\n    def add_skipped_file(self, path: str) -> None:\n        self.skipped_file_paths.append(path)\n\n    def add_error(self, path: str, message: str) -> None:\n        self.errors.append(\n            {\n                \"path\": path,\n                \"message\": message,\n            }\n        )\n\n    def to_response(self) -> dict:\n        return {\n            WORKSPACE_STRUCTURE_RESPONSE_SUCCESS: not self.errors,\n            WORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDERS: len(\n                self.created_folder_paths,\n            ),\n            WORKSPACE_STRUCTURE_RESPONSE_CREATED_FILES: len(\n                self.created_file_paths,\n            ),\n            WORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILES: len(\n                self.skipped_file_paths,\n            ),\n            WORKSPACE_STRUCTURE_RESPONSE_ERRORS: self.errors,\n            WORKSPACE_STRUCTURE_RESPONSE_CREATED_FOLDER_PATHS: self.created_folder_paths,\n            WORKSPACE_STRUCTURE_RESPONSE_CREATED_FILE_PATHS: self.created_file_paths,\n            WORKSPACE_STRUCTURE_RESPONSE_SKIPPED_FILE_PATHS: self.skipped_file_paths,\n        }\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_service.py",
+            "content": "\"\"\"\nWorkspace structure service.\n\nResponsibilities:\n- Create folders and files within the configured workspace root.\n- Enforce workspace root restrictions.\n- Return an execution result suitable for API responses and future automation logs.\n\"\"\"\n\nfrom pathlib import Path\n\nfrom src.core.automation.workspaces.workspace_structure_contracts import (\n    WORKSPACE_STRUCTURE_REQUEST_BASE_PATH,\n    WORKSPACE_STRUCTURE_REQUEST_FILES,\n    WORKSPACE_STRUCTURE_REQUEST_FILE_CONTENT,\n    WORKSPACE_STRUCTURE_REQUEST_FILE_PATH,\n    WORKSPACE_STRUCTURE_REQUEST_FOLDERS,\n    WORKSPACE_STRUCTURE_REQUEST_OVERWRITE_FILES,\n)\nfrom src.core.automation.workspaces.workspace_structure_messages import (\n    PATH_ESCAPES_WORKSPACE_ROOT,\n)\nfrom src.core.automation.workspaces.workspace_structure_result import (\n    WorkspaceStructureResult,\n)\n\n\nclass WorkspaceStructureService:\n    \"\"\"\n    Creates workspace folder and file structures under a controlled root.\n    \"\"\"\n\n    def __init__(\n        self,\n        workspace_root: Path,\n        workspace_file_system,\n        workspace_structure_validator,\n    ):\n        self._workspace_root = workspace_root.resolve()\n        self._workspace_file_system = workspace_file_system\n        self._workspace_structure_validator = workspace_structure_validator\n\n    def create_workspace_structure(self, request_data: dict) -> WorkspaceStructureResult:\n        self._workspace_structure_validator.validate(request_data)\n\n        result = WorkspaceStructureResult()\n        base_path = request_data[WORKSPACE_STRUCTURE_REQUEST_BASE_PATH]\n        folders = request_data.get(WORKSPACE_STRUCTURE_REQUEST_FOLDERS, [])\n        files = request_data.get(WORKSPACE_STRUCTURE_REQUEST_FILES, [])\n        overwrite_files = request_data.get(\n            WORKSPACE_STRUCTURE_REQUEST_OVERWRITE_FILES,\n            False,\n        )\n\n        base_target_path = self._resolve_workspace_path(base_path)\n        self._workspace_file_system.create_folder(base_target_path)\n\n        for folder_path in folders:\n            target_folder_path = self._resolve_workspace_path(\n                base_path,\n                folder_path,\n            )\n\n            self._workspace_file_system.create_folder(target_folder_path)\n            result.add_created_folder(\n                self._to_workspace_relative_path(target_folder_path),\n            )\n\n        for file_entry in files:\n            file_path = file_entry[WORKSPACE_STRUCTURE_REQUEST_FILE_PATH]\n            content = file_entry[WORKSPACE_STRUCTURE_REQUEST_FILE_CONTENT]\n            target_file_path = self._resolve_workspace_path(\n                base_path,\n                file_path,\n            )\n\n            was_created = self._workspace_file_system.write_file(\n                target_file_path,\n                content,\n                overwrite_files,\n            )\n\n            if was_created:\n                result.add_created_file(\n                    self._to_workspace_relative_path(target_file_path),\n                )\n            else:\n                result.add_skipped_file(\n                    self._to_workspace_relative_path(target_file_path),\n                )\n\n        return result\n\n    def _resolve_workspace_path(self, *path_parts: str) -> Path:\n        target_path = self._workspace_root.joinpath(*path_parts).resolve()\n\n        try:\n            target_path.relative_to(self._workspace_root)\n        except ValueError as error:\n            raise ValueError(PATH_ESCAPES_WORKSPACE_ROOT) from error\n\n        return target_path\n\n    def _to_workspace_relative_path(self, target_path: Path) -> str:\n        return target_path.relative_to(self._workspace_root).as_posix()\n",
+            "overwrite": true
+        },
+        {
+            "path": "backend/src/core/automation/workspaces/workspace_structure_routes.py",
+            "content": "\"\"\"\nWorkspace structure API routes.\n\nResponsibilities:\n- Handle workspace structure creation requests.\n- Delegate validation and execution to WorkspaceStructureService.\n- Keep HTTP transport logic separate from service logic.\n\"\"\"\n\nfrom src.api.route_utils import read_json_body, send_json\nfrom src.core.automation.workspaces.workspace_structure_messages import (\n    INVALID_JSON_BODY,\n    WORKSPACE_STRUCTURE_CREATE_FAILED,\n)\n\n\ndef handle_create_workspace_structure(handler, workspace_structure_service) -> None:\n    try:\n        request_data = read_json_body(handler)\n\n        if request_data is None:\n            send_json(\n                handler,\n                400,\n                {\n                    \"success\": False,\n                    \"errors\": [INVALID_JSON_BODY],\n                },\n            )\n            return\n\n        result = workspace_structure_service.create_workspace_structure(\n            request_data,\n        )\n\n        status_code = 200 if result.to_response()[\"success\"] else 400\n\n        send_json(\n            handler,\n            status_code,\n            result.to_response(),\n        )\n\n    except ValueError as error:\n        send_json(\n            handler,\n            400,\n            {\n                \"success\": False,\n                \"errors\": [str(error)],\n            },\n        )\n\n    except Exception:\n        send_json(\n            handler,\n            500,\n            {\n                \"success\": False,\n                \"errors\": [WORKSPACE_STRUCTURE_CREATE_FAILED],\n            },\n        )\n",
+            "overwrite": true
+        }
+    ],
+    "textReplacements": [
+        {
+            "path": "backend/src/api/api_paths.py",
+            "oldText": "API_PATH_AI_SPEECH_GENERATE = \"/api/ai/speech/generate\"\n",
+            "newText": "API_PATH_AI_SPEECH_GENERATE = \"/api/ai/speech/generate\"\n\nAPI_PATH_AUTOMATION_WORKSPACE_STRUCTURE = \"/api/automation/workspaces/structure\"\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/api/route_registry.py",
+            "oldText": "    API_PATH_AI_SPEECH_GENERATE,\n    API_PATH_AUTH_FORGOT_PASSWORD,\n",
+            "newText": "    API_PATH_AI_SPEECH_GENERATE,\n    API_PATH_AUTOMATION_WORKSPACE_STRUCTURE,\n    API_PATH_AUTH_FORGOT_PASSWORD,\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/api/route_registry.py",
+            "oldText": "from src.core.ai.ai_speech.ai_speech_routes import (\n    handle_generate_ai_speech,\n)\n",
+            "newText": "from src.core.ai.ai_speech.ai_speech_routes import (\n    handle_generate_ai_speech,\n)\nfrom src.core.automation.workspaces.workspace_structure_routes import (\n    handle_create_workspace_structure,\n)\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/api/route_registry.py",
+            "oldText": "                API_PATH_AI_SPEECH_GENERATE: lambda: handle_generate_ai_speech(\n                    handler,\n                    services.ai_speech_service,\n                    services.ai_speech_validator,\n                ),\n",
+            "newText": "                API_PATH_AI_SPEECH_GENERATE: lambda: handle_generate_ai_speech(\n                    handler,\n                    services.ai_speech_service,\n                    services.ai_speech_validator,\n                ),\n                API_PATH_AUTOMATION_WORKSPACE_STRUCTURE: lambda: handle_create_workspace_structure(\n                    handler,\n                    services.workspace_structure_service,\n                ),\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/core/application/service_factory.py",
+            "oldText": "from src.core.ai.ai_speech.ai_speech_service import AiSpeechService\nfrom src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator\n",
+            "newText": "from src.core.ai.ai_speech.ai_speech_service import AiSpeechService\nfrom src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator\nfrom src.core.automation.workspaces.local_workspace_file_system import (\n    LocalWorkspaceFileSystem,\n)\nfrom src.core.automation.workspaces.workspace_structure_service import (\n    WorkspaceStructureService,\n)\nfrom src.core.automation.workspaces.workspace_structure_validator import (\n    WorkspaceStructureValidator,\n)\nfrom src.core.shared.app_path_utils import get_path\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/core/application/service_factory.py",
+            "oldText": "def build_ai_speech_service():\n    ai_speech_provider_mapper = build_ai_speech_provider_mapper()\n\n    ai_speech_result_factory = build_ai_speech_result_factory()\n\n    return AiSpeechService(\n        ai_speech_provider_mapper=ai_speech_provider_mapper,\n        ai_speech_result_factory=ai_speech_result_factory,\n    )\n\n\n",
+            "newText": "def build_ai_speech_service():\n    ai_speech_provider_mapper = build_ai_speech_provider_mapper()\n\n    ai_speech_result_factory = build_ai_speech_result_factory()\n\n    return AiSpeechService(\n        ai_speech_provider_mapper=ai_speech_provider_mapper,\n        ai_speech_result_factory=ai_speech_result_factory,\n    )\n\n\ndef build_workspace_structure_service():\n    return WorkspaceStructureService(\n        workspace_root=get_path(\"workspaceAutomationRoot\"),\n        workspace_file_system=LocalWorkspaceFileSystem(),\n        workspace_structure_validator=WorkspaceStructureValidator(),\n    )\n\n\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/core/application/service_container.py",
+            "oldText": "    build_ai_speech_service,\n    build_ai_speech_validator,\n",
+            "newText": "    build_ai_speech_service,\n    build_ai_speech_validator,\n    build_workspace_structure_service,\n",
+            "required": true
+        },
+        {
+            "path": "backend/src/core/application/service_container.py",
+            "oldText": "        ai_speech_service=build_ai_speech_service(),\n        ai_speech_validator=build_ai_speech_validator(),\n",
+            "newText": "        ai_speech_service=build_ai_speech_service(),\n        ai_speech_validator=build_ai_speech_validator(),\n        workspace_structure_service=build_workspace_structure_service(),\n",
+            "required": true
+        }
+    ],
+    "jsonMerges": [
+        {
+            "path": "backend/src/core/shared/config/app_path_utils.json",
+            "values": {
+                "workspaceAutomationRoot": "{projectRoot}/workspace"
+            }
+        },
+        {
+            "path": "scripts/inspections/governed/config/inspect_script_governance.json",
+            "values": {
+                "targetScripts": [
+                    "scripts/inspections/governed/inspect_script_governance.py",
+                    "scripts/inspections/governed/script_blueprint.py",
+                    "scripts/db/sqlite_create_schema.py",
+                    "scripts/db/sqlite_seed_data.py",
+                    "scripts/inspections/endpoints/extract_backend_endpoints.py",
+                    "scripts/inspections/endpoints/extract_frontend_endpoints.py",
+                    "scripts/inspections/endpoints/compare_endpoint_contracts.py",
+                    "scripts/inspections/endpoints/inspect_frontend_endpoint_usage.py",
+                    "scripts/inspections/endpoints/analyze_backend_endpoint_usage.py",
+                    "scripts/inspections/endpoints/run_endpoint_inspection.py",
+                    "scripts/tasks/create_workspace_structure_endpoint/create_workspace_structure_endpoint.py"
+                ]
+            }
+        }
+    ]
+}
