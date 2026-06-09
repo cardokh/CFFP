@@ -20,16 +20,6 @@ from src.core.ai.ai_speech.ai_speech_result_factory import (
 )
 from src.core.ai.ai_speech.ai_speech_service import AiSpeechService
 from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
-from src.core.automation.workspaces.local_workspace_file_system import (
-    LocalWorkspaceFileSystem,
-)
-from src.core.automation.workspaces.workspace_structure_service import (
-    WorkspaceStructureService,
-)
-from src.core.automation.workspaces.workspace_structure_validator import (
-    WorkspaceStructureValidator,
-)
-from src.core.shared.app_path_utils import get_path
 from src.core.infrastructure.database import DatabaseManager
 
 from src.core.users.password_service import PasswordService
@@ -142,14 +132,6 @@ def build_ai_speech_service():
     return AiSpeechService(
         ai_speech_provider_mapper=ai_speech_provider_mapper,
         ai_speech_result_factory=ai_speech_result_factory,
-    )
-
-
-def build_workspace_structure_service():
-    return WorkspaceStructureService(
-        workspace_root=get_path("workspaceAutomationRoot"),
-        workspace_file_system=LocalWorkspaceFileSystem(),
-        workspace_structure_validator=WorkspaceStructureValidator(),
     )
 
 

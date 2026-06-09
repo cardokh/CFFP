@@ -21,7 +21,6 @@
         "scripts/inspections/endpoints/compare_endpoint_contracts.py",
         "scripts/inspections/endpoints/inspect_frontend_endpoint_usage.py",
         "scripts/inspections/endpoints/analyze_backend_endpoint_usage.py",
-        "scripts/inspections/endpoints/run_endpoint_inspection.py",
-        "scripts/tasks/create_workspace_structure_endpoint/create_workspace_structure_endpoint.py"
+        "scripts/inspections/endpoints/run_endpoint_inspection.py"
     ]
 }

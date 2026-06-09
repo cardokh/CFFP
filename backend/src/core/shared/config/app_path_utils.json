@@ -17,6 +17,5 @@
     "inspectionOutputPath": "{inspectionsPath}/output",
     "crudsPath": "{scriptsPath}/cruds",
     "testsPath": "{scriptsPath}/tests",
-    "fixesPath": "{scriptsPath}/fixes",
-    "workspaceAutomationRoot": "{projectRoot}/workspace"
+    "fixesPath": "{scriptsPath}/fixes"
 }

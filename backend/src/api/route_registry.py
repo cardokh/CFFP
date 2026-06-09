@@ -25,7 +25,6 @@ from src.api.api_paths import (
     API_PATH_ADMIN_USERS,
     API_PATH_ADMIN_USERS_PREFIX,
     API_PATH_AI_SPEECH_GENERATE,
-    API_PATH_AUTOMATION_WORKSPACE_STRUCTURE,
     API_PATH_AUTH_FORGOT_PASSWORD,
     API_PATH_AUTH_LOGIN,
     API_PATH_AUTH_REGISTER,
@@ -51,9 +50,6 @@ from src.api.route_registry_utils import (
 )
 from src.core.ai.ai_speech.ai_speech_routes import (
     handle_generate_ai_speech,
-)
-from src.core.automation.workspaces.workspace_structure_routes import (
-    handle_create_workspace_structure,
 )
 from src.core.users.user_routes import (
     handle_delete_user,
@@ -116,10 +112,6 @@ def build_core_route_registry(
                     handler,
                     services.ai_speech_service,
                     services.ai_speech_validator,
-                ),
-                API_PATH_AUTOMATION_WORKSPACE_STRUCTURE: lambda: handle_create_workspace_structure(
-                    handler,
-                    services.workspace_structure_service,
                 ),
             },
         },
