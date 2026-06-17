@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Task Details | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/details.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="automation-task-details-content">
+
+                    <div class="automation-task-details-heading">
+                        <div>
+                            <p class="automation-task-details-kicker">
+                                CCore Automation
+                            </p>
+
+                            <h1 id="automationTaskDetailsTitle">
+                                Automation Task Details
+                            </h1>
+
+                            <p id="automationTaskDetailsSummary" class="automation-task-details-summary">
+                                Select an automation task from the registry to inspect its metadata before execution.
+                            </p>
+                        </div>
+
+                        <div class="automation-task-details-actions">
+                            <a id="backToAutomationTasksLink" class="shared-button secondary" href="/desktop/protected/automation/tasks.html">
+                                Back to Tasks
+                            </a>
+
+                            <button id="refreshAutomationTaskDetailsButton" class="shared-button secondary" type="button">
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="automationTaskDetailsMessage" class="form-message info hidden"></div>
+
+                    <fieldset class="shared-panel automation-task-details-card">
+                        <legend>Task Metadata</legend>
+
+                        <div id="automationTaskDetailsBody" class="automation-task-details-body">
+                            <p class="automation-task-details-placeholder">
+                                Loading automation task details...
+                            </p>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="shared-panel automation-task-details-card">
+                        <legend>Next Capabilities</legend>
+
+                        <div class="automation-task-details-disabled-actions">
+                            <button class="shared-button secondary" type="button" disabled>
+                                View Configuration
+                            </button>
+
+                            <button class="shared-button secondary" type="button" disabled>
+                                Validate
+                            </button>
+
+                            <button class="shared-button secondary" type="button" disabled>
+                                Execute
+                            </button>
+                        </div>
+
+                        <p class="automation-task-details-note">
+                            These actions are intentionally visible but disabled. They define the next planned vertical slices without adding execution in this iteration.
+                        </p>
+                    </fieldset>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/task-details.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

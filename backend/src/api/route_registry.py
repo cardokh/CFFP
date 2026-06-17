@@ -26,6 +26,7 @@ from src.api.api_paths import (
     API_PATH_ADMIN_USERS_PREFIX,
     API_PATH_AI_SPEECH_GENERATE,
     API_PATH_AUTOMATION_TASKS,
+    API_PATH_AUTOMATION_TASKS_PREFIX,
     API_PATH_AUTH_FORGOT_PASSWORD,
     API_PATH_AUTH_LOGIN,
     API_PATH_AUTH_REGISTER,
@@ -53,6 +54,7 @@ from src.core.ai.ai_speech.ai_speech_routes import (
     handle_generate_ai_speech,
 )
 from src.core.automation.automation_task_routes import (
+    handle_get_automation_task_by_id,
     handle_get_automation_tasks,
 )
 from src.core.users.user_routes import (
@@ -98,6 +100,11 @@ def build_core_route_registry(
                 API_PATH_ADMIN_USERS_PREFIX: lambda path: handle_get_user_by_id(
                     handler,
                     services.users_service,
+                    path,
+                ),
+                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_get_automation_task_by_id(
+                    handler,
+                    services.automation_task_service,
                     path,
                 ),
             },

@@ -4,7 +4,7 @@ Automation task service.
 Responsibilities:
 - Coordinate automation task discovery use cases.
 - Keep API handlers separate from registry-loading details.
-- Keep v1 task listing independent from database storage.
+- Keep task listing and task detail lookup independent from database storage.
 """
 
 
@@ -17,3 +17,8 @@ class AutomationTaskService:
 
     def get_all_tasks(self):
         return self.automation_task_registry.find_all_tasks()
+
+    def get_task_by_id(self, task_id: str):
+        return self.automation_task_registry.find_task_by_id(
+            task_id=task_id,
+        )

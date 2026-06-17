@@ -3,7 +3,7 @@ Automation task registry tests.
 
 Responsibilities:
 - Verify JSON-based automation task discovery.
-- Protect v1 script registry behavior before execution endpoints are added.
+- Protect script registry behavior before execution endpoints are added.
 """
 
 import json
@@ -11,26 +11,35 @@ import json
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
 
 
-def test_find_all_tasks_returns_registered_tasks(tmp_path) -> None:
-    registry_path = tmp_path / "automation_task_registry.json"
-
+def write_registry(registry_path, tasks) -> None:
     registry_path.write_text(
         json.dumps(
             {
-                "tasks": [
-                    {
-                        "id": "inspect-script-governance",
-                        "name": "Inspect Script Governance",
-                        "description": "Inspects script governance rules.",
-                        "category": "validation",
-                        "status": "ready",
-                        "script_path": "scripts/inspections/governed/inspect_script_governance.py",
-                        "config_path": "scripts/inspections/governed/config/inspect_script_governance.json",
-                    }
-                ]
+                "tasks": tasks,
             }
         ),
         encoding="utf-8",
+    )
+
+
+def build_task_entry(task_id="inspect-script-governance") -> dict:
+    return {
+        "id": task_id,
+        "name": "Inspect Script Governance",
+        "description": "Inspects script governance rules.",
+        "category": "validation",
+        "status": "ready",
+        "script_path": "scripts/inspections/governed/inspect_script_governance.py",
+        "config_path": "scripts/inspections/governed/config/inspect_script_governance.json",
+    }
+
+
+def test_find_all_tasks_returns_registered_tasks(tmp_path) -> None:
+    registry_path = tmp_path / "automation_task_registry.json"
+
+    write_registry(
+        registry_path=registry_path,
+        tasks=[build_task_entry()],
     )
 
     registry = AutomationTaskRegistry(registry_path=registry_path)
@@ -55,3 +64,35 @@ def test_find_all_tasks_returns_empty_list_when_registry_has_no_tasks(tmp_path) 
     registry = AutomationTaskRegistry(registry_path=registry_path)
 
     assert registry.find_all_tasks() == []
+
+
+def test_find_task_by_id_returns_matching_task(tmp_path) -> None:
+    registry_path = tmp_path / "automation_task_registry.json"
+
+    write_registry(
+        registry_path=registry_path,
+        tasks=[
+            build_task_entry("inspect-script-governance"),
+            build_task_entry("validate-registry"),
+        ],
+    )
+
+    registry = AutomationTaskRegistry(registry_path=registry_path)
+
+    task = registry.find_task_by_id("validate-registry")
+
+    assert task is not None
+    assert task.task_id == "validate-registry"
+
+
+def test_find_task_by_id_returns_none_for_unknown_task(tmp_path) -> None:
+    registry_path = tmp_path / "automation_task_registry.json"
+
+    write_registry(
+        registry_path=registry_path,
+        tasks=[build_task_entry()],
+    )
+
+    registry = AutomationTaskRegistry(registry_path=registry_path)
+
+    assert registry.find_task_by_id("missing-task") is None

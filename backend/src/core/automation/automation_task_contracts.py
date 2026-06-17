@@ -6,6 +6,7 @@ Responsibilities:
 - Keep response dictionaries consistent across routes, mappers, and tests.
 """
 
+AUTOMATION_TASK_RESPONSE_TASK = "task"
 AUTOMATION_TASK_RESPONSE_TASKS = "tasks"
 
 AUTOMATION_TASK_ID = "id"

@@ -3,7 +3,9 @@
  *
  * Responsibilities:
  * - Load registered automation tasks from CCore.
- * - Render the first end-to-end automation task list UI slice.
+ * - Render a compact task summary list.
+ * - Navigate to task details without hardcoding detail page URLs.
+ * - Keep implementation paths out of the list page; details belong on the task details page.
  * - Handle loading, empty, and error states.
  *
  * Platform dependencies are loaded by protected-workspace.js.
@@ -17,6 +19,8 @@ const AUTOMATION_TASKS_LOADING_MESSAGE =
 
 const AUTOMATION_TASKS_ERROR_MESSAGE =
     "Automation tasks could not be loaded.";
+
+const AUTOMATION_TASKS_TABLE_COLUMN_COUNT = 4;
 
 
 function getAutomationTasksTableBody() {
@@ -47,6 +51,13 @@ function normalizeAutomationTaskStatus(status) {
     return String(status || "unknown")
         .trim()
         .toLowerCase();
+}
+
+
+function getAutomationTaskDetailsPath(taskId) {
+    return LLA_PATHS.desktop.protected.automation.taskDetails(
+        taskId
+    );
 }
 
 
@@ -92,7 +103,7 @@ function renderAutomationTasksPlaceholder(message) {
 
     tableBody.innerHTML = `
         <tr>
-            <td colspan="6" class="shared-table-empty-state">
+            <td colspan="${AUTOMATION_TASKS_TABLE_COLUMN_COUNT}" class="shared-table-empty-state">
                 ${escapeAutomationTaskValue(message)}
             </td>
         </tr>
@@ -106,22 +117,13 @@ function renderAutomationTaskRow(task) {
             task.status
         );
 
+    const detailsPath =
+        getAutomationTaskDetailsPath(
+            task.id
+        );
+
     return `
         <tr>
-            <td>
-                <span class="automation-tasks-table-code" title="${escapeAutomationTaskValue(task.id)}">
-                    ${escapeAutomationTaskValue(task.id)}
-                </span>
-            </td>
-
-            <td>
-                ${escapeAutomationTaskValue(task.name)}
-            </td>
-
-            <td>
-                ${escapeAutomationTaskValue(task.category)}
-            </td>
-
             <td>
                 <span class="automation-tasks-status ${escapeAutomationTaskValue(status)}">
                     ${escapeAutomationTaskValue(status)}
@@ -129,15 +131,25 @@ function renderAutomationTaskRow(task) {
             </td>
 
             <td>
-                <span class="automation-tasks-table-code" title="${escapeAutomationTaskValue(task.script_path)}">
-                    ${escapeAutomationTaskValue(task.script_path)}
-                </span>
+                <div class="automation-tasks-name-cell">
+                    <span class="automation-tasks-name">
+                        ${escapeAutomationTaskValue(task.name)}
+                    </span>
+
+                    <span class="automation-tasks-id" title="${escapeAutomationTaskValue(task.id)}">
+                        ${escapeAutomationTaskValue(task.id)}
+                    </span>
+                </div>
             </td>
 
             <td>
-                <span class="automation-tasks-table-code" title="${escapeAutomationTaskValue(task.config_path)}">
-                    ${escapeAutomationTaskValue(task.config_path)}
-                </span>
+                ${escapeAutomationTaskValue(task.category)}
+            </td>
+
+            <td>
+                <a class="shared-button secondary automation-tasks-details-link" href="${escapeAutomationTaskValue(detailsPath)}">
+                    Details
+                </a>
             </td>
         </tr>
     `;

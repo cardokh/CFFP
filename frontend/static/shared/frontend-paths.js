@@ -41,7 +41,10 @@ window.LLA_PATHS = {
          settings: "/desktop/protected/settings.html",
          projectGuide: "/desktop/protected/project-guide/project-guide.html",
          automation: {
-            tasks: "/desktop/protected/automation/tasks.html"
+            tasks: "/desktop/protected/automation/tasks.html",
+
+            taskDetails: (taskId) =>
+               `/desktop/protected/automation/task-details.html?taskId=${encodeURIComponent(taskId)}`
          },
          presentation: "/desktop/protected/presentation.html",
          about: "/desktop/protected/about.html",

@@ -2,8 +2,8 @@
  * Automation tasks page styles.
  *
  * Responsibilities:
- * - Style the first CCore automation task list UI slice.
- * - Keep layout local to the automation page content area.
+ * - Style the CCore automation task summary list.
+ * - Keep the list compact so row actions remain visible.
  * - Reuse shared protected layout, panel, table, and button styles.
  */
 
@@ -85,10 +85,36 @@
     color: #cfe0f3;
     font-size: 12px;
     line-height: 1.35;
+    vertical-align: middle;
 }
 
-.automation-tasks-table-code {
-    max-width: 260px;
+.automation-tasks-table th:first-child,
+.automation-tasks-table td:first-child {
+    width: 96px;
+}
+
+.automation-tasks-table th:last-child,
+.automation-tasks-table td:last-child {
+    width: 96px;
+    text-align: right;
+}
+
+.automation-tasks-name-cell {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.automation-tasks-name {
+    color: #f8fbff;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.automation-tasks-id {
+    max-width: 320px;
 
     display: inline-block;
 
@@ -96,12 +122,12 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    color: #c7d2fe;
+    color: #8fb7e4;
     font-family:
         Consolas,
         "Courier New",
         monospace;
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .automation-tasks-status {
@@ -109,7 +135,7 @@
     align-items: center;
     justify-content: center;
 
-    min-width: 64px;
+    min-width: 72px;
     padding: 3px 8px;
 
     border: 1px solid #2b415f;
@@ -129,11 +155,28 @@
     color: #8ef0b5;
 }
 
+.automation-tasks-status.draft,
+.automation-tasks-status.notready,
+.automation-tasks-status.not-ready {
+    border-color: rgba(160, 160, 170, 0.5);
+    background: rgba(80, 80, 90, 0.35);
+    color: #d1d5db;
+}
+
 .automation-tasks-status.disabled,
-.automation-tasks-status.error {
+.automation-tasks-status.error,
+.automation-tasks-status.failed {
     border-color: rgba(200, 80, 80, 0.5);
     background: rgba(100, 30, 30, 0.35);
     color: #ffb4b4;
+}
+
+.automation-tasks-details-link {
+    min-width: 72px;
+    padding: 5px 10px;
+
+    font-size: 11px;
+    text-align: center;
 }
 
 @media (max-width: 900px) {

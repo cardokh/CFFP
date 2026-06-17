@@ -24,3 +24,4 @@ API_PATH_ADMIN_USERS_PREFIX = "/api/admin/users/"
 API_PATH_AI_SPEECH_GENERATE = "/api/ai/speech/generate"
 
 API_PATH_AUTOMATION_TASKS = "/api/automation/tasks"
+API_PATH_AUTOMATION_TASKS_PREFIX = "/api/automation/tasks/"

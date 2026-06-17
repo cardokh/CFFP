@@ -12,6 +12,7 @@ from src.core.automation.automation_task_contracts import (
     AUTOMATION_TASK_DESCRIPTION,
     AUTOMATION_TASK_ID,
     AUTOMATION_TASK_NAME,
+    AUTOMATION_TASK_RESPONSE_TASK,
     AUTOMATION_TASK_RESPONSE_TASKS,
     AUTOMATION_TASK_SCRIPT_PATH,
     AUTOMATION_TASK_STATUS,
@@ -27,6 +28,14 @@ def automation_task_to_response(automation_task) -> dict:
         AUTOMATION_TASK_STATUS: automation_task.status,
         AUTOMATION_TASK_SCRIPT_PATH: automation_task.script_path,
         AUTOMATION_TASK_CONFIG_PATH: automation_task.config_path,
+    }
+
+
+def automation_task_detail_to_response(automation_task) -> dict:
+    return {
+        AUTOMATION_TASK_RESPONSE_TASK: automation_task_to_response(
+            automation_task
+        ),
     }
 
 
