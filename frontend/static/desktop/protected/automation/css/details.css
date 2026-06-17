@@ -367,3 +367,164 @@
         grid-template-columns: 1fr;
     }
 }
+
+.automation-task-validation-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.automation-task-validation-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 14px;
+
+    background: rgba(8, 18, 31, 0.78);
+    border: 1px solid #243a57;
+    border-radius: 12px;
+}
+
+.automation-task-validation-summary h2 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.automation-task-validation-summary.passed {
+    border-color: rgba(80, 180, 120, 0.5);
+    background: rgba(20, 90, 50, 0.22);
+}
+
+.automation-task-validation-summary.failed {
+    border-color: rgba(200, 80, 80, 0.5);
+    background: rgba(100, 30, 30, 0.22);
+}
+
+.automation-task-validation-counts {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.automation-task-validation-counts span {
+    padding: 4px 9px;
+
+    background: rgba(6, 17, 31, 0.78);
+    border: 1px solid #1e314b;
+    border-radius: 999px;
+
+    color: #dbeafe;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.automation-task-validation-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 12px;
+
+    background: rgba(8, 18, 31, 0.78);
+    border: 1px solid #243a57;
+    border-radius: 12px;
+}
+
+.automation-task-validation-panel h2,
+.automation-task-validation-check h3 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.automation-task-validation-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.automation-task-validation-check {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 12px;
+    align-items: flex-start;
+
+    padding: 10px;
+
+    background: #06111f;
+    border: 1px solid #1e314b;
+    border-radius: 10px;
+}
+
+.automation-task-validation-check.passed {
+    border-color: rgba(80, 180, 120, 0.45);
+}
+
+.automation-task-validation-check.failed {
+    border-color: rgba(200, 80, 80, 0.45);
+}
+
+.automation-task-validation-check-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 8px;
+
+    background: #16263a;
+    border: 1px solid #2b415f;
+    border-radius: 999px;
+
+    color: #dbeafe;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.automation-task-validation-check.passed .automation-task-validation-check-status {
+    border-color: rgba(80, 180, 120, 0.5);
+    background: rgba(20, 90, 50, 0.35);
+    color: #8ef0b5;
+}
+
+.automation-task-validation-check.failed .automation-task-validation-check-status {
+    border-color: rgba(200, 80, 80, 0.5);
+    background: rgba(100, 30, 30, 0.35);
+    color: #ffb4b4;
+}
+
+.automation-task-validation-check p {
+    margin: 5px 0 0;
+
+    color: #b9cde2;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.automation-task-validation-output {
+    max-height: 220px;
+    margin: 0;
+    overflow: auto;
+
+    padding: 12px;
+
+    background: #06111f;
+    border: 1px solid #1e314b;
+    border-radius: 10px;
+
+    color: #dbeafe;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}

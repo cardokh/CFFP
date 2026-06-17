@@ -16,6 +16,7 @@ from src.core.automation.automation_task_contracts import (
     AUTOMATION_TASK_RESPONSE_CONFIGURATION,
     AUTOMATION_TASK_RESPONSE_CONFIGURATION_PATH,
     AUTOMATION_TASK_RESPONSE_TASK,
+    AUTOMATION_TASK_RESPONSE_VALIDATION,
     AUTOMATION_TASK_RESPONSE_TASKS,
     AUTOMATION_TASK_SCRIPT_PATH,
     AUTOMATION_TASK_STATUS,
@@ -61,5 +62,18 @@ def automation_tasks_to_response(automation_tasks: list) -> dict:
         AUTOMATION_TASK_RESPONSE_TASKS: [
             automation_task_to_response(automation_task)
             for automation_task in automation_tasks
+        ],
+    }
+
+
+def automation_task_validation_to_response(task_validation_result) -> dict:
+    automation_task = task_validation_result["task"]
+
+    return {
+        AUTOMATION_TASK_RESPONSE_TASK: automation_task_to_response(
+            automation_task,
+        ),
+        AUTOMATION_TASK_RESPONSE_VALIDATION: task_validation_result[
+            "validation"
         ],
     }

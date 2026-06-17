@@ -74,7 +74,7 @@
                                 View Configuration
                             </button>
 
-                            <button class="shared-button secondary" type="button" disabled>
+                            <button id="validateAutomationTaskButton" class="shared-button secondary" type="button">
                                 Validate
                             </button>
 
@@ -84,8 +84,18 @@
                         </div>
 
                         <p class="automation-task-details-note">
-                            These actions are intentionally visible but disabled. They define the next planned vertical slices without adding execution in this iteration.
+                            Validate is enabled in this iteration. View Configuration loads the registered JSON. Execute remains disabled until the execution slice is approved.
                         </p>
+                    </fieldset>
+
+                    <fieldset id="automationTaskValidationCard" class="shared-panel automation-task-details-card hidden">
+                        <legend>Validation</legend>
+
+                        <div id="automationTaskValidationBody" class="automation-task-validation-body">
+                            <p class="automation-task-details-placeholder">
+                                Validation has not been run yet.
+                            </p>
+                        </div>
                     </fieldset>
 
                     <fieldset id="automationTaskConfigurationCard" class="shared-panel automation-task-details-card hidden">

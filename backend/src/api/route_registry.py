@@ -56,6 +56,7 @@ from src.core.ai.ai_speech.ai_speech_routes import (
 from src.core.automation.automation_task_routes import (
     handle_get_automation_task_path,
     handle_get_automation_tasks,
+    handle_validate_automation_task_path,
 )
 from src.core.users.user_routes import (
     handle_delete_user,
@@ -127,6 +128,13 @@ def build_core_route_registry(
                     handler,
                     services.ai_speech_service,
                     services.ai_speech_validator,
+                ),
+            },
+            "prefix": {
+                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_validate_automation_task_path(
+                    handler,
+                    services.automation_task_service,
+                    path,
                 ),
             },
         },

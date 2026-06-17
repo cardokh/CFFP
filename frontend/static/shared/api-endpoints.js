@@ -129,6 +129,10 @@ const CCORE_API_ENDPOINTS = {
 
             configuration(taskId) {
                 return `/api/automation/tasks/${encodeURIComponent(taskId)}/configuration`;
+            },
+
+            validate(taskId) {
+                return `/api/automation/tasks/${encodeURIComponent(taskId)}/validate`;
             }
         }
     }

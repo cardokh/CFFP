@@ -24,6 +24,7 @@ from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
 from src.core.infrastructure.database import DatabaseManager
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
 from src.core.automation.automation_task_service import AutomationTaskService
+from src.core.automation.automation_task_validation import AutomationTaskValidationService
 
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
@@ -122,9 +123,16 @@ def build_automation_task_registry():
     )
 
 
+def build_automation_task_validation_service():
+    return AutomationTaskValidationService(
+        project_root=get_path("projectRoot"),
+    )
+
+
 def build_automation_task_service():
     return AutomationTaskService(
         automation_task_registry=build_automation_task_registry(),
+        automation_task_validation_service=build_automation_task_validation_service(),
     )
 
 

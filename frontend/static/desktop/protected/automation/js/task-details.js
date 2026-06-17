@@ -26,6 +26,12 @@ const AUTOMATION_TASK_CONFIGURATION_LOADING_MESSAGE =
 const AUTOMATION_TASK_CONFIGURATION_ERROR_MESSAGE =
     "Automation task configuration could not be loaded.";
 
+const AUTOMATION_TASK_VALIDATION_LOADING_MESSAGE =
+    "Validating automation task...";
+
+const AUTOMATION_TASK_VALIDATION_ERROR_MESSAGE =
+    "Automation task validation could not be completed.";
+
 
 function getAutomationTaskDetailsBody() {
     return document.getElementById(
@@ -51,6 +57,20 @@ function getAutomationTaskConfigurationCard() {
 function getAutomationTaskConfigurationBody() {
     return document.getElementById(
         "automationTaskConfigurationBody"
+    );
+}
+
+
+function getAutomationTaskValidationCard() {
+    return document.getElementById(
+        "automationTaskValidationCard"
+    );
+}
+
+
+function getAutomationTaskValidationBody() {
+    return document.getElementById(
+        "automationTaskValidationBody"
     );
 }
 
@@ -128,6 +148,18 @@ function showAutomationTaskConfigurationCard() {
 }
 
 
+function showAutomationTaskValidationCard() {
+    const validationCard =
+        getAutomationTaskValidationCard();
+
+    if (!validationCard) {
+        return;
+    }
+
+    validationCard.classList.remove("hidden");
+}
+
+
 function renderAutomationTaskDetailsPlaceholder(message) {
     const detailsBody =
         getAutomationTaskDetailsBody();
@@ -153,6 +185,22 @@ function renderAutomationTaskConfigurationPlaceholder(message) {
     }
 
     configurationBody.innerHTML = `
+        <p class="automation-task-details-placeholder">
+            ${escapeAutomationTaskDetailsValue(message)}
+        </p>
+    `;
+}
+
+
+function renderAutomationTaskValidationPlaceholder(message) {
+    const validationBody =
+        getAutomationTaskValidationBody();
+
+    if (!validationBody) {
+        return;
+    }
+
+    validationBody.innerHTML = `
         <p class="automation-task-details-placeholder">
             ${escapeAutomationTaskDetailsValue(message)}
         </p>
@@ -294,6 +342,101 @@ function renderJsonTreeValue(value, key = "root") {
     `;
 }
 
+
+
+function normalizeAutomationTaskValidationStatus(status) {
+    return String(status || "UNKNOWN")
+        .trim()
+        .toUpperCase();
+}
+
+
+function renderAutomationTaskValidationCheck(check) {
+    const status =
+        normalizeAutomationTaskValidationStatus(
+            check.status
+        );
+
+    return `
+        <div class="automation-task-validation-check ${escapeAutomationTaskDetailsValue(status.toLowerCase())}">
+            <div class="automation-task-validation-check-status">
+                ${escapeAutomationTaskDetailsValue(status)}
+            </div>
+            <div>
+                <h3>${escapeAutomationTaskDetailsValue(check.label)}</h3>
+                <p>${escapeAutomationTaskDetailsValue(check.message)}</p>
+            </div>
+        </div>
+    `;
+}
+
+
+function renderAutomationTaskValidation(validationResponse) {
+    const validationBody =
+        getAutomationTaskValidationBody();
+
+    if (!validationBody) {
+        return;
+    }
+
+    const validation =
+        validationResponse.validation;
+
+    const status =
+        normalizeAutomationTaskValidationStatus(
+            validation.status
+        );
+
+    const summary =
+        validation.summary || {};
+
+    const terminalOutput =
+        validation.governance && validation.governance.terminal_output
+            ? validation.governance.terminal_output
+            : "No terminal output was captured.";
+
+    validationBody.innerHTML = `
+        <div class="automation-task-validation-summary ${escapeAutomationTaskDetailsValue(status.toLowerCase())}">
+            <div>
+                <p class="automation-task-configuration-label">
+                    Overall result
+                </p>
+                <h2>${escapeAutomationTaskDetailsValue(status)}</h2>
+            </div>
+
+            <div class="automation-task-validation-counts">
+                <span>${escapeAutomationTaskDetailsValue(summary.passed_check_count ?? 0)} passed</span>
+                <span>${escapeAutomationTaskDetailsValue(summary.failed_check_count ?? 0)} failed</span>
+                <span>${escapeAutomationTaskDetailsValue(summary.check_count ?? 0)} total</span>
+            </div>
+        </div>
+
+        <section class="automation-task-validation-panel">
+            <h2>Checks</h2>
+            <div class="automation-task-validation-checks">
+                ${(validation.checks || [])
+                    .map(renderAutomationTaskValidationCheck)
+                    .join("")}
+            </div>
+        </section>
+
+        <section class="automation-task-validation-panel">
+            <h2>Governance Inspector Output</h2>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(terminalOutput)}</code></pre>
+        </section>
+    `;
+}
+
+
+function parseAutomationTaskValidationResponse(responseData) {
+    if (!responseData || !responseData.validation) {
+        throw new Error(
+            "The backend did not return automation task validation data."
+        );
+    }
+
+    return responseData;
+}
 
 function renderAutomationTaskConfiguration(configurationResponse) {
     const configurationBody =
@@ -481,6 +624,66 @@ async function loadAutomationTaskConfiguration() {
 }
 
 
+async function validateAutomationTask() {
+    hideAutomationTaskDetailsMessage();
+    showAutomationTaskValidationCard();
+
+    const taskId =
+        getAutomationTaskIdFromLocation();
+
+    if (!taskId) {
+        renderAutomationTaskValidationPlaceholder(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE,
+            "error"
+        );
+
+        return;
+    }
+
+    renderAutomationTaskValidationPlaceholder(
+        AUTOMATION_TASK_VALIDATION_LOADING_MESSAGE
+    );
+
+    try {
+        const responseData =
+            await postJson(
+                CCORE_API_ENDPOINTS.automation.tasks.validate(
+                    taskId
+                ),
+                {}
+            );
+
+        const validationResponse =
+            parseAutomationTaskValidationResponse(
+                responseData
+            );
+
+        renderAutomationTaskValidation(
+            validationResponse
+        );
+
+    } catch (error) {
+        console.error(
+            "Failed to validate automation task:",
+            error
+        );
+
+        renderAutomationTaskValidationPlaceholder(
+            AUTOMATION_TASK_VALIDATION_ERROR_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            error.message || AUTOMATION_TASK_VALIDATION_ERROR_MESSAGE,
+            "error"
+        );
+    }
+}
+
+
 function setupAutomationTaskDetailsEvents() {
     const refreshButton =
         document.getElementById(
@@ -506,6 +709,20 @@ function setupAutomationTaskDetailsEvents() {
             "click",
             () => {
                 loadAutomationTaskConfiguration();
+            }
+        );
+    }
+
+    const validateButton =
+        document.getElementById(
+            "validateAutomationTaskButton"
+        );
+
+    if (validateButton) {
+        validateButton.addEventListener(
+            "click",
+            () => {
+                validateAutomationTask();
             }
         );
     }
