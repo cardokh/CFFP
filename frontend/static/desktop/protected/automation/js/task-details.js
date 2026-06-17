@@ -225,6 +225,44 @@ function renderAutomationTaskDetailsField(label, value, isCode = false) {
 }
 
 
+function setAutomationTaskDetailsStatus(status) {
+    const statusElement =
+        document.getElementById(
+            "automationTaskDetailsStatus"
+        );
+
+    if (!statusElement) {
+        return;
+    }
+
+    const normalizedStatus =
+        normalizeAutomationTaskDetailsStatus(
+            status
+        );
+
+    statusElement.className =
+        `automation-task-details-status ${escapeAutomationTaskDetailsValue(normalizedStatus)}`;
+
+    statusElement.textContent =
+        normalizedStatus;
+}
+
+
+function setAutomationTaskDetailsCategory(category) {
+    const categoryElement =
+        document.getElementById(
+            "automationTaskDetailsCategory"
+        );
+
+    if (!categoryElement) {
+        return;
+    }
+
+    categoryElement.textContent =
+        category || "uncategorized";
+}
+
+
 function renderAutomationTaskDetails(task) {
     const detailsBody =
         getAutomationTaskDetailsBody();
@@ -246,18 +284,12 @@ function renderAutomationTaskDetails(task) {
         "automationTaskDetailsSummary"
     ).textContent = task.description || "Registered automation task metadata.";
 
-    detailsBody.innerHTML = `
-        <div class="automation-task-details-status-row">
-            <span class="automation-task-details-status ${escapeAutomationTaskDetailsValue(status)}">
-                ${escapeAutomationTaskDetailsValue(status)}
-            </span>
-        </div>
+    setAutomationTaskDetailsStatus(status);
+    setAutomationTaskDetailsCategory(task.category);
 
-        <dl class="automation-task-details-grid">
+    detailsBody.innerHTML = `
+        <dl class="automation-task-details-grid compact">
             ${renderAutomationTaskDetailsField("ID", task.id, true)}
-            ${renderAutomationTaskDetailsField("Name", task.name)}
-            ${renderAutomationTaskDetailsField("Category", task.category)}
-            ${renderAutomationTaskDetailsField("Status", status)}
             ${renderAutomationTaskDetailsField("Script", task.script_path, true)}
             ${renderAutomationTaskDetailsField("Configuration", task.config_path, true)}
             ${renderAutomationTaskDetailsField("Description", task.description)}
@@ -390,6 +422,19 @@ function renderAutomationTaskValidation(validationResponse) {
     const summary =
         validation.summary || {};
 
+    const checks =
+        validation.checks || [];
+
+    const failedChecks =
+        checks.filter((check) =>
+            normalizeAutomationTaskValidationStatus(check.status) === "FAILED"
+        );
+
+    const passedChecks =
+        checks.filter((check) =>
+            normalizeAutomationTaskValidationStatus(check.status) !== "FAILED"
+        );
+
     const terminalOutput =
         validation.governance && validation.governance.terminal_output
             ? validation.governance.terminal_output
@@ -405,25 +450,34 @@ function renderAutomationTaskValidation(validationResponse) {
             </div>
 
             <div class="automation-task-validation-counts">
-                <span>${escapeAutomationTaskDetailsValue(summary.passed_check_count ?? 0)} passed</span>
-                <span>${escapeAutomationTaskDetailsValue(summary.failed_check_count ?? 0)} failed</span>
-                <span>${escapeAutomationTaskDetailsValue(summary.check_count ?? 0)} total</span>
+                <span>${escapeAutomationTaskDetailsValue(summary.failed_check_count ?? failedChecks.length)} failed</span>
+                <span>${escapeAutomationTaskDetailsValue(summary.passed_check_count ?? passedChecks.length)} passed</span>
+                <span>${escapeAutomationTaskDetailsValue(summary.check_count ?? checks.length)} total</span>
             </div>
         </div>
 
-        <section class="automation-task-validation-panel">
-            <h2>Checks</h2>
+        <section class="automation-task-validation-panel ${failedChecks.length === 0 ? "hidden" : ""}">
+            <h2>Failed Checks</h2>
             <div class="automation-task-validation-checks">
-                ${(validation.checks || [])
+                ${failedChecks
                     .map(renderAutomationTaskValidationCheck)
                     .join("")}
             </div>
         </section>
 
-        <section class="automation-task-validation-panel">
-            <h2>Governance Inspector Output</h2>
+        <details class="automation-task-validation-panel" ${failedChecks.length === 0 ? "open" : ""}>
+            <summary>Passed Checks</summary>
+            <div class="automation-task-validation-checks">
+                ${passedChecks
+                    .map(renderAutomationTaskValidationCheck)
+                    .join("")}
+            </div>
+        </details>
+
+        <details class="automation-task-validation-panel">
+            <summary>Governance Inspector Output</summary>
             <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(terminalOutput)}</code></pre>
-        </section>
+        </details>
     `;
 }
 

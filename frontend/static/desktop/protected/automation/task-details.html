@@ -29,49 +29,43 @@
                 <div class="automation-task-details-content">
 
                     <div class="automation-task-details-heading">
-                        <div>
+                        <div class="automation-task-details-heading-main">
                             <p class="automation-task-details-kicker">
                                 CCore Automation
                             </p>
 
-                            <h1 id="automationTaskDetailsTitle">
-                                Automation Task Details
-                            </h1>
+                            <div class="automation-task-details-title-row">
+                                <h1 id="automationTaskDetailsTitle">
+                                    Automation Task Details
+                                </h1>
+
+                                <div class="automation-task-details-state-row">
+                                    <span id="automationTaskDetailsStatus" class="automation-task-details-status unknown">
+                                        Loading
+                                    </span>
+
+                                    <span id="automationTaskDetailsCategory" class="automation-task-details-category">
+                                        Category
+                                    </span>
+                                </div>
+                            </div>
 
                             <p id="automationTaskDetailsSummary" class="automation-task-details-summary">
-                                Select an automation task from the registry to inspect its metadata before execution.
+                                Select an automation task from the registry to inspect, validate, and prepare it for execution.
                             </p>
                         </div>
 
-                        <div class="automation-task-details-actions">
+                        <div class="automation-task-details-toolbar" aria-label="Automation task actions">
                             <a id="backToAutomationTasksLink" class="shared-button secondary" href="/desktop/protected/automation/tasks.html">
-                                Back to Tasks
+                                Back
                             </a>
 
                             <button id="refreshAutomationTaskDetailsButton" class="shared-button secondary" type="button">
                                 Refresh
                             </button>
-                        </div>
-                    </div>
 
-                    <div id="automationTaskDetailsMessage" class="form-message info hidden"></div>
-
-                    <fieldset class="shared-panel automation-task-details-card">
-                        <legend>Task Metadata</legend>
-
-                        <div id="automationTaskDetailsBody" class="automation-task-details-body">
-                            <p class="automation-task-details-placeholder">
-                                Loading automation task details...
-                            </p>
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="shared-panel automation-task-details-card">
-                        <legend>Actions</legend>
-
-                        <div class="automation-task-details-disabled-actions">
                             <button id="viewAutomationTaskConfigurationButton" class="shared-button secondary" type="button">
-                                View Configuration
+                                Configuration
                             </button>
 
                             <button id="validateAutomationTaskButton" class="shared-button secondary" type="button">
@@ -82,11 +76,9 @@
                                 Execute
                             </button>
                         </div>
+                    </div>
 
-                        <p class="automation-task-details-note">
-                            Validate is enabled in this iteration. View Configuration loads the registered JSON. Execute remains disabled until the execution slice is approved.
-                        </p>
-                    </fieldset>
+                    <div id="automationTaskDetailsMessage" class="form-message info hidden"></div>
 
                     <fieldset id="automationTaskValidationCard" class="shared-panel automation-task-details-card hidden">
                         <legend>Validation</legend>
@@ -107,6 +99,18 @@
                             </p>
                         </div>
                     </fieldset>
+
+                    <details class="shared-panel automation-task-technical-details" open>
+                        <summary>
+                            Technical Details
+                        </summary>
+
+                        <div id="automationTaskDetailsBody" class="automation-task-details-body">
+                            <p class="automation-task-details-placeholder">
+                                Loading automation task details...
+                            </p>
+                        </div>
+                    </details>
 
                 </div>
 
