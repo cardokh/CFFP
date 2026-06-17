@@ -3,6 +3,7 @@ Automation task registry tests.
 
 Responsibilities:
 - Verify JSON-based automation task discovery.
+- Verify inspect-only task configuration loading.
 - Protect script registry behavior before execution endpoints are added.
 """
 
@@ -96,3 +97,65 @@ def test_find_task_by_id_returns_none_for_unknown_task(tmp_path) -> None:
     registry = AutomationTaskRegistry(registry_path=registry_path)
 
     assert registry.find_task_by_id("missing-task") is None
+
+
+def test_load_task_configuration_returns_json_data(tmp_path) -> None:
+    project_root = tmp_path
+    config_path = project_root / "scripts" / "inspections" / "governed" / "config"
+    config_path.mkdir(parents=True)
+    config_file = config_path / "inspect_script_governance.json"
+    config_file.write_text(
+        json.dumps(
+            {
+                "scriptName": "inspect_script_governance",
+                "mode": "inspect",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    registry_path = project_root / "automation_task_registry.json"
+
+    write_registry(
+        registry_path=registry_path,
+        tasks=[build_task_entry()],
+    )
+
+    registry = AutomationTaskRegistry(
+        registry_path=registry_path,
+        project_root=project_root,
+    )
+
+    task = registry.find_task_by_id("inspect-script-governance")
+    configuration = registry.load_task_configuration(task)
+
+    assert configuration["scriptName"] == "inspect_script_governance"
+    assert configuration["mode"] == "inspect"
+
+
+def test_load_task_configuration_rejects_paths_outside_project_root(tmp_path) -> None:
+    project_root = tmp_path / "project"
+    project_root.mkdir()
+
+    registry_path = project_root / "automation_task_registry.json"
+    task_entry = build_task_entry()
+    task_entry["config_path"] = "../outside.json"
+
+    write_registry(
+        registry_path=registry_path,
+        tasks=[task_entry],
+    )
+
+    registry = AutomationTaskRegistry(
+        registry_path=registry_path,
+        project_root=project_root,
+    )
+
+    task = registry.find_task_by_id("inspect-script-governance")
+
+    try:
+        registry.load_task_configuration(task)
+    except ValueError as error:
+        assert "inside the project root" in str(error)
+    else:
+        raise AssertionError("Expected path validation to reject escaped path.")

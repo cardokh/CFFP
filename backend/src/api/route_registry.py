@@ -54,7 +54,7 @@ from src.core.ai.ai_speech.ai_speech_routes import (
     handle_generate_ai_speech,
 )
 from src.core.automation.automation_task_routes import (
-    handle_get_automation_task_by_id,
+    handle_get_automation_task_path,
     handle_get_automation_tasks,
 )
 from src.core.users.user_routes import (
@@ -102,7 +102,7 @@ def build_core_route_registry(
                     services.users_service,
                     path,
                 ),
-                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_get_automation_task_by_id(
+                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_get_automation_task_path(
                     handler,
                     services.automation_task_service,
                     path,

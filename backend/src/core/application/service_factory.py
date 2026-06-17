@@ -118,6 +118,7 @@ def build_database_manager():
 def build_automation_task_registry():
     return AutomationTaskRegistry(
         registry_path=get_path("automationTaskRegistry"),
+        project_root=get_path("projectRoot"),
     )
 
 

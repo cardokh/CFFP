@@ -67,10 +67,10 @@
                     </fieldset>
 
                     <fieldset class="shared-panel automation-task-details-card">
-                        <legend>Next Capabilities</legend>
+                        <legend>Actions</legend>
 
                         <div class="automation-task-details-disabled-actions">
-                            <button class="shared-button secondary" type="button" disabled>
+                            <button id="viewAutomationTaskConfigurationButton" class="shared-button secondary" type="button">
                                 View Configuration
                             </button>
 
@@ -86,6 +86,16 @@
                         <p class="automation-task-details-note">
                             These actions are intentionally visible but disabled. They define the next planned vertical slices without adding execution in this iteration.
                         </p>
+                    </fieldset>
+
+                    <fieldset id="automationTaskConfigurationCard" class="shared-panel automation-task-details-card hidden">
+                        <legend>Configuration</legend>
+
+                        <div id="automationTaskConfigurationBody" class="automation-task-configuration-body">
+                            <p class="automation-task-details-placeholder">
+                                Configuration has not been loaded yet.
+                            </p>
+                        </div>
                     </fieldset>
 
                 </div>

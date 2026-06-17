@@ -4,7 +4,8 @@
  * Responsibilities:
  * - Read the selected automation task ID from the page URL.
  * - Load one registered automation task from CCore.
- * - Render task metadata before configuration viewing or execution exists.
+ * - Load and render task configuration JSON on demand.
+ * - Render task metadata before execution exists.
  * - Handle loading, missing ID, not found, and error states.
  *
  * Platform dependencies are loaded by protected-workspace.js.
@@ -19,6 +20,12 @@ const AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE =
 const AUTOMATION_TASK_DETAILS_ERROR_MESSAGE =
     "Automation task details could not be loaded.";
 
+const AUTOMATION_TASK_CONFIGURATION_LOADING_MESSAGE =
+    "Loading automation task configuration...";
+
+const AUTOMATION_TASK_CONFIGURATION_ERROR_MESSAGE =
+    "Automation task configuration could not be loaded.";
+
 
 function getAutomationTaskDetailsBody() {
     return document.getElementById(
@@ -30,6 +37,20 @@ function getAutomationTaskDetailsBody() {
 function getAutomationTaskDetailsMessage() {
     return document.getElementById(
         "automationTaskDetailsMessage"
+    );
+}
+
+
+function getAutomationTaskConfigurationCard() {
+    return document.getElementById(
+        "automationTaskConfigurationCard"
+    );
+}
+
+
+function getAutomationTaskConfigurationBody() {
+    return document.getElementById(
+        "automationTaskConfigurationBody"
     );
 }
 
@@ -95,6 +116,18 @@ function hideAutomationTaskDetailsMessage() {
 }
 
 
+function showAutomationTaskConfigurationCard() {
+    const configurationCard =
+        getAutomationTaskConfigurationCard();
+
+    if (!configurationCard) {
+        return;
+    }
+
+    configurationCard.classList.remove("hidden");
+}
+
+
 function renderAutomationTaskDetailsPlaceholder(message) {
     const detailsBody =
         getAutomationTaskDetailsBody();
@@ -104,6 +137,22 @@ function renderAutomationTaskDetailsPlaceholder(message) {
     }
 
     detailsBody.innerHTML = `
+        <p class="automation-task-details-placeholder">
+            ${escapeAutomationTaskDetailsValue(message)}
+        </p>
+    `;
+}
+
+
+function renderAutomationTaskConfigurationPlaceholder(message) {
+    const configurationBody =
+        getAutomationTaskConfigurationBody();
+
+    if (!configurationBody) {
+        return;
+    }
+
+    configurationBody.innerHTML = `
         <p class="automation-task-details-placeholder">
             ${escapeAutomationTaskDetailsValue(message)}
         </p>
@@ -169,6 +218,130 @@ function renderAutomationTaskDetails(task) {
 }
 
 
+function getJsonValueType(value) {
+    if (Array.isArray(value)) {
+        return "array";
+    }
+
+    if (value === null) {
+        return "null";
+    }
+
+    return typeof value;
+}
+
+
+function renderJsonPrimitive(value) {
+    if (typeof value === "string") {
+        return `"${escapeAutomationTaskDetailsValue(value)}"`;
+    }
+
+    return escapeAutomationTaskDetailsValue(
+        String(value)
+    );
+}
+
+
+function renderJsonTreeValue(value, key = "root") {
+    const valueType =
+        getJsonValueType(value);
+
+    if (valueType !== "object" && valueType !== "array") {
+        return `
+            <span class="automation-task-json-value ${valueType}">
+                ${renderJsonPrimitive(value)}
+            </span>
+        `;
+    }
+
+    const entries =
+        valueType === "array"
+            ? value.map((item, index) => [index, item])
+            : Object.entries(value);
+
+    const itemCountLabel =
+        valueType === "array"
+            ? `${entries.length} item${entries.length === 1 ? "" : "s"}`
+            : `${entries.length} field${entries.length === 1 ? "" : "s"}`;
+
+    return `
+        <details class="automation-task-json-node" open>
+            <summary>
+                <span class="automation-task-json-key">
+                    ${escapeAutomationTaskDetailsValue(key)}
+                </span>
+                <span class="automation-task-json-type">
+                    ${escapeAutomationTaskDetailsValue(valueType)} · ${escapeAutomationTaskDetailsValue(itemCountLabel)}
+                </span>
+            </summary>
+
+            <div class="automation-task-json-children">
+                ${entries
+                    .map(([entryKey, entryValue]) => `
+                        <div class="automation-task-json-row">
+                            <span class="automation-task-json-key">
+                                ${escapeAutomationTaskDetailsValue(entryKey)}
+                            </span>
+                            <span class="automation-task-json-separator">:</span>
+                            <div class="automation-task-json-child-value">
+                                ${renderJsonTreeValue(entryValue, entryKey)}
+                            </div>
+                        </div>
+                    `)
+                    .join("")}
+            </div>
+        </details>
+    `;
+}
+
+
+function renderAutomationTaskConfiguration(configurationResponse) {
+    const configurationBody =
+        getAutomationTaskConfigurationBody();
+
+    if (!configurationBody) {
+        return;
+    }
+
+    const configuration =
+        configurationResponse.configuration;
+
+    const rawJson =
+        JSON.stringify(
+            configuration,
+            null,
+            4
+        );
+
+    configurationBody.innerHTML = `
+        <div class="automation-task-configuration-header">
+            <div>
+                <p class="automation-task-configuration-label">
+                    Configuration path
+                </p>
+                <p class="automation-task-configuration-path" title="${escapeAutomationTaskDetailsValue(configurationResponse.configuration_path)}">
+                    ${escapeAutomationTaskDetailsValue(configurationResponse.configuration_path)}
+                </p>
+            </div>
+        </div>
+
+        <div class="automation-task-configuration-grid">
+            <section class="automation-task-configuration-panel">
+                <h2>JSON Tree</h2>
+                <div class="automation-task-json-tree">
+                    ${renderJsonTreeValue(configuration, "configuration")}
+                </div>
+            </section>
+
+            <section class="automation-task-configuration-panel">
+                <h2>Raw JSON</h2>
+                <pre class="automation-task-json-raw"><code>${escapeAutomationTaskDetailsValue(rawJson)}</code></pre>
+            </section>
+        </div>
+    `;
+}
+
+
 function parseAutomationTaskDetailsResponse(responseData) {
     if (!responseData || !responseData.task) {
         throw new Error(
@@ -177,6 +350,17 @@ function parseAutomationTaskDetailsResponse(responseData) {
     }
 
     return responseData.task;
+}
+
+
+function parseAutomationTaskConfigurationResponse(responseData) {
+    if (!responseData || !Object.prototype.hasOwnProperty.call(responseData, "configuration")) {
+        throw new Error(
+            "The backend did not return automation task configuration."
+        );
+    }
+
+    return responseData;
 }
 
 
@@ -238,22 +422,93 @@ async function loadAutomationTaskDetails() {
 }
 
 
+async function loadAutomationTaskConfiguration() {
+    hideAutomationTaskDetailsMessage();
+    showAutomationTaskConfigurationCard();
+
+    const taskId =
+        getAutomationTaskIdFromLocation();
+
+    if (!taskId) {
+        renderAutomationTaskConfigurationPlaceholder(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE,
+            "error"
+        );
+
+        return;
+    }
+
+    renderAutomationTaskConfigurationPlaceholder(
+        AUTOMATION_TASK_CONFIGURATION_LOADING_MESSAGE
+    );
+
+    try {
+        const responseData =
+            await getJson(
+                CCORE_API_ENDPOINTS.automation.tasks.configuration(
+                    taskId
+                )
+            );
+
+        const configurationResponse =
+            parseAutomationTaskConfigurationResponse(
+                responseData
+            );
+
+        renderAutomationTaskConfiguration(
+            configurationResponse
+        );
+
+    } catch (error) {
+        console.error(
+            "Failed to load automation task configuration:",
+            error
+        );
+
+        renderAutomationTaskConfigurationPlaceholder(
+            AUTOMATION_TASK_CONFIGURATION_ERROR_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            error.message || AUTOMATION_TASK_CONFIGURATION_ERROR_MESSAGE,
+            "error"
+        );
+    }
+}
+
+
 function setupAutomationTaskDetailsEvents() {
     const refreshButton =
         document.getElementById(
             "refreshAutomationTaskDetailsButton"
         );
 
-    if (!refreshButton) {
-        return;
+    if (refreshButton) {
+        refreshButton.addEventListener(
+            "click",
+            () => {
+                loadAutomationTaskDetails();
+            }
+        );
     }
 
-    refreshButton.addEventListener(
-        "click",
-        () => {
-            loadAutomationTaskDetails();
-        }
-    );
+    const viewConfigurationButton =
+        document.getElementById(
+            "viewAutomationTaskConfigurationButton"
+        );
+
+    if (viewConfigurationButton) {
+        viewConfigurationButton.addEventListener(
+            "click",
+            () => {
+                loadAutomationTaskConfiguration();
+            }
+        );
+    }
 }
 
 
