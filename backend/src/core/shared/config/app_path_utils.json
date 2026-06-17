@@ -10,6 +10,7 @@
     "scriptsPath": "{projectRoot}/scripts",
     "databaseScriptsPath": "{scriptsPath}/db",
     "sharedScriptsPath": "{scriptsPath}/shared",
+    "automationTaskRegistry": "{backendSrcPath}/core/automation/config/automation_task_registry.json",
     "inspectionsPath": "{scriptsPath}/inspections",
     "inspectionSharedPath": "{inspectionsPath}/shared",
     "inspectionRulesPath": "{inspectionsPath}/blueprint_rules",

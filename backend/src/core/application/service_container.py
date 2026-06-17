@@ -14,6 +14,7 @@ from types import SimpleNamespace
 
 from src.core.application.service_factory import (
     build_ai_speech_service,
+    build_automation_task_service,
     build_ai_speech_validator,
     build_learning_item_service,
     build_lesson_category_service,
@@ -51,4 +52,5 @@ def build_service_container() -> SimpleNamespace:
         reference_data_service=build_reference_data_service(),
         ai_speech_service=build_ai_speech_service(),
         ai_speech_validator=build_ai_speech_validator(),
+        automation_task_service=build_automation_task_service(),
     )

@@ -73,6 +73,12 @@ function getMainNavigationItems() {
 function getSystemNavigationItems() {
     return [
         {
+            key: "automation",
+            label: "Automation",
+            desktopHref: LLA_PATHS.desktop.protected.automation.tasks,
+            requiresAdmin: false
+        },
+        {
             key: "presentation",
             label: "Presentation",
             desktopHref: LLA_PATHS.desktop.protected.presentation,

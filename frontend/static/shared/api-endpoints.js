@@ -116,3 +116,12 @@ const LLA_API_ENDPOINTS = {
         }
     }
 };
+
+
+const CCORE_API_ENDPOINTS = {
+    automation: {
+        tasks: {
+            list: "/api/automation/tasks"
+        }
+    }
+};

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Tasks | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/tasks.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="automation-tasks-content">
+
+                    <div class="automation-tasks-heading">
+                        <div>
+                            <p class="automation-tasks-kicker">
+                                CCore Automation
+                            </p>
+
+                            <h1>
+                                Automation Tasks
+                            </h1>
+
+                            <p class="automation-tasks-summary">
+                                Registered automation tasks are loaded from the backend registry.
+                                This first end-to-end slice lists available tasks without execution.
+                            </p>
+                        </div>
+
+                        <button id="refreshAutomationTasksButton" class="shared-button secondary" type="button">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div id="automationTasksMessage" class="form-message info hidden"></div>
+
+                    <fieldset class="shared-panel automation-tasks-card">
+                        <legend>Registered Tasks</legend>
+
+                        <div class="automation-tasks-table-inner">
+
+                            <div class="shared-table-wrapper">
+
+                                <table class="shared-table automation-tasks-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Script</th>
+                                            <th>Configuration</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="automationTasksTableBody">
+                                        <tr>
+                                            <td colspan="6" class="shared-table-empty-state">
+                                                Loading automation tasks...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(() => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/tasks.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

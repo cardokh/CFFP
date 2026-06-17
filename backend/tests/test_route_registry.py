@@ -14,6 +14,7 @@ from types import SimpleNamespace
 
 from src.api.api_paths import (
     API_PATH_ADMIN_USERS,
+    API_PATH_AUTOMATION_TASKS,
     API_PATH_HEALTH,
 )
 from src.api.http_methods import (
@@ -57,6 +58,9 @@ def build_dummy_services() -> SimpleNamespace:
         quiz_question_service=dummy_service,
         lesson_service=dummy_service,
         reference_data_service=dummy_service,
+        ai_speech_service=dummy_service,
+        ai_speech_validator=dummy_service,
+        automation_task_service=dummy_service,
     )
 
 
@@ -67,6 +71,15 @@ def test_build_core_route_registry_contains_health_route() -> None:
     )
 
     assert API_PATH_HEALTH in route_registry[HTTP_METHOD_GET][ROUTE_GROUP_EXACT]
+
+
+def test_build_core_route_registry_contains_automation_tasks_route() -> None:
+    route_registry = build_core_route_registry(
+        handler=DummyHandler(),
+        services=build_dummy_services(),
+    )
+
+    assert API_PATH_AUTOMATION_TASKS in route_registry[HTTP_METHOD_GET][ROUTE_GROUP_EXACT]
 
 
 def test_build_core_route_registry_contains_users_route() -> None:

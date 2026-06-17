@@ -3,6 +3,12 @@
     "outputFolder": "scripts/tests/endpoints/output",
     "endpoints": [
         {
+            "name": "Get Automation Tasks",
+            "method": "GET",
+            "path": "/api/automation/tasks",
+            "expectedStatusCode": 200
+        },
+        {
             "name": "Get Lesson Categories",
             "method": "GET",
             "path": "/api/admin/lesson-categories",

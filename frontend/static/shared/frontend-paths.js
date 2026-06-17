@@ -40,6 +40,9 @@ window.LLA_PATHS = {
          contact: "/desktop/protected/contact.html",
          settings: "/desktop/protected/settings.html",
          projectGuide: "/desktop/protected/project-guide/project-guide.html",
+         automation: {
+            tasks: "/desktop/protected/automation/tasks.html"
+         },
          presentation: "/desktop/protected/presentation.html",
          about: "/desktop/protected/about.html",
 

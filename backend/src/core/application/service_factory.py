@@ -11,6 +11,7 @@ API -> Service Factory -> Services -> Repositories -> Database
 """
 
 from src.core.shared.app_config import DATABASE_PATH
+from src.core.shared.app_path_utils import get_path
 
 from src.core.ai.ai_speech.ai_speech_provider_mapper import (
     AiSpeechProviderMapper,
@@ -21,6 +22,8 @@ from src.core.ai.ai_speech.ai_speech_result_factory import (
 from src.core.ai.ai_speech.ai_speech_service import AiSpeechService
 from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
 from src.core.infrastructure.database import DatabaseManager
+from src.core.automation.automation_task_registry import AutomationTaskRegistry
+from src.core.automation.automation_task_service import AutomationTaskService
 
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
@@ -110,6 +113,18 @@ from src.modules.lla.student_progress.student_progress_service import (
 
 def build_database_manager():
     return DatabaseManager(DATABASE_PATH)
+
+
+def build_automation_task_registry():
+    return AutomationTaskRegistry(
+        registry_path=get_path("automationTaskRegistry"),
+    )
+
+
+def build_automation_task_service():
+    return AutomationTaskService(
+        automation_task_registry=build_automation_task_registry(),
+    )
 
 
 def build_ai_speech_provider_mapper():
