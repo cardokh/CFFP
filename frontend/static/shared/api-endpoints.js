@@ -137,6 +137,14 @@ const CCORE_API_ENDPOINTS = {
 
             execute(taskId) {
                 return `/api/automation/tasks/${encodeURIComponent(taskId)}/execute`;
+            },
+
+            executions(taskId) {
+                return `/api/automation/tasks/${encodeURIComponent(taskId)}/executions`;
+            },
+
+            executionReport(taskId, executionId) {
+                return `/api/automation/tasks/${encodeURIComponent(taskId)}/executions/${encodeURIComponent(executionId)}`;
             }
         },
 

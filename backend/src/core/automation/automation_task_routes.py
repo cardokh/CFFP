@@ -13,6 +13,8 @@ from urllib.parse import unquote
 from src.api.api_paths import API_PATH_AUTOMATION_TASKS_PREFIX
 from src.api.route_utils import send_json
 from src.core.automation.automation_task_execution_mapper import (
+    automation_task_execution_history_to_response,
+    automation_task_execution_report_to_response,
     automation_task_execution_to_response,
 )
 from src.core.automation.automation_task_mapper import (
@@ -32,6 +34,7 @@ from src.core.automation.automation_task_messages import (
 AUTOMATION_TASK_CONFIGURATION_PATH_SUFFIX = "/configuration"
 AUTOMATION_TASK_VALIDATE_PATH_SUFFIX = "/validate"
 AUTOMATION_TASK_EXECUTE_PATH_SUFFIX = "/execute"
+AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX = "/executions"
 
 
 def handle_get_automation_tasks(handler, automation_task_service) -> None:
@@ -74,6 +77,22 @@ def handle_get_automation_task_path(
     automation_task_service,
     path,
 ) -> None:
+    if is_automation_task_execution_report_path(path):
+        handle_get_automation_task_execution_report(
+            handler,
+            automation_task_service,
+            path,
+        )
+        return
+
+    if is_automation_task_executions_path(path):
+        handle_get_automation_task_executions(
+            handler,
+            automation_task_service,
+            path,
+        )
+        return
+
     if is_automation_task_configuration_path(path):
         handle_get_automation_task_configuration(
             handler,
@@ -211,6 +230,142 @@ def handle_get_automation_task_configuration(
         response,
     )
 
+
+
+def handle_get_automation_task_executions(
+    handler,
+    automation_task_service,
+    path,
+) -> None:
+    task_id = extract_automation_task_id_from_executions_path(path)
+
+    try:
+        task_execution_history_result = automation_task_service.list_task_executions_by_id(
+            task_id=task_id,
+        )
+
+    except FileNotFoundError:
+        send_json(
+            handler,
+            500,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_REGISTRY_LOAD_FAILED,
+            },
+        )
+        return
+
+    except JSONDecodeError:
+        send_json(
+            handler,
+            500,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_REGISTRY_INVALID,
+            },
+        )
+        return
+
+    except ValueError as error:
+        send_json(
+            handler,
+            400,
+            {
+                "success": False,
+                "error": str(error),
+            },
+        )
+        return
+
+    if task_execution_history_result is None:
+        send_json(
+            handler,
+            404,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_NOT_FOUND,
+            },
+        )
+        return
+
+    response = automation_task_execution_history_to_response(
+        task_execution_history_result,
+    )
+
+    send_json(
+        handler,
+        200,
+        response,
+    )
+
+
+def handle_get_automation_task_execution_report(
+    handler,
+    automation_task_service,
+    path,
+) -> None:
+    task_id = extract_automation_task_id_from_execution_report_path(path)
+    execution_id = extract_automation_execution_id_from_execution_report_path(path)
+
+    try:
+        task_execution_report_result = automation_task_service.get_task_execution_report_by_id(
+            task_id=task_id,
+            execution_id=execution_id,
+        )
+
+    except FileNotFoundError:
+        send_json(
+            handler,
+            500,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_REGISTRY_LOAD_FAILED,
+            },
+        )
+        return
+
+    except JSONDecodeError:
+        send_json(
+            handler,
+            500,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_REGISTRY_INVALID,
+            },
+        )
+        return
+
+    except ValueError as error:
+        send_json(
+            handler,
+            400,
+            {
+                "success": False,
+                "error": str(error),
+            },
+        )
+        return
+
+    if task_execution_report_result is None:
+        send_json(
+            handler,
+            404,
+            {
+                "success": False,
+                "error": AUTOMATION_TASK_NOT_FOUND,
+            },
+        )
+        return
+
+    response = automation_task_execution_report_to_response(
+        task_execution_report_result,
+    )
+
+    send_json(
+        handler,
+        200,
+        response,
+    )
 
 
 def handle_validate_automation_task_path(
@@ -380,6 +535,14 @@ def is_automation_task_execute_path(path: str) -> bool:
     return path.endswith(AUTOMATION_TASK_EXECUTE_PATH_SUFFIX)
 
 
+def is_automation_task_executions_path(path: str) -> bool:
+    return path.endswith(AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX)
+
+
+def is_automation_task_execution_report_path(path: str) -> bool:
+    return f"{AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX}/" in path
+
+
 def extract_automation_task_id_from_path(path: str) -> str:
     return unquote(
         path.replace(
@@ -398,6 +561,43 @@ def extract_automation_task_id_from_configuration_path(path: str) -> str:
     return task_id_with_suffix.removesuffix(
         AUTOMATION_TASK_CONFIGURATION_PATH_SUFFIX.lstrip("/"),
     ).rstrip("/")
+
+
+def extract_automation_task_id_from_executions_path(path: str) -> str:
+    task_id_with_suffix = extract_automation_task_id_from_path(
+        path,
+    )
+
+    return task_id_with_suffix.removesuffix(
+        AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX.lstrip("/"),
+    ).rstrip("/")
+
+
+def extract_automation_task_id_from_execution_report_path(path: str) -> str:
+    path_without_prefix = extract_automation_task_id_from_path(
+        path,
+    )
+
+    return path_without_prefix.split(
+        f"/{AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX.lstrip('/')}/",
+        1,
+    )[0].rstrip("/")
+
+
+def extract_automation_execution_id_from_execution_report_path(path: str) -> str:
+    path_without_prefix = extract_automation_task_id_from_path(
+        path,
+    )
+
+    parts = path_without_prefix.split(
+        f"/{AUTOMATION_TASK_EXECUTIONS_PATH_SUFFIX.lstrip('/')}/",
+        1,
+    )
+
+    if len(parts) != 2:
+        return ""
+
+    return unquote(parts[1].strip("/"))
 
 
 def extract_automation_task_id_from_validate_path(path: str) -> str:

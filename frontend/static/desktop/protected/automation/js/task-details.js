@@ -43,6 +43,7 @@ const AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE =
 let automationTaskConfigurationLoaded = false;
 let automationTaskValidationLoaded = false;
 let automationTaskExecutionLoaded = false;
+let selectedAutomationTaskExecutionId = "";
 
 
 function getAutomationTaskOverviewBody() {
@@ -651,6 +652,7 @@ function parseAutomationTaskConfigurationResponse(responseData) {
 }
 
 
+
 function normalizeAutomationTaskExecutionStatus(status) {
     return String(status || "unknown")
         .trim()
@@ -658,37 +660,269 @@ function normalizeAutomationTaskExecutionStatus(status) {
 }
 
 
-function renderAutomationTaskExecutionReportSummary(executionReport) {
-    if (!executionReport) {
+function formatAutomationTaskExecutionDateTime(value) {
+    if (!value) {
+        return "n/a";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleString();
+}
+
+
+function renderAutomationTaskExecutionHistory(executionHistoryResponse) {
+    const executionBody =
+        getAutomationTaskExecutionBody();
+
+    if (!executionBody) {
+        return;
+    }
+
+    const executions =
+        Array.isArray(executionHistoryResponse.executions)
+            ? executionHistoryResponse.executions
+            : [];
+
+    executionBody.innerHTML = `
+        <section class="automation-task-validation-panel">
+            <div class="automation-task-execution-history-header">
+                <div>
+                    <h2>Execution History</h2>
+                    <p>
+                        Each row represents one execution with its own task snapshot,
+                        configuration snapshot, validation result, report, artifacts, and logs.
+                    </p>
+                </div>
+                <span>${escapeAutomationTaskDetailsValue(executions.length)} execution${executions.length === 1 ? "" : "s"}</span>
+            </div>
+
+            ${renderAutomationTaskExecutionHistoryTable(executions)}
+        </section>
+
+        <div id="automationTaskExecutionReportContainer">
+            <p class="automation-task-details-placeholder">
+                Select an execution row to view its execution report.
+            </p>
+        </div>
+    `;
+
+    bindAutomationTaskExecutionRows();
+
+    if (executions.length > 0) {
+        loadAutomationTaskExecutionReport(executions[0].execution_id);
+    }
+}
+
+
+function renderAutomationTaskExecutionHistoryTable(executions) {
+    if (!executions.length) {
         return `
-            <section class="automation-task-validation-panel">
-                <h2>Execution Report</h2>
-                <p class="automation-task-details-placeholder">
-                    No execution report was returned.
-                </p>
-            </section>
+            <p class="automation-task-details-placeholder">
+                No executions have been recorded for this task yet. Use Execute to create the first execution report.
+            </p>
         `;
+    }
+
+    return `
+        <div class="automation-task-report-table-wrap history">
+            <table class="automation-task-report-table automation-task-execution-history-table">
+                <thead>
+                    <tr>
+                        <th>Started</th>
+                        <th>Status</th>
+                        <th>Validation</th>
+                        <th>Duration</th>
+                        <th>Artifacts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${executions
+                        .map((execution) => `
+                            <tr data-execution-id="${escapeAutomationTaskDetailsValue(execution.execution_id || "")}" tabindex="0">
+                                <td title="${escapeAutomationTaskDetailsValue(execution.execution_id || "")}">
+                                    ${escapeAutomationTaskDetailsValue(formatAutomationTaskExecutionDateTime(execution.started_at))}
+                                </td>
+                                <td>
+                                    <span class="automation-task-execution-pill ${escapeAutomationTaskDetailsValue(normalizeAutomationTaskExecutionStatus(execution.status))}">
+                                        ${escapeAutomationTaskDetailsValue(execution.status || "unknown")}
+                                    </span>
+                                </td>
+                                <td>${escapeAutomationTaskDetailsValue(execution.validation_status || "UNKNOWN")}</td>
+                                <td>${escapeAutomationTaskDetailsValue(execution.duration_ms ?? 0)} ms</td>
+                                <td>${escapeAutomationTaskDetailsValue(execution.artifact_count ?? 0)}</td>
+                            </tr>
+                        `)
+                        .join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+
+function bindAutomationTaskExecutionRows() {
+    document
+        .querySelectorAll(".automation-task-execution-history-table tbody tr")
+        .forEach((row) => {
+            const openReport = () => {
+                const executionId = row.dataset.executionId || "";
+
+                if (!executionId) {
+                    return;
+                }
+
+                loadAutomationTaskExecutionReport(executionId);
+            };
+
+            row.addEventListener("click", openReport);
+            row.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openReport();
+                }
+            });
+        });
+}
+
+
+function markSelectedAutomationTaskExecution(executionId) {
+    selectedAutomationTaskExecutionId = executionId;
+
+    document
+        .querySelectorAll(".automation-task-execution-history-table tbody tr")
+        .forEach((row) => {
+            row.classList.toggle(
+                "selected",
+                row.dataset.executionId === executionId
+            );
+        });
+}
+
+
+function getAutomationTaskExecutionReportContainer() {
+    return document.getElementById(
+        "automationTaskExecutionReportContainer"
+    );
+}
+
+
+function renderAutomationTaskExecutionReportLoading(message) {
+    const reportContainer =
+        getAutomationTaskExecutionReportContainer();
+
+    if (!reportContainer) {
+        return;
+    }
+
+    reportContainer.innerHTML = `
+        <p class="automation-task-details-placeholder">
+            ${escapeAutomationTaskDetailsValue(message)}
+        </p>
+    `;
+}
+
+
+function renderAutomationTaskExecutionReportResponse(reportResponse) {
+    const reportContainer =
+        getAutomationTaskExecutionReportContainer();
+
+    if (!reportContainer) {
+        return;
+    }
+
+    const executionReport =
+        reportResponse.execution_report || null;
+
+    if (!executionReport) {
+        reportContainer.innerHTML = `
+            <p class="automation-task-details-placeholder">
+                No execution report was returned.
+            </p>
+        `;
+        return;
     }
 
     const summary =
         executionReport.summary || {};
 
+    const status =
+        normalizeAutomationTaskExecutionStatus(summary.status);
+
+    const logs =
+        executionReport.logs || {};
+
+    reportContainer.innerHTML = `
+        <div class="automation-task-execution-summary ${escapeAutomationTaskDetailsValue(status)}">
+            <div>
+                <p class="automation-task-configuration-label">
+                    Selected execution result
+                </p>
+                <h2>${escapeAutomationTaskDetailsValue(summary.status || "unknown")}</h2>
+                <p>${escapeAutomationTaskDetailsValue(summary.message || "No message was returned.")}</p>
+            </div>
+
+            <dl class="automation-task-execution-metadata">
+                <div>
+                    <dt>Stage</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.stage || "unknown")}</dd>
+                </div>
+                <div>
+                    <dt>Return Code</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.return_code ?? "n/a")}</dd>
+                </div>
+                <div>
+                    <dt>Duration</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.duration_ms ?? 0)} ms</dd>
+                </div>
+            </dl>
+        </div>
+
+        ${renderAutomationTaskExecutionReportSummary(executionReport)}
+
+        ${renderAutomationTaskExecutionSnapshotPanels(executionReport)}
+
+        ${renderAutomationTaskExecutionArtifacts(executionReport)}
+
+        <details class="automation-task-validation-panel">
+            <summary>Standard Output</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(logs.stdout || "No standard output was captured.")}</code></pre>
+        </details>
+
+        <details class="automation-task-validation-panel">
+            <summary>Standard Error</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(logs.stderr || "No standard error output was captured.")}</code></pre>
+        </details>
+    `;
+}
+
+
+function renderAutomationTaskExecutionReportSummary(executionReport) {
+    const summary =
+        executionReport.summary || {};
+
     return `
-        <section class="automation-task-validation-panel" open>
+        <section class="automation-task-validation-panel">
             <h2>Execution Report</h2>
 
             <div class="automation-task-report-summary-grid">
                 <div>
-                    <dt>Status</dt>
-                    <dd>${escapeAutomationTaskDetailsValue(summary.status || "unknown")}</dd>
+                    <dt>Execution ID</dt>
+                    <dd title="${escapeAutomationTaskDetailsValue(executionReport.execution_id || "n/a")}">
+                        ${escapeAutomationTaskDetailsValue(executionReport.execution_id || "n/a")}
+                    </dd>
+                </div>
+                <div>
+                    <dt>Started</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(formatAutomationTaskExecutionDateTime(summary.started_at))}</dd>
                 </div>
                 <div>
                     <dt>Validation</dt>
                     <dd>${escapeAutomationTaskDetailsValue(summary.validation_status || "unknown")}</dd>
-                </div>
-                <div>
-                    <dt>Artifacts</dt>
-                    <dd>${escapeAutomationTaskDetailsValue(summary.artifact_count ?? 0)}</dd>
                 </div>
                 <div>
                     <dt>Report File</dt>
@@ -698,6 +932,38 @@ function renderAutomationTaskExecutionReportSummary(executionReport) {
                 </div>
             </div>
         </section>
+    `;
+}
+
+
+function renderAutomationTaskExecutionSnapshotPanels(executionReport) {
+    const taskSnapshot =
+        executionReport.task || {};
+
+    const configurationSnapshot =
+        executionReport.configuration || {};
+
+    const validationSnapshot =
+        executionReport.validation || {};
+
+    return `
+        <details class="automation-task-validation-panel">
+            <summary>Task Snapshot</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(JSON.stringify(taskSnapshot, null, 4))}</code></pre>
+        </details>
+
+        <details class="automation-task-validation-panel">
+            <summary>Configuration Snapshot</summary>
+            <p class="automation-task-artifact-path" title="${escapeAutomationTaskDetailsValue(configurationSnapshot.path || "")}">
+                ${escapeAutomationTaskDetailsValue(configurationSnapshot.path || "")}
+            </p>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(JSON.stringify(configurationSnapshot.content || {}, null, 4))}</code></pre>
+        </details>
+
+        <details class="automation-task-validation-panel">
+            <summary>Validation Snapshot</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(JSON.stringify(validationSnapshot, null, 4))}</code></pre>
+        </details>
     `;
 }
 
@@ -808,7 +1074,7 @@ function renderAutomationTaskExecutionArtifacts(executionReport) {
             <div class="automation-task-artifact-list">
                 ${artifacts
                     .map((artifact) => `
-                        <details class="automation-task-artifact-card" open>
+                        <details class="automation-task-artifact-card">
                             <summary>
                                 <span>${escapeAutomationTaskDetailsValue(artifact.name || "artifact.json")}</span>
                                 <span>${escapeAutomationTaskDetailsValue(artifact.status || "unknown")}</span>
@@ -828,78 +1094,32 @@ function renderAutomationTaskExecutionArtifacts(executionReport) {
 }
 
 
-function renderAutomationTaskExecution(executionResponse) {
-    const executionBody =
-        getAutomationTaskExecutionBody();
-
-    if (!executionBody) {
-        return;
-    }
-
-    const execution =
-        executionResponse.execution || {};
-
-    const executionReport =
-        execution.execution_report || null;
-
-    const status =
-        normalizeAutomationTaskExecutionStatus(
-            execution.status
-        );
-
-    const stdout =
-        execution.stdout || "No standard output was captured.";
-
-    const stderr =
-        execution.stderr || "No standard error output was captured.";
-
-    executionBody.innerHTML = `
-        <div class="automation-task-execution-summary ${escapeAutomationTaskDetailsValue(status)}">
-            <div>
-                <p class="automation-task-configuration-label">
-                    Execution result
-                </p>
-                <h2>${escapeAutomationTaskDetailsValue(status)}</h2>
-                <p>${escapeAutomationTaskDetailsValue(execution.message || "No message was returned.")}</p>
-            </div>
-
-            <dl class="automation-task-execution-metadata">
-                <div>
-                    <dt>Stage</dt>
-                    <dd>${escapeAutomationTaskDetailsValue(execution.stage || "unknown")}</dd>
-                </div>
-                <div>
-                    <dt>Return Code</dt>
-                    <dd>${escapeAutomationTaskDetailsValue(execution.return_code ?? "n/a")}</dd>
-                </div>
-                <div>
-                    <dt>Duration</dt>
-                    <dd>${escapeAutomationTaskDetailsValue(execution.duration_ms ?? 0)} ms</dd>
-                </div>
-            </dl>
-        </div>
-
-        ${renderAutomationTaskExecutionReportSummary(executionReport)}
-
-        ${renderAutomationTaskExecutionArtifacts(executionReport)}
-
-        <details class="automation-task-validation-panel">
-            <summary>Standard Output</summary>
-            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(stdout)}</code></pre>
-        </details>
-
-        <details class="automation-task-validation-panel">
-            <summary>Standard Error</summary>
-            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(stderr)}</code></pre>
-        </details>
-    `;
-}
-
-
 function parseAutomationTaskExecutionResponse(responseData) {
     if (!responseData || !responseData.execution) {
         throw new Error(
             "The backend did not return automation task execution data."
+        );
+    }
+
+    return responseData;
+}
+
+
+function parseAutomationTaskExecutionHistoryResponse(responseData) {
+    if (!responseData || !Array.isArray(responseData.executions)) {
+        throw new Error(
+            "The backend did not return automation task execution history."
+        );
+    }
+
+    return responseData;
+}
+
+
+function parseAutomationTaskExecutionReportResponse(responseData) {
+    if (!responseData || !responseData.execution_report) {
+        throw new Error(
+            "The backend did not return the automation task execution report."
         );
     }
 
@@ -1104,6 +1324,113 @@ async function validateAutomationTask() {
 }
 
 
+
+async function loadAutomationTaskExecutions() {
+    hideAutomationTaskDetailsMessage();
+    setActiveAutomationTaskTab("execution");
+
+    const taskId =
+        getAutomationTaskIdFromLocation();
+
+    if (!taskId) {
+        renderAutomationTaskExecutionPlaceholder(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE,
+            "error"
+        );
+
+        return;
+    }
+
+    renderAutomationTaskExecutionPlaceholder(
+        "Loading automation task execution history..."
+    );
+
+    try {
+        const responseData =
+            await getJson(
+                CCORE_API_ENDPOINTS.automation.tasks.executions(
+                    taskId
+                )
+            );
+
+        const executionHistoryResponse =
+            parseAutomationTaskExecutionHistoryResponse(
+                responseData
+            );
+
+        renderAutomationTaskExecutionHistory(
+            executionHistoryResponse
+        );
+
+        automationTaskExecutionLoaded = true;
+
+    } catch (error) {
+        console.error(
+            "Failed to load automation task execution history:",
+            error
+        );
+
+        renderAutomationTaskExecutionPlaceholder(
+            AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            error.message || AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE,
+            "error"
+        );
+    }
+}
+
+
+async function loadAutomationTaskExecutionReport(executionId) {
+    const taskId =
+        getAutomationTaskIdFromLocation();
+
+    if (!taskId || !executionId) {
+        return;
+    }
+
+    markSelectedAutomationTaskExecution(executionId);
+    renderAutomationTaskExecutionReportLoading(
+        "Loading selected execution report..."
+    );
+
+    try {
+        const responseData =
+            await getJson(
+                CCORE_API_ENDPOINTS.automation.tasks.executionReport(
+                    taskId,
+                    executionId
+                )
+            );
+
+        const reportResponse =
+            parseAutomationTaskExecutionReportResponse(
+                responseData
+            );
+
+        renderAutomationTaskExecutionReportResponse(
+            reportResponse
+        );
+
+    } catch (error) {
+        console.error(
+            "Failed to load automation task execution report:",
+            error
+        );
+
+        renderAutomationTaskExecutionReportLoading(
+            error.message || AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE
+        );
+    }
+}
+
+
+
 async function executeAutomationTask() {
     hideAutomationTaskDetailsMessage();
     setActiveAutomationTaskTab("execution");
@@ -1142,9 +1469,14 @@ async function executeAutomationTask() {
                 responseData
             );
 
-        renderAutomationTaskExecution(
-            executionResponse
-        );
+        const executionId =
+            executionResponse.execution.execution_id || "";
+
+        await loadAutomationTaskExecutions();
+
+        if (executionId) {
+            await loadAutomationTaskExecutionReport(executionId);
+        }
 
         automationTaskExecutionLoaded = true;
 
@@ -1177,6 +1509,11 @@ function setupAutomationTaskTabs() {
                         tabButton.dataset.tabTarget;
 
                     if (!targetTab) {
+                        return;
+                    }
+
+                    if (targetTab === "execution" && !automationTaskExecutionLoaded) {
+                        loadAutomationTaskExecutions();
                         return;
                     }
 

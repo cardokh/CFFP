@@ -46,3 +46,21 @@ def automation_task_execution_to_response(task_execution_result) -> dict:
     )
 
     return response
+
+
+def automation_task_execution_history_to_response(task_execution_history_result) -> dict:
+    return {
+        "task": automation_task_to_response(
+            task_execution_history_result["task"],
+        ),
+        "executions": task_execution_history_result["executions"],
+    }
+
+
+def automation_task_execution_report_to_response(task_execution_report_result) -> dict:
+    return {
+        "task": automation_task_to_response(
+            task_execution_report_result["task"],
+        ),
+        "execution_report": task_execution_report_result["execution_report"],
+    }
