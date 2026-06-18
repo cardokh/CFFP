@@ -28,80 +28,29 @@
 
             <section class="protected-content-panel">
 
-                <div class="automation-tasks-content">
+                <div class="automation-registry-content">
 
-                    <div class="automation-tasks-heading">
-                        <div>
-                            <p class="automation-tasks-kicker">
-                                CCore Automation
-                            </p>
+                    <header class="automation-registry-header">
+                        <p class="automation-registry-kicker">CCore Automation</p>
 
-                            <h1>
-                                Automation Tasks
-                            </h1>
+                        <h1>Automation Tasks</h1>
 
-                            <p class="automation-tasks-summary">
-                                Registered automation tasks are loaded from the backend registry.
-                                This list shows task summaries; implementation paths and detailed metadata are available from each task's details page.
-                            </p>
-                        </div>
-
-                        <div class="automation-tasks-heading-actions">
-                            <a id="automationPipelinesLink" class="shared-button secondary" href="#">
-                                View Pipelines
-                            </a>
-
-                            <button id="refreshAutomationTasksButton" class="shared-button secondary" type="button">
-                                Refresh
-                            </button>
-                        </div>
-                    </div>
+                        <p class="automation-registry-summary">
+                            Registered automation tasks are loaded from the backend registry.
+                            Tasks are reusable units of work; details and metadata are available from each task's details page.
+                        </p>
+                    </header>
 
                     <div id="automationTasksMessage" class="form-message info hidden"></div>
 
-                    <fieldset class="shared-panel automation-tasks-card">
+                    <fieldset class="shared-panel automation-registry-card automation-tasks-card">
                         <legend>Registered Tasks</legend>
 
-                        <div class="automation-tasks-table-inner">
-
-                            <div class="shared-table-toolbar automation-tasks-table-toolbar">
-                                <div class="shared-table-toolbar-left">
-                                    <span id="automationTasksCount" class="automation-tasks-count">
-                                        0 tasks
-                                    </span>
-                                </div>
-
-                                <div class="shared-table-toolbar-center">
-                                    <label class="shared-search-box shared-table-toolbar-search" for="automationTasksSearchInput">
-                                        <span class="shared-search-icon">⌕</span>
-                                        <input id="automationTasksSearchInput" class="shared-search-input" type="search" placeholder="Search tasks" disabled>
-                                    </label>
-
-                                    <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation tasks pagination">
-                                        <button id="automationTasksPreviousPageButton" class="shared-button secondary" type="button" disabled>
-                                            Previous
-                                        </button>
-
-                                        <span id="automationTasksPaginationStatus" class="shared-table-pagination-status">
-                                            Page 1 of 1
-                                        </span>
-
-                                        <button id="automationTasksNextPageButton" class="shared-button secondary" type="button" disabled>
-                                            Next
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="shared-table-toolbar-right">
-                                    <span id="automationTasksFilteredCount" class="automation-tasks-count muted">
-                                        0 shown
-                                    </span>
-                                </div>
-                            </div>
+                        <div class="automation-registry-table-inner automation-tasks-table-inner">
 
                             <div class="shared-table-wrapper">
 
-                                <table class="shared-table automation-tasks-table">
+                                <table class="shared-table automation-registry-table automation-tasks-table">
 
                                     <thead>
                                         <tr>
@@ -139,6 +88,55 @@
                         </div>
 
                     </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar automation-registry-toolbar automation-tasks-table-toolbar">
+
+                        <div class="shared-table-toolbar-left">
+                            <a id="backToAutomationButton" class="shared-button secondary shared-table-toolbar-action" href="#">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="automationTasksSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="automationTasksSearchInput" class="shared-search-input" type="search" placeholder="Search tasks..." disabled>
+                            </label>
+
+                            <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation tasks pagination">
+                                <button id="automationTasksPreviousPageButton" class="shared-button secondary" type="button" disabled>
+                                    ‹ Prev
+                                </button>
+
+                                <span id="automationTasksPaginationStatus" class="shared-table-pagination-status">
+                                    Page 1 of 1
+                                </span>
+
+                                <button id="automationTasksNextPageButton" class="shared-button secondary" type="button" disabled>
+                                    Next ›
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="automationTasksCount" class="automation-registry-count automation-tasks-count">
+                                0 tasks
+                            </span>
+
+                            <span id="automationTasksFilteredCount" class="automation-registry-count automation-tasks-count muted">
+                                0 shown
+                            </span>
+
+                            <a id="automationPipelinesLink" class="shared-button secondary shared-table-toolbar-action" href="#">
+                                View Pipelines
+                            </a>
+
+                            <button id="refreshAutomationTasksButton" class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+
+                    </section>
 
                 </div>
 

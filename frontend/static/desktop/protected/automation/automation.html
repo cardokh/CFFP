@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Workspace | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+    <link rel="stylesheet" href="./css/automation.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="automation-dashboard-content">
+
+                    <header class="automation-dashboard-header">
+
+                        <p class="automation-dashboard-kicker">CCore Automation</p>
+
+                        <h1>Automation Workspace</h1>
+
+                        <p>
+                            Manage reusable automation tasks, automation pipelines,
+                            configuration, execution history, reports, and governance validation.
+                        </p>
+                    </header>
+
+                    <section class="automation-dashboard-grid" aria-label="Automation modules">
+
+                        <a class="automation-dashboard-card" href="/desktop/protected/automation/tasks.html">
+                            <span class="automation-dashboard-card-icon">🧩</span>
+                            <h2>Automation Tasks</h2>
+                            <p>View reusable units of automation work loaded from the task registry.</p>
+                            <span class="automation-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="automation-dashboard-card" href="/desktop/protected/automation/pipelines.html">
+                            <span class="automation-dashboard-card-icon">🔁</span>
+                            <h2>Automation Pipelines</h2>
+                            <p>View pipeline definitions that orchestrate reusable automation tasks.</p>
+                            <span class="automation-dashboard-card-action">Open module →</span>
+                        </a>
+
+                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
+                            <span class="automation-dashboard-card-icon">⚙️</span>
+                            <h2>Configurations</h2>
+                            <p>Future workspace for viewing and validating automation configuration files.</p>
+                            <span class="automation-dashboard-card-action">Planned</span>
+                        </a>
+
+                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
+                            <span class="automation-dashboard-card-icon">▶️</span>
+                            <h2>Execution History</h2>
+                            <p>Future workspace for pipeline and task execution runs, state, and logs.</p>
+                            <span class="automation-dashboard-card-action">Planned</span>
+                        </a>
+
+                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
+                            <span class="automation-dashboard-card-icon">📄</span>
+                            <h2>Reports</h2>
+                            <p>Future workspace for validation reports, artifacts, warnings, and failures.</p>
+                            <span class="automation-dashboard-card-action">Planned</span>
+                        </a>
+
+                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
+                            <span class="automation-dashboard-card-icon">🛡️</span>
+                            <h2>Governance</h2>
+                            <p>Future workspace for script governance inspection and automation compliance.</p>
+                            <span class="automation-dashboard-card-action">Planned</span>
+                        </a>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation");
+    </script>
+
+</body>
+
+</html>

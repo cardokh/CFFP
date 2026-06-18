@@ -1,101 +1,124 @@
+
+:root {
+    --protected-content-height:
+        calc(var(--protected-workspace-height) - var(--protected-workspace-padding-top) - var(--protected-workspace-padding-bottom) - var(--protected-header-height) - var(--protected-panel-gap));
+}
+
+#footer-panel-container {
+    display: none;
+}
 /*
- * Automation tasks page styles.
+ * Automation registry page styles.
  *
  * Responsibilities:
- * - Style the CCore automation task summary list.
+ * - Keep automation registry pages compact and table-focused.
+ * - Match the Admin Users table layout pattern with the toolbar below the table.
  * - Reuse shared protected layout, panel, table, search, pagination, and button styles.
- * - Keep the list compact so row actions remain visible.
  */
 
+.automation-registry-content,
 .automation-tasks-content {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-
     display: flex;
     flex-direction: column;
-    gap: var(--protected-panel-gap);
+    align-items: flex-start;
+    gap: 14px;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
 
     overflow: hidden;
 }
 
+.automation-registry-header,
 .automation-tasks-heading {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
+    flex: 0 0 auto;
 
-    padding: 18px 20px;
-
-    background:
-        radial-gradient(circle at top right,
-            rgba(66, 153, 225, 0.16),
-            transparent 40%),
-        #0c1725;
-
-    border: 1px solid #243a57;
-    border-radius: 16px;
+    max-width: 920px;
 }
 
+.automation-registry-kicker,
 .automation-tasks-kicker {
-    margin: 0 0 6px;
+    margin: 0 0 0.35rem;
 
     color: #8fb7e4;
-    font-size: 12px;
+
+    font-size: 0.72rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
+
     text-transform: uppercase;
 }
 
+.automation-registry-header h1,
 .automation-tasks-heading h1 {
-    margin: 0 0 8px;
+    margin: 0 0 0.45rem;
 
     color: #ffffff;
-    font-size: 26px;
-    font-weight: 900;
+
+    font-size: 1.85rem;
 }
 
+.automation-registry-summary,
 .automation-tasks-summary {
-    max-width: 720px;
     margin: 0;
 
-    color: #b9cde2;
-    font-size: 13px;
-    line-height: 1.45;
+    max-width: 820px;
+
+    color: #9bb0c8;
+
+    font-size: 0.92rem;
+    line-height: 1.4;
 }
 
+.automation-registry-card,
 .automation-tasks-card {
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
+    margin: 0;
 
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
+    box-sizing: border-box;
 }
 
+.automation-registry-card legend,
+.automation-tasks-card legend {
+    padding: 0 10px;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.automation-registry-table-inner,
 .automation-tasks-table-inner {
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
 }
 
+.automation-registry-toolbar,
 .automation-tasks-table-toolbar {
-    margin-bottom: 10px;
+    width: 100%;
+    max-width: 100%;
+
+    flex-shrink: 0;
 }
 
+.automation-registry-count,
 .automation-tasks-count {
     color: #dbeafe;
     font-size: 12px;
     font-weight: 800;
 }
 
+.automation-registry-count.muted,
 .automation-tasks-count.muted {
     color: #9bb0c8;
 }
 
+.automation-registry-table td,
 .automation-tasks-table td {
     color: #cfe0f3;
     font-size: 12px;
@@ -103,17 +126,22 @@
     vertical-align: middle;
 }
 
+.automation-registry-table th:first-child,
+.automation-registry-table td:first-child,
 .automation-tasks-table th:first-child,
 .automation-tasks-table td:first-child {
     width: 96px;
 }
 
+.automation-registry-table th:last-child,
+.automation-registry-table td:last-child,
 .automation-tasks-table th:last-child,
 .automation-tasks-table td:last-child {
     width: 96px;
     text-align: right;
 }
 
+.automation-registry-table th:last-child,
 .automation-tasks-table th:last-child {
     color: #eaf3ff;
     font-size: 12px;
@@ -199,18 +227,4 @@
 
     font-size: 11px;
     text-align: center;
-}
-
-@media (max-width: 900px) {
-
-    .automation-tasks-heading {
-        flex-direction: column;
-    }
-}
-
-.automation-tasks-heading-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
 }

@@ -424,6 +424,16 @@ async function loadAutomationTasks() {
 
 
 function setupAutomationTasksEvents() {
+    const backToAutomationButton =
+        document.getElementById(
+            "backToAutomationButton"
+        );
+
+    if (backToAutomationButton) {
+        backToAutomationButton.href =
+            LLA_PATHS.desktop.protected.automation.home;
+    }
+
     const pipelinesLink =
         document.getElementById(
             "automationPipelinesLink"

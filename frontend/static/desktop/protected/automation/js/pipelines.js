@@ -442,6 +442,16 @@ async function loadAutomationPipelines() {
 
 
 function setupAutomationPipelinesEvents() {
+    const backToAutomationButton =
+        document.getElementById(
+            "backToAutomationButton"
+        );
+
+    if (backToAutomationButton) {
+        backToAutomationButton.href =
+            LLA_PATHS.desktop.protected.automation.home;
+    }
+
     const tasksLink =
         document.getElementById(
             "automationTasksLink"

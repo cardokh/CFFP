@@ -28,80 +28,29 @@
 
             <section class="protected-content-panel">
 
-                <div class="automation-tasks-content">
+                <div class="automation-registry-content">
 
-                    <div class="automation-tasks-heading">
-                        <div>
-                            <p class="automation-tasks-kicker">
-                                CCore Automation
-                            </p>
+                    <header class="automation-registry-header">
+                        <p class="automation-registry-kicker">CCore Automation</p>
 
-                            <h1>
-                                Automation Pipelines
-                            </h1>
+                        <h1>Automation Pipelines</h1>
 
-                            <p class="automation-tasks-summary">
-                                Registered automation pipelines are loaded from the backend pipeline registry.
-                                Pipelines orchestrate reusable automation tasks; they do not contain implementation logic.
-                            </p>
-                        </div>
-
-                        <div class="automation-tasks-heading-actions">
-                            <a id="automationTasksLink" class="shared-button secondary" href="#">
-                                View Tasks
-                            </a>
-
-                            <button id="refreshAutomationPipelinesButton" class="shared-button secondary" type="button">
-                                Refresh
-                            </button>
-                        </div>
-                    </div>
+                        <p class="automation-registry-summary">
+                            Registered automation pipelines are loaded from the backend pipeline registry.
+                            Pipelines orchestrate reusable automation tasks; they do not contain implementation logic.
+                        </p>
+                    </header>
 
                     <div id="automationPipelinesMessage" class="form-message info hidden"></div>
 
-                    <fieldset class="shared-panel automation-tasks-card">
+                    <fieldset class="shared-panel automation-registry-card automation-tasks-card">
                         <legend>Registered Pipelines</legend>
 
-                        <div class="automation-tasks-table-inner">
-
-                            <div class="shared-table-toolbar automation-tasks-table-toolbar">
-                                <div class="shared-table-toolbar-left">
-                                    <span id="automationPipelinesCount" class="automation-tasks-count">
-                                        0 pipelines
-                                    </span>
-                                </div>
-
-                                <div class="shared-table-toolbar-center">
-                                    <label class="shared-search-box shared-table-toolbar-search" for="automationPipelinesSearchInput">
-                                        <span class="shared-search-icon">⌕</span>
-                                        <input id="automationPipelinesSearchInput" class="shared-search-input" type="search" placeholder="Search pipelines" disabled>
-                                    </label>
-
-                                    <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation pipelines pagination">
-                                        <button id="automationPipelinesPreviousPageButton" class="shared-button secondary" type="button" disabled>
-                                            Previous
-                                        </button>
-
-                                        <span id="automationPipelinesPaginationStatus" class="shared-table-pagination-status">
-                                            Page 1 of 1
-                                        </span>
-
-                                        <button id="automationPipelinesNextPageButton" class="shared-button secondary" type="button" disabled>
-                                            Next
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="shared-table-toolbar-right">
-                                    <span id="automationPipelinesFilteredCount" class="automation-tasks-count muted">
-                                        0 shown
-                                    </span>
-                                </div>
-                            </div>
+                        <div class="automation-registry-table-inner automation-tasks-table-inner">
 
                             <div class="shared-table-wrapper">
 
-                                <table class="shared-table automation-tasks-table automation-pipelines-table">
+                                <table class="shared-table automation-registry-table automation-tasks-table automation-pipelines-table">
 
                                     <thead>
                                         <tr>
@@ -144,6 +93,55 @@
                         </div>
 
                     </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar automation-registry-toolbar automation-tasks-table-toolbar">
+
+                        <div class="shared-table-toolbar-left">
+                            <a id="backToAutomationButton" class="shared-button secondary shared-table-toolbar-action" href="#">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="automationPipelinesSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="automationPipelinesSearchInput" class="shared-search-input" type="search" placeholder="Search pipelines..." disabled>
+                            </label>
+
+                            <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation pipelines pagination">
+                                <button id="automationPipelinesPreviousPageButton" class="shared-button secondary" type="button" disabled>
+                                    ‹ Prev
+                                </button>
+
+                                <span id="automationPipelinesPaginationStatus" class="shared-table-pagination-status">
+                                    Page 1 of 1
+                                </span>
+
+                                <button id="automationPipelinesNextPageButton" class="shared-button secondary" type="button" disabled>
+                                    Next ›
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="automationPipelinesCount" class="automation-registry-count automation-tasks-count">
+                                0 pipelines
+                            </span>
+
+                            <span id="automationPipelinesFilteredCount" class="automation-registry-count automation-tasks-count muted">
+                                0 shown
+                            </span>
+
+                            <a id="automationTasksLink" class="shared-button secondary shared-table-toolbar-action" href="#">
+                                View Tasks
+                            </a>
+
+                            <button id="refreshAutomationPipelinesButton" class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+
+                    </section>
 
                 </div>
 

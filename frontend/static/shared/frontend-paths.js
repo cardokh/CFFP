@@ -41,6 +41,7 @@ window.LLA_PATHS = {
          settings: "/desktop/protected/settings.html",
          projectGuide: "/desktop/protected/project-guide/project-guide.html",
          automation: {
+            home: "/desktop/protected/automation/automation.html",
             tasks: "/desktop/protected/automation/tasks.html",
             pipelines: "/desktop/protected/automation/pipelines.html",
 

@@ -75,7 +75,7 @@ function getSystemNavigationItems() {
         {
             key: "automation",
             label: "Automation",
-            desktopHref: LLA_PATHS.desktop.protected.automation.tasks,
+            desktopHref: LLA_PATHS.desktop.protected.automation.home,
             requiresAdmin: false
         },
         {
