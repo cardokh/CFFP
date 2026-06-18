@@ -3,13 +3,14 @@
  *
  * Responsibilities:
  * - Style the CCore automation task summary list.
+ * - Reuse shared protected layout, panel, table, search, pagination, and button styles.
  * - Keep the list compact so row actions remain visible.
- * - Reuse shared protected layout, panel, table, and button styles.
  */
 
 .automation-tasks-content {
     width: 100%;
     height: 100%;
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
@@ -81,6 +82,20 @@
     overflow: hidden;
 }
 
+.automation-tasks-table-toolbar {
+    margin-bottom: 10px;
+}
+
+.automation-tasks-count {
+    color: #dbeafe;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.automation-tasks-count.muted {
+    color: #9bb0c8;
+}
+
 .automation-tasks-table td {
     color: #cfe0f3;
     font-size: 12px;
@@ -97,6 +112,12 @@
 .automation-tasks-table td:last-child {
     width: 96px;
     text-align: right;
+}
+
+.automation-tasks-table th:last-child {
+    color: #eaf3ff;
+    font-size: 12px;
+    font-weight: 800;
 }
 
 .automation-tasks-name-cell {
@@ -157,7 +178,8 @@
 
 .automation-tasks-status.draft,
 .automation-tasks-status.notready,
-.automation-tasks-status.not-ready {
+.automation-tasks-status.not-ready,
+.automation-tasks-status.unknown {
     border-color: rgba(160, 160, 170, 0.5);
     background: rgba(80, 80, 90, 0.35);
     color: #d1d5db;

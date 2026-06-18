@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
     <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
     <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
     <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
 
     <link rel="stylesheet" href="./css/tasks.css">
@@ -56,15 +58,62 @@
 
                         <div class="automation-tasks-table-inner">
 
+                            <div class="shared-table-toolbar automation-tasks-table-toolbar">
+                                <div class="shared-table-toolbar-left">
+                                    <span id="automationTasksCount" class="automation-tasks-count">
+                                        0 tasks
+                                    </span>
+                                </div>
+
+                                <div class="shared-table-toolbar-center">
+                                    <label class="shared-search-box shared-table-toolbar-search" for="automationTasksSearchInput">
+                                        <span class="shared-search-icon">⌕</span>
+                                        <input id="automationTasksSearchInput" class="shared-search-input" type="search" placeholder="Search tasks" disabled>
+                                    </label>
+
+                                    <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation tasks pagination">
+                                        <button id="automationTasksPreviousPageButton" class="shared-button secondary" type="button" disabled>
+                                            Previous
+                                        </button>
+
+                                        <span id="automationTasksPaginationStatus" class="shared-table-pagination-status">
+                                            Page 1 of 1
+                                        </span>
+
+                                        <button id="automationTasksNextPageButton" class="shared-button secondary" type="button" disabled>
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="shared-table-toolbar-right">
+                                    <span id="automationTasksFilteredCount" class="automation-tasks-count muted">
+                                        0 shown
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="shared-table-wrapper">
 
                                 <table class="shared-table automation-tasks-table">
 
                                     <thead>
                                         <tr>
-                                            <th>Status</th>
-                                            <th>Name</th>
-                                            <th>Category</th>
+                                            <th>
+                                                <button class="shared-table-sort-button" type="button" data-sort-key="status">
+                                                    Status
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="shared-table-sort-button sorted-asc" type="button" data-sort-key="name" data-sort-direction="asc">
+                                                    Name
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="shared-table-sort-button" type="button" data-sort-key="category">
+                                                    Category
+                                                </button>
+                                            </th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -99,7 +148,10 @@
 
     <script>
         loadProtectedWorkspace("automation")
-            .then(() => {
+            .then(async () => {
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-pagination.js");
+
                 const pageScript = document.createElement("script");
                 pageScript.src = "./js/tasks.js";
                 document.body.appendChild(pageScript);

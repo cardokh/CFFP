@@ -4,6 +4,8 @@
  * Responsibilities:
  * - Load registered automation tasks from CCore.
  * - Render a compact task summary list.
+ * - Use shared table search and pagination helpers.
+ * - Provide client-side sorting for the task summary list.
  * - Navigate to task details without hardcoding detail page URLs.
  * - Keep implementation paths out of the list page; details belong on the task details page.
  * - Handle loading, empty, and error states.
@@ -21,6 +23,12 @@ const AUTOMATION_TASKS_ERROR_MESSAGE =
     "Automation tasks could not be loaded.";
 
 const AUTOMATION_TASKS_TABLE_COLUMN_COUNT = 4;
+const AUTOMATION_TASKS_ROWS_PER_PAGE = 8;
+
+let automationTasks = [];
+let automationTasksCurrentPage = 1;
+let automationTasksSortKey = "name";
+let automationTasksSortDirection = "asc";
 
 
 function getAutomationTasksTableBody() {
@@ -111,6 +119,78 @@ function renderAutomationTasksPlaceholder(message) {
 }
 
 
+function getAutomationTaskSearchableText(task) {
+    return [
+        task.id,
+        task.name,
+        task.description,
+        task.category,
+        task.status
+    ]
+        .filter(Boolean)
+        .join(" ");
+}
+
+
+function getAutomationTaskSortValue(task, sortKey) {
+    if (sortKey === "status") {
+        return normalizeAutomationTaskStatus(
+            task.status
+        );
+    }
+
+    return String(task[sortKey] || "")
+        .trim()
+        .toLowerCase();
+}
+
+
+function getSortedAutomationTasks(tasks) {
+    return [...tasks].sort((firstTask, secondTask) => {
+        const firstValue =
+            getAutomationTaskSortValue(
+                firstTask,
+                automationTasksSortKey
+            );
+
+        const secondValue =
+            getAutomationTaskSortValue(
+                secondTask,
+                automationTasksSortKey
+            );
+
+        if (firstValue < secondValue) {
+            return automationTasksSortDirection === "asc" ? -1 : 1;
+        }
+
+        if (firstValue > secondValue) {
+            return automationTasksSortDirection === "asc" ? 1 : -1;
+        }
+
+        return 0;
+    });
+}
+
+
+function getFilteredAutomationTasks() {
+    const searchTerm =
+        getTableSearchInputValue(
+            "automationTasksSearchInput"
+        );
+
+    const filteredTasks =
+        filterTableItems(
+            automationTasks,
+            searchTerm,
+            getAutomationTaskSearchableText
+        );
+
+    return getSortedAutomationTasks(
+        filteredTasks
+    );
+}
+
+
 function renderAutomationTaskRow(task) {
     const status =
         normalizeAutomationTaskStatus(
@@ -156,7 +236,55 @@ function renderAutomationTaskRow(task) {
 }
 
 
-function renderAutomationTasks(tasks) {
+function updateAutomationTasksCounts(filteredTasks) {
+    const totalCountElement =
+        document.getElementById(
+            "automationTasksCount"
+        );
+
+    const filteredCountElement =
+        document.getElementById(
+            "automationTasksFilteredCount"
+        );
+
+    if (totalCountElement) {
+        totalCountElement.textContent =
+            `${automationTasks.length} task${automationTasks.length === 1 ? "" : "s"}`;
+    }
+
+    if (filteredCountElement) {
+        filteredCountElement.textContent =
+            `${filteredTasks.length} shown`;
+    }
+}
+
+
+function updateAutomationTasksSortIndicators() {
+    document
+        .querySelectorAll(".automation-tasks-table .shared-table-sort-button")
+        .forEach((button) => {
+            const isActive =
+                button.dataset.sortKey === automationTasksSortKey;
+
+            button.dataset.sortDirection =
+                isActive
+                    ? automationTasksSortDirection
+                    : "";
+
+            button.classList.toggle(
+                "sorted-asc",
+                isActive && automationTasksSortDirection === "asc"
+            );
+
+            button.classList.toggle(
+                "sorted-desc",
+                isActive && automationTasksSortDirection === "desc"
+            );
+        });
+}
+
+
+function renderAutomationTasks() {
     const tableBody =
         getAutomationTasksTableBody();
 
@@ -164,18 +292,71 @@ function renderAutomationTasks(tasks) {
         return;
     }
 
-    if (!Array.isArray(tasks) || tasks.length === 0) {
+    if (!Array.isArray(automationTasks) || automationTasks.length === 0) {
+        updateAutomationTasksCounts([]);
         renderAutomationTasksPlaceholder(
             AUTOMATION_TASKS_EMPTY_MESSAGE
         );
-
         return;
     }
 
+    const filteredTasks =
+        getFilteredAutomationTasks();
+
+    updateAutomationTasksCounts(
+        filteredTasks
+    );
+
+    if (filteredTasks.length === 0) {
+        renderAutomationTasksPlaceholder(
+            "No automation tasks match the current search."
+        );
+        updateTablePaginationControls({
+            items: filteredTasks,
+            rowsPerPage: AUTOMATION_TASKS_ROWS_PER_PAGE,
+            currentPage: 1,
+            previousButtonId: "automationTasksPreviousPageButton",
+            nextButtonId: "automationTasksNextPageButton",
+            statusElementId: "automationTasksPaginationStatus"
+        });
+        return;
+    }
+
+    const totalPages =
+        getTableTotalPages(
+            filteredTasks,
+            AUTOMATION_TASKS_ROWS_PER_PAGE
+        );
+
+    automationTasksCurrentPage =
+        clampTablePage(
+            automationTasksCurrentPage,
+            totalPages
+        );
+
+    const pagedTasks =
+        getPagedTableItems(
+            filteredTasks,
+            automationTasksCurrentPage,
+            AUTOMATION_TASKS_ROWS_PER_PAGE
+        );
+
     tableBody.innerHTML =
-        tasks
+        pagedTasks
             .map(renderAutomationTaskRow)
             .join("");
+
+    automationTasksCurrentPage =
+        updateTablePaginationControls({
+            items: filteredTasks,
+            rowsPerPage: AUTOMATION_TASKS_ROWS_PER_PAGE,
+            currentPage: automationTasksCurrentPage,
+            previousButtonId: "automationTasksPreviousPageButton",
+            nextButtonId: "automationTasksNextPageButton",
+            statusElementId: "automationTasksPaginationStatus"
+        });
+
+    updateAutomationTasksSortIndicators();
 }
 
 
@@ -193,6 +374,9 @@ function parseAutomationTasksResponse(responseData) {
 async function loadAutomationTasks() {
     hideAutomationTasksMessage();
 
+    automationTasks = [];
+    automationTasksCurrentPage = 1;
+
     renderAutomationTasksPlaceholder(
         AUTOMATION_TASKS_LOADING_MESSAGE
     );
@@ -203,16 +387,18 @@ async function loadAutomationTasks() {
                 CCORE_API_ENDPOINTS.automation.tasks.list
             );
 
-        const tasks =
+        automationTasks =
             parseAutomationTasksResponse(
                 responseData
             );
 
-        renderAutomationTasks(
-            tasks
+        enableTableSearchInput(
+            "automationTasksSearchInput"
         );
 
-        if (tasks.length === 0) {
+        renderAutomationTasks();
+
+        if (automationTasks.length === 0) {
             showAutomationTasksMessage(
                 AUTOMATION_TASKS_EMPTY_MESSAGE,
                 "info"
@@ -243,16 +429,90 @@ function setupAutomationTasksEvents() {
             "refreshAutomationTasksButton"
         );
 
-    if (!refreshButton) {
-        return;
+    if (refreshButton) {
+        refreshButton.addEventListener(
+            "click",
+            () => {
+                loadAutomationTasks();
+            }
+        );
     }
 
-    refreshButton.addEventListener(
-        "click",
-        () => {
-            loadAutomationTasks();
-        }
-    );
+    const searchInput =
+        document.getElementById(
+            "automationTasksSearchInput"
+        );
+
+    if (searchInput) {
+        searchInput.addEventListener(
+            "input",
+            () => {
+                automationTasksCurrentPage = 1;
+                renderAutomationTasks();
+            }
+        );
+    }
+
+    const previousButton =
+        document.getElementById(
+            "automationTasksPreviousPageButton"
+        );
+
+    if (previousButton) {
+        previousButton.addEventListener(
+            "click",
+            () => {
+                automationTasksCurrentPage -= 1;
+                renderAutomationTasks();
+            }
+        );
+    }
+
+    const nextButton =
+        document.getElementById(
+            "automationTasksNextPageButton"
+        );
+
+    if (nextButton) {
+        nextButton.addEventListener(
+            "click",
+            () => {
+                automationTasksCurrentPage += 1;
+                renderAutomationTasks();
+            }
+        );
+    }
+
+    document
+        .querySelectorAll(".automation-tasks-table .shared-table-sort-button")
+        .forEach((button) => {
+            button.addEventListener(
+                "click",
+                () => {
+                    const selectedSortKey =
+                        button.dataset.sortKey;
+
+                    if (!selectedSortKey) {
+                        return;
+                    }
+
+                    if (automationTasksSortKey === selectedSortKey) {
+                        automationTasksSortDirection =
+                            automationTasksSortDirection === "asc"
+                                ? "desc"
+                                : "asc";
+                    } else {
+                        automationTasksSortKey =
+                            selectedSortKey;
+                        automationTasksSortDirection =
+                            "asc";
+                    }
+
+                    automationTasksCurrentPage = 1;
+                    renderAutomationTasks();
+                }
+            );
+        });
 }
 
 

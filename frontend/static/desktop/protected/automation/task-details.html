@@ -28,7 +28,7 @@
 
                 <div class="automation-task-details-content">
 
-                    <div class="automation-task-details-heading">
+                    <section class="automation-task-details-heading" aria-labelledby="automationTaskDetailsTitle">
                         <div class="automation-task-details-heading-main">
                             <p class="automation-task-details-kicker">
                                 CCore Automation
@@ -39,7 +39,7 @@
                                     Automation Task Details
                                 </h1>
 
-                                <div class="automation-task-details-state-row">
+                                <div class="automation-task-details-state-row" aria-label="Automation task state">
                                     <span id="automationTaskDetailsStatus" class="automation-task-details-status unknown">
                                         Loading
                                     </span>
@@ -76,41 +76,75 @@
                                 Execute
                             </button>
                         </div>
-                    </div>
+                    </section>
 
                     <div id="automationTaskDetailsMessage" class="form-message info hidden"></div>
 
-                    <fieldset id="automationTaskValidationCard" class="shared-panel automation-task-details-card hidden">
-                        <legend>Validation</legend>
+                    <section class="automation-task-tabs-panel" aria-label="Automation task detail sections">
+                        <div class="automation-task-tabs" role="tablist" aria-label="Automation task sections">
+                            <button id="automationTaskOverviewTab" class="automation-task-tab active" type="button" role="tab" aria-selected="true" aria-controls="automationTaskOverviewPanel" data-tab-target="overview">
+                                Overview
+                            </button>
 
-                        <div id="automationTaskValidationBody" class="automation-task-validation-body">
-                            <p class="automation-task-details-placeholder">
-                                Validation has not been run yet.
-                            </p>
+                            <button id="automationTaskTechnicalTab" class="automation-task-tab" type="button" role="tab" aria-selected="false" aria-controls="automationTaskTechnicalPanel" data-tab-target="technical">
+                                Technical Details
+                            </button>
+
+                            <button id="automationTaskConfigurationTab" class="automation-task-tab" type="button" role="tab" aria-selected="false" aria-controls="automationTaskConfigurationPanel" data-tab-target="configuration">
+                                Configuration
+                            </button>
+
+                            <button id="automationTaskValidationTab" class="automation-task-tab" type="button" role="tab" aria-selected="false" aria-controls="automationTaskValidationPanel" data-tab-target="validation">
+                                Validation
+                            </button>
+
+                            <button id="automationTaskExecutionTab" class="automation-task-tab" type="button" role="tab" aria-selected="false" aria-controls="automationTaskExecutionPanel" data-tab-target="execution">
+                                Execution
+                            </button>
                         </div>
-                    </fieldset>
 
-                    <fieldset id="automationTaskConfigurationCard" class="shared-panel automation-task-details-card hidden">
-                        <legend>Configuration</legend>
+                        <div class="automation-task-tab-scroll-pane">
+                            <section id="automationTaskOverviewPanel" class="automation-task-tab-panel active" role="tabpanel" aria-labelledby="automationTaskOverviewTab" data-tab-panel="overview">
+                                <div id="automationTaskOverviewBody" class="automation-task-tab-body">
+                                    <p class="automation-task-details-placeholder">
+                                        Loading automation task overview...
+                                    </p>
+                                </div>
+                            </section>
 
-                        <div id="automationTaskConfigurationBody" class="automation-task-configuration-body">
-                            <p class="automation-task-details-placeholder">
-                                Configuration has not been loaded yet.
-                            </p>
+                            <section id="automationTaskTechnicalPanel" class="automation-task-tab-panel" role="tabpanel" aria-labelledby="automationTaskTechnicalTab" data-tab-panel="technical">
+                                <div id="automationTaskDetailsBody" class="automation-task-tab-body">
+                                    <p class="automation-task-details-placeholder">
+                                        Loading automation task details...
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section id="automationTaskConfigurationPanel" class="automation-task-tab-panel" role="tabpanel" aria-labelledby="automationTaskConfigurationTab" data-tab-panel="configuration">
+                                <div id="automationTaskConfigurationBody" class="automation-task-configuration-body">
+                                    <p class="automation-task-details-placeholder">
+                                        Configuration has not been loaded yet.
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section id="automationTaskValidationPanel" class="automation-task-tab-panel" role="tabpanel" aria-labelledby="automationTaskValidationTab" data-tab-panel="validation">
+                                <div id="automationTaskValidationBody" class="automation-task-validation-body">
+                                    <p class="automation-task-details-placeholder">
+                                        Validation has not been run yet.
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section id="automationTaskExecutionPanel" class="automation-task-tab-panel" role="tabpanel" aria-labelledby="automationTaskExecutionTab" data-tab-panel="execution">
+                                <div class="automation-task-tab-body">
+                                    <p class="automation-task-details-placeholder">
+                                        Execution is not implemented yet. This tab reserves space for execution controls, progress, logs, and generated artifacts.
+                                    </p>
+                                </div>
+                            </section>
                         </div>
-                    </fieldset>
-
-                    <details class="shared-panel automation-task-technical-details" open>
-                        <summary>
-                            Technical Details
-                        </summary>
-
-                        <div id="automationTaskDetailsBody" class="automation-task-details-body">
-                            <p class="automation-task-details-placeholder">
-                                Loading automation task details...
-                            </p>
-                        </div>
-                    </details>
+                    </section>
 
                 </div>
 

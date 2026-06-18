@@ -2,22 +2,23 @@
  * Automation task details page styles.
  *
  * Responsibilities:
- * - Keep the automation details workflow compact and information-dense.
- * - Present task state, toolbar actions, validation, configuration, and technical
- *   metadata in the order a user needs them.
+ * - Keep the automation task workflow compact and information-dense.
+ * - Present task state and actions in a single header.
+ * - Use tabs and a scrollable content pane for overview, technical details,
+ *   configuration, validation, and future execution.
  * - Reuse shared protected layout, panel, and button styles.
  */
 
 .automation-task-details-content {
     width: 100%;
     height: 100%;
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    overflow: auto;
-    padding-right: 2px;
+    overflow: hidden;
 }
 
 .automation-task-details-heading {
@@ -26,7 +27,7 @@
     gap: 12px;
     align-items: start;
 
-    padding: 14px 16px;
+    padding: 13px 16px;
 
     background:
         radial-gradient(circle at top right,
@@ -63,7 +64,7 @@
     margin: 0;
 
     color: #ffffff;
-    font-size: 24px;
+    font-size: 23px;
     font-weight: 900;
     line-height: 1.15;
 }
@@ -82,7 +83,7 @@
 
 .automation-task-details-summary {
     max-width: 860px;
-    margin: 8px 0 0;
+    margin: 6px 0 0;
 
     color: #b9cde2;
     font-size: 13px;
@@ -132,32 +133,86 @@
     color: #ffb4b4;
 }
 
-.automation-task-details-card,
-.automation-task-technical-details {
+.automation-task-tabs-panel {
+    flex: 1;
+    min-height: 0;
+
     display: flex;
     flex-direction: column;
-    gap: 10px;
 
     overflow: hidden;
+
+    background: #0c1725;
+    border: 1px solid #243a57;
+    border-radius: 14px;
 }
 
-.automation-task-technical-details {
-    padding: 10px 12px;
+.automation-task-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+
+    padding: 8px 10px 0;
+
+    border-bottom: 1px solid #243a57;
 }
 
-.automation-task-technical-details summary {
+.automation-task-tab {
+    min-height: 32px;
+    padding: 7px 12px;
+
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+
+    background: transparent;
+    color: #9bb0c8;
+
+    font-size: 12px;
+    font-weight: 800;
+
     cursor: pointer;
-
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 900;
 }
 
-.automation-task-details-body {
+.automation-task-tab:hover {
+    color: #eaf3ff;
+    background: rgba(27, 53, 82, 0.55);
+}
+
+.automation-task-tab.active {
+    color: #ffffff;
+    background: #132235;
+    border-color: #243a57;
+}
+
+.automation-task-tab-scroll-pane {
+    flex: 1;
+    min-height: 0;
+
+    overflow: auto;
+    padding: 12px;
+}
+
+.automation-task-tab-panel {
+    display: none;
+}
+
+.automation-task-tab-panel.active {
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.automation-task-tab-body,
+.automation-task-configuration-body,
+.automation-task-validation-body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 10px;
+
+    min-height: 0;
 }
 
 .automation-task-details-placeholder,
@@ -167,6 +222,73 @@
     color: #b9cde2;
     font-size: 13px;
     line-height: 1.35;
+}
+
+.automation-task-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.automation-task-overview-card {
+    min-width: 0;
+
+    padding: 12px;
+
+    background: rgba(8, 18, 31, 0.78);
+    border: 1px solid #243a57;
+    border-radius: 12px;
+}
+
+.automation-task-overview-card.wide {
+    grid-column: 1 / -1;
+}
+
+.automation-task-overview-card h2 {
+    margin: 0 0 6px;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.automation-task-overview-card p {
+    margin: 0;
+
+    color: #cfe0f3;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.automation-task-overview-list {
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.automation-task-overview-list div {
+    min-width: 0;
+}
+
+.automation-task-overview-list dt {
+    margin: 0 0 3px;
+
+    color: #8fb7e4;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.automation-task-overview-list dd {
+    margin: 0;
+
+    color: #dbeafe;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: capitalize;
 }
 
 .automation-task-details-grid {
@@ -222,15 +344,6 @@
     font-size: 12px;
 }
 
-.automation-task-configuration-body,
-.automation-task-validation-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    min-height: 0;
-}
-
 .automation-task-configuration-header {
     display: flex;
     align-items: flex-start;
@@ -273,14 +386,13 @@
     min-height: 0;
 
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
-.automation-task-configuration-panel,
-.automation-task-validation-panel {
+.automation-task-configuration-panel {
     min-width: 0;
-    min-height: 0;
+    min-height: 260px;
 
     display: flex;
     flex-direction: column;
@@ -294,35 +406,27 @@
 }
 
 .automation-task-configuration-panel h2,
-.automation-task-validation-panel h2,
-.automation-task-validation-panel summary,
-.automation-task-validation-check h3 {
+.automation-task-validation-panel h2 {
     margin: 0;
 
     color: #ffffff;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 900;
 }
 
-.automation-task-validation-panel summary {
-    cursor: pointer;
-}
-
 .automation-task-json-tree,
-.automation-task-json-raw {
-    max-height: 300px;
+.automation-task-json-raw,
+.automation-task-validation-output {
+    min-height: 0;
+    max-height: 420px;
 
     overflow: auto;
 
     padding: 10px;
 
-    background: #06111f;
-    border: 1px solid #1e314b;
+    background: #07111f;
+    border: 1px solid #243a57;
     border-radius: 8px;
-}
-
-.automation-task-json-raw {
-    margin: 0;
 
     color: #dbeafe;
     font-family:
@@ -330,65 +434,48 @@
         "Courier New",
         monospace;
     font-size: 12px;
-    line-height: 1.4;
-    white-space: pre;
+    line-height: 1.45;
 }
 
 .automation-task-json-node {
-    color: #dbeafe;
-    font-family:
-        Consolas,
-        "Courier New",
-        monospace;
-    font-size: 12px;
+    margin: 0 0 4px;
 }
 
 .automation-task-json-node summary {
     cursor: pointer;
 
     color: #dbeafe;
+    font-weight: 700;
 }
 
 .automation-task-json-children {
-    margin-top: 7px;
-    margin-left: 14px;
+    margin-top: 6px;
+    margin-left: 18px;
 
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 
 .automation-task-json-row {
-    min-width: 0;
-
     display: grid;
     grid-template-columns: auto auto minmax(0, 1fr);
     gap: 6px;
-    align-items: start;
+    align-items: baseline;
 }
 
 .automation-task-json-key {
-    color: #93c5fd;
+    color: #bfdbfe;
     font-weight: 800;
 }
 
-.automation-task-json-type {
-    margin-left: 6px;
-
-    color: #9ca3af;
-    font-size: 11px;
-}
-
+.automation-task-json-type,
 .automation-task-json-separator {
-    color: #64748b;
-}
-
-.automation-task-json-child-value {
-    min-width: 0;
+    color: #8fa2b8;
 }
 
 .automation-task-json-value.string {
-    color: #a7f3d0;
+    color: #8ef0b5;
 }
 
 .automation-task-json-value.number,
@@ -404,31 +491,32 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 16px;
 
-    padding: 12px;
+    padding: 14px 16px;
 
-    background: rgba(8, 18, 31, 0.78);
     border: 1px solid #243a57;
     border-radius: 10px;
+
+    background: rgba(8, 18, 31, 0.78);
+}
+
+.automation-task-validation-summary.failed {
+    border-color: rgba(200, 80, 80, 0.7);
+    background: rgba(85, 30, 45, 0.35);
+}
+
+.automation-task-validation-summary.passed {
+    border-color: rgba(80, 180, 120, 0.6);
+    background: rgba(20, 90, 50, 0.24);
 }
 
 .automation-task-validation-summary h2 {
     margin: 0;
 
     color: #ffffff;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 900;
-}
-
-.automation-task-validation-summary.passed {
-    border-color: rgba(80, 180, 120, 0.5);
-    background: rgba(20, 90, 50, 0.22);
-}
-
-.automation-task-validation-summary.failed {
-    border-color: rgba(200, 80, 80, 0.5);
-    background: rgba(100, 30, 30, 0.22);
 }
 
 .automation-task-validation-counts {
@@ -439,42 +527,63 @@
 }
 
 .automation-task-validation-counts span {
+    min-width: 70px;
     padding: 4px 9px;
 
-    background: rgba(6, 17, 31, 0.78);
-    border: 1px solid #1e314b;
+    border: 1px solid #243a57;
     border-radius: 999px;
 
+    background: #07111f;
     color: #dbeafe;
+
     font-size: 11px;
     font-weight: 800;
+    text-align: center;
+}
+
+.automation-task-validation-panel {
+    padding: 10px;
+
+    background: rgba(8, 18, 31, 0.78);
+    border: 1px solid #243a57;
+    border-radius: 10px;
+}
+
+.automation-task-validation-panel summary {
+    cursor: pointer;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 900;
 }
 
 .automation-task-validation-checks {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .automation-task-validation-check {
     display: grid;
-    grid-template-columns: 82px minmax(0, 1fr);
+    grid-template-columns: 92px minmax(0, 1fr);
     gap: 10px;
-    align-items: flex-start;
+    align-items: start;
 
-    padding: 8px 10px;
+    padding: 10px;
 
-    background: #06111f;
-    border: 1px solid #1e314b;
-    border-radius: 8px;
-}
+    border: 1px solid #243a57;
+    border-radius: 10px;
 
-.automation-task-validation-check.passed {
-    border-color: rgba(80, 180, 120, 0.45);
+    background: #07111f;
 }
 
 .automation-task-validation-check.failed {
-    border-color: rgba(200, 80, 80, 0.45);
+    border-color: rgba(200, 80, 80, 0.7);
+}
+
+.automation-task-validation-check.passed {
+    border-color: rgba(80, 180, 120, 0.6);
 }
 
 .automation-task-validation-check-status {
@@ -484,13 +593,20 @@
 
     padding: 4px 8px;
 
-    background: #16263a;
     border: 1px solid #2b415f;
     border-radius: 999px;
 
+    background: #16263a;
     color: #dbeafe;
+
     font-size: 10px;
     font-weight: 900;
+}
+
+.automation-task-validation-check.failed .automation-task-validation-check-status {
+    border-color: rgba(200, 80, 80, 0.7);
+    background: rgba(100, 30, 30, 0.35);
+    color: #ffb4b4;
 }
 
 .automation-task-validation-check.passed .automation-task-validation-check-status {
@@ -499,57 +615,40 @@
     color: #8ef0b5;
 }
 
-.automation-task-validation-check.failed .automation-task-validation-check-status {
-    border-color: rgba(200, 80, 80, 0.5);
-    background: rgba(100, 30, 30, 0.35);
-    color: #ffb4b4;
+.automation-task-validation-check h3 {
+    margin: 0 0 4px;
+
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
 }
 
 .automation-task-validation-check p {
-    margin: 4px 0 0;
+    margin: 0;
 
     color: #b9cde2;
     font-size: 12px;
     line-height: 1.35;
 }
 
-.automation-task-validation-output {
-    max-height: 180px;
-    margin: 0;
-    overflow: auto;
-
-    padding: 10px;
-
-    background: #06111f;
-    border: 1px solid #1e314b;
-    border-radius: 8px;
-
-    color: #dbeafe;
-    font-family:
-        Consolas,
-        "Courier New",
-        monospace;
-    font-size: 12px;
-    line-height: 1.4;
-    white-space: pre-wrap;
+.hidden {
+    display: none !important;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 980px) {
 
-    .automation-task-details-heading,
-    .automation-task-configuration-grid {
+    .automation-task-details-heading {
         grid-template-columns: 1fr;
     }
 
     .automation-task-details-toolbar {
         justify-content: flex-start;
     }
-}
 
-@media (max-width: 900px) {
-
+    .automation-task-configuration-grid,
     .automation-task-details-grid,
-    .automation-task-details-grid.compact {
+    .automation-task-details-grid.compact,
+    .automation-task-overview-grid {
         grid-template-columns: 1fr;
     }
 }
