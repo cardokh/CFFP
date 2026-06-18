@@ -22,6 +22,8 @@ from src.core.ai.ai_speech.ai_speech_result_factory import (
 from src.core.ai.ai_speech.ai_speech_service import AiSpeechService
 from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
 from src.core.infrastructure.database import DatabaseManager
+from src.core.automation.automation_pipeline_registry import AutomationPipelineRegistry
+from src.core.automation.automation_pipeline_service import AutomationPipelineService
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
 from src.core.automation.automation_task_service import AutomationTaskService
 from src.core.automation.automation_task_validation import AutomationTaskValidationService
@@ -120,6 +122,18 @@ def build_automation_task_registry():
     return AutomationTaskRegistry(
         registry_path=get_path("automationTaskRegistry"),
         project_root=get_path("projectRoot"),
+    )
+
+
+def build_automation_pipeline_registry():
+    return AutomationPipelineRegistry(
+        registry_path=get_path("automationPipelineRegistry"),
+    )
+
+
+def build_automation_pipeline_service():
+    return AutomationPipelineService(
+        automation_pipeline_registry=build_automation_pipeline_registry(),
     )
 
 

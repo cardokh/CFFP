@@ -134,6 +134,14 @@ const CCORE_API_ENDPOINTS = {
             validate(taskId) {
                 return `/api/automation/tasks/${encodeURIComponent(taskId)}/validate`;
             }
+        },
+
+        pipelines: {
+            list: "/api/automation/pipelines",
+
+            byId(pipelineId) {
+                return `/api/automation/pipelines/${encodeURIComponent(pipelineId)}`;
+            }
         }
     }
 };

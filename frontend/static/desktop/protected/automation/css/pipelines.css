@@ -214,3 +214,9 @@
     gap: 10px;
     flex-shrink: 0;
 }
+
+.automation-pipelines-table th:last-child,
+.automation-pipelines-table td:last-child {
+    width: 90px;
+    text-align: left;
+}

@@ -11,6 +11,7 @@ Responsibilities:
 import contextlib
 import io
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -176,15 +177,21 @@ class AutomationTaskValidationService:
 
         try:
             ScriptGovernanceInspector = self._load_script_governance_inspector()
-            inspector = ScriptGovernanceInspector()
-            inspector.config["targetScripts"] = [
-                self._to_project_relative_path(script_path),
-            ]
-
             captured_output = io.StringIO()
+            current_working_directory = Path.cwd()
 
-            with contextlib.redirect_stdout(captured_output):
-                inspector.run()
+            try:
+                os.chdir(self.project_root)
+
+                inspector = ScriptGovernanceInspector()
+                inspector.config["targetScripts"] = [
+                    self._to_project_relative_path(script_path),
+                ]
+
+                with contextlib.redirect_stdout(captured_output):
+                    inspector.run()
+            finally:
+                os.chdir(current_working_directory)
 
             script_report = inspector.script_reports[0] if inspector.script_reports else None
 

@@ -424,6 +424,16 @@ async function loadAutomationTasks() {
 
 
 function setupAutomationTasksEvents() {
+    const pipelinesLink =
+        document.getElementById(
+            "automationPipelinesLink"
+        );
+
+    if (pipelinesLink) {
+        pipelinesLink.href =
+            LLA_PATHS.desktop.protected.automation.pipelines;
+    }
+
     const refreshButton =
         document.getElementById(
             "refreshAutomationTasksButton"

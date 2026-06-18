@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automation Tasks | CFFP</title>
+    <title>Automation Pipelines | CFFP</title>
 
     <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
     <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
     <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
 
-    <link rel="stylesheet" href="./css/tasks.css">
+    <link rel="stylesheet" href="./css/pipelines.css">
 </head>
 
 <body>
@@ -37,63 +37,63 @@
                             </p>
 
                             <h1>
-                                Automation Tasks
+                                Automation Pipelines
                             </h1>
 
                             <p class="automation-tasks-summary">
-                                Registered automation tasks are loaded from the backend registry.
-                                This list shows task summaries; implementation paths and detailed metadata are available from each task's details page.
+                                Registered automation pipelines are loaded from the backend pipeline registry.
+                                Pipelines orchestrate reusable automation tasks; they do not contain implementation logic.
                             </p>
                         </div>
 
                         <div class="automation-tasks-heading-actions">
-                            <a id="automationPipelinesLink" class="shared-button secondary" href="#">
-                                View Pipelines
+                            <a id="automationTasksLink" class="shared-button secondary" href="#">
+                                View Tasks
                             </a>
 
-                            <button id="refreshAutomationTasksButton" class="shared-button secondary" type="button">
+                            <button id="refreshAutomationPipelinesButton" class="shared-button secondary" type="button">
                                 Refresh
                             </button>
                         </div>
                     </div>
 
-                    <div id="automationTasksMessage" class="form-message info hidden"></div>
+                    <div id="automationPipelinesMessage" class="form-message info hidden"></div>
 
                     <fieldset class="shared-panel automation-tasks-card">
-                        <legend>Registered Tasks</legend>
+                        <legend>Registered Pipelines</legend>
 
                         <div class="automation-tasks-table-inner">
 
                             <div class="shared-table-toolbar automation-tasks-table-toolbar">
                                 <div class="shared-table-toolbar-left">
-                                    <span id="automationTasksCount" class="automation-tasks-count">
-                                        0 tasks
+                                    <span id="automationPipelinesCount" class="automation-tasks-count">
+                                        0 pipelines
                                     </span>
                                 </div>
 
                                 <div class="shared-table-toolbar-center">
-                                    <label class="shared-search-box shared-table-toolbar-search" for="automationTasksSearchInput">
+                                    <label class="shared-search-box shared-table-toolbar-search" for="automationPipelinesSearchInput">
                                         <span class="shared-search-icon">⌕</span>
-                                        <input id="automationTasksSearchInput" class="shared-search-input" type="search" placeholder="Search tasks" disabled>
+                                        <input id="automationPipelinesSearchInput" class="shared-search-input" type="search" placeholder="Search pipelines" disabled>
                                     </label>
 
-                                    <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation tasks pagination">
-                                        <button id="automationTasksPreviousPageButton" class="shared-button secondary" type="button" disabled>
+                                    <div class="shared-table-pagination shared-table-toolbar-pagination" aria-label="Automation pipelines pagination">
+                                        <button id="automationPipelinesPreviousPageButton" class="shared-button secondary" type="button" disabled>
                                             Previous
                                         </button>
 
-                                        <span id="automationTasksPaginationStatus" class="shared-table-pagination-status">
+                                        <span id="automationPipelinesPaginationStatus" class="shared-table-pagination-status">
                                             Page 1 of 1
                                         </span>
 
-                                        <button id="automationTasksNextPageButton" class="shared-button secondary" type="button" disabled>
+                                        <button id="automationPipelinesNextPageButton" class="shared-button secondary" type="button" disabled>
                                             Next
                                         </button>
                                     </div>
                                 </div>
 
                                 <div class="shared-table-toolbar-right">
-                                    <span id="automationTasksFilteredCount" class="automation-tasks-count muted">
+                                    <span id="automationPipelinesFilteredCount" class="automation-tasks-count muted">
                                         0 shown
                                     </span>
                                 </div>
@@ -101,7 +101,7 @@
 
                             <div class="shared-table-wrapper">
 
-                                <table class="shared-table automation-tasks-table">
+                                <table class="shared-table automation-tasks-table automation-pipelines-table">
 
                                     <thead>
                                         <tr>
@@ -120,14 +120,19 @@
                                                     Category
                                                 </button>
                                             </th>
-                                            <th>Action</th>
+                                            <th>
+                                                <button class="shared-table-sort-button" type="button" data-sort-key="execution_mode">
+                                                    Execution
+                                                </button>
+                                            </th>
+                                            <th>Steps</th>
                                         </tr>
                                     </thead>
 
-                                    <tbody id="automationTasksTableBody">
+                                    <tbody id="automationPipelinesTableBody">
                                         <tr>
-                                            <td colspan="4" class="shared-table-empty-state">
-                                                Loading automation tasks...
+                                            <td colspan="5" class="shared-table-empty-state">
+                                                Loading automation pipelines...
                                             </td>
                                         </tr>
                                     </tbody>
@@ -159,7 +164,7 @@
                 await loadProtectedWorkspaceScript("/desktop/shared/js/table-pagination.js");
 
                 const pageScript = document.createElement("script");
-                pageScript.src = "./js/tasks.js";
+                pageScript.src = "./js/pipelines.js";
                 document.body.appendChild(pageScript);
             });
     </script>

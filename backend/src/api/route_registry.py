@@ -25,6 +25,8 @@ from src.api.api_paths import (
     API_PATH_ADMIN_USERS,
     API_PATH_ADMIN_USERS_PREFIX,
     API_PATH_AI_SPEECH_GENERATE,
+    API_PATH_AUTOMATION_PIPELINES,
+    API_PATH_AUTOMATION_PIPELINES_PREFIX,
     API_PATH_AUTOMATION_TASKS,
     API_PATH_AUTOMATION_TASKS_PREFIX,
     API_PATH_AUTH_FORGOT_PASSWORD,
@@ -52,6 +54,10 @@ from src.api.route_registry_utils import (
 )
 from src.core.ai.ai_speech.ai_speech_routes import (
     handle_generate_ai_speech,
+)
+from src.core.automation.automation_pipeline_routes import (
+    handle_get_automation_pipeline_by_id,
+    handle_get_automation_pipelines,
 )
 from src.core.automation.automation_task_routes import (
     handle_get_automation_task_path,
@@ -90,6 +96,10 @@ def build_core_route_registry(
                     handler,
                     services.automation_task_service,
                 ),
+                API_PATH_AUTOMATION_PIPELINES: lambda: handle_get_automation_pipelines(
+                    handler,
+                    services.automation_pipeline_service,
+                ),
             },
             "prefix": {
                 API_PATH_ECHO_PREFIX: lambda path: handler._send_json(
@@ -106,6 +116,11 @@ def build_core_route_registry(
                 API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_get_automation_task_path(
                     handler,
                     services.automation_task_service,
+                    path,
+                ),
+                API_PATH_AUTOMATION_PIPELINES_PREFIX: lambda path: handle_get_automation_pipeline_by_id(
+                    handler,
+                    services.automation_pipeline_service,
                     path,
                 ),
             },

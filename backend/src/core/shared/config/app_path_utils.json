@@ -18,5 +18,6 @@
     "inspectionOutputPath": "{inspectionsPath}/output",
     "crudsPath": "{scriptsPath}/cruds",
     "testsPath": "{scriptsPath}/tests",
-    "fixesPath": "{scriptsPath}/fixes"
+    "fixesPath": "{scriptsPath}/fixes",
+    "automationPipelineRegistry": "{backendSrcPath}/core/automation/config/automation_pipeline_registry.json"
 }
