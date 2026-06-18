@@ -5,9 +5,9 @@
  * - Read the selected automation task ID from the page URL.
  * - Load one registered automation task from CCore.
  * - Render task metadata in a compact header and tabbed layout.
- * - Load and render task configuration JSON on demand.
- * - Validate the task through the backend validation endpoint.
- * - Keep execution visible as a future capability without implementing it yet.
+ * - Render task definition data in Overview.
+ * - Render execution history and selected execution reports in Execution.
+ * - Treat configuration and validation as execution-specific snapshots.
  * - Handle loading, missing ID, not found, and error states.
  *
  * Platform dependencies are loaded by protected-workspace.js.
@@ -350,9 +350,20 @@ function renderAutomationTaskOverview(task) {
             </article>
 
             <article class="automation-task-overview-card wide">
-                <h2>Next Available Steps</h2>
+                <h2>Technical Details</h2>
+                <dl class="automation-task-details-grid compact">
+                    ${renderAutomationTaskDetailsField("ID", task.id, true)}
+                    ${renderAutomationTaskDetailsField("Script", task.script_path, true)}
+                    ${renderAutomationTaskDetailsField("Configuration", task.config_path, true)}
+                    ${renderAutomationTaskDetailsField("Description", task.description)}
+                </dl>
+            </article>
+
+            <article class="automation-task-overview-card wide">
+                <h2>Execution Model</h2>
                 <p>
-                    Use Configuration to inspect the JSON settings, Validation to run governance checks, and Execution once task execution is implemented.
+                    Configuration and validation are captured as execution snapshots.
+                    Open the Execution tab, select a specific execution row, and inspect the configuration and validation used for that run.
                 </p>
             </article>
         </section>
@@ -361,13 +372,6 @@ function renderAutomationTaskOverview(task) {
 
 
 function renderAutomationTaskDetails(task) {
-    const detailsBody =
-        getAutomationTaskDetailsBody();
-
-    if (!detailsBody) {
-        return;
-    }
-
     const status =
         normalizeAutomationTaskDetailsStatus(
             task.status
@@ -384,15 +388,6 @@ function renderAutomationTaskDetails(task) {
     setAutomationTaskDetailsStatus(status);
     setAutomationTaskDetailsCategory(task.category);
     renderAutomationTaskOverview(task);
-
-    detailsBody.innerHTML = `
-        <dl class="automation-task-details-grid compact">
-            ${renderAutomationTaskDetailsField("ID", task.id, true)}
-            ${renderAutomationTaskDetailsField("Script", task.script_path, true)}
-            ${renderAutomationTaskDetailsField("Configuration", task.config_path, true)}
-            ${renderAutomationTaskDetailsField("Description", task.description)}
-        </dl>
-    `;
 }
 
 
