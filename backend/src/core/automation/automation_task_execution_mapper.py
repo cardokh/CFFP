@@ -25,6 +25,7 @@ def automation_task_execution_result_to_response(task_execution_result) -> dict:
             "stdout": task_execution_result.stdout,
             "stderr": task_execution_result.stderr,
             "validation": task_execution_result.validation,
+            "execution_report": task_execution_result.execution_report,
         }
     }
 

@@ -5,6 +5,7 @@ Responsibilities:
 - Represent one attempt to execute an automation task.
 - Keep execution state separate from task registry metadata.
 - Provide structured results for manual execution and future pipeline orchestration.
+- Carry the mandatory execution report produced for every task execution.
 """
 
 from dataclasses import dataclass
@@ -24,3 +25,4 @@ class AutomationTaskExecutionResult:
     stdout: str
     stderr: str
     validation: dict | None
+    execution_report: dict

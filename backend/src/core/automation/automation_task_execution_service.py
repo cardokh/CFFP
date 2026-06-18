@@ -5,9 +5,12 @@ Responsibilities:
 - Execute one registered automation task through the mandatory CCore blueprint.
 - Validate task metadata, configuration, paths, and script governance before execution.
 - Run approved task scripts as project-root-relative Python scripts.
+- Always produce a structured execution report for every task execution attempt.
+- Collect task-generated JSON artifacts and expose them through the report contract.
 - Return structured execution results for manual execution and future pipelines.
 """
 
+import json
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -27,6 +30,9 @@ EXECUTION_STAGE_EXECUTION = "execution"
 
 VALIDATION_STATUS_PASSED = "PASSED"
 
+EXECUTION_REPORT_SCHEMA_VERSION = "1.0"
+EXECUTION_REPORT_OUTPUT_DIRECTORY = "scripts/tasks/output"
+
 
 class AutomationTaskExecutionService:
     def __init__(
@@ -38,10 +44,14 @@ class AutomationTaskExecutionService:
         self.project_root = Path(project_root).resolve()
         self.automation_task_validation_service = automation_task_validation_service
         self.timeout_seconds = timeout_seconds
+        self.execution_report_output_directory = (
+            self.project_root / EXECUTION_REPORT_OUTPUT_DIRECTORY
+        )
 
     def execute_task(self, automation_task) -> AutomationTaskExecutionResult:
         execution_id = str(uuid4())
         started_at = self._utc_now()
+        execution_started_at = datetime.fromisoformat(started_at)
 
         validation_report = self.automation_task_validation_service.validate_task(
             automation_task,
@@ -49,6 +59,20 @@ class AutomationTaskExecutionService:
 
         if validation_report.get("status") != VALIDATION_STATUS_PASSED:
             finished_at = self._utc_now()
+            execution_report = self._build_execution_report(
+                automation_task=automation_task,
+                execution_id=execution_id,
+                status=EXECUTION_STATUS_BLOCKED,
+                stage=EXECUTION_STAGE_VALIDATION,
+                message="Task execution was blocked because validation failed.",
+                started_at=started_at,
+                finished_at=finished_at,
+                duration_ms=self._duration_ms(started_at, finished_at),
+                return_code=None,
+                validation_report=validation_report,
+                artifacts=[],
+            )
+            execution_report = self._persist_execution_report(execution_report)
 
             return AutomationTaskExecutionResult(
                 execution_id=execution_id,
@@ -63,6 +87,7 @@ class AutomationTaskExecutionService:
                 stdout="",
                 stderr="",
                 validation=validation_report,
+                execution_report=execution_report,
             )
 
         script_path = self._resolve_project_relative_file_path(
@@ -92,6 +117,26 @@ class AutomationTaskExecutionService:
                 else "Task execution failed."
             )
 
+            artifacts = self._collect_json_artifacts(
+                script_path=script_path,
+                execution_started_at=execution_started_at,
+            )
+
+            execution_report = self._build_execution_report(
+                automation_task=automation_task,
+                execution_id=execution_id,
+                status=status,
+                stage=EXECUTION_STAGE_EXECUTION,
+                message=message,
+                started_at=started_at,
+                finished_at=finished_at,
+                duration_ms=self._duration_ms(started_at, finished_at),
+                return_code=completed_process.returncode,
+                validation_report=validation_report,
+                artifacts=artifacts,
+            )
+            execution_report = self._persist_execution_report(execution_report)
+
             return AutomationTaskExecutionResult(
                 execution_id=execution_id,
                 task_id=automation_task.task_id,
@@ -105,10 +150,25 @@ class AutomationTaskExecutionService:
                 stdout=completed_process.stdout,
                 stderr=completed_process.stderr,
                 validation=validation_report,
+                execution_report=execution_report,
             )
 
         except subprocess.TimeoutExpired as error:
             finished_at = self._utc_now()
+            execution_report = self._build_execution_report(
+                automation_task=automation_task,
+                execution_id=execution_id,
+                status=EXECUTION_STATUS_FAILED,
+                stage=EXECUTION_STAGE_EXECUTION,
+                message="Task execution timed out.",
+                started_at=started_at,
+                finished_at=finished_at,
+                duration_ms=self._duration_ms(started_at, finished_at),
+                return_code=None,
+                validation_report=validation_report,
+                artifacts=[],
+            )
+            execution_report = self._persist_execution_report(execution_report)
 
             return AutomationTaskExecutionResult(
                 execution_id=execution_id,
@@ -123,7 +183,163 @@ class AutomationTaskExecutionService:
                 stdout=error.stdout or "",
                 stderr=error.stderr or "",
                 validation=validation_report,
+                execution_report=execution_report,
             )
+
+    def _build_execution_report(
+        self,
+        automation_task,
+        execution_id: str,
+        status: str,
+        stage: str,
+        message: str,
+        started_at: str,
+        finished_at: str,
+        duration_ms: int,
+        return_code: int | None,
+        validation_report: dict,
+        artifacts: list[dict],
+    ) -> dict:
+        failed_artifacts = [
+            artifact
+            for artifact in artifacts
+            if artifact.get("status") == "failed"
+        ]
+
+        return {
+            "schema_version": EXECUTION_REPORT_SCHEMA_VERSION,
+            "execution_id": execution_id,
+            "task": {
+                "id": automation_task.task_id,
+                "name": automation_task.name,
+                "category": automation_task.category,
+                "script_path": automation_task.script_path,
+                "config_path": automation_task.config_path,
+            },
+            "summary": {
+                "status": status,
+                "stage": stage,
+                "message": message,
+                "return_code": return_code,
+                "started_at": started_at,
+                "finished_at": finished_at,
+                "duration_ms": duration_ms,
+                "validation_status": validation_report.get("status", "UNKNOWN"),
+                "artifact_count": len(artifacts),
+                "failed_artifact_count": len(failed_artifacts),
+            },
+            "validation": validation_report,
+            "artifacts": artifacts,
+        }
+
+    def _persist_execution_report(self, execution_report: dict) -> dict:
+        self.execution_report_output_directory.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        task_id = execution_report["task"]["id"]
+        timestamp = self._safe_timestamp(
+            execution_report["summary"]["started_at"],
+        )
+        report_path = (
+            self.execution_report_output_directory
+            / f"{task_id}_execution_{timestamp}.json"
+        )
+
+        report_path.write_text(
+            json.dumps(
+                execution_report,
+                indent=4,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+
+        execution_report["report_path"] = self._to_project_relative_path(
+            report_path,
+        )
+
+        report_path.write_text(
+            json.dumps(
+                execution_report,
+                indent=4,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+
+        return execution_report
+
+    def _collect_json_artifacts(
+        self,
+        script_path: Path,
+        execution_started_at: datetime,
+    ) -> list[dict]:
+        output_directory = script_path.parent / "output"
+
+        if not output_directory.is_dir():
+            return []
+
+        artifacts = []
+
+        for artifact_path in sorted(output_directory.glob("*.json")):
+            modified_at = datetime.fromtimestamp(
+                artifact_path.stat().st_mtime,
+                tz=timezone.utc,
+            )
+
+            if modified_at < execution_started_at:
+                continue
+
+            artifacts.append(
+                self._build_json_artifact(
+                    artifact_path,
+                    modified_at,
+                )
+            )
+
+        return artifacts
+
+    def _build_json_artifact(
+        self,
+        artifact_path: Path,
+        modified_at: datetime,
+    ) -> dict:
+        artifact = {
+            "name": artifact_path.name,
+            "path": self._to_project_relative_path(artifact_path),
+            "type": "json",
+            "modified_at": modified_at.isoformat(),
+            "status": "available",
+            "content": None,
+            "summary": None,
+        }
+
+        try:
+            content = json.loads(
+                artifact_path.read_text(
+                    encoding="utf-8",
+                )
+            )
+            artifact["content"] = content
+            artifact["summary"] = self._extract_artifact_summary(content)
+        except (OSError, json.JSONDecodeError) as error:
+            artifact["status"] = "failed"
+            artifact["error"] = str(error)
+
+        return artifact
+
+    def _extract_artifact_summary(self, content: object) -> dict | None:
+        if not isinstance(content, dict):
+            return None
+
+        summary = content.get("summary")
+
+        if isinstance(summary, dict):
+            return summary
+
+        return None
 
     def _resolve_project_relative_file_path(self, relative_path: str) -> Path:
         candidate_path = (self.project_root / relative_path).resolve()
@@ -137,6 +353,14 @@ class AutomationTaskExecutionService:
             raise FileNotFoundError("The script file does not exist.")
 
         return candidate_path
+
+    def _to_project_relative_path(self, path: Path) -> str:
+        return path.resolve().relative_to(self.project_root).as_posix()
+
+    def _safe_timestamp(self, timestamp: str) -> str:
+        parsed = datetime.fromisoformat(timestamp)
+
+        return parsed.strftime("%Y%m%d_%H%M%S_%f")
 
     def _utc_now(self) -> str:
         return datetime.now(timezone.utc).isoformat()

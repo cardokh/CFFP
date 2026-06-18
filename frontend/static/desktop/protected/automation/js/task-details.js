@@ -658,6 +658,176 @@ function normalizeAutomationTaskExecutionStatus(status) {
 }
 
 
+function renderAutomationTaskExecutionReportSummary(executionReport) {
+    if (!executionReport) {
+        return `
+            <section class="automation-task-validation-panel">
+                <h2>Execution Report</h2>
+                <p class="automation-task-details-placeholder">
+                    No execution report was returned.
+                </p>
+            </section>
+        `;
+    }
+
+    const summary =
+        executionReport.summary || {};
+
+    return `
+        <section class="automation-task-validation-panel" open>
+            <h2>Execution Report</h2>
+
+            <div class="automation-task-report-summary-grid">
+                <div>
+                    <dt>Status</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.status || "unknown")}</dd>
+                </div>
+                <div>
+                    <dt>Validation</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.validation_status || "unknown")}</dd>
+                </div>
+                <div>
+                    <dt>Artifacts</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.artifact_count ?? 0)}</dd>
+                </div>
+                <div>
+                    <dt>Report File</dt>
+                    <dd title="${escapeAutomationTaskDetailsValue(executionReport.report_path || "n/a")}">
+                        ${escapeAutomationTaskDetailsValue(executionReport.report_path || "n/a")}
+                    </dd>
+                </div>
+            </div>
+        </section>
+    `;
+}
+
+
+function renderAutomationTaskArtifactSummary(artifact) {
+    const summary =
+        artifact.summary || {};
+
+    const content =
+        artifact.content || {};
+
+    if (summary.inspectedScriptCount !== undefined) {
+        return `
+            <div class="automation-task-artifact-summary-grid">
+                <div>
+                    <dt>Inspected</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.inspectedScriptCount)}</dd>
+                </div>
+                <div>
+                    <dt>Passed</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.passedScriptCount ?? 0)}</dd>
+                </div>
+                <div>
+                    <dt>Failed</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.failedScriptCount ?? 0)}</dd>
+                </div>
+                <div>
+                    <dt>Findings</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(summary.findingCount ?? 0)}</dd>
+                </div>
+            </div>
+
+            ${renderAutomationTaskInspectedFiles(content.inspectedFiles || [])}
+        `;
+    }
+
+    if (!summary || Object.keys(summary).length === 0) {
+        return `
+            <p class="automation-task-details-placeholder">
+                This artifact does not expose a summary section.
+            </p>
+        `;
+    }
+
+    return `
+        <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(JSON.stringify(summary, null, 4))}</code></pre>
+    `;
+}
+
+
+function renderAutomationTaskInspectedFiles(inspectedFiles) {
+    if (!inspectedFiles.length) {
+        return "";
+    }
+
+    return `
+        <div class="automation-task-report-table-wrap">
+            <table class="automation-task-report-table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Status</th>
+                        <th>Findings</th>
+                        <th>Failed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${inspectedFiles
+                        .map((inspectedFile) => `
+                            <tr>
+                                <td title="${escapeAutomationTaskDetailsValue(inspectedFile.filePath || "")}">
+                                    ${escapeAutomationTaskDetailsValue(inspectedFile.filePath || "")}
+                                </td>
+                                <td>${escapeAutomationTaskDetailsValue(inspectedFile.status || "unknown")}</td>
+                                <td>${escapeAutomationTaskDetailsValue(inspectedFile.findingCount ?? 0)}</td>
+                                <td>${escapeAutomationTaskDetailsValue(inspectedFile.failedFindingCount ?? 0)}</td>
+                            </tr>
+                        `)
+                        .join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+
+function renderAutomationTaskExecutionArtifacts(executionReport) {
+    const artifacts =
+        executionReport && Array.isArray(executionReport.artifacts)
+            ? executionReport.artifacts
+            : [];
+
+    if (!artifacts.length) {
+        return `
+            <section class="automation-task-validation-panel">
+                <h2>Generated Artifacts</h2>
+                <p class="automation-task-details-placeholder">
+                    No task-specific artifacts were collected for this execution.
+                </p>
+            </section>
+        `;
+    }
+
+    return `
+        <section class="automation-task-validation-panel">
+            <h2>Generated Artifacts</h2>
+
+            <div class="automation-task-artifact-list">
+                ${artifacts
+                    .map((artifact) => `
+                        <details class="automation-task-artifact-card" open>
+                            <summary>
+                                <span>${escapeAutomationTaskDetailsValue(artifact.name || "artifact.json")}</span>
+                                <span>${escapeAutomationTaskDetailsValue(artifact.status || "unknown")}</span>
+                            </summary>
+
+                            <p class="automation-task-artifact-path" title="${escapeAutomationTaskDetailsValue(artifact.path || "")}">
+                                ${escapeAutomationTaskDetailsValue(artifact.path || "")}
+                            </p>
+
+                            ${renderAutomationTaskArtifactSummary(artifact)}
+                        </details>
+                    `)
+                    .join("")}
+            </div>
+        </section>
+    `;
+}
+
+
 function renderAutomationTaskExecution(executionResponse) {
     const executionBody =
         getAutomationTaskExecutionBody();
@@ -668,6 +838,9 @@ function renderAutomationTaskExecution(executionResponse) {
 
     const execution =
         executionResponse.execution || {};
+
+    const executionReport =
+        execution.execution_report || null;
 
     const status =
         normalizeAutomationTaskExecutionStatus(
@@ -706,7 +879,11 @@ function renderAutomationTaskExecution(executionResponse) {
             </dl>
         </div>
 
-        <details class="automation-task-validation-panel" open>
+        ${renderAutomationTaskExecutionReportSummary(executionReport)}
+
+        ${renderAutomationTaskExecutionArtifacts(executionReport)}
+
+        <details class="automation-task-validation-panel">
             <summary>Standard Output</summary>
             <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(stdout)}</code></pre>
         </details>

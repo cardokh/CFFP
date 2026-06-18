@@ -738,3 +738,120 @@
     font-size: 12px;
     font-weight: 800;
 }
+
+.automation-task-report-summary-grid,
+.automation-task-artifact-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.automation-task-report-summary-grid div,
+.automation-task-artifact-summary-grid div {
+    min-width: 0;
+    padding: 10px;
+
+    background: #0b1626;
+    border: 1px solid #243a57;
+    border-radius: 10px;
+}
+
+.automation-task-report-summary-grid dt,
+.automation-task-artifact-summary-grid dt {
+    margin: 0 0 4px;
+
+    color: #8fb7e4;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.automation-task-report-summary-grid dd,
+.automation-task-artifact-summary-grid dd {
+    margin: 0;
+
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.automation-task-artifact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.automation-task-artifact-card {
+    padding: 10px;
+
+    background: #0b1626;
+    border: 1px solid #243a57;
+    border-radius: 10px;
+}
+
+.automation-task-artifact-card summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.automation-task-artifact-path {
+    margin: 8px 0 10px;
+
+    overflow: hidden;
+    color: #9bb0c8;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.automation-task-report-table-wrap {
+    max-height: 260px;
+    margin-top: 10px;
+    overflow: auto;
+
+    border: 1px solid #243a57;
+    border-radius: 10px;
+}
+
+.automation-task-report-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    color: #dbeafe;
+    font-size: 12px;
+}
+
+.automation-task-report-table th,
+.automation-task-report-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #182b43;
+    text-align: left;
+}
+
+.automation-task-report-table th {
+    position: sticky;
+    top: 0;
+
+    background: #1b3a5c;
+    color: #ffffff;
+    font-weight: 900;
+}
+
+.automation-task-report-table td:first-child {
+    max-width: 520px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
