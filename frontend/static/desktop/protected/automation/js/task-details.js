@@ -34,8 +34,15 @@ const AUTOMATION_TASK_VALIDATION_LOADING_MESSAGE =
 const AUTOMATION_TASK_VALIDATION_ERROR_MESSAGE =
     "Automation task validation could not be completed.";
 
+const AUTOMATION_TASK_EXECUTION_LOADING_MESSAGE =
+    "Executing automation task...";
+
+const AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE =
+    "Automation task execution could not be completed.";
+
 let automationTaskConfigurationLoaded = false;
 let automationTaskValidationLoaded = false;
+let automationTaskExecutionLoaded = false;
 
 
 function getAutomationTaskOverviewBody() {
@@ -69,6 +76,13 @@ function getAutomationTaskConfigurationBody() {
 function getAutomationTaskValidationBody() {
     return document.getElementById(
         "automationTaskValidationBody"
+    );
+}
+
+
+function getAutomationTaskExecutionBody() {
+    return document.getElementById(
+        "automationTaskExecutionBody"
     );
 }
 
@@ -227,6 +241,22 @@ function renderAutomationTaskValidationPlaceholder(message) {
     }
 
     validationBody.innerHTML = `
+        <p class="automation-task-details-placeholder">
+            ${escapeAutomationTaskDetailsValue(message)}
+        </p>
+    `;
+}
+
+
+function renderAutomationTaskExecutionPlaceholder(message) {
+    const executionBody =
+        getAutomationTaskExecutionBody();
+
+    if (!executionBody) {
+        return;
+    }
+
+    executionBody.innerHTML = `
         <p class="automation-task-details-placeholder">
             ${escapeAutomationTaskDetailsValue(message)}
         </p>
@@ -621,6 +651,85 @@ function parseAutomationTaskConfigurationResponse(responseData) {
 }
 
 
+function normalizeAutomationTaskExecutionStatus(status) {
+    return String(status || "unknown")
+        .trim()
+        .toLowerCase();
+}
+
+
+function renderAutomationTaskExecution(executionResponse) {
+    const executionBody =
+        getAutomationTaskExecutionBody();
+
+    if (!executionBody) {
+        return;
+    }
+
+    const execution =
+        executionResponse.execution || {};
+
+    const status =
+        normalizeAutomationTaskExecutionStatus(
+            execution.status
+        );
+
+    const stdout =
+        execution.stdout || "No standard output was captured.";
+
+    const stderr =
+        execution.stderr || "No standard error output was captured.";
+
+    executionBody.innerHTML = `
+        <div class="automation-task-execution-summary ${escapeAutomationTaskDetailsValue(status)}">
+            <div>
+                <p class="automation-task-configuration-label">
+                    Execution result
+                </p>
+                <h2>${escapeAutomationTaskDetailsValue(status)}</h2>
+                <p>${escapeAutomationTaskDetailsValue(execution.message || "No message was returned.")}</p>
+            </div>
+
+            <dl class="automation-task-execution-metadata">
+                <div>
+                    <dt>Stage</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(execution.stage || "unknown")}</dd>
+                </div>
+                <div>
+                    <dt>Return Code</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(execution.return_code ?? "n/a")}</dd>
+                </div>
+                <div>
+                    <dt>Duration</dt>
+                    <dd>${escapeAutomationTaskDetailsValue(execution.duration_ms ?? 0)} ms</dd>
+                </div>
+            </dl>
+        </div>
+
+        <details class="automation-task-validation-panel" open>
+            <summary>Standard Output</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(stdout)}</code></pre>
+        </details>
+
+        <details class="automation-task-validation-panel">
+            <summary>Standard Error</summary>
+            <pre class="automation-task-validation-output"><code>${escapeAutomationTaskDetailsValue(stderr)}</code></pre>
+        </details>
+    `;
+}
+
+
+function parseAutomationTaskExecutionResponse(responseData) {
+    if (!responseData || !responseData.execution) {
+        throw new Error(
+            "The backend did not return automation task execution data."
+        );
+    }
+
+    return responseData;
+}
+
+
 async function loadAutomationTaskDetails() {
     hideAutomationTaskDetailsMessage();
 
@@ -818,6 +927,68 @@ async function validateAutomationTask() {
 }
 
 
+async function executeAutomationTask() {
+    hideAutomationTaskDetailsMessage();
+    setActiveAutomationTaskTab("execution");
+
+    const taskId =
+        getAutomationTaskIdFromLocation();
+
+    if (!taskId) {
+        renderAutomationTaskExecutionPlaceholder(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            AUTOMATION_TASK_DETAILS_MISSING_ID_MESSAGE,
+            "error"
+        );
+
+        return;
+    }
+
+    renderAutomationTaskExecutionPlaceholder(
+        AUTOMATION_TASK_EXECUTION_LOADING_MESSAGE
+    );
+
+    try {
+        const responseData =
+            await postJson(
+                CCORE_API_ENDPOINTS.automation.tasks.execute(
+                    taskId
+                ),
+                {}
+            );
+
+        const executionResponse =
+            parseAutomationTaskExecutionResponse(
+                responseData
+            );
+
+        renderAutomationTaskExecution(
+            executionResponse
+        );
+
+        automationTaskExecutionLoaded = true;
+
+    } catch (error) {
+        console.error(
+            "Failed to execute automation task:",
+            error
+        );
+
+        renderAutomationTaskExecutionPlaceholder(
+            AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE
+        );
+
+        showAutomationTaskDetailsMessage(
+            error.message || AUTOMATION_TASK_EXECUTION_ERROR_MESSAGE,
+            "error"
+        );
+    }
+}
+
+
 function setupAutomationTaskTabs() {
     document
         .querySelectorAll(".automation-task-tab")
@@ -855,11 +1026,15 @@ function setupAutomationTaskDetailsEvents() {
             () => {
                 automationTaskConfigurationLoaded = false;
                 automationTaskValidationLoaded = false;
+                automationTaskExecutionLoaded = false;
                 renderAutomationTaskConfigurationPlaceholder(
                     "Configuration has not been loaded yet."
                 );
                 renderAutomationTaskValidationPlaceholder(
                     "Validation has not been run yet."
+                );
+                renderAutomationTaskExecutionPlaceholder(
+                    "Execution has not been run yet."
                 );
                 loadAutomationTaskDetails();
             }
@@ -890,6 +1065,20 @@ function setupAutomationTaskDetailsEvents() {
             "click",
             () => {
                 validateAutomationTask();
+            }
+        );
+    }
+
+    const executeButton =
+        document.getElementById(
+            "executeAutomationTaskButton"
+        );
+
+    if (executeButton) {
+        executeButton.addEventListener(
+            "click",
+            () => {
+                executeAutomationTask();
             }
         );
     }

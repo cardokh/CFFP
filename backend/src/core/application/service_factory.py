@@ -26,6 +26,7 @@ from src.core.automation.automation_pipeline_registry import AutomationPipelineR
 from src.core.automation.automation_pipeline_service import AutomationPipelineService
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
 from src.core.automation.automation_task_service import AutomationTaskService
+from src.core.automation.automation_task_execution_service import AutomationTaskExecutionService
 from src.core.automation.automation_task_validation import AutomationTaskValidationService
 
 from src.core.users.password_service import PasswordService
@@ -143,10 +144,25 @@ def build_automation_task_validation_service():
     )
 
 
+def build_automation_task_execution_service():
+    automation_task_validation_service = build_automation_task_validation_service()
+
+    return AutomationTaskExecutionService(
+        project_root=get_path("projectRoot"),
+        automation_task_validation_service=automation_task_validation_service,
+    )
+
+
 def build_automation_task_service():
+    automation_task_validation_service = build_automation_task_validation_service()
+
     return AutomationTaskService(
         automation_task_registry=build_automation_task_registry(),
-        automation_task_validation_service=build_automation_task_validation_service(),
+        automation_task_validation_service=automation_task_validation_service,
+        automation_task_execution_service=AutomationTaskExecutionService(
+            project_root=get_path("projectRoot"),
+            automation_task_validation_service=automation_task_validation_service,
+        ),
     )
 
 

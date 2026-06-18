@@ -60,6 +60,7 @@ from src.core.automation.automation_pipeline_routes import (
     handle_get_automation_pipelines,
 )
 from src.core.automation.automation_task_routes import (
+    handle_execute_automation_task_path,
     handle_get_automation_task_path,
     handle_get_automation_tasks,
     handle_validate_automation_task_path,
@@ -73,6 +74,26 @@ from src.core.users.user_routes import (
     handle_register,
     handle_update_user,
 )
+
+
+def handle_execute_or_validate_automation_task_path(
+    handler,
+    automation_task_service,
+    path,
+) -> None:
+    if path.endswith("/execute"):
+        handle_execute_automation_task_path(
+            handler,
+            automation_task_service,
+            path,
+        )
+        return
+
+    handle_validate_automation_task_path(
+        handler,
+        automation_task_service,
+        path,
+    )
 
 
 def build_core_route_registry(
@@ -146,7 +167,7 @@ def build_core_route_registry(
                 ),
             },
             "prefix": {
-                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_validate_automation_task_path(
+                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_execute_or_validate_automation_task_path(
                     handler,
                     services.automation_task_service,
                     path,
