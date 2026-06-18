@@ -46,7 +46,10 @@ window.LLA_PATHS = {
             pipelines: "/desktop/protected/automation/pipelines.html",
 
             taskDetails: (taskId) =>
-               `/desktop/protected/automation/task-details.html?taskId=${encodeURIComponent(taskId)}`
+               `/desktop/protected/automation/task-details.html?taskId=${encodeURIComponent(taskId)}`,
+
+            pipelineDetails: (pipelineId) =>
+               `/desktop/protected/automation/pipeline-details.html?pipelineId=${encodeURIComponent(pipelineId)}`
          },
          presentation: "/desktop/protected/presentation.html",
          about: "/desktop/protected/about.html",

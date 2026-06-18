@@ -228,3 +228,24 @@
     font-size: 11px;
     text-align: center;
 }
+
+.automation-registry-clickable-row {
+    cursor: pointer;
+}
+
+.automation-registry-clickable-row:focus-visible {
+    outline: 2px solid #5aa7ff;
+    outline-offset: -2px;
+}
+
+.automation-registry-clickable-row:hover td {
+    background: rgba(90, 167, 255, 0.08);
+}
+
+.automation-registry-table th:last-child,
+.automation-registry-table td:last-child,
+.automation-tasks-table th:last-child,
+.automation-tasks-table td:last-child {
+    width: auto;
+    text-align: left;
+}

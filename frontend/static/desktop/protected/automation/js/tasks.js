@@ -62,6 +62,18 @@ function normalizeAutomationTaskStatus(status) {
 }
 
 
+function getAutomationTaskState(task) {
+    return task.state || "Registered";
+}
+
+
+function normalizeAutomationTaskState(task) {
+    return String(getAutomationTaskState(task))
+        .trim()
+        .toLowerCase();
+}
+
+
 function getAutomationTaskDetailsPath(taskId) {
     return LLA_PATHS.desktop.protected.automation.taskDetails(
         taskId
@@ -125,7 +137,8 @@ function getAutomationTaskSearchableText(task) {
         task.name,
         task.description,
         task.category,
-        task.status
+        task.status,
+        getAutomationTaskState(task)
     ]
         .filter(Boolean)
         .join(" ");
@@ -137,6 +150,10 @@ function getAutomationTaskSortValue(task, sortKey) {
         return normalizeAutomationTaskStatus(
             task.status
         );
+    }
+
+    if (sortKey === "state") {
+        return normalizeAutomationTaskState(task);
     }
 
     return String(task[sortKey] || "")
@@ -203,13 +220,7 @@ function renderAutomationTaskRow(task) {
         );
 
     return `
-        <tr>
-            <td>
-                <span class="automation-tasks-status ${escapeAutomationTaskValue(status)}">
-                    ${escapeAutomationTaskValue(status)}
-                </span>
-            </td>
-
+        <tr class="automation-registry-clickable-row" tabindex="0" data-details-path="${escapeAutomationTaskValue(detailsPath)}" aria-label="Open ${escapeAutomationTaskValue(task.name)} details">
             <td>
                 <div class="automation-tasks-name-cell">
                     <span class="automation-tasks-name">
@@ -227,34 +238,28 @@ function renderAutomationTaskRow(task) {
             </td>
 
             <td>
-                <a class="shared-button secondary automation-tasks-details-link" href="${escapeAutomationTaskValue(detailsPath)}">
-                    Details
-                </a>
+                <span class="automation-tasks-status ${escapeAutomationTaskValue(status)}">
+                    ${escapeAutomationTaskValue(status)}
+                </span>
+            </td>
+
+            <td>
+                ${escapeAutomationTaskValue(getAutomationTaskState(task))}
             </td>
         </tr>
     `;
 }
 
 
-function updateAutomationTasksCounts(filteredTasks) {
+function updateAutomationTasksCounts(_filteredTasks) {
     const totalCountElement =
         document.getElementById(
             "automationTasksCount"
         );
 
-    const filteredCountElement =
-        document.getElementById(
-            "automationTasksFilteredCount"
-        );
-
     if (totalCountElement) {
         totalCountElement.textContent =
             `${automationTasks.length} task${automationTasks.length === 1 ? "" : "s"}`;
-    }
-
-    if (filteredCountElement) {
-        filteredCountElement.textContent =
-            `${filteredTasks.length} shown`;
     }
 }
 
@@ -422,6 +427,63 @@ async function loadAutomationTasks() {
     }
 }
 
+function openAutomationTaskDetails(detailsPath) {
+    if (!detailsPath) {
+        return;
+    }
+
+    window.location.href = detailsPath;
+}
+
+
+function setupAutomationTaskRowNavigation() {
+    const tableBody =
+        getAutomationTasksTableBody();
+
+    if (!tableBody) {
+        return;
+    }
+
+    tableBody.addEventListener(
+        "click",
+        (event) => {
+            const row = event.target.closest(
+                "tr[data-details-path]"
+            );
+
+            if (!row) {
+                return;
+            }
+
+            openAutomationTaskDetails(
+                row.dataset.detailsPath
+            );
+        }
+    );
+
+    tableBody.addEventListener(
+        "keydown",
+        (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            const row = event.target.closest(
+                "tr[data-details-path]"
+            );
+
+            if (!row) {
+                return;
+            }
+
+            event.preventDefault();
+
+            openAutomationTaskDetails(
+                row.dataset.detailsPath
+            );
+        }
+    );
+}
 
 function setupAutomationTasksEvents() {
     const backToAutomationButton =
@@ -432,16 +494,6 @@ function setupAutomationTasksEvents() {
     if (backToAutomationButton) {
         backToAutomationButton.href =
             LLA_PATHS.desktop.protected.automation.home;
-    }
-
-    const pipelinesLink =
-        document.getElementById(
-            "automationPipelinesLink"
-        );
-
-    if (pipelinesLink) {
-        pipelinesLink.href =
-            LLA_PATHS.desktop.protected.automation.pipelines;
     }
 
     const refreshButton =
@@ -538,6 +590,7 @@ function setupAutomationTasksEvents() {
 
 function initializeAutomationTasksPage() {
     setupAutomationTasksEvents();
+    setupAutomationTaskRowNavigation();
     loadAutomationTasks();
 }
 

@@ -19,7 +19,7 @@ const AUTOMATION_PIPELINES_LOADING_MESSAGE =
 const AUTOMATION_PIPELINES_ERROR_MESSAGE =
     "Automation pipelines could not be loaded.";
 
-const AUTOMATION_PIPELINES_TABLE_COLUMN_COUNT = 5;
+const AUTOMATION_PIPELINES_TABLE_COLUMN_COUNT = 4;
 const AUTOMATION_PIPELINES_ROWS_PER_PAGE = 8;
 
 let automationPipelines = [];
@@ -56,6 +56,25 @@ function normalizeAutomationPipelineStatus(status) {
     return String(status || "unknown")
         .trim()
         .toLowerCase();
+}
+
+
+function getAutomationPipelineState(pipeline) {
+    return pipeline.state || "Registered";
+}
+
+
+function normalizeAutomationPipelineState(pipeline) {
+    return String(getAutomationPipelineState(pipeline))
+        .trim()
+        .toLowerCase();
+}
+
+
+function getAutomationPipelineDetailsPath(pipelineId) {
+    return LLA_PATHS.desktop.protected.automation.pipelineDetails(
+        pipelineId
+    );
 }
 
 
@@ -143,6 +162,7 @@ function getAutomationPipelineSearchableText(pipeline) {
         pipeline.status,
         pipeline.execution_mode,
         pipeline.failure_strategy,
+        getAutomationPipelineState(pipeline),
         stepText
     ]
         .filter(Boolean)
@@ -155,6 +175,10 @@ function getAutomationPipelineSortValue(pipeline, sortKey) {
         return normalizeAutomationPipelineStatus(
             pipeline.status
         );
+    }
+
+    if (sortKey === "state") {
+        return normalizeAutomationPipelineState(pipeline);
     }
 
     return String(pipeline[sortKey] || "")
@@ -215,14 +239,13 @@ function renderAutomationPipelineRow(pipeline) {
             pipeline.status
         );
 
-    return `
-        <tr>
-            <td>
-                <span class="automation-tasks-status ${escapeAutomationPipelineValue(status)}">
-                    ${escapeAutomationPipelineValue(status)}
-                </span>
-            </td>
+    const detailsPath =
+        getAutomationPipelineDetailsPath(
+            pipeline.id
+        );
 
+    return `
+        <tr class="automation-registry-clickable-row" tabindex="0" data-details-path="${escapeAutomationPipelineValue(detailsPath)}" aria-label="Open ${escapeAutomationPipelineValue(pipeline.name)} details">
             <td>
                 <div class="automation-tasks-name-cell">
                     <span class="automation-tasks-name">
@@ -240,39 +263,28 @@ function renderAutomationPipelineRow(pipeline) {
             </td>
 
             <td>
-                <div class="automation-tasks-name-cell">
-                    <span>${escapeAutomationPipelineValue(pipeline.execution_mode)}</span>
-                    <span class="automation-tasks-id">${escapeAutomationPipelineValue(pipeline.failure_strategy)}</span>
-                </div>
+                <span class="automation-tasks-status ${escapeAutomationPipelineValue(status)}">
+                    ${escapeAutomationPipelineValue(status)}
+                </span>
             </td>
 
             <td>
-                ${escapeAutomationPipelineValue(getAutomationPipelineStepSummary(pipeline))}
+                ${escapeAutomationPipelineValue(getAutomationPipelineState(pipeline))}
             </td>
         </tr>
     `;
 }
 
 
-function updateAutomationPipelinesCounts(filteredPipelines) {
+function updateAutomationPipelinesCounts(_filteredPipelines) {
     const totalCountElement =
         document.getElementById(
             "automationPipelinesCount"
         );
 
-    const filteredCountElement =
-        document.getElementById(
-            "automationPipelinesFilteredCount"
-        );
-
     if (totalCountElement) {
         totalCountElement.textContent =
             `${automationPipelines.length} pipeline${automationPipelines.length === 1 ? "" : "s"}`;
-    }
-
-    if (filteredCountElement) {
-        filteredCountElement.textContent =
-            `${filteredPipelines.length} shown`;
     }
 }
 
@@ -440,6 +452,63 @@ async function loadAutomationPipelines() {
     }
 }
 
+function openAutomationPipelineDetails(detailsPath) {
+    if (!detailsPath) {
+        return;
+    }
+
+    window.location.href = detailsPath;
+}
+
+
+function setupAutomationPipelineRowNavigation() {
+    const tableBody =
+        getAutomationPipelinesTableBody();
+
+    if (!tableBody) {
+        return;
+    }
+
+    tableBody.addEventListener(
+        "click",
+        (event) => {
+            const row = event.target.closest(
+                "tr[data-details-path]"
+            );
+
+            if (!row) {
+                return;
+            }
+
+            openAutomationPipelineDetails(
+                row.dataset.detailsPath
+            );
+        }
+    );
+
+    tableBody.addEventListener(
+        "keydown",
+        (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            const row = event.target.closest(
+                "tr[data-details-path]"
+            );
+
+            if (!row) {
+                return;
+            }
+
+            event.preventDefault();
+
+            openAutomationPipelineDetails(
+                row.dataset.detailsPath
+            );
+        }
+    );
+}
 
 function setupAutomationPipelinesEvents() {
     const backToAutomationButton =
@@ -450,16 +519,6 @@ function setupAutomationPipelinesEvents() {
     if (backToAutomationButton) {
         backToAutomationButton.href =
             LLA_PATHS.desktop.protected.automation.home;
-    }
-
-    const tasksLink =
-        document.getElementById(
-            "automationTasksLink"
-        );
-
-    if (tasksLink) {
-        tasksLink.href =
-            LLA_PATHS.desktop.protected.automation.tasks;
     }
 
     const refreshButton =
@@ -556,6 +615,7 @@ function setupAutomationPipelinesEvents() {
 
 function initializeAutomationPipelinesPage() {
     setupAutomationPipelinesEvents();
+    setupAutomationPipelineRowNavigation();
     loadAutomationPipelines();
 }
 

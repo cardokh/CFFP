@@ -55,11 +55,6 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                <button class="shared-table-sort-button" type="button" data-sort-key="status">
-                                                    Status
-                                                </button>
-                                            </th>
-                                            <th>
                                                 <button class="shared-table-sort-button sorted-asc" type="button" data-sort-key="name" data-sort-direction="asc">
                                                     Name
                                                 </button>
@@ -70,17 +65,17 @@
                                                 </button>
                                             </th>
                                             <th>
-                                                <button class="shared-table-sort-button" type="button" data-sort-key="execution_mode">
-                                                    Execution
+                                                <button class="shared-table-sort-button" type="button" data-sort-key="status">
+                                                    Status
                                                 </button>
                                             </th>
-                                            <th>Steps</th>
+                                            <th>State</th>
                                         </tr>
                                     </thead>
 
                                     <tbody id="automationPipelinesTableBody">
                                         <tr>
-                                            <td colspan="5" class="shared-table-empty-state">
+                                            <td colspan="4" class="shared-table-empty-state">
                                                 Loading automation pipelines...
                                             </td>
                                         </tr>
@@ -127,14 +122,6 @@
                             <span id="automationPipelinesCount" class="automation-registry-count automation-tasks-count">
                                 0 pipelines
                             </span>
-
-                            <span id="automationPipelinesFilteredCount" class="automation-registry-count automation-tasks-count muted">
-                                0 shown
-                            </span>
-
-                            <a id="automationTasksLink" class="shared-button secondary shared-table-toolbar-action" href="#">
-                                View Tasks
-                            </a>
 
                             <button id="refreshAutomationPipelinesButton" class="shared-button secondary shared-table-toolbar-action" type="button">
                                 Refresh

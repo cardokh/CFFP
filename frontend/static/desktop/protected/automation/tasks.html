@@ -55,11 +55,6 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                <button class="shared-table-sort-button" type="button" data-sort-key="status">
-                                                    Status
-                                                </button>
-                                            </th>
-                                            <th>
                                                 <button class="shared-table-sort-button sorted-asc" type="button" data-sort-key="name" data-sort-direction="asc">
                                                     Name
                                                 </button>
@@ -69,7 +64,12 @@
                                                     Category
                                                 </button>
                                             </th>
-                                            <th>Action</th>
+                                            <th>
+                                                <button class="shared-table-sort-button" type="button" data-sort-key="status">
+                                                    Status
+                                                </button>
+                                            </th>
+                                            <th>State</th>
                                         </tr>
                                     </thead>
 
@@ -122,14 +122,6 @@
                             <span id="automationTasksCount" class="automation-registry-count automation-tasks-count">
                                 0 tasks
                             </span>
-
-                            <span id="automationTasksFilteredCount" class="automation-registry-count automation-tasks-count muted">
-                                0 shown
-                            </span>
-
-                            <a id="automationPipelinesLink" class="shared-button secondary shared-table-toolbar-action" href="#">
-                                View Pipelines
-                            </a>
 
                             <button id="refreshAutomationTasksButton" class="shared-button secondary shared-table-toolbar-action" type="button">
                                 Refresh
