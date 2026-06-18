@@ -1,3 +1,6 @@
 {
-    "openAiApiKeyEnvironmentVariable": "OPENAI_API_KEY"
+    "openAiApiKeyEnvironmentVariable": "OPENAI_API_KEY",
+    "automationTaskArtifactOutputDirectoryName": "output",
+    "automationTaskExecutionReportSchemaVersion": "1.2",
+    "automationTaskExecutionTimeoutSeconds": 60
 }

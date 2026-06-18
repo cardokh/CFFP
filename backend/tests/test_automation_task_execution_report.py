@@ -95,6 +95,7 @@ def build_execution_service(project_root: Path, validation_service):
     return AutomationTaskExecutionService(
         project_root=project_root,
         automation_task_validation_service=validation_service,
+        execution_report_output_directory=project_root / "scripts" / "tasks" / "output",
         timeout_seconds=10,
     )
 
@@ -152,7 +153,7 @@ def test_execute_task_always_returns_persisted_execution_report(tmp_path, monkey
 
     execution_report = result.execution_report
 
-    assert execution_report["schema_version"] == "1.1"
+    assert execution_report["schema_version"] == "1.2"
     assert execution_report["execution_id"] == result.execution_id
     assert execution_report["task"]["id"] == "test-task"
     assert execution_report["summary"]["status"] == result.status
@@ -182,10 +183,12 @@ def test_execute_task_report_contains_task_configuration_validation_and_logs_sna
 
     execution_report = result.execution_report
 
-    assert execution_report["schema_version"] == "1.1"
+    assert execution_report["schema_version"] == "1.2"
     assert execution_report["task"]["id"] == "test-task"
     assert execution_report["configuration"]["path"] == "scripts/tasks/config/test_task.json"
     assert execution_report["configuration"]["content"]["scriptName"] == "test_task"
+    assert execution_report["configuration"]["status"] == "available"
+    assert execution_report["summary"]["configuration_status"] == "available"
     assert execution_report["validation"]["status"] == "PASSED"
     assert execution_report["logs"]["stdout"] == result.stdout
     assert execution_report["logs"]["stderr"] == result.stderr
@@ -228,3 +231,30 @@ def test_list_and_read_task_execution_reports_by_execution_id(tmp_path, monkeypa
     assert execution_report is not None
     assert execution_report["execution_id"] == result.execution_id
     assert execution_report["configuration"]["path"] == "scripts/tasks/config/test_task.json"
+
+
+def test_execute_task_persists_report_when_configuration_snapshot_fails(tmp_path, monkeypatch) -> None:
+    automation_task = build_test_task(tmp_path)
+    config_path = tmp_path / automation_task.config_path
+    config_path.write_text(
+        "{ invalid json",
+        encoding="utf-8",
+    )
+    install_fake_subprocess_run(monkeypatch, tmp_path)
+    execution_service = build_execution_service(
+        tmp_path,
+        FailingValidationService(),
+    )
+
+    result = execution_service.execute_task(
+        automation_task,
+    )
+
+    execution_report = result.execution_report
+
+    assert result.status == "blocked"
+    assert execution_report["configuration"]["status"] == "failed"
+    assert execution_report["configuration"]["content"] is None
+    assert execution_report["summary"]["configuration_status"] == "failed"
+    assert "error" in execution_report["configuration"]
+    assert (tmp_path / execution_report["report_path"]).is_file()

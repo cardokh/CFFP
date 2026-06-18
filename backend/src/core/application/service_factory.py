@@ -10,7 +10,7 @@ Architecture:
 API -> Service Factory -> Services -> Repositories -> Database
 """
 
-from src.core.shared.app_config import DATABASE_PATH
+from src.core.shared.app_config import DATABASE_PATH, get_app_setting
 from src.core.shared.app_path_utils import get_path
 
 from src.core.ai.ai_speech.ai_speech_provider_mapper import (
@@ -150,6 +150,10 @@ def build_automation_task_execution_service():
     return AutomationTaskExecutionService(
         project_root=get_path("projectRoot"),
         automation_task_validation_service=automation_task_validation_service,
+        execution_report_output_directory=get_path("automationExecutionReportOutputPath"),
+        task_artifact_output_directory_name=get_app_setting("automationTaskArtifactOutputDirectoryName"),
+        execution_report_schema_version=get_app_setting("automationTaskExecutionReportSchemaVersion"),
+        timeout_seconds=get_app_setting("automationTaskExecutionTimeoutSeconds"),
     )
 
 
@@ -159,10 +163,7 @@ def build_automation_task_service():
     return AutomationTaskService(
         automation_task_registry=build_automation_task_registry(),
         automation_task_validation_service=automation_task_validation_service,
-        automation_task_execution_service=AutomationTaskExecutionService(
-            project_root=get_path("projectRoot"),
-            automation_task_validation_service=automation_task_validation_service,
-        ),
+        automation_task_execution_service=build_automation_task_execution_service(),
     )
 
 
