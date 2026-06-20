@@ -10,3 +10,7 @@ Rules:
 
 Feature request:
 {{FEATURE_REQUEST}}
+
+Use the following repository context when it is relevant. Do not invent files or APIs that are not present in the context.
+
+{{REPOSITORY_CONTEXT}}

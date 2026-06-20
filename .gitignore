@@ -198,3 +198,8 @@ scripts/setup/output/
 # factory
 backend/src/core/factory/output/
 backend/src/core/factory/reports/
+# Factory runtime output
+runtime/factory/output/*
+runtime/factory/reports/*
+!runtime/factory/output/.gitkeep
+!runtime/factory/reports/.gitkeep

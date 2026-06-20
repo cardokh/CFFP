@@ -2,10 +2,10 @@
   "task_id": "factory.generate_markdown_summary",
   "name": "Generate Markdown Summary",
   "description": "Generate one controlled markdown artifact from a local feature request.",
-  "input_file": "input/feature_request.txt",
-  "prompt_template": "prompts/markdown_artifact_prompt.txt",
+  "input_file": "backend/src/core/factory/input/feature_request.txt",
+  "prompt_template": "backend/src/core/factory/prompts/markdown_artifact_prompt.txt",
   "artifact": {
-    "output_dir": "output",
+    "output_dir": "runtime/factory/output",
     "filename": "generated_summary.md",
     "allowed_extensions": [
       ".md",
@@ -19,5 +19,15 @@
     "generated_text_size_limit",
     "artifact_path_allowed",
     "artifact_written"
-  ]
+  ],
+  "repository_context": {
+    "enabled": true,
+    "include_patterns": [
+      "backend/src/core/factory/*.py",
+      "backend/src/core/factory/tasks/*.json"
+    ],
+    "exclude_patterns": [],
+    "max_files": 12,
+    "max_file_characters": 3000
+  }
 }

@@ -1,9 +1,11 @@
-"""Shared data models for the CCore Automation Factory POC."""
+"""Shared data models for the CCore Automation Factory."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+
+from .repository_context_models import RepositoryContextConfig
 
 
 @dataclass(frozen=True)
@@ -13,9 +15,15 @@ class FactoryConfig:
     factory_name: str
     execution_provider: str
     llm_provider: str
-    gemini_model: str
+    llm_model: str
     task_definition: Path
     report_dir: Path
+
+    @property
+    def gemini_model(self) -> str:
+        """Backward-compatible alias for older tests/config consumers."""
+
+        return self.llm_model
 
 
 @dataclass(frozen=True)
@@ -39,3 +47,4 @@ class AutomationTaskDefinition:
     prompt_template: Path
     artifact: ArtifactDefinition
     validations: tuple[str, ...]
+    repository_context: RepositoryContextConfig | None = None

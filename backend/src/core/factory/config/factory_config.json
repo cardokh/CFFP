@@ -1,8 +1,8 @@
 {
-  "factory_name": "CCore Automation Factory POC v3",
+  "factory_name": "CCore Automation Factory",
   "execution_provider": "prefect",
   "llm_provider": "gemini",
-  "gemini_model": "gemini-2.5-flash",
-  "task_definition": "tasks/generate_markdown_summary.json",
-  "report_dir": "reports"
+  "llm_model": "gemini-2.5-flash",
+  "task_definition": "backend/src/core/factory/tasks/generate_markdown_summary.json",
+  "report_dir": "runtime/factory/reports"
 }
