@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Python cache
-*.pyc
+
 
 # C extensions
 *.so
@@ -194,3 +194,7 @@ scripts/frontend/lesson_player/patching/
 
 # Setup script output
 scripts/setup/output/
+
+# factory
+backend/src/core/factory/output/
+backend/src/core/factory/reports/

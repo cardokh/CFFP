@@ -1,0 +1,23 @@
+{
+  "task_id": "factory.generate_markdown_summary",
+  "name": "Generate Markdown Summary",
+  "description": "Generate one controlled markdown artifact from a local feature request.",
+  "input_file": "input/feature_request.txt",
+  "prompt_template": "prompts/markdown_artifact_prompt.txt",
+  "artifact": {
+    "output_dir": "output",
+    "filename": "generated_summary.md",
+    "allowed_extensions": [
+      ".md",
+      ".txt",
+      ".json"
+    ],
+    "max_output_characters": 12000
+  },
+  "validations": [
+    "generated_text_not_empty",
+    "generated_text_size_limit",
+    "artifact_path_allowed",
+    "artifact_written"
+  ]
+}

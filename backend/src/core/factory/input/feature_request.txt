@@ -1,0 +1,2 @@
+Create a short CCore Automation Factory proof-of-concept summary.
+Explain that Prefect executes the workflow, Gemini generates text, and CCore owns validation, allowed paths, and reporting.

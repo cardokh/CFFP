@@ -1,0 +1,12 @@
+You are helping with a CCore Automation Factory proof of concept.
+
+Generate a concise markdown document for the following feature request.
+
+Rules:
+- Return markdown only.
+- Do not include code fences.
+- Do not include secrets, API keys, credentials, or environment values.
+- Keep the output focused on the requested artifact.
+
+Feature request:
+{{FEATURE_REQUEST}}
