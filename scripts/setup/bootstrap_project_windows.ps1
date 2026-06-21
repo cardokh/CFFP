@@ -17,20 +17,12 @@ $LogFilePath = Join-Path $OutputDirectory $Config.logFileName
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 
 $Steps = @()
-$LogCache = New-Object System.Collections.Generic.List[string]
 
 function Add-Log {
     param ([string]$Message)
 
     $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $script:LogCache.Add("[$Timestamp] $Message") | Out-Null
-}
-
-function Flush-Log {
-    if ($script:LogCache.Count -gt 0) {
-        $script:LogCache | Add-Content -Path $LogFilePath -Encoding UTF8
-        $script:LogCache.Clear()
-    }
+    Add-Content -Path $LogFilePath -Value "[$Timestamp] $Message"
 }
 
 function Add-Step {
@@ -52,91 +44,36 @@ function Add-Step {
 function Invoke-BootstrapCommand {
     param (
         [string]$Name,
-        [string]$Executable,
-        [string[]]$ArgList
+        [string]$Command
     )
 
-    Add-Log "STARTED - $Name - $Executable $($ArgList -join ' ')"
+    Add-Log "STARTED - $Name - $Command"
 
-    $Output = & $Executable @ArgList 2>&1
-    $ExitCode = $LASTEXITCODE
+    cmd.exe /c "$Command >> `"$LogFilePath`" 2>&1"
 
-    foreach ($Line in $Output) {
-        Add-Log $Line.ToString()
-    }
-
-    if ($ExitCode -ne 0) {
-        $Message = "Command failed with exit code $ExitCode."
+    if ($LASTEXITCODE -ne 0) {
+        $Message = "Command failed with exit code $LASTEXITCODE."
         Add-Step $Name "FAILED" $Message
-        Flush-Log
         throw $Message
     }
 
     Add-Step $Name "PASSED" "Command completed successfully."
-    Flush-Log
-}
-
-function Get-FileMd5Hash {
-    param ([string]$Path)
-
-    if (-not (Test-Path $Path)) {
-        return $null
-    }
-
-    return (Get-FileHash -Path $Path -Algorithm MD5).Hash
-}
-
-function Install-DependenciesIfNeeded {
-    $RequirementsPath = Join-Path $ProjectRoot "requirements.txt"
-    $VirtualEnvironmentPath = Join-Path $ProjectRoot ".venv"
-    $HashFilePath = Join-Path $VirtualEnvironmentPath ".requirements.hash"
-
-    if (-not (Test-Path $RequirementsPath)) {
-        Add-Step "Install dependencies" "SKIPPED" "requirements.txt not found."
-        return
-    }
-
-    $CurrentHash = Get-FileMd5Hash $RequirementsPath
-    $PreviousHash = $null
-
-    if (Test-Path $HashFilePath) {
-        $PreviousHash = (Get-Content $HashFilePath -Raw).Trim()
-    }
-
-    if ($CurrentHash -eq $PreviousHash) {
-        Add-Step "Install dependencies" "SKIPPED" "requirements.txt unchanged."
-        return
-    }
-
-    Invoke-BootstrapCommand `
-        -Name "Install dependencies" `
-        -Executable "python" `
-        -ArgList @("-m", "pip", "install", "-r", "requirements.txt")
-
-    Set-Content -Path $HashFilePath -Value $CurrentHash -Encoding UTF8
-    Add-Log "UPDATED - requirements hash cache - .venv/.requirements.hash"
-    Flush-Log
 }
 
 try {
-    Set-Content -Path $LogFilePath -Value "" -Encoding UTF8
+    Set-Content -Path $LogFilePath -Value ""
 
     Add-Log "Project bootstrap started."
     Add-Log "Project root: ."
-    Flush-Log
 
     if ($Config.steps.createVirtualEnvironment -eq $true) {
         $VirtualEnvironmentPath = Join-Path $ProjectRoot ".venv"
 
         if (-not (Test-Path $VirtualEnvironmentPath)) {
-            Invoke-BootstrapCommand `
-                -Name "Create virtual environment" `
-                -Executable "python" `
-                -ArgList @("-m", "venv", ".venv")
+            Invoke-BootstrapCommand "Create virtual environment" "python -m venv .venv"
         }
         else {
             Add-Step "Create virtual environment" "SKIPPED" "Existing .venv found."
-            Flush-Log
         }
     }
 
@@ -148,28 +85,20 @@ try {
 
     . $ActivateScriptPath
     Add-Step "Activate virtual environment" "PASSED" "Virtual environment activated."
-    Flush-Log
 
     $env:PYTHONPATH = $ProjectRoot
     Add-Step "Set PYTHONPATH" "PASSED" "PYTHONPATH set to project root."
-    Flush-Log
 
     if ($Config.steps.installDependencies -eq $true) {
-        Install-DependenciesIfNeeded
+        Invoke-BootstrapCommand "Install dependencies" "python -m pip install -r requirements.txt"
     }
 
     if ($Config.steps.createDatabaseSchema -eq $true) {
-        Invoke-BootstrapCommand `
-            -Name "Create SQLite database schema" `
-            -Executable "python" `
-            -ArgList @("-m", "scripts.db.sqlite_create_schema")
+        Invoke-BootstrapCommand "Create SQLite database schema" "python -m scripts.db.sqlite_create_schema"
     }
 
     if ($Config.steps.seedDatabase -eq $true) {
-        Invoke-BootstrapCommand `
-            -Name "Seed SQLite database" `
-            -Executable "python" `
-            -ArgList @("-m", "scripts.db.sqlite_seed_data")
+        Invoke-BootstrapCommand "Seed SQLite database" "python -m scripts.db.sqlite_seed_data"
     }
 
     $Summary = [PSCustomObject]@{
@@ -184,9 +113,6 @@ try {
     ConvertTo-Json -Depth 10 |
     Set-Content -Path $SummaryFilePath -Encoding UTF8
 
-    Add-Log "Project bootstrap completed successfully."
-    Flush-Log
-
     Write-Host "PASSED Project bootstrap completed. Summary: scripts/setup/output/$($Config.summaryFileName)"
     exit 0
 }
@@ -198,7 +124,6 @@ catch {
     }
 
     Add-Log "FAILED - Project bootstrap failed - $ErrorMessage"
-    Flush-Log
 
     $Summary = [PSCustomObject]@{
         status      = "FAILED"
