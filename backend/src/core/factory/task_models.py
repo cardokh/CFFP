@@ -24,26 +24,42 @@ class FactoryTask:
 
 
 @dataclass(frozen=True)
+class FactoryTaskRunRecord:
+    """Execution summary for one Factory task."""
+
+    task_id: str
+    name: str
+    status: str
+    message: str
+
+    def to_dict(self) -> dict[str, object]:
+        """Return a serializable task run record."""
+
+        return {
+            "task_id": self.task_id,
+            "name": self.name,
+            "status": self.status,
+            "message": self.message,
+        }
+
+
+@dataclass(frozen=True)
 class FactoryRunnerResult:
     """Summary returned by the Factory task runner."""
 
     discovered_count: int
-    pending_tasks: tuple[FactoryTask, ...]
+    executed_count: int
+    completed_count: int
+    failed_count: int
+    task_runs: tuple[FactoryTaskRunRecord, ...]
 
     def to_dict(self) -> dict[str, object]:
         """Return a serializable runner result."""
 
         return {
             "discovered_count": self.discovered_count,
-            "pending_tasks": [
-                {
-                    "task_id": task.task_id,
-                    "name": task.name,
-                    "status": task.status,
-                    "task_definition_path": task.task_definition_path,
-                    "priority": task.priority,
-                    "payload": task.payload,
-                }
-                for task in self.pending_tasks
-            ],
+            "executed_count": self.executed_count,
+            "completed_count": self.completed_count,
+            "failed_count": self.failed_count,
+            "task_runs": [record.to_dict() for record in self.task_runs],
         }

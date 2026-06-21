@@ -35,10 +35,17 @@ def _run_factory_with_config(project_root: Path, config_path: str) -> None:
 def _run_factory_pending_tasks(project_root: Path, database_path: str | None) -> None:
     from src.core.factory.task_dependencies import build_sql_task_repository
     from src.core.factory.task_runner import FactoryTaskRunner
+    from src.infrastructure.orchestration.prefect.prefect_execution_provider import (
+        PrefectExecutionProvider,
+    )
 
     resolved_database_path = _resolve_database_path(project_root, database_path)
     task_repository = build_sql_task_repository(resolved_database_path)
-    result = FactoryTaskRunner(task_repository=task_repository).run_pending_tasks()
+    execution_provider = PrefectExecutionProvider()
+    result = FactoryTaskRunner(
+        task_repository=task_repository,
+        execution_provider=execution_provider,
+    ).run_pending_tasks()
     print(json.dumps(result.to_dict(), indent=2))
 
 
