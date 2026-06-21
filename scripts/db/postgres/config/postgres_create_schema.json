@@ -1,0 +1,75 @@
+{
+    "scriptName": "postgres_create_schema",
+    "mode": "create_schema",
+    "databaseConfigPath": "scripts/db/postgres/config/database.json",
+    "entitiesConfigPath": "scripts/db/postgres/config/entities.json",
+    "tables": {
+        "ccore_tasks": {
+            "columns": [
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                {
+                    "name": "task_name",
+                    "type": "VARCHAR(255)",
+                    "nullable": false
+                },
+                {
+                    "name": "status",
+                    "type": "VARCHAR(50)",
+                    "nullable": false,
+                    "default": "'PENDING'"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        "ccore_metrics": {
+            "columns": [
+                {
+                    "name": "metric_id",
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "nullable": false
+                },
+                {
+                    "name": "execution_duration_ms",
+                    "type": "INTEGER"
+                },
+                {
+                    "name": "llm_tokens_used",
+                    "type": "INTEGER"
+                },
+                {
+                    "name": "payload",
+                    "type": "JSONB"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "task_id"
+                    ],
+                    "references": {
+                        "table": "ccore_tasks",
+                        "columns": [
+                            "task_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
+                }
+            ]
+        }
+    }
+}

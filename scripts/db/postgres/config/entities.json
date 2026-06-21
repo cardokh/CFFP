@@ -1,0 +1,6 @@
+{
+    "entities": [
+        "ccore_tasks",
+        "ccore_metrics"
+    ]
+}
