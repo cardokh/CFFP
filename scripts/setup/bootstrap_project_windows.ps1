@@ -18,6 +18,7 @@ $RequirementsHashFilePath = Join-Path $ProjectRoot ".venv/.requirements.hash"
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 
 $Steps = @()
+$ConfigurationResolution = @()
 $LogCache = New-Object System.Collections.Generic.List[string]
 
 function Add-Log {
@@ -122,7 +123,25 @@ function Invoke-BootstrapCommand {
     }
 
     if ($ExitCode -ne 0) {
+        $OutputTail = ""
+
+        if (-not [string]::IsNullOrWhiteSpace($StderrContent)) {
+            $OutputTail = $StderrContent.Trim()
+        }
+        elseif (-not [string]::IsNullOrWhiteSpace($StdoutContent)) {
+            $OutputTail = $StdoutContent.Trim()
+        }
+
+        if ($OutputTail.Length -gt 1200) {
+            $OutputTail = $OutputTail.Substring($OutputTail.Length - 1200)
+        }
+
         $Message = "Command failed with exit code $ExitCode."
+
+        if (-not [string]::IsNullOrWhiteSpace($OutputTail)) {
+            $Message = "$Message $OutputTail"
+        }
+
         Add-Step $Name "FAILED" $Message
         throw $Message
     }
@@ -162,6 +181,99 @@ function Invoke-DependencyInstallation {
         -Arguments @("-m", "pip", "install", "-r", "requirements.txt")
 
     Set-Content -Path $RequirementsHashFilePath -Value $CurrentRequirementsHash -Encoding UTF8
+}
+
+
+function Test-SensitiveConfigKey {
+    param ([string]$Key)
+
+    if ([string]::IsNullOrWhiteSpace($Key)) {
+        return $false
+    }
+
+    return ($Key -match "(?i)(password|secret|token|key)")
+}
+
+function Get-MaskedConfigValue {
+    param (
+        [string]$Key,
+        [object]$Value
+    )
+
+    if (Test-SensitiveConfigKey $Key) {
+        if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
+            return ""
+        }
+
+        return "********"
+    }
+
+    return [string]$Value
+}
+
+function Resolve-ConfigurationValue {
+    param (
+        [string]$GroupName,
+        [string]$Key,
+        [string]$EnvironmentVariableName,
+        [object]$ConfiguredValue
+    )
+
+    if ([string]::IsNullOrWhiteSpace($EnvironmentVariableName)) {
+        $ResolvedValue = $ConfiguredValue
+        $Source = "database.json"
+    }
+    else {
+        $EnvironmentValue = [Environment]::GetEnvironmentVariable($EnvironmentVariableName, "Process")
+
+        if (-not [string]::IsNullOrWhiteSpace($EnvironmentValue)) {
+            $ResolvedValue = $EnvironmentValue
+            $Source = "environment"
+        }
+        else {
+            $ResolvedValue = $ConfiguredValue
+            $Source = "database.json"
+        }
+    }
+
+    $script:ConfigurationResolution += [PSCustomObject]@{
+        group               = $GroupName
+        key                 = $Key
+        value               = Get-MaskedConfigValue -Key $Key -Value $ResolvedValue
+        source              = $Source
+        environmentVariable = $EnvironmentVariableName
+        sensitive           = (Test-SensitiveConfigKey $Key)
+    }
+
+    $MaskedValue = Get-MaskedConfigValue -Key $Key -Value $ResolvedValue
+    $EnvironmentNote = ""
+
+    if (-not [string]::IsNullOrWhiteSpace($EnvironmentVariableName)) {
+        $EnvironmentNote = ": $EnvironmentVariableName"
+    }
+
+    Add-Log "CONFIG - $GroupName.$Key - $MaskedValue ($Source$EnvironmentNote)"
+
+    return $ResolvedValue
+}
+
+function Set-ResolvedEnvironmentValue {
+    param (
+        [string]$GroupName,
+        [string]$Key,
+        [string]$VariableName,
+        [object]$ConfiguredValue
+    )
+
+    $ResolvedValue = Resolve-ConfigurationValue `
+        -GroupName $GroupName `
+        -Key $Key `
+        -EnvironmentVariableName $VariableName `
+        -ConfiguredValue $ConfiguredValue
+
+    if (-not [string]::IsNullOrWhiteSpace($VariableName) -and $null -ne $ResolvedValue) {
+        [Environment]::SetEnvironmentVariable($VariableName, [string]$ResolvedValue, "Process")
+    }
 }
 
 function Test-PostgreSqlBootstrapEnabled {
@@ -217,45 +329,22 @@ function Set-PostgreSqlEnvironmentDefaults {
         throw "PostgreSQL database config must contain application environment variable mappings."
     }
 
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.host `
-        -Value $PostgreSqlDatabaseConfig.adminConnection.host
+    Add-Log "PostgreSQL configuration resolution started."
 
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.port `
-        -Value $PostgreSqlDatabaseConfig.adminConnection.port
+    Set-ResolvedEnvironmentValue -GroupName "postgres.admin" -Key "host" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.host -ConfiguredValue $PostgreSqlDatabaseConfig.adminConnection.host
+    Set-ResolvedEnvironmentValue -GroupName "postgres.admin" -Key "port" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.port -ConfiguredValue $PostgreSqlDatabaseConfig.adminConnection.port
+    Set-ResolvedEnvironmentValue -GroupName "postgres.admin" -Key "databaseName" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.databaseName -ConfiguredValue $PostgreSqlDatabaseConfig.adminConnection.databaseName
+    Set-ResolvedEnvironmentValue -GroupName "postgres.admin" -Key "username" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.username -ConfiguredValue $PostgreSqlDatabaseConfig.adminConnection.username
+    Set-ResolvedEnvironmentValue -GroupName "postgres.admin" -Key "password" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.password -ConfiguredValue $PostgreSqlDatabaseConfig.adminConnection.password
 
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.databaseName `
-        -Value $PostgreSqlDatabaseConfig.adminConnection.databaseName
+    Set-ResolvedEnvironmentValue -GroupName "postgres.application" -Key "host" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.host -ConfiguredValue $PostgreSqlDatabaseConfig.applicationConnection.host
+    Set-ResolvedEnvironmentValue -GroupName "postgres.application" -Key "port" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.port -ConfiguredValue $PostgreSqlDatabaseConfig.applicationConnection.port
+    Set-ResolvedEnvironmentValue -GroupName "postgres.application" -Key "databaseName" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.databaseName -ConfiguredValue $PostgreSqlDatabaseConfig.applicationConnection.databaseName
+    Set-ResolvedEnvironmentValue -GroupName "postgres.application" -Key "username" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.username -ConfiguredValue $PostgreSqlDatabaseConfig.applicationConnection.username
+    Set-ResolvedEnvironmentValue -GroupName "postgres.application" -Key "password" -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.password -ConfiguredValue $PostgreSqlDatabaseConfig.applicationConnection.password
 
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.username `
-        -Value $PostgreSqlDatabaseConfig.adminConnection.username
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.admin.password `
-        -Value $PostgreSqlDatabaseConfig.adminConnection.password
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.host `
-        -Value $PostgreSqlDatabaseConfig.applicationConnection.host
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.port `
-        -Value $PostgreSqlDatabaseConfig.applicationConnection.port
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.databaseName `
-        -Value $PostgreSqlDatabaseConfig.applicationConnection.databaseName
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.username `
-        -Value $PostgreSqlDatabaseConfig.applicationConnection.username
-
-    Set-EnvironmentDefault `
-        -VariableName $PostgreSqlDatabaseConfig.environmentVariables.application.password `
-        -Value $PostgreSqlDatabaseConfig.applicationConnection.password
+    Add-Log "PostgreSQL configuration resolution completed."
+    Flush-Log
 }
 
 function Set-EnvironmentDefault {
@@ -355,7 +444,8 @@ try {
         projectRoot = "."
         summaryFile = "scripts/setup/output/$($Config.summaryFileName)"
         logFile     = "scripts/setup/output/$($Config.logFileName)"
-        steps       = $Steps
+        steps                   = $Steps
+        configurationResolution = $ConfigurationResolution
     }
 
     $Summary |
@@ -380,8 +470,9 @@ catch {
         projectRoot = "."
         summaryFile = "scripts/setup/output/$($Config.summaryFileName)"
         logFile     = "scripts/setup/output/$($Config.logFileName)"
-        steps       = $Steps
-        error       = $ErrorMessage
+        steps                   = $Steps
+        configurationResolution = $ConfigurationResolution
+        error                   = $ErrorMessage
     }
 
     $Summary |

@@ -7,7 +7,6 @@ Run before postgres_seed_data.py:
     python -m scripts.db.postgres.postgres_seed_data
 """
 
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -16,20 +15,22 @@ import psycopg2
 from psycopg2 import sql
 
 from scripts.shared.base_script import BaseScript
+from scripts.shared.config_resolution import ConfigurationResolver
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
 from scripts.shared.script_path_utils import get_path
 
 
 class PostgreSQLCreateSchemaScript(BaseScript):
-    """
-    Provisions the PostgreSQL application database and creates schema objects from metadata.
-    """
+    """Provisions the PostgreSQL application database and creates schema objects from metadata."""
+
+    CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
 
     def __init__(self):
         super().__init__(__file__)
         self.database_config = self._load_database_config()
         self.entities_config = self._load_entities_config()
+        self.config_resolver = ConfigurationResolver(default_source_name="database.json")
         self.admin_connection_config = self._resolve_connection_config("adminConnection", "admin")
         self.application_connection_config = self._resolve_connection_config("applicationConnection", "application")
         self.created_database = False
@@ -38,12 +39,15 @@ class PostgreSQLCreateSchemaScript(BaseScript):
         self.granted_privileges = []
         self.dropped_tables = []
         self.created_tables = []
+        self.verified_database = False
+        self.verified_tables = []
 
     def run(self) -> None:
         self._configure_backend_import_path()
         self._validate_database_type()
         self._execute_database_provisioning()
         self._execute_schema_creation()
+        self._verify_database_state()
 
         report = self._build_report()
         self._write_report(report)
@@ -83,42 +87,14 @@ class PostgreSQLCreateSchemaScript(BaseScript):
         environment_variables = self.database_config.get("environmentVariables", {})
         grouped_environment_variables = environment_variables.get(environment_group_key, {})
 
-        if not isinstance(configured_connection, dict):
-            raise ValueError(f"database.json must contain '{config_key}' object.")
-
-        if not isinstance(grouped_environment_variables, dict):
-            raise ValueError(
-                f"database.json environmentVariables must contain '{environment_group_key}' object."
-            )
-
-        return {
-            "host": self._resolve_connection_value("host", configured_connection, grouped_environment_variables),
-            "port": int(self._resolve_connection_value("port", configured_connection, grouped_environment_variables)),
-            "databaseName": self._resolve_connection_value("databaseName", configured_connection, grouped_environment_variables),
-            "username": self._resolve_connection_value("username", configured_connection, grouped_environment_variables),
-            "password": self._resolve_connection_value("password", configured_connection, grouped_environment_variables),
-        }
-
-    def _resolve_connection_value(
-        self,
-        key: str,
-        configured_connection: dict,
-        environment_variables: dict,
-    ) -> Any:
-        environment_variable_name = environment_variables.get(key)
-
-        if isinstance(environment_variable_name, str) and environment_variable_name:
-            environment_value = os.environ.get(environment_variable_name)
-
-            if environment_value not in (None, ""):
-                return environment_value
-
-        configured_value = configured_connection.get(key)
-
-        if configured_value in (None, ""):
-            raise ValueError(f"PostgreSQL connection value '{key}' is not configured.")
-
-        return configured_value
+        return self.config_resolver.resolve_group(
+            group_name=environment_group_key,
+            configured_values=configured_connection,
+            environment_variables=grouped_environment_variables,
+            keys=self.CONNECTION_KEYS,
+            casts={"port": int},
+            sensitive_keys={"password"},
+        )
 
     def _execute_database_provisioning(self) -> None:
         bootstrap_config = self.database_config.get("bootstrap", {})
@@ -144,7 +120,6 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "SELECT 1 FROM pg_roles WHERE rolname = %s",
                 (self.application_connection_config["username"],),
             )
-
             role_exists = cursor.fetchone() is not None
 
             if not role_exists:
@@ -176,7 +151,6 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "SELECT 1 FROM pg_database WHERE datname = %s",
                 (self.application_connection_config["databaseName"],),
             )
-
             database_exists = cursor.fetchone() is not None
 
             if not database_exists:
@@ -250,6 +224,58 @@ class PostgreSQLCreateSchemaScript(BaseScript):
             conn.commit()
         finally:
             conn.close()
+
+    def _verify_database_state(self) -> None:
+        self._verify_application_database_exists()
+        self._verify_application_tables_exist()
+
+    def _verify_application_database_exists(self) -> None:
+        conn = self._get_admin_connection(self.admin_connection_config["databaseName"])
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT 1 FROM pg_database WHERE datname = %s",
+                (self.application_connection_config["databaseName"],),
+            )
+            self.verified_database = cursor.fetchone() is not None
+        finally:
+            conn.close()
+
+        if not self.verified_database:
+            raise RuntimeError(
+                "PostgreSQL verification failed: application database was not found: "
+                f"{self.application_connection_config['databaseName']}"
+            )
+
+    def _verify_application_tables_exist(self) -> None:
+        expected_tables = self._get_entity_names()
+        conn = self._get_application_connection()
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
+                AND table_type = 'BASE TABLE'
+                AND table_name = ANY(%s)
+                ORDER BY table_name
+                """,
+                (expected_tables,),
+            )
+            self.verified_tables = [row[0] for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
+        missing_tables = sorted(set(expected_tables) - set(self.verified_tables))
+
+        if missing_tables:
+            raise RuntimeError(
+                "PostgreSQL verification failed: missing application tables: "
+                + ", ".join(missing_tables)
+            )
 
     def _get_entity_names(self) -> list[str]:
         entities = self.entities_config.get("entities")
@@ -435,6 +461,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
         return {
             "scriptName": self.script_name,
             "mode": self.config.get("mode", "create_schema"),
+            "configurationResolution": self.config_resolver.to_report(),
             "summary": {
                 "status": "PASSED",
                 "adminDatabaseName": self.admin_connection_config["databaseName"],
@@ -448,9 +475,12 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "grantedPrivileges": self.granted_privileges,
                 "droppedTableCount": len(self.dropped_tables),
                 "createdTableCount": len(self.created_tables),
+                "verifiedDatabase": self.verified_database,
+                "verifiedTableCount": len(self.verified_tables),
             },
             "droppedTables": self.dropped_tables,
             "createdTables": self.created_tables,
+            "verifiedTables": self.verified_tables,
         }
 
     def _write_report(self, report: dict) -> None:
@@ -459,9 +489,9 @@ class PostgreSQLCreateSchemaScript(BaseScript):
 
     def _print_success(self, report: dict) -> None:
         print_passed(
-            "PostgreSQL schema created. "
+            "PostgreSQL schema created and verified. "
             f"Database: {report['summary']['applicationDatabaseName']}. "
-            f"Tables: {report['summary']['createdTableCount']}"
+            f"Tables: {report['summary']['verifiedTableCount']}"
         )
 
 

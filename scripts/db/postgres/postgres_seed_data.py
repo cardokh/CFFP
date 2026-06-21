@@ -7,7 +7,6 @@ Run after postgres_create_schema.py:
     python -m scripts.db.postgres.postgres_seed_data
 """
 
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -17,26 +16,30 @@ from psycopg2 import sql
 from psycopg2.extras import Json
 
 from scripts.shared.base_script import BaseScript
+from scripts.shared.config_resolution import ConfigurationResolver
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
 from scripts.shared.script_path_utils import get_path
 
 
 class PostgreSQLSeedDataScript(BaseScript):
-    """
-    Inserts PostgreSQL seed data from structured database and seed configuration.
-    """
+    """Inserts PostgreSQL seed data from structured database and seed configuration."""
+
+    CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
 
     def __init__(self):
         super().__init__(__file__)
         self.database_config = self._load_database_config()
+        self.config_resolver = ConfigurationResolver(default_source_name="database.json")
         self.application_connection_config = self._resolve_application_connection_config()
         self.inserted_rows_by_table = {}
+        self.verified_rows_by_table = {}
 
     def run(self) -> None:
         self._configure_backend_import_path()
         self._validate_database_type()
         self._execute_seed_data()
+        self._verify_seed_data()
 
         report = self._build_report()
         self._write_report(report)
@@ -69,44 +72,15 @@ class PostgreSQLSeedDataScript(BaseScript):
             raise ValueError("postgres_seed_data.py requires databaseType 'postgres'.")
 
     def _resolve_application_connection_config(self) -> dict:
-        configured_connection = self.database_config.get("applicationConnection")
         environment_variables = self.database_config.get("environmentVariables", {})
-        application_environment_variables = environment_variables.get("application", {})
-
-        if not isinstance(configured_connection, dict):
-            raise ValueError("database.json must contain 'applicationConnection' object.")
-
-        if not isinstance(application_environment_variables, dict):
-            raise ValueError("database.json environmentVariables must contain 'application' object.")
-
-        return {
-            "host": self._resolve_connection_value("host", configured_connection, application_environment_variables),
-            "port": int(self._resolve_connection_value("port", configured_connection, application_environment_variables)),
-            "databaseName": self._resolve_connection_value("databaseName", configured_connection, application_environment_variables),
-            "username": self._resolve_connection_value("username", configured_connection, application_environment_variables),
-            "password": self._resolve_connection_value("password", configured_connection, application_environment_variables),
-        }
-
-    def _resolve_connection_value(
-        self,
-        key: str,
-        configured_connection: dict,
-        environment_variables: dict,
-    ) -> Any:
-        environment_variable_name = environment_variables.get(key)
-
-        if isinstance(environment_variable_name, str) and environment_variable_name:
-            environment_value = os.environ.get(environment_variable_name)
-
-            if environment_value not in (None, ""):
-                return environment_value
-
-        configured_value = configured_connection.get(key)
-
-        if configured_value in (None, ""):
-            raise ValueError(f"PostgreSQL connection value '{key}' is not configured.")
-
-        return configured_value
+        return self.config_resolver.resolve_group(
+            group_name="application",
+            configured_values=self.database_config.get("applicationConnection"),
+            environment_variables=environment_variables.get("application", {}),
+            keys=self.CONNECTION_KEYS,
+            casts={"port": int},
+            sensitive_keys={"password"},
+        )
 
     def _execute_seed_data(self) -> None:
         conn = self._get_application_connection()
@@ -115,11 +89,7 @@ class PostgreSQLSeedDataScript(BaseScript):
             cursor = conn.cursor()
 
             for seed_group in self._get_seed_groups():
-                table_name = self._get_required_string(
-                    seed_group,
-                    "table",
-                    "Every seed group must contain 'table'.",
-                )
+                table_name = self._get_required_string(seed_group, "table", "Every seed group must contain 'table'.")
                 conflict_column = self._get_required_string(
                     seed_group,
                     "conflictColumn",
@@ -146,6 +116,33 @@ class PostgreSQLSeedDataScript(BaseScript):
                 self.inserted_rows_by_table[table_name] = inserted_count
 
             conn.commit()
+        finally:
+            conn.close()
+
+    def _verify_seed_data(self) -> None:
+        conn = self._get_application_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            for seed_group in self._get_seed_groups():
+                table_name = self._get_required_string(seed_group, "table", "Every seed group must contain 'table'.")
+                expected_rows = seed_group.get("rows", [])
+
+                if not isinstance(expected_rows, list):
+                    raise ValueError("Seed group 'rows' must be a list.")
+
+                cursor.execute(
+                    sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(table_name))
+                )
+                actual_count = cursor.fetchone()[0]
+                self.verified_rows_by_table[table_name] = actual_count
+
+                if actual_count < len(expected_rows):
+                    raise RuntimeError(
+                        f"PostgreSQL seed verification failed for table '{table_name}': "
+                        f"expected at least {len(expected_rows)} rows, found {actual_count}."
+                    )
         finally:
             conn.close()
 
@@ -210,10 +207,12 @@ class PostgreSQLSeedDataScript(BaseScript):
 
     def _build_report(self) -> dict:
         total_inserted_rows = sum(self.inserted_rows_by_table.values())
+        total_verified_rows = sum(self.verified_rows_by_table.values())
 
         return {
             "scriptName": self.script_name,
             "mode": self.config.get("mode", "seed_data"),
+            "configurationResolution": self.config_resolver.to_report(),
             "summary": {
                 "status": "PASSED",
                 "databaseName": self.application_connection_config["databaseName"],
@@ -222,8 +221,11 @@ class PostgreSQLSeedDataScript(BaseScript):
                 "username": self.application_connection_config["username"],
                 "seededTableCount": len(self.inserted_rows_by_table),
                 "insertedRowCount": total_inserted_rows,
+                "verifiedTableCount": len(self.verified_rows_by_table),
+                "verifiedRowCount": total_verified_rows,
             },
             "insertedRowsByTable": self.inserted_rows_by_table,
+            "verifiedRowsByTable": self.verified_rows_by_table,
         }
 
     def _write_report(self, report: dict) -> None:
@@ -232,7 +234,8 @@ class PostgreSQLSeedDataScript(BaseScript):
 
     def _print_success(self, report: dict) -> None:
         print_passed(
-            f"PostgreSQL seed data inserted. Rows: {report['summary']['insertedRowCount']}"
+            "PostgreSQL seed data inserted and verified. "
+            f"Rows: {report['summary']['verifiedRowCount']}"
         )
 
 
