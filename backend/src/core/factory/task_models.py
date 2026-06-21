@@ -31,16 +31,23 @@ class FactoryTaskRunRecord:
     name: str
     status: str
     message: str
+    artifact_path: str | None = None
+    report_path: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         """Return a serializable task run record."""
 
-        return {
+        data: dict[str, object] = {
             "task_id": self.task_id,
             "name": self.name,
             "status": self.status,
             "message": self.message,
         }
+        if self.artifact_path:
+            data["artifact_path"] = self.artifact_path
+        if self.report_path:
+            data["report_path"] = self.report_path
+        return data
 
 
 @dataclass(frozen=True)
