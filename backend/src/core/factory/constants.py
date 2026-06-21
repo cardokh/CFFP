@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 DEFAULT_FACTORY_CONFIG_PATH = "backend/src/core/factory/config/factory_config.json"
+DEFAULT_FACTORY_TASK_SEED_PATH = "backend/src/core/factory/config/factory_task_seed.json"
 DEFAULT_FACTORY_NAME = "CCore Automation Factory"
 DEFAULT_EXECUTION_PROVIDER = "prefect"
 DEFAULT_LLM_PROVIDER = "gemini"

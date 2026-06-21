@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "task_id": "factory.first-controlled-ccore-task",
+      "name": "First Controlled CCore Task",
+      "description": "Generate the first controlled CCore Factory artifact.",
+      "task_definition_path": "backend/src/core/factory/tasks/generate_markdown_summary.json",
+      "priority": 10
+    },
+    {
+      "task_id": "factory.repository-context-smoke-task",
+      "name": "Repository Context Smoke Task",
+      "description": "Verify that repository context can be collected for a Factory task.",
+      "task_definition_path": "backend/src/core/factory/tasks/generate_markdown_summary.json",
+      "priority": 20
+    }
+  ]
+}

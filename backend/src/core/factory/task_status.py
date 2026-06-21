@@ -1,0 +1,18 @@
+"""Factory task lifecycle status values."""
+
+from __future__ import annotations
+
+TASK_STATUS_PENDING = "PENDING"
+TASK_STATUS_RUNNING = "RUNNING"
+TASK_STATUS_COMPLETED = "COMPLETED"
+TASK_STATUS_FAILED = "FAILED"
+
+FINAL_TASK_STATUSES: tuple[str, ...] = (
+    TASK_STATUS_COMPLETED,
+    TASK_STATUS_FAILED,
+)
+
+ACTIVE_TASK_STATUSES: tuple[str, ...] = (
+    TASK_STATUS_PENDING,
+    TASK_STATUS_RUNNING,
+)
