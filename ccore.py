@@ -23,29 +23,11 @@ def _resolve_database_path(project_root: Path, database_path: str | None) -> Pat
     return get_path("database")
 
 
-def _run_factory_with_config(project_root: Path, config_path: str) -> None:
-    from src.core.factory.prefect_flow import run_factory_pipeline
-
-    run_factory_pipeline(
-        project_root_value=str(project_root),
-        config_path_value=str(Path(config_path).resolve()),
-    )
-
-
 def _run_factory_pending_tasks(project_root: Path, database_path: str | None) -> None:
-    from src.core.factory.task_dependencies import build_sql_task_repository
-    from src.core.factory.task_runner import FactoryTaskRunner
-    from src.infrastructure.orchestration.prefect.prefect_execution_provider import (
-        PrefectExecutionProvider,
-    )
+    from src.infrastructure.factory.dependencies import build_factory_task_runner
 
     resolved_database_path = _resolve_database_path(project_root, database_path)
-    task_repository = build_sql_task_repository(resolved_database_path)
-    execution_provider = PrefectExecutionProvider()
-    result = FactoryTaskRunner(
-        task_repository=task_repository,
-        execution_provider=execution_provider,
-    ).run_pending_tasks()
+    result = build_factory_task_runner(resolved_database_path).run_pending_tasks()
     print(json.dumps(result.to_dict(), indent=2))
 
 
@@ -55,7 +37,7 @@ def _seed_factory_tasks(
     seed_path: str | None,
 ) -> None:
     from src.core.factory.constants import DEFAULT_FACTORY_TASK_SEED_PATH
-    from src.core.factory.task_dependencies import build_sql_task_repository
+    from src.infrastructure.factory.dependencies import build_sql_task_repository
     from src.core.factory.task_seed_repository import JsonFactoryTaskSeedRepository
     from src.core.factory.task_seeder import FactoryTaskSeeder
 
@@ -82,7 +64,6 @@ def main() -> None:
     run_parser = factory_subparsers.add_parser("run", help="Run pending Automation Factory tasks.")
     run_parser.add_argument("--project-root", default=None)
     run_parser.add_argument("--database", default=None)
-    run_parser.add_argument("--config", default=None)
 
     seed_parser = factory_subparsers.add_parser("seed-tasks", help="Seed pending Factory tasks.")
     seed_parser.add_argument("--project-root", default=None)
@@ -94,9 +75,6 @@ def main() -> None:
     _ensure_backend_on_path(project_root)
 
     if args.command == "factory" and args.factory_command == "run":
-        if args.config:
-            _run_factory_with_config(project_root, args.config)
-            return
         _run_factory_pending_tasks(project_root, args.database)
         return
 
