@@ -6,7 +6,7 @@ from pathlib import Path
 
 from src.core.infrastructure.database import DatabaseManager
 
-from .sql_task_repository import SqlTaskRepository
+from src.infrastructure.persistence.sqlite.factory.sql_task_repository import SqlTaskRepository
 from .interfaces.task_repository import ITaskRepository
 
 

@@ -57,5 +57,6 @@ def test_runner_initializes_schema_and_returns_pending_tasks() -> None:
             "status": "PENDING",
             "task_definition_path": "backend/src/core/factory/tasks/example.json",
             "priority": 10,
+            "payload": '{}',
         }
     ]

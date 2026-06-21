@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.core.factory.sql_task_repository import SqlTaskRepository
+from src.infrastructure.persistence.sqlite.factory.sql_task_repository import SqlTaskRepository
 from src.core.factory.task_models import FactoryTask
 from src.core.factory.task_status import (
     TASK_STATUS_COMPLETED,
@@ -32,6 +32,7 @@ def test_repository_creates_and_discovers_pending_tasks(tmp_path) -> None:
             status=TASK_STATUS_PENDING,
             task_definition_path="tasks/second.json",
             priority=20,
+            payload='{"target": "second"}',
         )
     )
     repository.upsert_task(
@@ -49,6 +50,7 @@ def test_repository_creates_and_discovers_pending_tasks(tmp_path) -> None:
 
     assert [task.task_id for task in pending_tasks] == ["task.one", "task.two"]
     assert pending_tasks[0].status == TASK_STATUS_PENDING
+    assert pending_tasks[1].payload == '{"target": "second"}'
 
 
 def test_repository_excludes_non_pending_tasks(tmp_path) -> None:
@@ -109,3 +111,44 @@ def test_repository_updates_task_lifecycle_state(tmp_path) -> None:
     )
     repository.mark_completed("task.lifecycle")
     assert repository.find_pending_tasks() == ()
+
+
+def test_repository_adds_payload_column_to_existing_table(tmp_path) -> None:
+    database_path = tmp_path / "factory.db"
+    manager = DatabaseManager(str(database_path))
+    with manager.get_connection() as connection:
+        connection.execute(
+            """
+            CREATE TABLE factory_tasks (
+                task_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL DEFAULT '',
+                status TEXT NOT NULL,
+                task_definition_path TEXT NOT NULL,
+                priority INTEGER NOT NULL DEFAULT 100,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                started_at TEXT,
+                completed_at TEXT,
+                error_message TEXT
+            )
+            """
+        )
+        connection.commit()
+
+    repository = build_repository(database_path)
+    repository.upsert_task(
+        FactoryTask(
+            task_id="task.payload-migration",
+            name="Payload Migration Task",
+            description="Existing table migration.",
+            status=TASK_STATUS_PENDING,
+            task_definition_path="tasks/payload.json",
+            priority=10,
+            payload='{"migrated": true}',
+        )
+    )
+
+    pending_tasks = repository.find_pending_tasks()
+
+    assert pending_tasks[0].payload == '{"migrated": true}'

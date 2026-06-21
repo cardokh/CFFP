@@ -43,6 +43,7 @@ def test_seeder_upserts_pending_tasks() -> None:
             description="Seeded task.",
             task_definition_path="tasks/seed.json",
             priority=10,
+            payload='{"scope": "test"}',
         ),
     )
 
@@ -52,3 +53,4 @@ def test_seeder_upserts_pending_tasks() -> None:
     assert result == {"seeded_count": 1, "task_ids": ["factory.seed"]}
     assert repository.upserted_tasks[0].status == TASK_STATUS_PENDING
     assert repository.upserted_tasks[0].task_definition_path == "tasks/seed.json"
+    assert repository.upserted_tasks[0].payload == '{"scope": "test"}'

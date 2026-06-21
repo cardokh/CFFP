@@ -29,6 +29,7 @@ class FactoryTaskSeeder:
                     status=TASK_STATUS_PENDING,
                     task_definition_path=seed.task_definition_path,
                     priority=seed.priority,
+                    payload=seed.payload,
                 )
             )
 

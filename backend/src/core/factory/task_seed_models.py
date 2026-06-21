@@ -14,3 +14,4 @@ class FactoryTaskSeed:
     description: str
     task_definition_path: str
     priority: int
+    payload: str = '{}'

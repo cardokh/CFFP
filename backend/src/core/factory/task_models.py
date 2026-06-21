@@ -15,6 +15,7 @@ class FactoryTask:
     status: str
     task_definition_path: str
     priority: int
+    payload: str = '{}'
     created_at: str | None = None
     updated_at: str | None = None
     started_at: str | None = None
@@ -41,6 +42,7 @@ class FactoryRunnerResult:
                     "status": task.status,
                     "task_definition_path": task.task_definition_path,
                     "priority": task.priority,
+                    "payload": task.payload,
                 }
                 for task in self.pending_tasks
             ],
