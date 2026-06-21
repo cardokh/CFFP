@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from src.core.factory.task_execution_models import (
     FactoryTaskExecutionRequest,
@@ -10,6 +11,7 @@ from src.core.factory.task_execution_models import (
 )
 from src.core.factory.task_models import FactoryTask
 from src.core.factory.task_runner import FactoryTaskRunner
+from src.core.factory.task_prompt_compiler import build_default_task_prompt_compiler
 from src.core.factory.task_status import (
     TASK_STATUS_COMPLETED,
     TASK_STATUS_FAILED,
@@ -94,6 +96,7 @@ def test_runner_executes_pending_task_and_marks_completed() -> None:
     result = FactoryTaskRunner(
         task_repository=repository,
         execution_provider=execution_provider,
+        prompt_compiler=build_default_task_prompt_compiler(Path.cwd()),
     ).run_pending_tasks()
 
     assert repository.initialized is True
@@ -125,6 +128,7 @@ def test_runner_marks_failed_when_execution_provider_returns_failure() -> None:
     result = FactoryTaskRunner(
         task_repository=repository,
         execution_provider=FailingExecutionProvider(),
+        prompt_compiler=build_default_task_prompt_compiler(Path.cwd()),
     ).run_pending_tasks()
 
     assert repository.running_task_ids == ["factory.example"]
@@ -140,6 +144,7 @@ def test_runner_marks_failed_when_execution_provider_raises() -> None:
     result = FactoryTaskRunner(
         task_repository=repository,
         execution_provider=RaisingExecutionProvider(),
+        prompt_compiler=build_default_task_prompt_compiler(Path.cwd()),
     ).run_pending_tasks()
 
     assert repository.running_task_ids == ["factory.example"]
@@ -156,6 +161,7 @@ def test_runner_marks_failed_when_payload_is_invalid_json() -> None:
     result = FactoryTaskRunner(
         task_repository=repository,
         execution_provider=execution_provider,
+        prompt_compiler=build_default_task_prompt_compiler(Path.cwd()),
     ).run_pending_tasks()
 
     assert repository.running_task_ids == []

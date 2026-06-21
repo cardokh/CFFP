@@ -1,35 +1,14 @@
-"""LLM provider implementations and factory."""
+"""Backward-compatible local LLM provider factory.
+
+External SDK-backed LLM implementations live in infrastructure adapters.
+"""
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
 
-from .constants import DEFAULT_LLM_PROVIDER, DEFAULT_MOCK_LLM_PROVIDER
+from .constants import DEFAULT_MOCK_LLM_PROVIDER
 from .contracts import LlmProvider
-
-
-@dataclass(frozen=True)
-class GeminiProvider:
-    """Gemini implementation of the LLM provider contract."""
-
-    model: str
-
-    def generate_text(self, prompt: str) -> str:
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "GEMINI_API_KEY is not set. Set it as an environment variable before running the factory."
-            )
-
-        from google import genai
-
-        client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(model=self.model, contents=prompt)
-        text = getattr(response, "text", None)
-        if not text:
-            raise RuntimeError("Gemini returned an empty response.")
-        return str(text)
 
 
 @dataclass(frozen=True)
@@ -49,15 +28,16 @@ class MockProvider:
 
 @dataclass(frozen=True)
 class ConfiguredLlmProviderFactory:
-    """Creates configured LLM providers."""
+    """Creates configured local LLM providers."""
 
     def create_provider(self, provider_name: str, model: str) -> LlmProvider:
         normalized_name = provider_name.strip().lower()
-        if normalized_name == DEFAULT_LLM_PROVIDER:
-            return GeminiProvider(model=model)
         if normalized_name == DEFAULT_MOCK_LLM_PROVIDER:
             return MockProvider()
-        raise ValueError(f"Unsupported LLM provider: {provider_name}")
+        raise ValueError(
+            "SDK-backed LLM providers are infrastructure adapters. "
+            f"Unsupported core provider: {provider_name}"
+        )
 
 
 def create_llm_provider(provider_name: str, gemini_model: str) -> LlmProvider:

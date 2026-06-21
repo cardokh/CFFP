@@ -5,14 +5,32 @@
       "name": "First Controlled CCore Task",
       "description": "Generate the first controlled CCore Factory artifact.",
       "task_definition_path": "backend/src/core/factory/tasks/generate_markdown_summary.json",
-      "priority": 10
+      "priority": 10,
+      "payload": {
+        "instruction": "Generate a concise markdown summary explaining the current CCore Automation Factory runner and its architectural boundaries.",
+        "context_targets": [
+          "backend/src/core/factory/task_runner.py",
+          "backend/src/core/factory/interfaces/execution_provider.py"
+        ],
+        "max_file_characters": 4000,
+        "max_total_characters": 10000
+      }
     },
     {
       "task_id": "factory.repository-context-smoke-task",
       "name": "Repository Context Smoke Task",
       "description": "Verify that repository context can be collected for a Factory task.",
       "task_definition_path": "backend/src/core/factory/tasks/generate_markdown_summary.json",
-      "priority": 20
+      "priority": 20,
+      "payload": {
+        "instruction": "Generate a short markdown note confirming that task payload context collection is working.",
+        "context_targets": [
+          "backend/src/core/factory/task_prompt_compiler.py",
+          "backend/src/core/factory/task_context_collector.py"
+        ],
+        "max_file_characters": 4000,
+        "max_total_characters": 10000
+      }
     }
   ]
 }

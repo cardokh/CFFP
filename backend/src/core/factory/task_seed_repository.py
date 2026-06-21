@@ -26,6 +26,7 @@ class JsonFactoryTaskSeedRepository:
             description=str(raw_seed.get("description", "")),
             task_definition_path=str(raw_seed["task_definition_path"]),
             priority=int(raw_seed.get("priority", 100)),
+            payload=json.dumps(raw_seed.get("payload", {})),
         )
 
     @staticmethod

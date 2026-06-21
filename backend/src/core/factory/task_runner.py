@@ -10,6 +10,7 @@ from .interfaces.execution_provider import IExecutionProvider
 from .interfaces.task_repository import ITaskRepository
 from .task_execution_models import FactoryTaskExecutionRequest
 from .task_models import FactoryRunnerResult, FactoryTask, FactoryTaskRunRecord
+from .task_prompt_compiler import FactoryTaskPromptCompiler
 
 
 @dataclass(frozen=True)
@@ -18,6 +19,7 @@ class FactoryTaskRunner:
 
     task_repository: ITaskRepository
     execution_provider: IExecutionProvider
+    prompt_compiler: FactoryTaskPromptCompiler
 
     def run_pending_tasks(self) -> FactoryRunnerResult:
         """Discover and execute pending Factory tasks."""
@@ -81,12 +83,16 @@ class FactoryTaskRunner:
 
     def _build_execution_request(self, task: FactoryTask) -> FactoryTaskExecutionRequest:
         payload = self._parse_payload(task.payload)
+        compiled_prompt = self.prompt_compiler.compile_prompt(task, payload)
         return FactoryTaskExecutionRequest(
             task_id=task.task_id,
             name=task.name,
             task_definition_path=task.task_definition_path,
             priority=task.priority,
             payload=payload,
+            prompt=compiled_prompt.prompt,
+            system_instruction=compiled_prompt.system_instruction,
+            context_file_count=compiled_prompt.context_file_count,
         )
 
     def _parse_payload(self, raw_payload: str) -> dict[str, Any]:

@@ -15,6 +15,9 @@ class FactoryTaskExecutionRequest:
     task_definition_path: str
     priority: int
     payload: dict[str, Any] = field(default_factory=dict)
+    prompt: str = ""
+    system_instruction: str | None = None
+    context_file_count: int = 0
 
 
 @dataclass(frozen=True)
@@ -24,6 +27,7 @@ class FactoryTaskExecutionResult:
     task_id: str
     success: bool
     message: str
+    artifact_text: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         """Return a serializable execution result."""
@@ -32,4 +36,5 @@ class FactoryTaskExecutionResult:
             "task_id": self.task_id,
             "success": self.success,
             "message": self.message,
+            "artifact_text": self.artifact_text,
         }

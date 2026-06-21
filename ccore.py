@@ -27,7 +27,7 @@ def _run_factory_pending_tasks(project_root: Path, database_path: str | None) ->
     from src.infrastructure.factory.dependencies import build_factory_task_runner
 
     resolved_database_path = _resolve_database_path(project_root, database_path)
-    result = build_factory_task_runner(resolved_database_path).run_pending_tasks()
+    result = build_factory_task_runner(resolved_database_path, project_root).run_pending_tasks()
     print(json.dumps(result.to_dict(), indent=2))
 
 

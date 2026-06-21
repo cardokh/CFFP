@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
-
+from src.core.factory.interfaces.llm_provider import ILlmProvider
 from src.core.factory.task_execution_models import (
     FactoryTaskExecutionRequest,
     FactoryTaskExecutionResult,
@@ -21,7 +20,10 @@ def execute_factory_task_step(
     name: str,
     task_definition_path: str,
     priority: int,
-    payload: dict[str, Any],
+    payload_keys: list[str],
+    prompt: str,
+    system_instruction: str | None,
+    context_file_count: int,
 ) -> dict[str, object]:
     """Execute one primitive Factory task payload inside Prefect."""
 
@@ -29,11 +31,14 @@ def execute_factory_task_step(
     logger.info("Executing Factory task: %s (%s)", name, task_id)
     logger.info("Task definition path: %s", task_definition_path)
     logger.info("Task priority: %s", priority)
-    logger.info("Task payload keys: %s", sorted(payload.keys()))
+    logger.info("Task payload keys: %s", payload_keys)
+    logger.info("Context file count: %s", context_file_count)
+    logger.info("Prompt characters: %s", len(prompt))
+    logger.info("System instruction characters: %s", len(system_instruction or ""))
     return {
         "task_id": task_id,
         "success": True,
-        "message": "Factory task executed by Prefect provider.",
+        "message": "Factory task prepared by Prefect provider.",
     }
 
 
@@ -43,7 +48,10 @@ def execute_factory_task_flow(
     name: str,
     task_definition_path: str,
     priority: int,
-    payload: dict[str, Any],
+    payload_keys: list[str],
+    prompt: str,
+    system_instruction: str | None,
+    context_file_count: int,
 ) -> dict[str, object]:
     """Run one Factory task execution flow with primitive parameters only."""
 
@@ -52,25 +60,49 @@ def execute_factory_task_flow(
         name=name,
         task_definition_path=task_definition_path,
         priority=priority,
-        payload=payload,
+        payload_keys=payload_keys,
+        prompt=prompt,
+        system_instruction=system_instruction,
+        context_file_count=context_file_count,
     )
 
 
 class PrefectExecutionProvider:
-    """Executes Factory task requests through Prefect."""
+    """Executes Factory task requests through Prefect and an injected LLM provider."""
+
+    def __init__(self, llm_provider: ILlmProvider) -> None:
+        self._llm_provider = llm_provider
 
     def execute(self, request: FactoryTaskExecutionRequest) -> FactoryTaskExecutionResult:
         """Execute one Factory task request through a Prefect flow."""
 
-        result = execute_factory_task_flow(
+        flow_result = execute_factory_task_flow(
             task_id=request.task_id,
             name=request.name,
             task_definition_path=request.task_definition_path,
             priority=request.priority,
-            payload=request.payload,
+            payload_keys=sorted(request.payload.keys()),
+            prompt=request.prompt,
+            system_instruction=request.system_instruction,
+            context_file_count=request.context_file_count,
+        )
+        if not bool(flow_result["success"]):
+            return FactoryTaskExecutionResult(
+                task_id=str(flow_result["task_id"]),
+                success=False,
+                message=str(flow_result["message"]),
+            )
+
+        artifact_text = self._llm_provider.generate_artifact(
+            prompt=request.prompt,
+            system_instruction=request.system_instruction,
         )
         return FactoryTaskExecutionResult(
-            task_id=str(result["task_id"]),
-            success=bool(result["success"]),
-            message=str(result["message"]),
+            task_id=str(flow_result["task_id"]),
+            success=True,
+            message=(
+                "Factory task executed by Prefect provider; "
+                f"generated artifact characters: {len(artifact_text)}."
+            ),
+            artifact_text=artifact_text,
         )
