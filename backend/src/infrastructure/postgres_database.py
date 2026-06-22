@@ -1,24 +1,19 @@
+"""
+PostgreSQL database infrastructure manager.
+
+Responsibilities:
+- Resolve PostgreSQL application connection settings from repository metadata.
+- Allow environment variables to override JSON configuration values.
+- Create PostgreSQL database connections for CCore services.
+- Keep low-level PostgreSQL connection handling out of services and repositories.
+"""
+
 import json
 import os
-import sqlite3
 from pathlib import Path
 from typing import Any
 
 import psycopg2
-
-"""
-Database infrastructure managers.
-
-Responsibilities:
-- Store the configured SQLite database path.
-- Create SQLite database connections.
-- Resolve PostgreSQL application connection settings from repository metadata.
-- Allow environment variables to override PostgreSQL JSON configuration values.
-- Create PostgreSQL database connections for CCore services.
-
-This module belongs to the infrastructure layer and isolates low-level database
-connection handling from the rest of the application.
-"""
 
 
 DEFAULT_POSTGRES_DATABASE_CONFIG_PATH = "scripts/db/postgres/config/database.json"
@@ -26,14 +21,6 @@ PROJECT_ROOT_MARKERS = (
     "ccore.py",
     "requirements.txt",
 )
-
-
-class DatabaseManager:
-    def __init__(self, db_file: str = "auth.db"):
-        self.db_path = Path(db_file)
-
-    def get_connection(self) -> sqlite3.Connection:
-        return sqlite3.connect(self.db_path)
 
 
 class PostgresDatabaseManager:
@@ -61,7 +48,7 @@ class PostgresDatabaseManager:
             if all((parent_path / marker).exists() for marker in PROJECT_ROOT_MARKERS):
                 return parent_path
 
-        return Path.cwd().parent if Path.cwd().name == "backend" else Path.cwd()
+        return Path.cwd()
 
     def _load_database_config(self) -> dict[str, Any]:
         config_path = self.project_root / self.database_config_path

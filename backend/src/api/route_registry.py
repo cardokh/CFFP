@@ -29,6 +29,8 @@ from src.api.api_paths import (
     API_PATH_AUTOMATION_PIPELINES_PREFIX,
     API_PATH_AUTOMATION_TASKS,
     API_PATH_AUTOMATION_TASKS_PREFIX,
+    API_PATH_CCORE_TASKS,
+    API_PATH_CCORE_TASKS_PREFIX,
     API_PATH_AUTH_FORGOT_PASSWORD,
     API_PATH_AUTH_LOGIN,
     API_PATH_AUTH_REGISTER,
@@ -64,6 +66,13 @@ from src.core.automation.automation_task_routes import (
     handle_get_automation_task_path,
     handle_get_automation_tasks,
     handle_validate_automation_task_path,
+)
+from src.core.tasks.task_routes import (
+    handle_create_ccore_task,
+    handle_delete_ccore_task,
+    handle_get_ccore_task_by_id,
+    handle_get_ccore_tasks,
+    handle_update_ccore_task,
 )
 from src.core.users.user_routes import (
     handle_delete_user,
@@ -121,6 +130,10 @@ def build_core_route_registry(
                     handler,
                     services.automation_pipeline_service,
                 ),
+                API_PATH_CCORE_TASKS: lambda: handle_get_ccore_tasks(
+                    handler,
+                    services.ccore_task_service,
+                ),
             },
             "prefix": {
                 API_PATH_ECHO_PREFIX: lambda path: handler._send_json(
@@ -144,6 +157,11 @@ def build_core_route_registry(
                     services.automation_pipeline_service,
                     path,
                 ),
+                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_get_ccore_task_by_id(
+                    handler,
+                    services.ccore_task_service,
+                    path,
+                ),
             },
         },
         HTTP_METHOD_POST: {
@@ -165,6 +183,10 @@ def build_core_route_registry(
                     services.ai_speech_service,
                     services.ai_speech_validator,
                 ),
+                API_PATH_CCORE_TASKS: lambda: handle_create_ccore_task(
+                    handler,
+                    services.ccore_task_service,
+                ),
             },
             "prefix": {
                 API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_execute_or_validate_automation_task_path(
@@ -181,6 +203,11 @@ def build_core_route_registry(
                     services.users_service,
                     path,
                 ),
+                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_update_ccore_task(
+                    handler,
+                    services.ccore_task_service,
+                    path,
+                ),
             },
         },
         HTTP_METHOD_DELETE: {
@@ -188,6 +215,11 @@ def build_core_route_registry(
                 API_PATH_ADMIN_USERS_PREFIX: lambda path: handle_delete_user(
                     handler,
                     services.users_service,
+                    path,
+                ),
+                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_delete_ccore_task(
+                    handler,
+                    services.ccore_task_service,
                     path,
                 ),
             },

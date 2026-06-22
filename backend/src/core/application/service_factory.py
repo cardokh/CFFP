@@ -21,7 +21,7 @@ from src.core.ai.ai_speech.ai_speech_result_factory import (
 )
 from src.core.ai.ai_speech.ai_speech_service import AiSpeechService
 from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
-from src.core.infrastructure.database import DatabaseManager
+from src.core.infrastructure.database import DatabaseManager, PostgresDatabaseManager
 from src.core.automation.automation_pipeline_registry import AutomationPipelineRegistry
 from src.core.automation.automation_pipeline_service import AutomationPipelineService
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
@@ -29,6 +29,9 @@ from src.core.automation.automation_task_service import AutomationTaskService
 from src.core.automation.automation_task_execution_service import AutomationTaskExecutionService
 from src.core.automation.automation_task_validation import AutomationTaskValidationService
 
+from src.core.tasks.task_repository import CCoreTaskRepository
+from src.core.tasks.task_service import CCoreTaskService
+from src.core.tasks.task_validator import CCoreTaskValidator
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
 from src.core.users.user_service import UserService
@@ -117,6 +120,22 @@ from src.modules.lla.student_progress.student_progress_service import (
 
 def build_database_manager():
     return DatabaseManager(DATABASE_PATH)
+
+
+def build_postgres_database_manager():
+    return PostgresDatabaseManager()
+
+
+def build_ccore_task_service():
+    postgres_database_manager = build_postgres_database_manager()
+
+    task_repository = CCoreTaskRepository(postgres_database_manager)
+    task_validator = CCoreTaskValidator()
+
+    return CCoreTaskService(
+        task_repository=task_repository,
+        task_validator=task_validator,
+    )
 
 
 def build_automation_task_registry():

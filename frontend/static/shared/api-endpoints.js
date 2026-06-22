@@ -119,6 +119,15 @@ const LLA_API_ENDPOINTS = {
 
 
 const CCORE_API_ENDPOINTS = {
+    tasks: {
+        list: "/api/ccore/tasks",
+        create: "/api/ccore/tasks",
+
+        byId(taskId) {
+            return `/api/ccore/tasks/${encodeURIComponent(taskId)}`;
+        }
+    },
+
     automation: {
         tasks: {
             list: "/api/automation/tasks",

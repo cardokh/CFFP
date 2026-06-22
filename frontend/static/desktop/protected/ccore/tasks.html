@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Tasks | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/tasks.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-tasks-content">
+
+                    <header class="ccore-tasks-header">
+                        <p class="ccore-tasks-kicker">CCore</p>
+
+                        <h1>CCore Tasks</h1>
+
+                        <p>
+                            Manage persisted CCore tasks stored in PostgreSQL table
+                            <code>ccore_tasks</code>.
+                        </p>
+                    </header>
+
+                    <div id="ccoreTasksMessage" class="form-message info hidden"></div>
+
+                    <section class="ccore-tasks-layout">
+
+                        <fieldset class="shared-panel ccore-tasks-card ccore-tasks-form-card">
+                            <legend id="ccoreTaskFormLegend">Create Task</legend>
+
+                            <form id="ccoreTaskForm" class="ccore-task-form">
+                                <input id="ccoreTaskIdInput" type="hidden">
+
+                                <label class="ccore-task-field" for="ccoreTaskNameInput">
+                                    <span>Task Name</span>
+                                    <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
+                                </label>
+
+                                <label class="ccore-task-field" for="ccoreTaskStatusInput">
+                                    <span>Status</span>
+                                    <select id="ccoreTaskStatusInput" required>
+                                        <option value="PENDING">PENDING</option>
+                                        <option value="RUNNING">RUNNING</option>
+                                        <option value="COMPLETED">COMPLETED</option>
+                                        <option value="FAILED">FAILED</option>
+                                    </select>
+                                </label>
+
+                                <div class="ccore-task-form-actions">
+                                    <button id="saveCCoreTaskButton" class="shared-button primary" type="submit">
+                                        Create Task
+                                    </button>
+
+                                    <button id="resetCCoreTaskFormButton" class="shared-button secondary" type="button">
+                                        Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </fieldset>
+
+                        <fieldset class="shared-panel ccore-tasks-card ccore-tasks-table-card">
+                            <legend>PostgreSQL Tasks</legend>
+
+                            <div class="shared-table-wrapper">
+                                <table class="shared-table ccore-tasks-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="ccoreTasksTableBody">
+                                        <tr>
+                                            <td colspan="4" class="shared-table-empty-state">
+                                                Loading CCore tasks...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+
+                    </section>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-tasks-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action" href="/desktop/protected/automation/automation.html">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="ccoreTasksSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="ccoreTasksSearchInput" class="shared-search-input" type="search" placeholder="Search PostgreSQL tasks..." disabled>
+                            </label>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="ccoreTasksCount" class="ccore-tasks-count">0 tasks</span>
+
+                            <button id="refreshCCoreTasksButton" class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/tasks.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>
