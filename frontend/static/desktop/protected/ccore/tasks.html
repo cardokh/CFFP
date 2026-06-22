@@ -51,17 +51,17 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <button class="shared-table-sort-button" data-sort-column="0" type="button">
+                                            <button class="shared-table-sort-button" data-sort-column="0" data-sort-key="taskName" type="button">
                                                 Name
                                             </button>
                                         </th>
                                         <th>
-                                            <button class="shared-table-sort-button" data-sort-column="1" type="button">
+                                            <button class="shared-table-sort-button" data-sort-column="1" data-sort-key="statusLabel" type="button">
                                                 Status
                                             </button>
                                         </th>
                                         <th>
-                                            <button class="shared-table-sort-button" data-sort-column="2" type="button">
+                                            <button class="shared-table-sort-button" data-sort-column="2" data-sort-key="createdAt" type="button">
                                                 Created
                                             </button>
                                         </th>
@@ -91,6 +91,18 @@
                                 <span class="shared-search-icon">⌕</span>
                                 <input id="ccoreTasksSearchInput" class="shared-search-input" type="search" placeholder="Search PostgreSQL tasks..." disabled>
                             </label>
+
+                            <button id="ccoreTasksPreviousPageButton" class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                ‹ Prev
+                            </button>
+
+                            <span id="ccoreTasksPageIndicator" class="ccore-tasks-page-indicator">
+                                Page 1 of 1
+                            </span>
+
+                            <button id="ccoreTasksNextPageButton" class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                Next ›
+                            </button>
                         </div>
 
                         <div class="shared-table-toolbar-right">

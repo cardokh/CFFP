@@ -110,3 +110,10 @@
     font-size: 0.82rem;
     font-weight: 700;
 }
+
+.ccore-tasks-page-indicator {
+    color: #c7d9ee;
+    font-size: 0.82rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
