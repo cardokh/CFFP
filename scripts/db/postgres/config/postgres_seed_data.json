@@ -49,6 +49,51 @@
                     "status_code": "COMPLETED"
                 }
             ]
+        },
+        {
+            "table": "ccore_metric_types",
+            "conflictColumn": "metric_type_code",
+            "rows": [
+                {
+                    "metric_type_code": "COUNTER",
+                    "metric_type_label": "Counter",
+                    "sort_order": 10
+                },
+                {
+                    "metric_type_code": "GAUGE",
+                    "metric_type_label": "Gauge",
+                    "sort_order": 20
+                },
+                {
+                    "metric_type_code": "TIMER",
+                    "metric_type_label": "Timer",
+                    "sort_order": 30
+                }
+            ]
+        },
+        {
+            "table": "ccore_metrics",
+            "conflictColumn": "metric_id",
+            "rows": [
+                {
+                    "metric_id": "44444444-4444-4444-4444-444444444444",
+                    "metric_name": "Task Execution Count",
+                    "metric_key": "task.execution.count",
+                    "metric_type_code": "COUNTER"
+                },
+                {
+                    "metric_id": "55555555-5555-5555-5555-555555555555",
+                    "metric_name": "Task Failure Count",
+                    "metric_key": "task.failure.count",
+                    "metric_type_code": "COUNTER"
+                },
+                {
+                    "metric_id": "66666666-6666-6666-6666-666666666666",
+                    "metric_name": "Task Execution Duration",
+                    "metric_key": "task.execution.duration",
+                    "metric_type_code": "TIMER"
+                }
+            ]
         }
     ]
 }

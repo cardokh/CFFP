@@ -29,6 +29,9 @@ from src.api.api_paths import (
     API_PATH_AUTOMATION_PIPELINES_PREFIX,
     API_PATH_AUTOMATION_TASKS,
     API_PATH_AUTOMATION_TASKS_PREFIX,
+    API_PATH_CCORE_METRICS,
+    API_PATH_CCORE_METRICS_PREFIX,
+    API_PATH_CCORE_METRIC_TYPES,
     API_PATH_CCORE_TASKS,
     API_PATH_CCORE_TASKS_PREFIX,
     API_PATH_CCORE_TASK_STATUSES,
@@ -67,6 +70,14 @@ from src.core.automation.automation_task_routes import (
     handle_get_automation_task_path,
     handle_get_automation_tasks,
     handle_validate_automation_task_path,
+)
+from backend.src.ccore.metrics.metric_routes import (
+    handle_create_ccore_metric,
+    handle_delete_ccore_metric,
+    handle_get_ccore_metric_by_id,
+    handle_get_ccore_metric_types,
+    handle_get_ccore_metrics,
+    handle_update_ccore_metric,
 )
 from backend.src.ccore.tasks.task_routes import (
     handle_create_ccore_task,
@@ -140,6 +151,14 @@ def build_core_route_registry(
                     handler,
                     services.ccore_task_status_service,
                 ),
+                API_PATH_CCORE_METRICS: lambda: handle_get_ccore_metrics(
+                    handler,
+                    services.ccore_metric_service,
+                ),
+                API_PATH_CCORE_METRIC_TYPES: lambda: handle_get_ccore_metric_types(
+                    handler,
+                    services.ccore_metric_type_service,
+                ),
             },
             "prefix": {
                 API_PATH_ECHO_PREFIX: lambda path: handler._send_json(
@@ -168,6 +187,11 @@ def build_core_route_registry(
                     services.ccore_task_service,
                     path,
                 ),
+                API_PATH_CCORE_METRICS_PREFIX: lambda path: handle_get_ccore_metric_by_id(
+                    handler,
+                    services.ccore_metric_service,
+                    path,
+                ),
             },
         },
         HTTP_METHOD_POST: {
@@ -193,6 +217,10 @@ def build_core_route_registry(
                     handler,
                     services.ccore_task_service,
                 ),
+                API_PATH_CCORE_METRICS: lambda: handle_create_ccore_metric(
+                    handler,
+                    services.ccore_metric_service,
+                ),
             },
             "prefix": {
                 API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_execute_or_validate_automation_task_path(
@@ -214,6 +242,11 @@ def build_core_route_registry(
                     services.ccore_task_service,
                     path,
                 ),
+                API_PATH_CCORE_METRICS_PREFIX: lambda path: handle_update_ccore_metric(
+                    handler,
+                    services.ccore_metric_service,
+                    path,
+                ),
             },
         },
         HTTP_METHOD_DELETE: {
@@ -226,6 +259,11 @@ def build_core_route_registry(
                 API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_delete_ccore_task(
                     handler,
                     services.ccore_task_service,
+                    path,
+                ),
+                API_PATH_CCORE_METRICS_PREFIX: lambda path: handle_delete_ccore_metric(
+                    handler,
+                    services.ccore_metric_service,
                     path,
                 ),
             },

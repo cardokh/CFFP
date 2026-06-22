@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Metrics | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/metrics.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-metrics-content">
+
+                    <header class="ccore-metrics-header">
+                        <p class="ccore-metrics-kicker">CCore</p>
+
+                        <h1>CCore Metrics</h1>
+
+                        <p>
+                            Manage persisted CCore metrics stored in PostgreSQL table
+                            <code>ccore_metrics</code>.
+                        </p>
+                    </header>
+
+                    <div id="ccoreMetricsMessage" class="form-message info hidden"></div>
+
+                    <section class="ccore-metrics-layout">
+
+                        <fieldset class="shared-panel ccore-metrics-card ccore-metrics-form-card">
+                            <legend id="ccoreMetricFormLegend">Create Metric</legend>
+
+                            <form id="ccoreMetricForm" class="ccore-metric-form">
+                                <input id="ccoreMetricIdInput" type="hidden">
+
+                                <label class="ccore-metric-field" for="ccoreMetricNameInput">
+                                    <span>Metric Name</span>
+                                    <input id="ccoreMetricNameInput" type="text" maxlength="255" required>
+                                </label>
+
+                                <label class="ccore-metric-field" for="ccoreMetricKeyInput">
+                                    <span>Metric Key</span>
+                                    <input id="ccoreMetricKeyInput" type="text" maxlength="150" required>
+                                </label>
+
+                                <label class="ccore-metric-field" for="ccoreMetricTypeInput">
+                                    <span>Type</span>
+                                    <select id="ccoreMetricTypeInput" required disabled>
+                                        <option value="">Loading metric types...</option>
+                                    </select>
+                                </label>
+
+                                <div class="ccore-metric-form-actions">
+                                    <button id="saveCCoreMetricButton" class="shared-button primary" type="submit">
+                                        Create Metric
+                                    </button>
+
+                                    <button id="resetCCoreMetricFormButton" class="shared-button secondary" type="button">
+                                        Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </fieldset>
+
+                        <fieldset class="shared-panel ccore-metrics-card ccore-metrics-table-card">
+                            <legend>PostgreSQL Metrics</legend>
+
+                            <div class="shared-table-wrapper">
+                                <table class="shared-table ccore-metrics-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Key</th>
+                                            <th>Type</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="ccoreMetricsTableBody">
+                                        <tr>
+                                            <td colspan="5" class="shared-table-empty-state">
+                                                Loading CCore metrics...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+
+                    </section>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-metrics-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action" href="/desktop/protected/automation/automation.html">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="ccoreMetricsSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="ccoreMetricsSearchInput" class="shared-search-input" type="search" placeholder="Search PostgreSQL metrics..." disabled>
+                            </label>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="ccoreMetricsCount" class="ccore-metrics-count">0 metrics</span>
+
+                            <button id="refreshCCoreMetricsButton" class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/metrics.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

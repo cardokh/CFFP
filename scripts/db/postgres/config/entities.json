@@ -1,6 +1,8 @@
 {
     "entities": [
         "ccore_task_statuses",
-        "ccore_tasks"
+        "ccore_tasks",
+        "ccore_metric_types",
+        "ccore_metrics"
     ]
 }

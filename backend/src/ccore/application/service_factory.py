@@ -36,6 +36,15 @@ from src.core.automation.automation_task_validation import (
     AutomationTaskValidationService,
 )
 
+from backend.src.ccore.metrics.metric_repository import (
+    CCoreMetricRepository,
+    CCoreMetricTypeRepository,
+)
+from backend.src.ccore.metrics.metric_service import (
+    CCoreMetricService,
+    CCoreMetricTypeService,
+)
+from backend.src.ccore.metrics.metric_validator import CCoreMetricValidator
 from backend.src.ccore.tasks.task_repository import (
     CCoreTaskRepository,
     CCoreTaskStatusRepository,
@@ -163,6 +172,33 @@ def build_ccore_task_status_service():
 
     return CCoreTaskStatusService(
         status_repository=status_repository,
+    )
+
+
+def build_ccore_metric_repositories():
+    postgres_database_manager = build_postgres_database_manager()
+
+    return (
+        CCoreMetricRepository(postgres_database_manager),
+        CCoreMetricTypeRepository(postgres_database_manager),
+    )
+
+
+def build_ccore_metric_service():
+    metric_repository, type_repository = build_ccore_metric_repositories()
+    metric_validator = CCoreMetricValidator(type_repository=type_repository)
+
+    return CCoreMetricService(
+        metric_repository=metric_repository,
+        metric_validator=metric_validator,
+    )
+
+
+def build_ccore_metric_type_service():
+    _, type_repository = build_ccore_metric_repositories()
+
+    return CCoreMetricTypeService(
+        type_repository=type_repository,
     )
 
 

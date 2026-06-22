@@ -129,6 +129,16 @@ const CCORE_API_ENDPOINTS = {
         }
     },
 
+    metrics: {
+        list: "/api/ccore/metrics",
+        create: "/api/ccore/metrics",
+        types: "/api/ccore/metric-types",
+
+        byId(metricId) {
+            return `/api/ccore/metrics/${encodeURIComponent(metricId)}`;
+        }
+    },
+
     automation: {
         tasks: {
             list: "/api/automation/tasks",
