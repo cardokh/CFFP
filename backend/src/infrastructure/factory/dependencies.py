@@ -14,12 +14,14 @@ from src.core.factory.task_prompt_compiler import build_default_task_prompt_comp
 from src.core.factory.task_report_writer import FactoryTaskReportWriter
 from src.core.factory.task_runner import FactoryTaskRunner
 from src.core.factory.validation import FactoryOutputValidator
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.infrastructure.ai.dependencies import build_llm_provider
 from src.infrastructure.orchestration.prefect.prefect_execution_provider import (
     PrefectExecutionProvider,
 )
-from src.infrastructure.persistence.sqlite.factory.sql_task_repository import SqlTaskRepository
+from src.infrastructure.persistence.sqlite.factory.sql_task_repository import (
+    SqlTaskRepository,
+)
 
 
 def build_sql_task_repository(database_path: Path) -> ITaskRepository:
@@ -29,7 +31,9 @@ def build_sql_task_repository(database_path: Path) -> ITaskRepository:
     return SqlTaskRepository(DatabaseManager(str(database_path)))
 
 
-def build_factory_task_runner(database_path: Path, project_root: Path) -> FactoryTaskRunner:
+def build_factory_task_runner(
+    database_path: Path, project_root: Path
+) -> FactoryTaskRunner:
     """Build the Factory task runner with infrastructure adapters injected."""
 
     llm_provider = build_llm_provider()

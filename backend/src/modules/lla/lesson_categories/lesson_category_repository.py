@@ -10,7 +10,7 @@ Responsibilities:
 This repository isolates SQL/database access from the application layer.
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.lesson_categories.lesson_category import LessonCategory
 
 

@@ -11,7 +11,7 @@ Responsibilities:
 import json
 from functools import lru_cache
 from pathlib import Path
-from src.core.shared.app_config_utils import (
+from backend.src.ccore.shared.app_config_utils import (
     get_config_file_path,
 )
 

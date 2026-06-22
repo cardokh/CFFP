@@ -10,7 +10,7 @@ Architecture:
 Service -> Repository -> SQLite
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.student_progress.student_progress import (
     StudentProgressLesson,
     StudentProgressOverview,

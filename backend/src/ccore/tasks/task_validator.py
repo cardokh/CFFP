@@ -6,8 +6,8 @@ Responsibilities:
 - Keep validation rules out of route handlers and repositories.
 """
 
-from src.core.tasks.task import CCoreTask
-from src.core.tasks.task_messages import (
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_INVALID_ID_MESSAGE,
     CCORE_TASK_NAME_REQUIRED_MESSAGE,
     CCORE_TASK_STATUS_REQUIRED_MESSAGE,

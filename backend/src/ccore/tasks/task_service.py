@@ -7,7 +7,7 @@ Responsibilities:
 - Keep API handlers independent from repository/database details.
 """
 
-from src.core.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task import CCoreTask
 
 
 class CCoreTaskService:

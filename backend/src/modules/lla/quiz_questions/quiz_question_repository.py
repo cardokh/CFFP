@@ -13,7 +13,7 @@ Note:
 Quiz question options are owned by QuizQuestionOptionRepository.
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.quiz_questions.quiz_question import QuizQuestion
 
 

@@ -7,8 +7,8 @@ Responsibilities:
 - Keep API field names camelCase while preserving database/domain names internally.
 """
 
-from src.core.tasks.task import CCoreTask
-from src.core.tasks.task_contracts import (
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_contracts import (
     CreateCCoreTaskRequest,
     UpdateCCoreTaskRequest,
 )

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sqlite3 import Connection, Row
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 
 from .sql_task_schema import (
     CREATE_FACTORY_TASKS_STATUS_INDEX_SQL,
@@ -39,7 +39,9 @@ class SqlTaskRepository:
         """Return pending Factory tasks ordered for execution."""
 
         with self._connect() as connection:
-            rows = connection.execute(SELECT_PENDING_TASKS_SQL, (TASK_STATUS_PENDING,)).fetchall()
+            rows = connection.execute(
+                SELECT_PENDING_TASKS_SQL, (TASK_STATUS_PENDING,)
+            ).fetchall()
 
         return tuple(map_factory_task_row(row) for row in rows)
 

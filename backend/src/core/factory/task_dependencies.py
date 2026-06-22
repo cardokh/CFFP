@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 
-from src.infrastructure.persistence.sqlite.factory.sql_task_repository import SqlTaskRepository
+from src.infrastructure.persistence.sqlite.factory.sql_task_repository import (
+    SqlTaskRepository,
+)
 from .interfaces.task_repository import ITaskRepository
 
 

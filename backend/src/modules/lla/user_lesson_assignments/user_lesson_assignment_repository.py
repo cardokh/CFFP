@@ -10,7 +10,7 @@ Architecture:
 service -> repository -> SQLite
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.user_lesson_assignments.user_lesson_assignment_mapper import (
     UserLessonAssignmentMapper,
 )

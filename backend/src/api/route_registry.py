@@ -67,7 +67,7 @@ from src.core.automation.automation_task_routes import (
     handle_get_automation_tasks,
     handle_validate_automation_task_path,
 )
-from src.core.tasks.task_routes import (
+from backend.src.ccore.tasks.task_routes import (
     handle_create_ccore_task,
     handle_delete_ccore_task,
     handle_get_ccore_task_by_id,

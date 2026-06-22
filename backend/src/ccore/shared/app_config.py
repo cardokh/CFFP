@@ -2,11 +2,11 @@ import json
 import os
 from functools import lru_cache
 
-from src.core.shared.app_config_utils import (
+from backend.src.ccore.shared.app_config_utils import (
     get_config_file_path,
 )
 
-from src.core.shared.app_path_utils import (
+from backend.src.ccore.shared.app_path_utils import (
     get_path,
 )
 

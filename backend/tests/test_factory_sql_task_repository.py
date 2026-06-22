@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.infrastructure.persistence.sqlite.factory.sql_task_repository import SqlTaskRepository
+from src.infrastructure.persistence.sqlite.factory.sql_task_repository import (
+    SqlTaskRepository,
+)
 from src.core.factory.task_models import FactoryTask
 from src.core.factory.task_status import (
     TASK_STATUS_COMPLETED,
@@ -12,7 +14,7 @@ from src.core.factory.task_status import (
     TASK_STATUS_PENDING,
     TASK_STATUS_RUNNING,
 )
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 
 
 def build_repository(database_path: Path) -> SqlTaskRepository:
@@ -117,8 +119,7 @@ def test_repository_adds_payload_column_to_existing_table(tmp_path) -> None:
     database_path = tmp_path / "factory.db"
     manager = DatabaseManager(str(database_path))
     with manager.get_connection() as connection:
-        connection.execute(
-            """
+        connection.execute("""
             CREATE TABLE factory_tasks (
                 task_id TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
@@ -132,8 +133,7 @@ def test_repository_adds_payload_column_to_existing_table(tmp_path) -> None:
                 completed_at TEXT,
                 error_message TEXT
             )
-            """
-        )
+            """)
         connection.commit()
 
     repository = build_repository(database_path)

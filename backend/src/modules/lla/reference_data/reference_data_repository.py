@@ -7,7 +7,7 @@ Responsibilities:
 - Provide simple API-friendly dictionaries for small lookup tables
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 
 
 class ReferenceDataRepository:

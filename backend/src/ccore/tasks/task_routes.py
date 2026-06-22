@@ -12,12 +12,12 @@ from urllib.parse import unquote
 
 from src.api.api_paths import API_PATH_CCORE_TASKS_PREFIX
 from src.api.route_utils import read_json_body, send_json
-from src.core.tasks.task_contracts import (
+from backend.src.ccore.tasks.task_contracts import (
     CreateCCoreTaskRequest,
     UpdateCCoreTaskRequest,
 )
-from src.core.tasks.task_mapper import CCoreTaskMapper
-from src.core.tasks.task_messages import (
+from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
+from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_CREATED_SUCCESS_MESSAGE,
     CCORE_TASK_DELETED_SUCCESS_MESSAGE,
     CCORE_TASK_INVALID_ID_MESSAGE,
@@ -62,7 +62,9 @@ def handle_get_ccore_task_by_id(handler, ccore_task_service, path: str) -> None:
         return
 
     if task is None:
-        send_json(handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE})
+        send_json(
+            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
+        )
         return
 
     send_json(
@@ -79,7 +81,11 @@ def handle_create_ccore_task(handler, ccore_task_service) -> None:
     request_data = read_json_body(handler)
 
     if request_data is None:
-        send_json(handler, 400, {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE})
+        send_json(
+            handler,
+            400,
+            {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE},
+        )
         return
 
     try:
@@ -115,7 +121,11 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
     request_data = read_json_body(handler)
 
     if request_data is None:
-        send_json(handler, 400, {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE})
+        send_json(
+            handler,
+            400,
+            {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE},
+        )
         return
 
     try:
@@ -137,7 +147,9 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
         return
 
     if updated_task is None:
-        send_json(handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE})
+        send_json(
+            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
+        )
         return
 
     send_json(
@@ -166,7 +178,9 @@ def handle_delete_ccore_task(handler, ccore_task_service, path: str) -> None:
         return
 
     if not deleted:
-        send_json(handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE})
+        send_json(
+            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
+        )
         return
 
     send_json(
@@ -183,7 +197,7 @@ def extract_ccore_task_id(path: str) -> str:
     if not path.startswith(API_PATH_CCORE_TASKS_PREFIX):
         raise ValueError(CCORE_TASK_INVALID_ID_MESSAGE)
 
-    task_id = unquote(path[len(API_PATH_CCORE_TASKS_PREFIX):]).strip("/")
+    task_id = unquote(path[len(API_PATH_CCORE_TASKS_PREFIX) :]).strip("/")
 
     if not task_id:
         raise ValueError(CCORE_TASK_INVALID_ID_MESSAGE)

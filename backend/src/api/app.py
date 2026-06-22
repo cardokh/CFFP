@@ -43,7 +43,7 @@ from src.api.route_utils import (
     send_json,
     set_cors_headers,
 )
-from src.core.application.service_container import build_service_container
+from backend.src.ccore.application.service_container import build_service_container
 
 
 class ApiRequestHandler(BaseHTTPRequestHandler):

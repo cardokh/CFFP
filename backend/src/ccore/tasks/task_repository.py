@@ -7,8 +7,8 @@ Responsibilities:
 - Keep SQL access isolated from routes and services.
 """
 
-from src.core.infrastructure.postgres_database import PostgresDatabaseManager
-from src.core.tasks.task import CCoreTask
+from backend.src.ccore.infrastructure.postgres_database import PostgresDatabaseManager
+from backend.src.ccore.tasks.task import CCoreTask
 
 
 class CCoreTaskRepository:
@@ -26,8 +26,7 @@ class CCoreTaskRepository:
     def find_all_tasks(self) -> list[CCoreTask]:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """
+                cursor.execute("""
                     SELECT
                         task_id,
                         task_name,
@@ -35,8 +34,7 @@ class CCoreTaskRepository:
                         created_at
                     FROM ccore_tasks
                     ORDER BY created_at DESC, task_name ASC
-                    """
-                )
+                    """)
 
                 rows = cursor.fetchall()
 

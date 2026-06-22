@@ -11,7 +11,7 @@ Architecture:
 Service -> Repository -> SQLite
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.quiz_questions.quiz_question_option import (
     QuizQuestionOption,
 )

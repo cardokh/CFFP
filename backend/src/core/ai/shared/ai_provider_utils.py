@@ -7,10 +7,10 @@ Responsibilities:
 - Provide reusable AI enablement checks for all AI modules.
 """
 
-from src.core.shared.app_config import (
+from backend.src.ccore.shared.app_config import (
     get_app_setting,
 )
-from src.core.shared.app_path_utils import (
+from backend.src.ccore.shared.app_path_utils import (
     get_path,
 )
 

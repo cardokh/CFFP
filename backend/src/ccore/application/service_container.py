@@ -12,7 +12,7 @@ app.py -> service_container -> services -> repositories -> SQLite
 
 from types import SimpleNamespace
 
-from src.core.application.service_factory import (
+from backend.src.ccore.application.service_factory import (
     build_ai_speech_service,
     build_automation_pipeline_service,
     build_automation_task_service,

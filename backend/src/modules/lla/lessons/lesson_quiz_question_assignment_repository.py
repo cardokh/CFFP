@@ -7,7 +7,7 @@ Responsibilities:
 - Return assignment domain objects.
 """
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 from src.modules.lla.lessons.lesson_quiz_question_assignment import (
     LessonQuizQuestionAssignment,
 )

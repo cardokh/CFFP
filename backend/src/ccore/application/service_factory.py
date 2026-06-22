@@ -10,8 +10,8 @@ Architecture:
 API -> Service Factory -> Services -> Repositories -> Database
 """
 
-from src.core.shared.app_config import DATABASE_PATH, get_app_setting
-from src.core.shared.app_path_utils import get_path
+from backend.src.ccore.shared.app_config import DATABASE_PATH, get_app_setting
+from backend.src.ccore.shared.app_path_utils import get_path
 
 from src.core.ai.ai_speech.ai_speech_provider_mapper import (
     AiSpeechProviderMapper,
@@ -21,17 +21,24 @@ from src.core.ai.ai_speech.ai_speech_result_factory import (
 )
 from src.core.ai.ai_speech.ai_speech_service import AiSpeechService
 from src.core.ai.ai_speech.ai_speech_validator import AiSpeechValidator
-from src.core.infrastructure.database import DatabaseManager, PostgresDatabaseManager
+from backend.src.ccore.infrastructure.database import (
+    DatabaseManager,
+    PostgresDatabaseManager,
+)
 from src.core.automation.automation_pipeline_registry import AutomationPipelineRegistry
 from src.core.automation.automation_pipeline_service import AutomationPipelineService
 from src.core.automation.automation_task_registry import AutomationTaskRegistry
 from src.core.automation.automation_task_service import AutomationTaskService
-from src.core.automation.automation_task_execution_service import AutomationTaskExecutionService
-from src.core.automation.automation_task_validation import AutomationTaskValidationService
+from src.core.automation.automation_task_execution_service import (
+    AutomationTaskExecutionService,
+)
+from src.core.automation.automation_task_validation import (
+    AutomationTaskValidationService,
+)
 
-from src.core.tasks.task_repository import CCoreTaskRepository
-from src.core.tasks.task_service import CCoreTaskService
-from src.core.tasks.task_validator import CCoreTaskValidator
+from backend.src.ccore.tasks.task_repository import CCoreTaskRepository
+from backend.src.ccore.tasks.task_service import CCoreTaskService
+from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
 from src.core.users.user_service import UserService
@@ -169,9 +176,15 @@ def build_automation_task_execution_service():
     return AutomationTaskExecutionService(
         project_root=get_path("projectRoot"),
         automation_task_validation_service=automation_task_validation_service,
-        execution_report_output_directory=get_path("automationExecutionReportOutputPath"),
-        task_artifact_output_directory_name=get_app_setting("automationTaskArtifactOutputDirectoryName"),
-        execution_report_schema_version=get_app_setting("automationTaskExecutionReportSchemaVersion"),
+        execution_report_output_directory=get_path(
+            "automationExecutionReportOutputPath"
+        ),
+        task_artifact_output_directory_name=get_app_setting(
+            "automationTaskArtifactOutputDirectoryName"
+        ),
+        execution_report_schema_version=get_app_setting(
+            "automationTaskExecutionReportSchemaVersion"
+        ),
         timeout_seconds=get_app_setting("automationTaskExecutionTimeoutSeconds"),
     )
 

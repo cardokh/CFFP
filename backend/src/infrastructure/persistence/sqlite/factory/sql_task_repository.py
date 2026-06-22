@@ -4,14 +4,16 @@ from __future__ import annotations
 
 from sqlite3 import Connection, Row
 
-from src.core.infrastructure.database import DatabaseManager
+from backend.src.ccore.infrastructure.database import DatabaseManager
 
 from src.infrastructure.persistence.sqlite.factory.sql_task_schema import (
     ADD_FACTORY_TASKS_PAYLOAD_COLUMN_SQL,
     CREATE_FACTORY_TASKS_STATUS_INDEX_SQL,
     CREATE_FACTORY_TASKS_TABLE_SQL,
 )
-from src.infrastructure.persistence.sqlite.factory.sql_task_mapper import map_factory_task_row
+from src.infrastructure.persistence.sqlite.factory.sql_task_mapper import (
+    map_factory_task_row,
+)
 from src.infrastructure.persistence.sqlite.factory.sql_task_statements import (
     MARK_FACTORY_TASK_COMPLETED_SQL,
     MARK_FACTORY_TASK_FAILED_SQL,
@@ -47,7 +49,9 @@ class SqlTaskRepository:
         """Return pending Factory tasks ordered for execution."""
 
         with self._connect() as connection:
-            rows = connection.execute(SELECT_PENDING_TASKS_SQL, (TASK_STATUS_PENDING,)).fetchall()
+            rows = connection.execute(
+                SELECT_PENDING_TASKS_SQL, (TASK_STATUS_PENDING,)
+            ).fetchall()
 
         return tuple(map_factory_task_row(row) for row in rows)
 
@@ -73,14 +77,18 @@ class SqlTaskRepository:
         """Mark one task as running."""
 
         with self._connect() as connection:
-            connection.execute(MARK_FACTORY_TASK_RUNNING_SQL, (TASK_STATUS_RUNNING, task_id))
+            connection.execute(
+                MARK_FACTORY_TASK_RUNNING_SQL, (TASK_STATUS_RUNNING, task_id)
+            )
             connection.commit()
 
     def mark_completed(self, task_id: str) -> None:
         """Mark one task as completed."""
 
         with self._connect() as connection:
-            connection.execute(MARK_FACTORY_TASK_COMPLETED_SQL, (TASK_STATUS_COMPLETED, task_id))
+            connection.execute(
+                MARK_FACTORY_TASK_COMPLETED_SQL, (TASK_STATUS_COMPLETED, task_id)
+            )
             connection.commit()
 
     def mark_failed(self, task_id: str, error_message: str) -> None:
