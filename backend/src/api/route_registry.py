@@ -82,9 +82,10 @@ from backend.src.ccore.metrics.metric_routes import (
 from backend.src.ccore.tasks.task_routes import (
     handle_create_ccore_task,
     handle_delete_ccore_task,
-    handle_get_ccore_task_by_id,
+    handle_get_ccore_task_path,
     handle_get_ccore_task_statuses,
     handle_get_ccore_tasks,
+    handle_post_ccore_task_path,
     handle_update_ccore_task,
 )
 from src.core.users.user_routes import (
@@ -182,7 +183,7 @@ def build_core_route_registry(
                     services.automation_pipeline_service,
                     path,
                 ),
-                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_get_ccore_task_by_id(
+                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_get_ccore_task_path(
                     handler,
                     services.ccore_task_service,
                     path,
@@ -226,6 +227,11 @@ def build_core_route_registry(
                 API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_execute_or_validate_automation_task_path(
                     handler,
                     services.automation_task_service,
+                    path,
+                ),
+                API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_post_ccore_task_path(
+                    handler,
+                    services.ccore_task_service,
                     path,
                 ),
             },

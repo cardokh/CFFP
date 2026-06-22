@@ -2,6 +2,8 @@
     "entities": [
         "ccore_task_statuses",
         "ccore_tasks",
+        "ccore_task_execution_statuses",
+        "ccore_task_executions",
         "ccore_metric_types",
         "ccore_metrics"
     ]

@@ -51,6 +51,37 @@
             ]
         },
         {
+            "table": "ccore_task_execution_statuses",
+            "conflictColumn": "status_code",
+            "rows": [
+                {
+                    "status_code": "PENDING",
+                    "status_label": "Pending",
+                    "sort_order": 10
+                },
+                {
+                    "status_code": "RUNNING",
+                    "status_label": "Running",
+                    "sort_order": 20
+                },
+                {
+                    "status_code": "SUCCEEDED",
+                    "status_label": "Succeeded",
+                    "sort_order": 30
+                },
+                {
+                    "status_code": "FAILED",
+                    "status_label": "Failed",
+                    "sort_order": 40
+                },
+                {
+                    "status_code": "BLOCKED",
+                    "status_label": "Blocked",
+                    "sort_order": 50
+                }
+            ]
+        },
+        {
             "table": "ccore_metric_types",
             "conflictColumn": "metric_type_code",
             "rows": [

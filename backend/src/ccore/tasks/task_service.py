@@ -15,6 +15,10 @@ from backend.src.ccore.tasks.task_repository_contract import (
 )
 from backend.src.ccore.tasks.task_status import CCoreTaskStatus
 from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
+from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
+from backend.src.ccore.tasks.task_execution_constants import (
+    CCORE_TASK_EXECUTION_STATUS_BLOCKED,
+)
 
 
 class CCoreTaskService:
@@ -22,9 +26,13 @@ class CCoreTaskService:
         self,
         task_repository: CCoreTaskRepositoryProtocol,
         task_validator: CCoreTaskValidator,
+        task_execution_repository=None,
+        task_runner_registry=None,
     ):
         self.task_repository = task_repository
         self.task_validator = task_validator
+        self.task_execution_repository = task_execution_repository
+        self.task_runner_registry = task_runner_registry
 
     def get_all_tasks(self) -> list[CCoreTask]:
         return self.task_repository.find_all_tasks()
@@ -48,6 +56,58 @@ class CCoreTaskService:
         self.task_validator.validate_task_id(task_id)
 
         return self.task_repository.delete_task(task_id)
+
+    def execute_task(self, task_id: str) -> CCoreTaskExecution | None:
+        self.task_validator.validate_task_id(task_id)
+        task = self.task_repository.find_by_id(task_id)
+
+        if task is None:
+            return None
+
+        self._validate_execution_dependencies()
+        runner = self.task_runner_registry.get_runner_for_task(task)
+
+        if runner is None:
+            return self.task_execution_repository.create_execution(
+                CCoreTaskExecution(
+                    execution_id=None,
+                    task_id=task_id,
+                    status_code=CCORE_TASK_EXECUTION_STATUS_BLOCKED,
+                    runner_code=None,
+                    report_json={
+                        "status": "BLOCKED",
+                        "message": f"No Automation Factory runner is registered for task: {task.task_name}.",
+                    },
+                )
+            )
+
+        runner_result = runner.execute(task)
+        return self.task_execution_repository.create_execution(
+            CCoreTaskExecution(
+                execution_id=None,
+                task_id=task_id,
+                status_code=runner_result["status_code"],
+                runner_code=runner_result["runner_code"],
+                report_json=runner_result["report"],
+            )
+        )
+
+    def get_latest_execution(self, task_id: str) -> CCoreTaskExecution | None:
+        self.task_validator.validate_task_id(task_id)
+        self._validate_execution_dependencies()
+        return self.task_execution_repository.find_latest_by_task_id(task_id)
+
+    def get_execution_history(self, task_id: str) -> list[CCoreTaskExecution]:
+        self.task_validator.validate_task_id(task_id)
+        self._validate_execution_dependencies()
+        return self.task_execution_repository.find_by_task_id(task_id)
+
+    def _validate_execution_dependencies(self) -> None:
+        if self.task_execution_repository is None:
+            raise ValueError("CCore task execution repository is not configured.")
+
+        if self.task_runner_registry is None:
+            raise ValueError("CCore task runner registry is not configured.")
 
 
 class CCoreTaskStatusService:
