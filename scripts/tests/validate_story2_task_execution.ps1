@@ -162,6 +162,15 @@ try {
                 }
                 else {
                     Write-Pass "Execution report returned"
+                    $sectionNames = @($executeResponse.execution.report.sections | ForEach-Object { $_.name })
+                    foreach ($expectedSection in @("configuration", "python_compilation", "javascript_syntax", "unit_tests")) {
+                        if ($sectionNames -contains $expectedSection) {
+                            Write-Pass "Validation report contains $expectedSection section"
+                        }
+                        else {
+                            Write-Fail "Validation report missing $expectedSection section"
+                        }
+                    }
                 }
             }
 

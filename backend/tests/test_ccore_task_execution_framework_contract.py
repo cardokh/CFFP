@@ -76,4 +76,11 @@ def test_validate_project_runner_executes_through_automation_factory():
         CCORE_TASK_EXECUTION_STATUS_FAILED,
     }
     assert result["report"]["task"]["name"] == VALIDATE_PROJECT_TASK_NAME
-    assert result["report"]["sections"]
+    section_names = [section["name"] for section in result["report"]["sections"]]
+    assert section_names == [
+        "configuration",
+        "python_compilation",
+        "javascript_syntax",
+        "unit_tests",
+    ]
+    assert result["report"]["summary"]["sectionCount"] == 4
