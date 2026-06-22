@@ -50,9 +50,21 @@
                             <table class="shared-table ccore-tasks-table">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Created</th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="0" type="button">
+                                                Name
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="1" type="button">
+                                                Status
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="2" type="button">
+                                                Created
+                                            </button>
+                                        </th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -137,6 +149,7 @@
         loadProtectedWorkspace("automation")
             .then(async () => {
                 await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-sorter.js");
 
                 const pageScript = document.createElement("script");
                 pageScript.src = "./js/tasks.js";

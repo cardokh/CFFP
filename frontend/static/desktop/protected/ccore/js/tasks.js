@@ -460,6 +460,17 @@ function enableCCoreTaskSearch() {
 }
 
 
+function setupCCoreTaskSorting() {
+    if (typeof initializeTableSorting !== "function") {
+        return;
+    }
+
+    initializeTableSorting(
+        document.querySelector(".ccore-tasks-table") || document
+    );
+}
+
+
 function setupCCoreTaskSearch() {
     const searchInput = document.getElementById("ccoreTasksSearchInput");
 
@@ -481,6 +492,7 @@ async function setupCCoreTasksPage() {
 
     setupTaskTableActions();
     setupCCoreTaskSearch();
+    setupCCoreTaskSorting();
 
     try {
         await loadCCoreTaskStatuses();
