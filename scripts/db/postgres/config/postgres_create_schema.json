@@ -46,6 +46,12 @@
                     "type": "TIMESTAMP WITH TIME ZONE",
                     "nullable": false,
                     "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
                 }
             ],
             "constraints": [
@@ -109,6 +115,12 @@
                 },
                 {
                     "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
                     "type": "TIMESTAMP WITH TIME ZONE",
                     "nullable": false,
                     "default": "CURRENT_TIMESTAMP"

@@ -20,6 +20,30 @@ const CCORE_TASK_STATUSES_ERROR_MESSAGE =
 const CCORE_TASK_DETAILS_ERROR_MESSAGE =
     "CCore task details could not be loaded.";
 
+const CCORE_TASK_NAME_REQUIRED_MESSAGE =
+    "Task name is required.";
+
+const CCORE_TASK_STATUS_REQUIRED_MESSAGE =
+    "Task status is required.";
+
+const CCORE_TASK_NO_CHANGES_MESSAGE =
+    "No changes to update.";
+
+const CCORE_TASK_CREATED_SUCCESS_MESSAGE =
+    "Task created successfully.";
+
+const CCORE_TASK_UPDATED_SUCCESS_MESSAGE =
+    "Task updated successfully.";
+
+const CCORE_TASK_SAVE_ERROR_MESSAGE =
+    "Task could not be saved.";
+
+const CCORE_TASK_DELETE_CONFIRM_MESSAGE =
+    "Delete this CCore task?";
+
+const CCORE_TASK_DELETE_ERROR_MESSAGE =
+    "Task could not be deleted.";
+
 let ccoreTaskStatuses = [];
 let currentCCoreTaskId = "";
 let originalCCoreTaskFormData = null;
@@ -266,17 +290,17 @@ async function saveCCoreTask(event) {
     const formData = getCCoreTaskFormData();
 
     if (!formData.taskName) {
-        showCCoreTaskDetailsMessage("Task name is required.", "error");
+        showCCoreTaskDetailsMessage(CCORE_TASK_NAME_REQUIRED_MESSAGE, "error");
         return;
     }
 
     if (!formData.status) {
-        showCCoreTaskDetailsMessage("Task status is required.", "error");
+        showCCoreTaskDetailsMessage(CCORE_TASK_STATUS_REQUIRED_MESSAGE, "error");
         return;
     }
 
     if (formData.taskId && !hasCCoreTaskFormChanged(formData)) {
-        showCCoreTaskDetailsMessage("No changes to update.", "info");
+        showCCoreTaskDetailsMessage(CCORE_TASK_NO_CHANGES_MESSAGE, "info");
         return;
     }
 
@@ -292,7 +316,7 @@ async function saveCCoreTask(event) {
                 }
             );
 
-            showCCoreTaskDetailsMessage("Task updated successfully.", "success");
+            showCCoreTaskDetailsMessage(CCORE_TASK_UPDATED_SUCCESS_MESSAGE, "success");
         } else {
             responseData = await postJson(
                 CCORE_API_ENDPOINTS.tasks.create,
@@ -302,7 +326,7 @@ async function saveCCoreTask(event) {
                 }
             );
 
-            showCCoreTaskDetailsMessage("Task created successfully.", "success");
+            showCCoreTaskDetailsMessage(CCORE_TASK_CREATED_SUCCESS_MESSAGE, "success");
         }
 
         const savedTask = parseCCoreTaskResponse(responseData);
@@ -317,7 +341,7 @@ async function saveCCoreTask(event) {
         }
 
     } catch (error) {
-        showCCoreTaskDetailsMessage(error.message || "Task could not be saved.", "error");
+        showCCoreTaskDetailsMessage(error.message || CCORE_TASK_SAVE_ERROR_MESSAGE, "error");
     }
 }
 
@@ -329,7 +353,7 @@ async function deleteCCoreTask() {
         return;
     }
 
-    if (!window.confirm("Delete this CCore task?")) {
+    if (!window.confirm(CCORE_TASK_DELETE_CONFIRM_MESSAGE)) {
         return;
     }
 
@@ -338,7 +362,7 @@ async function deleteCCoreTask() {
         window.location.href = "./tasks.html";
 
     } catch (error) {
-        showCCoreTaskDetailsMessage(error.message || "Task could not be deleted.", "error");
+        showCCoreTaskDetailsMessage(error.message || CCORE_TASK_DELETE_ERROR_MESSAGE, "error");
     }
 }
 

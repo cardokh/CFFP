@@ -14,6 +14,7 @@ from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_API_FIELD_STATUS_LABEL,
     CCORE_TASK_API_FIELD_TASK_ID,
     CCORE_TASK_API_FIELD_TASK_NAME,
+    CCORE_TASK_API_FIELD_UPDATED_AT,
     CCORE_TASK_DEFAULT_STATUS_CODE,
     CCORE_TASK_STATUS_API_FIELD_CODE,
     CCORE_TASK_STATUS_API_FIELD_LABEL,
@@ -54,6 +55,7 @@ class CCoreTaskMapper:
             CCORE_TASK_API_FIELD_STATUS: task.status_code,
             CCORE_TASK_API_FIELD_STATUS_LABEL: task.status_label,
             CCORE_TASK_API_FIELD_CREATED_AT: task.created_at,
+            CCORE_TASK_API_FIELD_UPDATED_AT: task.updated_at,
         }
 
     def domains_to_response(self, tasks: list[CCoreTask]) -> list[dict]:

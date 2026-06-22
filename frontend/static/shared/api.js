@@ -47,6 +47,20 @@ async function parseJsonResponse(response) {
     }
 }
 
+
+function getApiErrorMessage(data) {
+    if (data && typeof data.error === "object" && data.error !== null) {
+        return data.error.message || "The server rejected the request.";
+    }
+
+    if (data && typeof data.error === "string") {
+        return data.error;
+    }
+
+    return "The server rejected the request.";
+}
+
+
 async function requestJson(endpoint, options) {
     let response;
 
@@ -61,7 +75,7 @@ async function requestJson(endpoint, options) {
         await parseJsonResponse(response);
 
     if (!response.ok) {
-        throw new Error(data.error || "The server rejected the request.");
+        throw new Error(getApiErrorMessage(data));
     }
 
     return data;

@@ -20,6 +20,7 @@ from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_STATUS_SORT_ORDER_COLUMN,
     CCORE_TASK_STATUSES_TABLE_NAME,
     CCORE_TASKS_TABLE_NAME,
+    CCORE_TASK_UPDATED_AT_COLUMN,
 )
 from backend.src.ccore.tasks.task_status import CCoreTaskStatus
 
@@ -35,7 +36,18 @@ class CCoreTaskRepository:
             status_code=row[2],
             status_label=row[3],
             created_at=row[4].isoformat() if row[4] is not None else None,
+            updated_at=row[5].isoformat() if row[5] is not None else None,
         )
+
+    def _task_select_columns(self) -> str:
+        return f"""
+            task.{CCORE_TASK_ID_COLUMN},
+            task.{CCORE_TASK_NAME_COLUMN},
+            task.{CCORE_TASK_STATUS_CODE_COLUMN},
+            status.{CCORE_TASK_STATUS_LABEL_COLUMN},
+            task.{CCORE_TASK_CREATED_AT_COLUMN},
+            task.{CCORE_TASK_UPDATED_AT_COLUMN}
+        """
 
     def find_all_tasks(self) -> list[CCoreTask]:
         with self.db_manager.get_connection() as connection:
@@ -43,11 +55,7 @@ class CCoreTaskRepository:
                 cursor.execute(
                     f"""
                     SELECT
-                        task.{CCORE_TASK_ID_COLUMN},
-                        task.{CCORE_TASK_NAME_COLUMN},
-                        task.{CCORE_TASK_STATUS_CODE_COLUMN},
-                        status.{CCORE_TASK_STATUS_LABEL_COLUMN},
-                        task.{CCORE_TASK_CREATED_AT_COLUMN}
+                        {self._task_select_columns()}
                     FROM {CCORE_TASKS_TABLE_NAME} task
                     INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
                         ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
@@ -65,11 +73,7 @@ class CCoreTaskRepository:
                 cursor.execute(
                     f"""
                     SELECT
-                        task.{CCORE_TASK_ID_COLUMN},
-                        task.{CCORE_TASK_NAME_COLUMN},
-                        task.{CCORE_TASK_STATUS_CODE_COLUMN},
-                        status.{CCORE_TASK_STATUS_LABEL_COLUMN},
-                        task.{CCORE_TASK_CREATED_AT_COLUMN}
+                        {self._task_select_columns()}
                     FROM {CCORE_TASKS_TABLE_NAME} task
                     INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
                         ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
@@ -109,7 +113,8 @@ class CCoreTaskRepository:
                             FROM {CCORE_TASK_STATUSES_TABLE_NAME}
                             WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
                         ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
-                        {CCORE_TASK_CREATED_AT_COLUMN}
+                        {CCORE_TASK_CREATED_AT_COLUMN},
+                        {CCORE_TASK_UPDATED_AT_COLUMN}
                     """,
                     (
                         task.task_name,
@@ -131,7 +136,8 @@ class CCoreTaskRepository:
                     UPDATE {CCORE_TASKS_TABLE_NAME}
                     SET
                         {CCORE_TASK_NAME_COLUMN} = %s,
-                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s
+                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
                     WHERE {CCORE_TASK_ID_COLUMN} = %s
                     RETURNING
                         {CCORE_TASK_ID_COLUMN},
@@ -142,7 +148,8 @@ class CCoreTaskRepository:
                             FROM {CCORE_TASK_STATUSES_TABLE_NAME}
                             WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
                         ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
-                        {CCORE_TASK_CREATED_AT_COLUMN}
+                        {CCORE_TASK_CREATED_AT_COLUMN},
+                        {CCORE_TASK_UPDATED_AT_COLUMN}
                     """,
                     (
                         task.task_name,

@@ -18,6 +18,9 @@ from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
 from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_CREATED_SUCCESS_MESSAGE,
     CCORE_TASK_DELETED_SUCCESS_MESSAGE,
+    CCORE_TASK_ERROR_CODE_NOT_FOUND,
+    CCORE_TASK_ERROR_CODE_SERVER,
+    CCORE_TASK_ERROR_CODE_VALIDATION,
     CCORE_TASK_INVALID_ID_MESSAGE,
     CCORE_TASK_INVALID_JSON_BODY_MESSAGE,
     CCORE_TASK_NOT_FOUND_MESSAGE,
@@ -28,19 +31,48 @@ ccore_task_mapper = CCoreTaskMapper()
 ccore_task_request_parser = CCoreTaskRequestParser()
 
 
+def _send_success(handler, status_code: int, payload: dict) -> None:
+    send_json(handler, status_code, {"success": True, **payload})
+
+
+def _send_error(handler, status_code: int, code: str, message: str) -> None:
+    send_json(
+        handler,
+        status_code,
+        {
+            "success": False,
+            "error": {
+                "code": code,
+                "message": message,
+            },
+        },
+    )
+
+
+def _send_validation_error(handler, message: str) -> None:
+    _send_error(handler, 400, CCORE_TASK_ERROR_CODE_VALIDATION, message)
+
+
+def _send_not_found_error(handler) -> None:
+    _send_error(handler, 404, CCORE_TASK_ERROR_CODE_NOT_FOUND, CCORE_TASK_NOT_FOUND_MESSAGE)
+
+
+def _send_server_error(handler, error: Exception) -> None:
+    _send_error(handler, 500, CCORE_TASK_ERROR_CODE_SERVER, str(error))
+
+
 def handle_get_ccore_tasks(handler, ccore_task_service) -> None:
     try:
         tasks = ccore_task_service.get_all_tasks()
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
-    send_json(
+    _send_success(
         handler,
         200,
         {
-            "success": True,
             "tasks": ccore_task_mapper.domains_to_response(tasks),
         },
     )
@@ -51,14 +83,13 @@ def handle_get_ccore_task_statuses(handler, ccore_task_status_service) -> None:
         statuses = ccore_task_status_service.get_all_statuses()
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
-    send_json(
+    _send_success(
         handler,
         200,
         {
-            "success": True,
             "statuses": ccore_task_mapper.statuses_to_response(statuses),
         },
     )
@@ -71,24 +102,21 @@ def handle_get_ccore_task_by_id(handler, ccore_task_service, path: str) -> None:
         task = ccore_task_service.get_task_by_id(task_id)
 
     except ValueError as error:
-        send_json(handler, 400, {"success": False, "error": str(error)})
+        _send_validation_error(handler, str(error))
         return
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
     if task is None:
-        send_json(
-            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
-        )
+        _send_not_found_error(handler)
         return
 
-    send_json(
+    _send_success(
         handler,
         200,
         {
-            "success": True,
             "task": ccore_task_mapper.domain_to_response(task),
         },
     )
@@ -98,11 +126,7 @@ def handle_create_ccore_task(handler, ccore_task_service) -> None:
     request_data = read_json_body(handler)
 
     if request_data is None:
-        send_json(
-            handler,
-            400,
-            {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE},
-        )
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
         return
 
     try:
@@ -111,18 +135,17 @@ def handle_create_ccore_task(handler, ccore_task_service) -> None:
         created_task = ccore_task_service.create_task(task)
 
     except ValueError as error:
-        send_json(handler, 400, {"success": False, "error": str(error)})
+        _send_validation_error(handler, str(error))
         return
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
-    send_json(
+    _send_success(
         handler,
         201,
         {
-            "success": True,
             "message": CCORE_TASK_CREATED_SUCCESS_MESSAGE,
             "task": ccore_task_mapper.domain_to_response(created_task),
         },
@@ -134,11 +157,7 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
     request_data = read_json_body(handler)
 
     if request_data is None:
-        send_json(
-            handler,
-            400,
-            {"success": False, "error": CCORE_TASK_INVALID_JSON_BODY_MESSAGE},
-        )
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
         return
 
     try:
@@ -150,24 +169,21 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
         updated_task = ccore_task_service.update_task(task)
 
     except ValueError as error:
-        send_json(handler, 400, {"success": False, "error": str(error)})
+        _send_validation_error(handler, str(error))
         return
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
     if updated_task is None:
-        send_json(
-            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
-        )
+        _send_not_found_error(handler)
         return
 
-    send_json(
+    _send_success(
         handler,
         200,
         {
-            "success": True,
             "message": CCORE_TASK_UPDATED_SUCCESS_MESSAGE,
             "task": ccore_task_mapper.domain_to_response(updated_task),
         },
@@ -181,24 +197,21 @@ def handle_delete_ccore_task(handler, ccore_task_service, path: str) -> None:
         deleted = ccore_task_service.delete_task(task_id)
 
     except ValueError as error:
-        send_json(handler, 400, {"success": False, "error": str(error)})
+        _send_validation_error(handler, str(error))
         return
 
     except Exception as error:
-        send_json(handler, 500, {"success": False, "error": str(error)})
+        _send_server_error(handler, error)
         return
 
     if not deleted:
-        send_json(
-            handler, 404, {"success": False, "error": CCORE_TASK_NOT_FOUND_MESSAGE}
-        )
+        _send_not_found_error(handler)
         return
 
-    send_json(
+    _send_success(
         handler,
         200,
         {
-            "success": True,
             "message": CCORE_TASK_DELETED_SUCCESS_MESSAGE,
         },
     )
