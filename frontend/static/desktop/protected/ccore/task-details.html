@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Task Details | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/task-details.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-task-details-content">
+
+                    <header class="ccore-task-details-header">
+                        <p class="ccore-task-details-kicker">CCore</p>
+
+                        <h1 id="ccoreTaskDetailsTitle">CCore Task Details</h1>
+
+                        <p>
+                            View and maintain a PostgreSQL-backed CCore task record.
+                        </p>
+                    </header>
+
+                    <div id="ccoreTaskDetailsMessage" class="form-message info hidden"></div>
+
+                    <fieldset class="shared-panel ccore-task-details-card">
+                        <legend id="ccoreTaskDetailsLegend">Task Details</legend>
+
+                        <form id="ccoreTaskDetailsForm" class="ccore-task-details-form">
+                            <input id="ccoreTaskIdInput" type="hidden">
+
+                            <div class="ccore-task-details-grid">
+                                <label class="ccore-task-details-field" for="ccoreTaskNameInput">
+                                    <span>Task Name</span>
+                                    <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
+                                </label>
+
+                                <label class="ccore-task-details-field" for="ccoreTaskStatusInput">
+                                    <span>Status</span>
+                                    <select id="ccoreTaskStatusInput" required disabled>
+                                        <option value="">Loading statuses...</option>
+                                    </select>
+                                </label>
+
+                                <label class="ccore-task-details-field readonly" for="ccoreTaskCreatedAtInput">
+                                    <span>Created</span>
+                                    <input id="ccoreTaskCreatedAtInput" type="text" readonly value="—">
+                                </label>
+
+                                <label class="ccore-task-details-field readonly ccore-task-details-id-field" for="ccoreTaskDisplayIdInput">
+                                    <span>Task ID</span>
+                                    <input id="ccoreTaskDisplayIdInput" type="text" readonly value="New task">
+                                </label>
+                            </div>
+                        </form>
+                    </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-task-details-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action" href="./tasks.html">
+                                Back to Tasks
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <span id="ccoreTaskDetailsMode" class="ccore-task-details-mode">Create mode</span>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <button id="deleteCCoreTaskButton" class="shared-button secondary shared-table-toolbar-action hidden" type="button">
+                                Delete Task
+                            </button>
+
+                            <button id="saveCCoreTaskButton" class="shared-button primary shared-table-toolbar-action" type="submit" form="ccoreTaskDetailsForm">
+                                Create Task
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/task-details.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

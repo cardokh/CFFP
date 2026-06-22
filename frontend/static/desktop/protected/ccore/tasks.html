@@ -65,13 +65,12 @@
                                                 Created
                                             </button>
                                         </th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
 
                                 <tbody id="ccoreTasksTableBody">
                                     <tr>
-                                        <td colspan="4" class="shared-table-empty-state">
+                                        <td colspan="3" class="shared-table-empty-state">
                                             Loading CCore tasks...
                                         </td>
                                     </tr>
@@ -97,41 +96,15 @@
                         <div class="shared-table-toolbar-right">
                             <span id="ccoreTasksCount" class="ccore-tasks-count">0 tasks</span>
 
+                            <a class="shared-button primary shared-table-toolbar-action" href="./task-details.html">
+                                Create Task
+                            </a>
+
                             <button id="refreshCCoreTasksButton" class="shared-button secondary shared-table-toolbar-action" type="button">
                                 Refresh
                             </button>
                         </div>
                     </section>
-
-                    <fieldset class="shared-panel ccore-tasks-card ccore-tasks-form-card">
-                        <legend id="ccoreTaskFormLegend">Create Task</legend>
-
-                        <form id="ccoreTaskForm" class="ccore-task-form">
-                            <input id="ccoreTaskIdInput" type="hidden">
-
-                            <label class="ccore-task-field" for="ccoreTaskNameInput">
-                                <span>Task Name</span>
-                                <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
-                            </label>
-
-                            <label class="ccore-task-field" for="ccoreTaskStatusInput">
-                                <span>Status</span>
-                                <select id="ccoreTaskStatusInput" required disabled>
-                                    <option value="">Loading statuses...</option>
-                                </select>
-                            </label>
-
-                            <div class="ccore-task-form-actions">
-                                <button id="saveCCoreTaskButton" class="shared-button primary" type="submit">
-                                    Create Task
-                                </button>
-
-                                <button id="resetCCoreTaskFormButton" class="shared-button secondary" type="button">
-                                    Reset
-                                </button>
-                            </div>
-                        </form>
-                    </fieldset>
 
                 </div>
 

@@ -1,36 +1,25 @@
 /*
- * CCore PostgreSQL tasks page controller.
+ * CCore PostgreSQL tasks list page controller.
  *
  * Responsibilities:
  * - Load persisted CCore tasks from PostgreSQL through the backend API.
- * - Load task status options from PostgreSQL reference data.
- * - Create, update, and delete rows in the ccore_tasks table.
+ * - Render a searchable, sortable task list.
+ * - Open the task details page when a task row is selected.
  * - Keep frontend endpoint usage centralized through CCORE_API_ENDPOINTS.
- * - Provide compact CRUD UI behavior for the first CCore database slice.
  */
 
 const CCORE_TASKS_LOADING_MESSAGE =
     "Loading CCore tasks...";
 
-const CCORE_TASK_STATUSES_LOADING_MESSAGE =
-    "Loading task statuses...";
-
 const CCORE_TASKS_EMPTY_MESSAGE =
     "No PostgreSQL tasks found.";
-
-const CCORE_TASK_STATUSES_EMPTY_MESSAGE =
-    "No task statuses are configured.";
 
 const CCORE_TASKS_ERROR_MESSAGE =
     "CCore tasks could not be loaded.";
 
-const CCORE_TASK_STATUSES_ERROR_MESSAGE =
-    "CCore task statuses could not be loaded.";
-
-const CCORE_TASKS_TABLE_COLUMN_COUNT = 4;
+const CCORE_TASKS_TABLE_COLUMN_COUNT = 3;
 
 let ccoreTasks = [];
-let ccoreTaskStatuses = [];
 let ccoreTaskSearchTerm = "";
 
 
@@ -41,11 +30,6 @@ function getCCoreTasksTableBody() {
 
 function getCCoreTasksMessage() {
     return document.getElementById("ccoreTasksMessage");
-}
-
-
-function getCCoreTaskStatusInput() {
-    return document.getElementById("ccoreTaskStatusInput");
 }
 
 
@@ -122,25 +106,6 @@ function formatCCoreTaskDate(value) {
 }
 
 
-function getDefaultCCoreTaskStatusCode() {
-    if (ccoreTaskStatuses.length === 0) {
-        return "";
-    }
-
-    return ccoreTaskStatuses[0].code;
-}
-
-
-function getCCoreTaskStatusLabel(statusCode) {
-    const normalizedStatusCode = normalizeCCoreTaskStatus(statusCode);
-    const status = ccoreTaskStatuses.find((candidateStatus) =>
-        normalizeCCoreTaskStatus(candidateStatus.code) === normalizedStatusCode
-    );
-
-    return status ? status.label : normalizedStatusCode;
-}
-
-
 function getCCoreTaskSearchableText(task) {
     return [
         task.taskId,
@@ -168,14 +133,19 @@ function getFilteredCCoreTasks() {
 }
 
 
+function getCCoreTaskDetailsUrl(taskId) {
+    return `./task-details.html?taskId=${encodeURIComponent(taskId)}`;
+}
+
+
 function renderCCoreTaskRow(task) {
     const taskId = task.taskId;
     const taskName = task.taskName;
     const status = normalizeCCoreTaskStatus(task.status);
-    const statusLabel = task.statusLabel || getCCoreTaskStatusLabel(status);
+    const statusLabel = task.statusLabel || status;
 
     return `
-        <tr data-task-id="${escapeCCoreTaskValue(taskId)}">
+        <tr data-task-id="${escapeCCoreTaskValue(taskId)}" tabindex="0" aria-label="Open task ${escapeCCoreTaskValue(taskName)}">
             <td>
                 <div class="ccore-task-name-cell">
                     <span class="ccore-task-name">${escapeCCoreTaskValue(taskName)}</span>
@@ -188,16 +158,6 @@ function renderCCoreTaskRow(task) {
                 </span>
             </td>
             <td>${escapeCCoreTaskValue(formatCCoreTaskDate(task.createdAt))}</td>
-            <td>
-                <div class="ccore-task-row-actions">
-                    <button class="shared-button secondary" type="button" data-action="edit" data-task-id="${escapeCCoreTaskValue(taskId)}">
-                        Edit
-                    </button>
-                    <button class="shared-button secondary" type="button" data-action="delete" data-task-id="${escapeCCoreTaskValue(taskId)}">
-                        Delete
-                    </button>
-                </div>
-            </td>
         </tr>
     `;
 }
@@ -247,54 +207,6 @@ function parseCCoreTasksResponse(responseData) {
 }
 
 
-function parseCCoreTaskStatusesResponse(responseData) {
-    if (!responseData || !Array.isArray(responseData.statuses)) {
-        throw new Error("The backend did not return a CCore task status list.");
-    }
-
-    return responseData.statuses;
-}
-
-
-function renderCCoreTaskStatusOptions() {
-    const statusInput = getCCoreTaskStatusInput();
-
-    if (!statusInput) {
-        return;
-    }
-
-    if (ccoreTaskStatuses.length === 0) {
-        statusInput.innerHTML = `<option value="">${escapeCCoreTaskValue(CCORE_TASK_STATUSES_EMPTY_MESSAGE)}</option>`;
-        statusInput.disabled = true;
-        return;
-    }
-
-    statusInput.innerHTML = ccoreTaskStatuses
-        .map((status) => `
-            <option value="${escapeCCoreTaskValue(status.code)}">
-                ${escapeCCoreTaskValue(status.label)}
-            </option>
-        `)
-        .join("");
-
-    statusInput.disabled = false;
-}
-
-
-async function loadCCoreTaskStatuses() {
-    const statusInput = getCCoreTaskStatusInput();
-
-    if (statusInput) {
-        statusInput.innerHTML = `<option value="">${escapeCCoreTaskValue(CCORE_TASK_STATUSES_LOADING_MESSAGE)}</option>`;
-        statusInput.disabled = true;
-    }
-
-    const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.statuses);
-    ccoreTaskStatuses = parseCCoreTaskStatusesResponse(responseData);
-    renderCCoreTaskStatusOptions();
-}
-
-
 async function loadCCoreTasks() {
     hideCCoreTasksMessage();
     renderCCoreTasksPlaceholder(CCORE_TASKS_LOADING_MESSAGE);
@@ -319,108 +231,16 @@ async function loadCCoreTasks() {
 }
 
 
-function getTaskFormData() {
-    return {
-        taskId: document.getElementById("ccoreTaskIdInput").value,
-        taskName: document.getElementById("ccoreTaskNameInput").value.trim(),
-        status: getCCoreTaskStatusInput().value
-    };
-}
-
-
-function resetTaskForm() {
-    document.getElementById("ccoreTaskIdInput").value = "";
-    document.getElementById("ccoreTaskNameInput").value = "";
-    getCCoreTaskStatusInput().value = getDefaultCCoreTaskStatusCode();
-    document.getElementById("ccoreTaskFormLegend").textContent = "Create Task";
-    document.getElementById("saveCCoreTaskButton").textContent = "Create Task";
-}
-
-
-function editTask(taskId) {
-    const task = ccoreTasks.find((candidateTask) =>
-        String(candidateTask.taskId) === String(taskId)
-    );
-
-    if (!task) {
-        showCCoreTasksMessage("Task could not be found in the current list.", "error");
+function openCCoreTaskDetails(taskId) {
+    if (!taskId) {
         return;
     }
 
-    document.getElementById("ccoreTaskIdInput").value = task.taskId;
-    document.getElementById("ccoreTaskNameInput").value = task.taskName || "";
-    getCCoreTaskStatusInput().value = normalizeCCoreTaskStatus(task.status);
-    document.getElementById("ccoreTaskFormLegend").textContent = "Edit Task";
-    document.getElementById("saveCCoreTaskButton").textContent = "Update Task";
+    window.location.href = getCCoreTaskDetailsUrl(taskId);
 }
 
 
-async function saveTask(event) {
-    event.preventDefault();
-    hideCCoreTasksMessage();
-
-    const formData = getTaskFormData();
-
-    if (!formData.taskName) {
-        showCCoreTasksMessage("Task name is required.", "error");
-        return;
-    }
-
-    if (!formData.status) {
-        showCCoreTasksMessage("Task status is required.", "error");
-        return;
-    }
-
-    try {
-        if (formData.taskId) {
-            await putJson(
-                CCORE_API_ENDPOINTS.tasks.byId(formData.taskId),
-                {
-                    taskName: formData.taskName,
-                    status: formData.status
-                }
-            );
-
-            showCCoreTasksMessage("Task updated successfully.", "success");
-        } else {
-            await postJson(
-                CCORE_API_ENDPOINTS.tasks.create,
-                {
-                    taskName: formData.taskName,
-                    status: formData.status
-                }
-            );
-
-            showCCoreTasksMessage("Task created successfully.", "success");
-        }
-
-        resetTaskForm();
-        await loadCCoreTasks();
-
-    } catch (error) {
-        showCCoreTasksMessage(error.message || "Task could not be saved.", "error");
-    }
-}
-
-
-async function deleteTask(taskId) {
-    if (!window.confirm("Delete this CCore task?")) {
-        return;
-    }
-
-    try {
-        await deleteJson(CCORE_API_ENDPOINTS.tasks.byId(taskId));
-        showCCoreTasksMessage("Task deleted successfully.", "success");
-        resetTaskForm();
-        await loadCCoreTasks();
-
-    } catch (error) {
-        showCCoreTasksMessage(error.message || "Task could not be deleted.", "error");
-    }
-}
-
-
-function setupTaskTableActions() {
+function setupCCoreTaskRowNavigation() {
     const tableBody = getCCoreTasksTableBody();
 
     if (!tableBody) {
@@ -428,23 +248,28 @@ function setupTaskTableActions() {
     }
 
     tableBody.addEventListener("click", (event) => {
-        const actionButton = event.target.closest("button[data-action]");
+        const taskRow = event.target.closest("tr[data-task-id]");
 
-        if (!actionButton) {
+        if (!taskRow) {
             return;
         }
 
-        const taskId = actionButton.dataset.taskId;
-        const action = actionButton.dataset.action;
+        openCCoreTaskDetails(taskRow.dataset.taskId);
+    });
 
-        if (action === "edit") {
-            editTask(taskId);
+    tableBody.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
             return;
         }
 
-        if (action === "delete") {
-            deleteTask(taskId);
+        const taskRow = event.target.closest("tr[data-task-id]");
+
+        if (!taskRow) {
+            return;
         }
+
+        event.preventDefault();
+        openCCoreTaskDetails(taskRow.dataset.taskId);
     });
 }
 
@@ -486,23 +311,13 @@ function setupCCoreTaskSearch() {
 
 
 async function setupCCoreTasksPage() {
-    document.getElementById("ccoreTaskForm").addEventListener("submit", saveTask);
-    document.getElementById("resetCCoreTaskFormButton").addEventListener("click", resetTaskForm);
     document.getElementById("refreshCCoreTasksButton").addEventListener("click", loadCCoreTasks);
 
-    setupTaskTableActions();
+    setupCCoreTaskRowNavigation();
     setupCCoreTaskSearch();
     setupCCoreTaskSorting();
 
-    try {
-        await loadCCoreTaskStatuses();
-        resetTaskForm();
-        await loadCCoreTasks();
-    } catch (error) {
-        console.error("Failed to initialize CCore tasks page:", error);
-        renderCCoreTasksPlaceholder(CCORE_TASKS_ERROR_MESSAGE);
-        showCCoreTasksMessage(error.message || CCORE_TASK_STATUSES_ERROR_MESSAGE, "error");
-    }
+    await loadCCoreTasks();
 }
 
 

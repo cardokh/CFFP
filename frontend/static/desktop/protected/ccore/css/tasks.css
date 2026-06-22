@@ -65,8 +65,12 @@
     min-height: 0;
 }
 
-.ccore-tasks-table td:last-child {
-    white-space: nowrap;
+.ccore-tasks-table tbody tr[data-task-id] {
+    cursor: pointer;
+}
+
+.ccore-tasks-table tbody tr[data-task-id]:hover {
+    background: rgba(119, 183, 255, 0.08);
 }
 
 .ccore-task-name-cell {
@@ -97,17 +101,6 @@
     letter-spacing: 0.05em;
 }
 
-.ccore-task-row-actions {
-    display: flex;
-    gap: 0.4rem;
-    justify-content: flex-end;
-}
-
-.ccore-task-row-actions .shared-button {
-    padding: 0.35rem 0.55rem;
-    font-size: 0.75rem;
-}
-
 .ccore-tasks-toolbar {
     flex: 0 0 auto;
 }
@@ -116,40 +109,4 @@
     color: #9bb0c8;
     font-size: 0.82rem;
     font-weight: 700;
-}
-
-.ccore-tasks-form-card {
-    max-width: 420px;
-}
-
-.ccore-task-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.ccore-task-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-
-    color: #d9e7f7;
-    font-size: 0.82rem;
-    font-weight: 700;
-}
-
-.ccore-task-field input,
-.ccore-task-field select {
-    border: 1px solid rgba(119, 183, 255, 0.28);
-    border-radius: 10px;
-    background: rgba(6, 18, 33, 0.88);
-    color: #ffffff;
-    padding: 0.55rem 0.65rem;
-    font-size: 0.9rem;
-}
-
-.ccore-task-form-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
 }
