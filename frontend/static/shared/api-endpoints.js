@@ -122,6 +122,7 @@ const CCORE_API_ENDPOINTS = {
     tasks: {
         list: "/api/ccore/tasks",
         create: "/api/ccore/tasks",
+        statuses: "/api/ccore/task-statuses",
 
         byId(taskId) {
             return `/api/ccore/tasks/${encodeURIComponent(taskId)}`;

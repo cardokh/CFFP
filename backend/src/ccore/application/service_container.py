@@ -17,6 +17,7 @@ from backend.src.ccore.application.service_factory import (
     build_automation_pipeline_service,
     build_automation_task_service,
     build_ccore_task_service,
+    build_ccore_task_status_service,
     build_ai_speech_validator,
     build_learning_item_service,
     build_lesson_category_service,
@@ -57,4 +58,5 @@ def build_service_container() -> SimpleNamespace:
         automation_task_service=build_automation_task_service(),
         automation_pipeline_service=build_automation_pipeline_service(),
         ccore_task_service=build_ccore_task_service(),
+        ccore_task_status_service=build_ccore_task_status_service(),
     )

@@ -9,6 +9,18 @@ Responsibilities:
 
 from backend.src.ccore.infrastructure.postgres_database import PostgresDatabaseManager
 from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_constants import (
+    CCORE_TASK_CREATED_AT_COLUMN,
+    CCORE_TASK_ID_COLUMN,
+    CCORE_TASK_NAME_COLUMN,
+    CCORE_TASK_STATUS_CODE_COLUMN,
+    CCORE_TASK_STATUS_LABEL_COLUMN,
+    CCORE_TASK_STATUS_SORT_ORDER_COLUMN,
+    CCORE_TASK_STATUS_CODE_COLUMN_ALIAS,
+    CCORE_TASK_STATUSES_TABLE_NAME,
+    CCORE_TASKS_TABLE_NAME,
+)
+from backend.src.ccore.tasks.task_status import CCoreTaskStatus
 
 
 class CCoreTaskRepository:
@@ -19,22 +31,28 @@ class CCoreTaskRepository:
         return CCoreTask(
             task_id=str(row[0]),
             task_name=row[1],
-            status=row[2],
-            created_at=row[3].isoformat() if row[3] is not None else None,
+            status_code=row[2],
+            status_label=row[3],
+            created_at=row[4].isoformat() if row[4] is not None else None,
         )
 
     def find_all_tasks(self) -> list[CCoreTask]:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("""
+                cursor.execute(
+                    f"""
                     SELECT
-                        task_id,
-                        task_name,
-                        status,
-                        created_at
-                    FROM ccore_tasks
-                    ORDER BY created_at DESC, task_name ASC
-                    """)
+                        task.{CCORE_TASK_ID_COLUMN},
+                        task.{CCORE_TASK_NAME_COLUMN},
+                        task.{CCORE_TASK_STATUS_CODE_COLUMN},
+                        status.{CCORE_TASK_STATUS_LABEL_COLUMN},
+                        task.{CCORE_TASK_CREATED_AT_COLUMN}
+                    FROM {CCORE_TASKS_TABLE_NAME} task
+                    INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
+                        ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
+                    ORDER BY task.{CCORE_TASK_CREATED_AT_COLUMN} DESC, task.{CCORE_TASK_NAME_COLUMN} ASC
+                    """
+                )
 
                 rows = cursor.fetchall()
 
@@ -44,14 +62,17 @@ class CCoreTaskRepository:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """
+                    f"""
                     SELECT
-                        task_id,
-                        task_name,
-                        status,
-                        created_at
-                    FROM ccore_tasks
-                    WHERE task_id = %s
+                        task.{CCORE_TASK_ID_COLUMN},
+                        task.{CCORE_TASK_NAME_COLUMN},
+                        task.{CCORE_TASK_STATUS_CODE_COLUMN},
+                        status.{CCORE_TASK_STATUS_LABEL_COLUMN},
+                        task.{CCORE_TASK_CREATED_AT_COLUMN}
+                    FROM {CCORE_TASKS_TABLE_NAME} task
+                    INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
+                        ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
+                    WHERE task.{CCORE_TASK_ID_COLUMN} = %s
                     """,
                     (task_id,),
                 )
@@ -67,11 +88,11 @@ class CCoreTaskRepository:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """
-                    INSERT INTO ccore_tasks (
-                        task_id,
-                        task_name,
-                        status
+                    f"""
+                    INSERT INTO {CCORE_TASKS_TABLE_NAME} (
+                        {CCORE_TASK_ID_COLUMN},
+                        {CCORE_TASK_NAME_COLUMN},
+                        {CCORE_TASK_STATUS_CODE_COLUMN}
                     )
                     VALUES (
                         gen_random_uuid(),
@@ -79,14 +100,19 @@ class CCoreTaskRepository:
                         %s
                     )
                     RETURNING
-                        task_id,
-                        task_name,
-                        status,
-                        created_at
+                        {CCORE_TASK_ID_COLUMN},
+                        {CCORE_TASK_NAME_COLUMN},
+                        {CCORE_TASK_STATUS_CODE_COLUMN},
+                        (
+                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
+                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
+                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
+                        {CCORE_TASK_CREATED_AT_COLUMN}
                     """,
                     (
                         task.task_name,
-                        task.status,
+                        task.status_code,
                     ),
                 )
 
@@ -100,21 +126,26 @@ class CCoreTaskRepository:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """
-                    UPDATE ccore_tasks
+                    f"""
+                    UPDATE {CCORE_TASKS_TABLE_NAME}
                     SET
-                        task_name = %s,
-                        status = %s
-                    WHERE task_id = %s
+                        {CCORE_TASK_NAME_COLUMN} = %s,
+                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
                     RETURNING
-                        task_id,
-                        task_name,
-                        status,
-                        created_at
+                        {CCORE_TASK_ID_COLUMN},
+                        {CCORE_TASK_NAME_COLUMN},
+                        {CCORE_TASK_STATUS_CODE_COLUMN},
+                        (
+                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
+                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
+                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
+                        {CCORE_TASK_CREATED_AT_COLUMN}
                     """,
                     (
                         task.task_name,
-                        task.status,
+                        task.status_code,
                         task.task_id,
                     ),
                 )
@@ -132,9 +163,9 @@ class CCoreTaskRepository:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """
-                    DELETE FROM ccore_tasks
-                    WHERE task_id = %s
+                    f"""
+                    DELETE FROM {CCORE_TASKS_TABLE_NAME}
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
                     """,
                     (task_id,),
                 )
@@ -144,3 +175,47 @@ class CCoreTaskRepository:
             connection.commit()
 
         return deleted_count > 0
+
+
+class CCoreTaskStatusRepository:
+    def __init__(self, db_manager: PostgresDatabaseManager):
+        self.db_manager = db_manager
+
+    def _map_row_to_status(self, row) -> CCoreTaskStatus:
+        return CCoreTaskStatus(
+            status_code=row[0],
+            status_label=row[1],
+            sort_order=row[2],
+        )
+
+    def find_all_statuses(self) -> list[CCoreTaskStatus]:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    SELECT
+                        {CCORE_TASK_STATUS_CODE_COLUMN},
+                        {CCORE_TASK_STATUS_LABEL_COLUMN},
+                        {CCORE_TASK_STATUS_SORT_ORDER_COLUMN}
+                    FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                    ORDER BY {CCORE_TASK_STATUS_SORT_ORDER_COLUMN} ASC, {CCORE_TASK_STATUS_LABEL_COLUMN} ASC
+                    """
+                )
+
+                rows = cursor.fetchall()
+
+        return [self._map_row_to_status(row) for row in rows]
+
+    def status_exists(self, status_code: str) -> bool:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    SELECT 1
+                    FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                    WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = %s
+                    """,
+                    (status_code,),
+                )
+
+                return cursor.fetchone() is not None

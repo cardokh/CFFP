@@ -31,6 +31,7 @@ from src.api.api_paths import (
     API_PATH_AUTOMATION_TASKS_PREFIX,
     API_PATH_CCORE_TASKS,
     API_PATH_CCORE_TASKS_PREFIX,
+    API_PATH_CCORE_TASK_STATUSES,
     API_PATH_AUTH_FORGOT_PASSWORD,
     API_PATH_AUTH_LOGIN,
     API_PATH_AUTH_REGISTER,
@@ -71,6 +72,7 @@ from backend.src.ccore.tasks.task_routes import (
     handle_create_ccore_task,
     handle_delete_ccore_task,
     handle_get_ccore_task_by_id,
+    handle_get_ccore_task_statuses,
     handle_get_ccore_tasks,
     handle_update_ccore_task,
 )
@@ -133,6 +135,10 @@ def build_core_route_registry(
                 API_PATH_CCORE_TASKS: lambda: handle_get_ccore_tasks(
                     handler,
                     services.ccore_task_service,
+                ),
+                API_PATH_CCORE_TASK_STATUSES: lambda: handle_get_ccore_task_statuses(
+                    handler,
+                    services.ccore_task_status_service,
                 ),
             },
             "prefix": {

@@ -100,7 +100,7 @@ class SQLiteCreateSchemaScript(BaseScript):
 
         self._delete_existing_database()
 
-        from src.core.infrastructure.database import DatabaseManager
+        from src.ccore.infrastructure.database import DatabaseManager
 
         db = DatabaseManager(str(self.database_path))
         conn = db.get_connection()

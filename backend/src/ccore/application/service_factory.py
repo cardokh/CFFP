@@ -36,8 +36,14 @@ from src.core.automation.automation_task_validation import (
     AutomationTaskValidationService,
 )
 
-from backend.src.ccore.tasks.task_repository import CCoreTaskRepository
-from backend.src.ccore.tasks.task_service import CCoreTaskService
+from backend.src.ccore.tasks.task_repository import (
+    CCoreTaskRepository,
+    CCoreTaskStatusRepository,
+)
+from backend.src.ccore.tasks.task_service import (
+    CCoreTaskService,
+    CCoreTaskStatusService,
+)
 from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
@@ -133,15 +139,30 @@ def build_postgres_database_manager():
     return PostgresDatabaseManager()
 
 
-def build_ccore_task_service():
+def build_ccore_task_repositories():
     postgres_database_manager = build_postgres_database_manager()
 
-    task_repository = CCoreTaskRepository(postgres_database_manager)
-    task_validator = CCoreTaskValidator()
+    return (
+        CCoreTaskRepository(postgres_database_manager),
+        CCoreTaskStatusRepository(postgres_database_manager),
+    )
+
+
+def build_ccore_task_service():
+    task_repository, status_repository = build_ccore_task_repositories()
+    task_validator = CCoreTaskValidator(status_repository=status_repository)
 
     return CCoreTaskService(
         task_repository=task_repository,
         task_validator=task_validator,
+    )
+
+
+def build_ccore_task_status_service():
+    _, status_repository = build_ccore_task_repositories()
+
+    return CCoreTaskStatusService(
+        status_repository=status_repository,
     )
 
 

@@ -3,6 +3,7 @@
  *
  * Responsibilities:
  * - Load persisted CCore tasks from PostgreSQL through the backend API.
+ * - Load task status options from PostgreSQL reference data.
  * - Create, update, and delete rows in the ccore_tasks table.
  * - Keep frontend endpoint usage centralized through CCORE_API_ENDPOINTS.
  * - Provide compact CRUD UI behavior for the first CCore database slice.
@@ -11,15 +12,25 @@
 const CCORE_TASKS_LOADING_MESSAGE =
     "Loading CCore tasks...";
 
+const CCORE_TASK_STATUSES_LOADING_MESSAGE =
+    "Loading task statuses...";
+
 const CCORE_TASKS_EMPTY_MESSAGE =
     "No PostgreSQL tasks found.";
+
+const CCORE_TASK_STATUSES_EMPTY_MESSAGE =
+    "No task statuses are configured.";
 
 const CCORE_TASKS_ERROR_MESSAGE =
     "CCore tasks could not be loaded.";
 
+const CCORE_TASK_STATUSES_ERROR_MESSAGE =
+    "CCore task statuses could not be loaded.";
+
 const CCORE_TASKS_TABLE_COLUMN_COUNT = 4;
 
 let ccoreTasks = [];
+let ccoreTaskStatuses = [];
 let ccoreTaskSearchTerm = "";
 
 
@@ -30,6 +41,11 @@ function getCCoreTasksTableBody() {
 
 function getCCoreTasksMessage() {
     return document.getElementById("ccoreTasksMessage");
+}
+
+
+function getCCoreTaskStatusInput() {
+    return document.getElementById("ccoreTaskStatusInput");
 }
 
 
@@ -85,7 +101,7 @@ function renderCCoreTasksPlaceholder(message) {
 
 
 function normalizeCCoreTaskStatus(status) {
-    return String(status || "PENDING")
+    return String(status || "")
         .trim()
         .toUpperCase();
 }
@@ -106,6 +122,25 @@ function formatCCoreTaskDate(value) {
 }
 
 
+function getDefaultCCoreTaskStatusCode() {
+    if (ccoreTaskStatuses.length === 0) {
+        return "";
+    }
+
+    return ccoreTaskStatuses[0].code;
+}
+
+
+function getCCoreTaskStatusLabel(statusCode) {
+    const normalizedStatusCode = normalizeCCoreTaskStatus(statusCode);
+    const status = ccoreTaskStatuses.find((candidateStatus) =>
+        normalizeCCoreTaskStatus(candidateStatus.code) === normalizedStatusCode
+    );
+
+    return status ? status.label : normalizedStatusCode;
+}
+
+
 function getCCoreTaskSearchableText(task) {
     return [
         task.id,
@@ -113,6 +148,7 @@ function getCCoreTaskSearchableText(task) {
         task.name,
         task.taskName,
         task.status,
+        task.statusLabel,
         task.createdAt
     ]
         .filter(Boolean)
@@ -138,6 +174,7 @@ function renderCCoreTaskRow(task) {
     const taskId = task.taskId || task.id;
     const taskName = task.taskName || task.name;
     const status = normalizeCCoreTaskStatus(task.status);
+    const statusLabel = task.statusLabel || getCCoreTaskStatusLabel(status);
 
     return `
         <tr data-task-id="${escapeCCoreTaskValue(taskId)}">
@@ -148,7 +185,9 @@ function renderCCoreTaskRow(task) {
                 </div>
             </td>
             <td>
-                <span class="ccore-task-status">${escapeCCoreTaskValue(status)}</span>
+                <span class="ccore-task-status" title="${escapeCCoreTaskValue(status)}">
+                    ${escapeCCoreTaskValue(statusLabel)}
+                </span>
             </td>
             <td>${escapeCCoreTaskValue(formatCCoreTaskDate(task.createdAt))}</td>
             <td>
@@ -210,6 +249,54 @@ function parseCCoreTasksResponse(responseData) {
 }
 
 
+function parseCCoreTaskStatusesResponse(responseData) {
+    if (!responseData || !Array.isArray(responseData.statuses)) {
+        throw new Error("The backend did not return a CCore task status list.");
+    }
+
+    return responseData.statuses;
+}
+
+
+function renderCCoreTaskStatusOptions() {
+    const statusInput = getCCoreTaskStatusInput();
+
+    if (!statusInput) {
+        return;
+    }
+
+    if (ccoreTaskStatuses.length === 0) {
+        statusInput.innerHTML = `<option value="">${escapeCCoreTaskValue(CCORE_TASK_STATUSES_EMPTY_MESSAGE)}</option>`;
+        statusInput.disabled = true;
+        return;
+    }
+
+    statusInput.innerHTML = ccoreTaskStatuses
+        .map((status) => `
+            <option value="${escapeCCoreTaskValue(status.code)}">
+                ${escapeCCoreTaskValue(status.label)}
+            </option>
+        `)
+        .join("");
+
+    statusInput.disabled = false;
+}
+
+
+async function loadCCoreTaskStatuses() {
+    const statusInput = getCCoreTaskStatusInput();
+
+    if (statusInput) {
+        statusInput.innerHTML = `<option value="">${escapeCCoreTaskValue(CCORE_TASK_STATUSES_LOADING_MESSAGE)}</option>`;
+        statusInput.disabled = true;
+    }
+
+    const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.statuses);
+    ccoreTaskStatuses = parseCCoreTaskStatusesResponse(responseData);
+    renderCCoreTaskStatusOptions();
+}
+
+
 async function loadCCoreTasks() {
     hideCCoreTasksMessage();
     renderCCoreTasksPlaceholder(CCORE_TASKS_LOADING_MESSAGE);
@@ -238,7 +325,7 @@ function getTaskFormData() {
     return {
         taskId: document.getElementById("ccoreTaskIdInput").value,
         taskName: document.getElementById("ccoreTaskNameInput").value.trim(),
-        status: document.getElementById("ccoreTaskStatusInput").value
+        status: getCCoreTaskStatusInput().value
     };
 }
 
@@ -246,7 +333,7 @@ function getTaskFormData() {
 function resetTaskForm() {
     document.getElementById("ccoreTaskIdInput").value = "";
     document.getElementById("ccoreTaskNameInput").value = "";
-    document.getElementById("ccoreTaskStatusInput").value = "PENDING";
+    getCCoreTaskStatusInput().value = getDefaultCCoreTaskStatusCode();
     document.getElementById("ccoreTaskFormLegend").textContent = "Create Task";
     document.getElementById("saveCCoreTaskButton").textContent = "Create Task";
 }
@@ -264,7 +351,7 @@ function editTask(taskId) {
 
     document.getElementById("ccoreTaskIdInput").value = task.taskId || task.id;
     document.getElementById("ccoreTaskNameInput").value = task.taskName || task.name || "";
-    document.getElementById("ccoreTaskStatusInput").value = normalizeCCoreTaskStatus(task.status);
+    getCCoreTaskStatusInput().value = normalizeCCoreTaskStatus(task.status);
     document.getElementById("ccoreTaskFormLegend").textContent = "Edit Task";
     document.getElementById("saveCCoreTaskButton").textContent = "Update Task";
 }
@@ -278,6 +365,11 @@ async function saveTask(event) {
 
     if (!formData.taskName) {
         showCCoreTasksMessage("Task name is required.", "error");
+        return;
+    }
+
+    if (!formData.status) {
+        showCCoreTasksMessage("Task status is required.", "error");
         return;
     }
 
@@ -384,14 +476,23 @@ function setupCCoreTaskSearch() {
 }
 
 
-function setupCCoreTasksPage() {
+async function setupCCoreTasksPage() {
     document.getElementById("ccoreTaskForm").addEventListener("submit", saveTask);
     document.getElementById("resetCCoreTaskFormButton").addEventListener("click", resetTaskForm);
     document.getElementById("refreshCCoreTasksButton").addEventListener("click", loadCCoreTasks);
 
     setupTaskTableActions();
     setupCCoreTaskSearch();
-    loadCCoreTasks();
+
+    try {
+        await loadCCoreTaskStatuses();
+        resetTaskForm();
+        await loadCCoreTasks();
+    } catch (error) {
+        console.error("Failed to initialize CCore tasks page:", error);
+        renderCCoreTasksPlaceholder(CCORE_TASKS_ERROR_MESSAGE);
+        showCCoreTasksMessage(error.message || CCORE_TASK_STATUSES_ERROR_MESSAGE, "error");
+    }
 }
 
 

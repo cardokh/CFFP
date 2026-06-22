@@ -12,11 +12,11 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class CreateCCoreTaskRequest:
     task_name: str
-    status: str | None = None
+    status_code: str | None = None
 
 
 @dataclass(frozen=True)
 class UpdateCCoreTaskRequest:
     task_id: str
     task_name: str
-    status: str
+    status_code: str

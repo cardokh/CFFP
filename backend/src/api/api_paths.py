@@ -31,3 +31,4 @@ API_PATH_AUTOMATION_PIPELINES_PREFIX = "/api/automation/pipelines/"
 
 API_PATH_CCORE_TASKS = "/api/ccore/tasks"
 API_PATH_CCORE_TASKS_PREFIX = "/api/ccore/tasks/"
+API_PATH_CCORE_TASK_STATUSES = "/api/ccore/task-statuses"

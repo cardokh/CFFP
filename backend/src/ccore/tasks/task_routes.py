@@ -3,6 +3,7 @@ CCore task API routes.
 
 Responsibilities:
 - Handle CCore task CRUD HTTP requests.
+- Handle CCore task reference-data requests.
 - Convert JSON requests into task request contracts.
 - Delegate business use cases to CCoreTaskService.
 - Return consistent JSON responses.
@@ -43,6 +44,24 @@ def handle_get_ccore_tasks(handler, ccore_task_service) -> None:
         {
             "success": True,
             "tasks": ccore_task_mapper.domains_to_response(tasks),
+        },
+    )
+
+
+def handle_get_ccore_task_statuses(handler, ccore_task_status_service) -> None:
+    try:
+        statuses = ccore_task_status_service.get_all_statuses()
+
+    except Exception as error:
+        send_json(handler, 500, {"success": False, "error": str(error)})
+        return
+
+    send_json(
+        handler,
+        200,
+        {
+            "success": True,
+            "statuses": ccore_task_mapper.statuses_to_response(statuses),
         },
     )
 
@@ -91,7 +110,7 @@ def handle_create_ccore_task(handler, ccore_task_service) -> None:
     try:
         create_request = CreateCCoreTaskRequest(
             task_name=request_data.get("taskName", request_data.get("name", "")),
-            status=request_data.get("status", "PENDING"),
+            status_code=request_data.get("status"),
         )
 
         task = ccore_task_mapper.create_request_to_domain(create_request)
@@ -132,7 +151,7 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
         update_request = UpdateCCoreTaskRequest(
             task_id=task_id,
             task_name=request_data.get("taskName", request_data.get("name", "")),
-            status=request_data.get("status", ""),
+            status_code=request_data.get("status", ""),
         )
 
         task = ccore_task_mapper.update_request_to_domain(update_request)

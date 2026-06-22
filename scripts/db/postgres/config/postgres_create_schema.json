@@ -4,6 +4,25 @@
     "databaseConfigPath": "scripts/db/postgres/config/database.json",
     "entitiesConfigPath": "scripts/db/postgres/config/entities.json",
     "tables": {
+        "ccore_task_statuses": {
+            "columns": [
+                {
+                    "name": "status_code",
+                    "type": "VARCHAR(50)",
+                    "primaryKey": true
+                },
+                {
+                    "name": "status_label",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ]
+        },
         "ccore_tasks": {
             "columns": [
                 {
@@ -17,7 +36,7 @@
                     "nullable": false
                 },
                 {
-                    "name": "status",
+                    "name": "status_code",
                     "type": "VARCHAR(50)",
                     "nullable": false,
                     "default": "'PENDING'"
@@ -27,6 +46,21 @@
                     "type": "TIMESTAMP WITH TIME ZONE",
                     "nullable": false,
                     "default": "CURRENT_TIMESTAMP"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "status_code"
+                    ],
+                    "references": {
+                        "table": "ccore_task_statuses",
+                        "columns": [
+                            "status_code"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
                 }
             ]
         },

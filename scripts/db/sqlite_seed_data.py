@@ -83,7 +83,7 @@ class SQLiteSeedDataScript(BaseScript):
         if self.database_config.get("databaseType") != "sqlite":
             raise ValueError("sqlite_seed_data.py requires databaseType 'sqlite'.")
 
-        from src.core.infrastructure.database import DatabaseManager
+        from src.ccore.infrastructure.database import DatabaseManager
 
         db = DatabaseManager(str(self.database_path))
         conn = db.get_connection()
