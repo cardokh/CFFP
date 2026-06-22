@@ -226,7 +226,6 @@ function renderCCoreTaskRow(task) {
             <td>
                 <div class="ccore-task-name-cell">
                     <span class="ccore-task-name">${escapeCCoreTaskValue(taskName)}</span>
-                    <span class="ccore-task-id">${escapeCCoreTaskValue(taskId)}</span>
                 </div>
             </td>
             <td>
