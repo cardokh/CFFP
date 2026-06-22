@@ -29,12 +29,11 @@
                 <div class="ccore-task-details-content">
 
                     <header class="ccore-task-details-header">
-                        <p class="ccore-task-details-kicker">CCore</p>
 
                         <h1 id="ccoreTaskDetailsTitle">CCore Task Details</h1>
 
                         <p>
-                            View and maintain a PostgreSQL-backed CCore task record.
+                            View/Update and Create a PostgreSQL-backed CCore task record.
                         </p>
                     </header>
 
@@ -62,7 +61,8 @@
                                     <input id="ccoreTaskCreatedAtInput" type="text" readonly value="—">
                                 </label>
 
-                                <label class="ccore-task-details-field readonly ccore-task-details-id-field" for="ccoreTaskDisplayIdInput">
+                                <label class="ccore-task-details-field readonly ccore-task-details-id-field"
+                                    for="ccoreTaskDisplayIdInput">
                                     <span>Task ID</span>
                                     <input id="ccoreTaskDisplayIdInput" type="text" readonly value="New task">
                                 </label>
@@ -84,11 +84,13 @@
                         </div>
 
                         <div class="shared-table-toolbar-right">
-                            <button id="deleteCCoreTaskButton" class="shared-button secondary shared-table-toolbar-action hidden" type="button">
+                            <button id="deleteCCoreTaskButton"
+                                class="shared-button secondary shared-table-toolbar-action hidden" type="button">
                                 Delete Task
                             </button>
 
-                            <button id="saveCCoreTaskButton" class="shared-button primary shared-table-toolbar-action" type="submit" form="ccoreTaskDetailsForm">
+                            <button id="saveCCoreTaskButton" class="shared-button primary shared-table-toolbar-action"
+                                type="submit" form="ccoreTaskDetailsForm">
                                 Create Task
                             </button>
                         </div>
