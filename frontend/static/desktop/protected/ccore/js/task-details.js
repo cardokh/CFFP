@@ -22,6 +22,7 @@ const CCORE_TASK_DETAILS_ERROR_MESSAGE =
 
 let ccoreTaskStatuses = [];
 let currentCCoreTaskId = "";
+let originalCCoreTaskFormData = null;
 
 
 function getCCoreTaskDetailsMessage() {
@@ -51,7 +52,7 @@ function showCCoreTaskDetailsMessage(message, type = "info") {
         return;
     }
 
-    messageElement.className = `form-message ${type}`;
+    messageElement.className = `form-message ${type} ccore-task-details-message`;
     messageElement.textContent = message;
 }
 
@@ -63,7 +64,7 @@ function hideCCoreTaskDetailsMessage() {
         return;
     }
 
-    messageElement.className = "form-message info hidden";
+    messageElement.className = "form-message info hidden ccore-task-details-message";
     messageElement.textContent = "";
 }
 
@@ -87,6 +88,33 @@ function formatCCoreTaskDate(value) {
     }
 
     return date.toLocaleString();
+}
+
+
+function normalizeCCoreTaskFormSnapshot(formData) {
+    return {
+        taskName: String(formData.taskName || "").trim(),
+        status: normalizeCCoreTaskStatus(formData.status)
+    };
+}
+
+
+function setOriginalCCoreTaskFormData(formData) {
+    originalCCoreTaskFormData = normalizeCCoreTaskFormSnapshot(formData);
+}
+
+
+function hasCCoreTaskFormChanged(formData) {
+    if (!originalCCoreTaskFormData) {
+        return true;
+    }
+
+    const currentFormData = normalizeCCoreTaskFormSnapshot(formData);
+
+    return (
+        currentFormData.taskName !== originalCCoreTaskFormData.taskName ||
+        currentFormData.status !== originalCCoreTaskFormData.status
+    );
 }
 
 
@@ -189,6 +217,7 @@ function populateCCoreTaskDetails(task) {
     document.getElementById("ccoreTaskDisplayIdInput").value = currentCCoreTaskId || "New task";
 
     setCCoreTaskDetailsMode(currentCCoreTaskId ? "edit" : "create");
+    setOriginalCCoreTaskFormData(getCCoreTaskFormData());
 }
 
 
@@ -202,6 +231,7 @@ function resetCCoreTaskDetailsForCreate() {
     document.getElementById("ccoreTaskDisplayIdInput").value = "New task";
 
     setCCoreTaskDetailsMode("create");
+    setOriginalCCoreTaskFormData(getCCoreTaskFormData());
 }
 
 
@@ -242,6 +272,11 @@ async function saveCCoreTask(event) {
 
     if (!formData.status) {
         showCCoreTaskDetailsMessage("Task status is required.", "error");
+        return;
+    }
+
+    if (formData.taskId && !hasCCoreTaskFormChanged(formData)) {
+        showCCoreTaskDetailsMessage("No changes to update.", "info");
         return;
     }
 
