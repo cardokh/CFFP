@@ -57,47 +57,8 @@
     color: #b9dafc;
 }
 
-.ccore-tasks-layout {
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 0.85rem;
-    min-height: 0;
-}
-
 .ccore-tasks-card {
     min-width: 0;
-}
-
-.ccore-task-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.ccore-task-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-
-    color: #d9e7f7;
-    font-size: 0.82rem;
-    font-weight: 700;
-}
-
-.ccore-task-field input,
-.ccore-task-field select {
-    border: 1px solid rgba(119, 183, 255, 0.28);
-    border-radius: 10px;
-    background: rgba(6, 18, 33, 0.88);
-    color: #ffffff;
-    padding: 0.55rem 0.65rem;
-    font-size: 0.9rem;
-}
-
-.ccore-task-form-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
 }
 
 .ccore-tasks-table-card {
@@ -157,8 +118,38 @@
     font-weight: 700;
 }
 
-@media (max-width: 1000px) {
-    .ccore-tasks-layout {
-        grid-template-columns: 1fr;
-    }
+.ccore-tasks-form-card {
+    max-width: 420px;
+}
+
+.ccore-task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ccore-task-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+    color: #d9e7f7;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-task-field input,
+.ccore-task-field select {
+    border: 1px solid rgba(119, 183, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(6, 18, 33, 0.88);
+    color: #ffffff;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.9rem;
+}
+
+.ccore-task-form-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }

@@ -43,64 +43,30 @@
 
                     <div id="ccoreTasksMessage" class="form-message info hidden"></div>
 
-                    <section class="ccore-tasks-layout">
+                    <fieldset class="shared-panel ccore-tasks-card ccore-tasks-table-card">
+                        <legend>PostgreSQL Tasks</legend>
 
-                        <fieldset class="shared-panel ccore-tasks-card ccore-tasks-form-card">
-                            <legend id="ccoreTaskFormLegend">Create Task</legend>
+                        <div class="shared-table-wrapper">
+                            <table class="shared-table ccore-tasks-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
 
-                            <form id="ccoreTaskForm" class="ccore-task-form">
-                                <input id="ccoreTaskIdInput" type="hidden">
-
-                                <label class="ccore-task-field" for="ccoreTaskNameInput">
-                                    <span>Task Name</span>
-                                    <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
-                                </label>
-
-                                <label class="ccore-task-field" for="ccoreTaskStatusInput">
-                                    <span>Status</span>
-                                    <select id="ccoreTaskStatusInput" required disabled>
-                                        <option value="">Loading statuses...</option>
-                                    </select>
-                                </label>
-
-                                <div class="ccore-task-form-actions">
-                                    <button id="saveCCoreTaskButton" class="shared-button primary" type="submit">
-                                        Create Task
-                                    </button>
-
-                                    <button id="resetCCoreTaskFormButton" class="shared-button secondary" type="button">
-                                        Reset
-                                    </button>
-                                </div>
-                            </form>
-                        </fieldset>
-
-                        <fieldset class="shared-panel ccore-tasks-card ccore-tasks-table-card">
-                            <legend>PostgreSQL Tasks</legend>
-
-                            <div class="shared-table-wrapper">
-                                <table class="shared-table ccore-tasks-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Created</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="ccoreTasksTableBody">
-                                        <tr>
-                                            <td colspan="4" class="shared-table-empty-state">
-                                                Loading CCore tasks...
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </fieldset>
-
-                    </section>
+                                <tbody id="ccoreTasksTableBody">
+                                    <tr>
+                                        <td colspan="4" class="shared-table-empty-state">
+                                            Loading CCore tasks...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </fieldset>
 
                     <section class="shared-toolbar-panel shared-table-toolbar ccore-tasks-toolbar">
                         <div class="shared-table-toolbar-left">
@@ -124,6 +90,36 @@
                             </button>
                         </div>
                     </section>
+
+                    <fieldset class="shared-panel ccore-tasks-card ccore-tasks-form-card">
+                        <legend id="ccoreTaskFormLegend">Create Task</legend>
+
+                        <form id="ccoreTaskForm" class="ccore-task-form">
+                            <input id="ccoreTaskIdInput" type="hidden">
+
+                            <label class="ccore-task-field" for="ccoreTaskNameInput">
+                                <span>Task Name</span>
+                                <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
+                            </label>
+
+                            <label class="ccore-task-field" for="ccoreTaskStatusInput">
+                                <span>Status</span>
+                                <select id="ccoreTaskStatusInput" required disabled>
+                                    <option value="">Loading statuses...</option>
+                                </select>
+                            </label>
+
+                            <div class="ccore-task-form-actions">
+                                <button id="saveCCoreTaskButton" class="shared-button primary" type="submit">
+                                    Create Task
+                                </button>
+
+                                <button id="resetCCoreTaskFormButton" class="shared-button secondary" type="button">
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </fieldset>
 
                 </div>
 
