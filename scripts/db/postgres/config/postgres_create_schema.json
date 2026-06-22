@@ -63,47 +63,6 @@
                     "onDelete": "RESTRICT"
                 }
             ]
-        },
-        "ccore_metrics": {
-            "columns": [
-                {
-                    "name": "metric_id",
-                    "type": "UUID",
-                    "primaryKey": true
-                },
-                {
-                    "name": "task_id",
-                    "type": "UUID",
-                    "nullable": false
-                },
-                {
-                    "name": "execution_duration_ms",
-                    "type": "INTEGER"
-                },
-                {
-                    "name": "llm_tokens_used",
-                    "type": "INTEGER"
-                },
-                {
-                    "name": "payload",
-                    "type": "JSONB"
-                }
-            ],
-            "constraints": [
-                {
-                    "type": "foreignKey",
-                    "columns": [
-                        "task_id"
-                    ],
-                    "references": {
-                        "table": "ccore_tasks",
-                        "columns": [
-                            "task_id"
-                        ]
-                    },
-                    "onDelete": "CASCADE"
-                }
-            ]
         }
     }
 }

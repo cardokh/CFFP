@@ -49,48 +49,6 @@
                     "status_code": "COMPLETED"
                 }
             ]
-        },
-        {
-            "table": "ccore_metrics",
-            "conflictColumn": "metric_id",
-            "rows": [
-                {
-                    "metric_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
-                    "task_id": "11111111-1111-1111-1111-111111111111",
-                    "execution_duration_ms": 0,
-                    "llm_tokens_used": 0,
-                    "payload": {
-                        "result": "pending",
-                        "worker": "local",
-                        "logs": []
-                    }
-                },
-                {
-                    "metric_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
-                    "task_id": "22222222-2222-2222-2222-222222222222",
-                    "execution_duration_ms": 1438,
-                    "llm_tokens_used": 214,
-                    "payload": {
-                        "result": "running",
-                        "worker": "prefect-worker-01",
-                        "progress": 65
-                    }
-                },
-                {
-                    "metric_id": "cccccccc-cccc-cccc-cccc-cccccccccccc",
-                    "task_id": "33333333-3333-3333-3333-333333333333",
-                    "execution_duration_ms": 2847,
-                    "llm_tokens_used": 612,
-                    "payload": {
-                        "result": "completed",
-                        "worker": "prefect-worker-01",
-                        "artifacts": [
-                            "report.json",
-                            "summary.md"
-                        ]
-                    }
-                }
-            ]
         }
     ]
 }

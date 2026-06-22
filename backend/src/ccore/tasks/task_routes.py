@@ -4,7 +4,7 @@ CCore task API routes.
 Responsibilities:
 - Handle CCore task CRUD HTTP requests.
 - Handle CCore task reference-data requests.
-- Convert JSON requests into task request contracts.
+- Delegate request payload parsing to API request contracts.
 - Delegate business use cases to CCoreTaskService.
 - Return consistent JSON responses.
 """
@@ -13,10 +13,7 @@ from urllib.parse import unquote
 
 from src.api.api_paths import API_PATH_CCORE_TASKS_PREFIX
 from src.api.route_utils import read_json_body, send_json
-from backend.src.ccore.tasks.task_contracts import (
-    CreateCCoreTaskRequest,
-    UpdateCCoreTaskRequest,
-)
+from backend.src.ccore.tasks.task_contracts import CCoreTaskRequestParser
 from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
 from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_CREATED_SUCCESS_MESSAGE,
@@ -28,6 +25,7 @@ from backend.src.ccore.tasks.task_messages import (
 )
 
 ccore_task_mapper = CCoreTaskMapper()
+ccore_task_request_parser = CCoreTaskRequestParser()
 
 
 def handle_get_ccore_tasks(handler, ccore_task_service) -> None:
@@ -108,11 +106,7 @@ def handle_create_ccore_task(handler, ccore_task_service) -> None:
         return
 
     try:
-        create_request = CreateCCoreTaskRequest(
-            task_name=request_data.get("taskName", request_data.get("name", "")),
-            status_code=request_data.get("status"),
-        )
-
+        create_request = ccore_task_request_parser.parse_create_request(request_data)
         task = ccore_task_mapper.create_request_to_domain(create_request)
         created_task = ccore_task_service.create_task(task)
 
@@ -148,12 +142,10 @@ def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
         return
 
     try:
-        update_request = UpdateCCoreTaskRequest(
-            task_id=task_id,
-            task_name=request_data.get("taskName", request_data.get("name", "")),
-            status_code=request_data.get("status", ""),
+        update_request = ccore_task_request_parser.parse_update_request(
+            task_id,
+            request_data,
         )
-
         task = ccore_task_mapper.update_request_to_domain(update_request)
         updated_task = ccore_task_service.update_task(task)
 

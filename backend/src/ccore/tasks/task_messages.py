@@ -14,6 +14,8 @@ CCORE_TASK_NOT_FOUND_MESSAGE = "CCore task was not found."
 CCORE_TASK_INVALID_ID_MESSAGE = "A valid CCore task id is required."
 CCORE_TASK_INVALID_JSON_BODY_MESSAGE = "Request body must contain valid JSON."
 
+CCORE_TASK_PAYLOAD_OBJECT_REQUIRED_MESSAGE = "Request body must be a JSON object."
+CCORE_TASK_UNKNOWN_FIELD_MESSAGE = "Unsupported task request field."
 CCORE_TASK_NAME_REQUIRED_MESSAGE = "Task name is required."
 CCORE_TASK_STATUS_REQUIRED_MESSAGE = "Task status is required."
 CCORE_TASK_STATUS_INVALID_MESSAGE = "Task status is not valid."

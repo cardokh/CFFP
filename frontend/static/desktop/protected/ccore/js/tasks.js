@@ -143,9 +143,7 @@ function getCCoreTaskStatusLabel(statusCode) {
 
 function getCCoreTaskSearchableText(task) {
     return [
-        task.id,
         task.taskId,
-        task.name,
         task.taskName,
         task.status,
         task.statusLabel,
@@ -171,8 +169,8 @@ function getFilteredCCoreTasks() {
 
 
 function renderCCoreTaskRow(task) {
-    const taskId = task.taskId || task.id;
-    const taskName = task.taskName || task.name;
+    const taskId = task.taskId;
+    const taskName = task.taskName;
     const status = normalizeCCoreTaskStatus(task.status);
     const statusLabel = task.statusLabel || getCCoreTaskStatusLabel(status);
 
@@ -341,7 +339,7 @@ function resetTaskForm() {
 
 function editTask(taskId) {
     const task = ccoreTasks.find((candidateTask) =>
-        String(candidateTask.taskId || candidateTask.id) === String(taskId)
+        String(candidateTask.taskId) === String(taskId)
     );
 
     if (!task) {
@@ -349,8 +347,8 @@ function editTask(taskId) {
         return;
     }
 
-    document.getElementById("ccoreTaskIdInput").value = task.taskId || task.id;
-    document.getElementById("ccoreTaskNameInput").value = task.taskName || task.name || "";
+    document.getElementById("ccoreTaskIdInput").value = task.taskId;
+    document.getElementById("ccoreTaskNameInput").value = task.taskName || "";
     getCCoreTaskStatusInput().value = normalizeCCoreTaskStatus(task.status);
     document.getElementById("ccoreTaskFormLegend").textContent = "Edit Task";
     document.getElementById("saveCCoreTaskButton").textContent = "Update Task";

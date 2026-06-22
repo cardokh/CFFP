@@ -10,8 +10,6 @@ Responsibilities:
 from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_API_FIELD_CREATED_AT,
-    CCORE_TASK_API_FIELD_ID,
-    CCORE_TASK_API_FIELD_NAME,
     CCORE_TASK_API_FIELD_STATUS,
     CCORE_TASK_API_FIELD_STATUS_LABEL,
     CCORE_TASK_API_FIELD_TASK_ID,
@@ -51,9 +49,7 @@ class CCoreTaskMapper:
 
     def domain_to_response(self, task: CCoreTask) -> dict:
         return {
-            CCORE_TASK_API_FIELD_ID: task.task_id,
             CCORE_TASK_API_FIELD_TASK_ID: task.task_id,
-            CCORE_TASK_API_FIELD_NAME: task.task_name,
             CCORE_TASK_API_FIELD_TASK_NAME: task.task_name,
             CCORE_TASK_API_FIELD_STATUS: task.status_code,
             CCORE_TASK_API_FIELD_STATUS_LABEL: task.status_label,

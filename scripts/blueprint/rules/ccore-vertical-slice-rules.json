@@ -1,0 +1,47 @@
+{
+  "blueprintName": "CCore Vertical Slice Blueprint",
+  "blueprintVersion": "1.0",
+  "referenceSlice": "ccore_tasks",
+  "rules": [
+    {
+      "id": "CCORE-VS-001",
+      "name": "Layered route orchestration",
+      "description": "Routes read HTTP input, delegate request parsing, call services, and return mapped responses. Routes must not construct repositories or manually map JSON fields to domain objects."
+    },
+    {
+      "id": "CCORE-VS-002",
+      "name": "Strict external camelCase contract",
+      "description": "JSON/API fields must be canonical camelCase only. Transitional aliases such as id/name beside taskId/taskName are not allowed."
+    },
+    {
+      "id": "CCORE-VS-003",
+      "name": "Python snake_case internals",
+      "description": "Python dataclass attributes, service parameters, repository parameters, and internal variables use snake_case."
+    },
+    {
+      "id": "CCORE-VS-004",
+      "name": "Repository protocol dependency",
+      "description": "Services depend on repository protocols, not concrete repository implementations."
+    },
+    {
+      "id": "CCORE-VS-005",
+      "name": "Database provider protocol dependency",
+      "description": "Concrete repositories depend on a database connection provider protocol, not a concrete database manager class."
+    },
+    {
+      "id": "CCORE-VS-006",
+      "name": "Split validation",
+      "description": "API payload validation happens before request/domain mapping; domain and lookup validation happens before repository operations."
+    },
+    {
+      "id": "CCORE-VS-007",
+      "name": "Lookup/reference data",
+      "description": "Statuses, categories, types, and similar reference values are loaded through reference tables/providers and exposed through reference-data APIs."
+    },
+    {
+      "id": "CCORE-VS-008",
+      "name": "Focused slice tests",
+      "description": "Each generated slice includes focused tests for API contracts, mappers, validators, service behavior with fake repositories, and repository protocol expectations."
+    }
+  ]
+}

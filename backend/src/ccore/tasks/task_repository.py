@@ -7,7 +7,9 @@ Responsibilities:
 - Keep SQL access isolated from routes and services.
 """
 
-from backend.src.ccore.infrastructure.postgres_database import PostgresDatabaseManager
+from backend.src.ccore.infrastructure.database_contracts import (
+    DatabaseConnectionProviderProtocol,
+)
 from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_CREATED_AT_COLUMN,
@@ -16,7 +18,6 @@ from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_STATUS_CODE_COLUMN,
     CCORE_TASK_STATUS_LABEL_COLUMN,
     CCORE_TASK_STATUS_SORT_ORDER_COLUMN,
-    CCORE_TASK_STATUS_CODE_COLUMN_ALIAS,
     CCORE_TASK_STATUSES_TABLE_NAME,
     CCORE_TASKS_TABLE_NAME,
 )
@@ -24,7 +25,7 @@ from backend.src.ccore.tasks.task_status import CCoreTaskStatus
 
 
 class CCoreTaskRepository:
-    def __init__(self, db_manager: PostgresDatabaseManager):
+    def __init__(self, db_manager: DatabaseConnectionProviderProtocol):
         self.db_manager = db_manager
 
     def _map_row_to_task(self, row) -> CCoreTask:
@@ -178,7 +179,7 @@ class CCoreTaskRepository:
 
 
 class CCoreTaskStatusRepository:
-    def __init__(self, db_manager: PostgresDatabaseManager):
+    def __init__(self, db_manager: DatabaseConnectionProviderProtocol):
         self.db_manager = db_manager
 
     def _map_row_to_status(self, row) -> CCoreTaskStatus:
