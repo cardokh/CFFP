@@ -33,68 +33,52 @@
 
                         <p>
                             Manage reusable automation tasks, automation pipelines,
-                            configuration, execution history, reports, and governance validation.
+                            and PostgreSQL-backed CCore modules.
                         </p>
                     </header>
 
-                    <section class="automation-dashboard-grid" aria-label="Automation modules">
+                    <section class="automation-dashboard-section" aria-labelledby="automation-modules-heading">
+                        <h2 id="automation-modules-heading">Automation Modules</h2>
 
-                        <a class="automation-dashboard-card" href="/desktop/protected/automation/tasks.html">
-                            <span class="automation-dashboard-card-icon">🧩</span>
-                            <h2>Automation Tasks</h2>
-                            <p>View reusable units of automation work loaded from the task registry.</p>
-                            <span class="automation-dashboard-card-action">Open module →</span>
-                        </a>
+                        <div class="automation-dashboard-grid" aria-label="Automation modules">
 
-                        <a class="automation-dashboard-card" href="/desktop/protected/automation/pipelines.html">
-                            <span class="automation-dashboard-card-icon">🔁</span>
-                            <h2>Automation Pipelines</h2>
-                            <p>View pipeline definitions that orchestrate reusable automation tasks.</p>
-                            <span class="automation-dashboard-card-action">Open module →</span>
-                        </a>
+                            <a class="automation-dashboard-card" href="/desktop/protected/automation/tasks.html">
+                                <span class="automation-dashboard-card-icon">🧩</span>
+                                <h3>Automation Tasks</h3>
+                                <p>View reusable units of automation work loaded from the task registry.</p>
+                                <span class="automation-dashboard-card-action">Open module →</span>
+                            </a>
 
-                        <a class="automation-dashboard-card" href="/desktop/protected/ccore/tasks.html">
-                            <span class="automation-dashboard-card-icon">🗄️</span>
-                            <h2>CCore Tasks</h2>
-                            <p>Create, update, and delete PostgreSQL-backed CCore task records.</p>
-                            <span class="automation-dashboard-card-action">Open module →</span>
-                        </a>
+                            <a class="automation-dashboard-card" href="/desktop/protected/automation/pipelines.html">
+                                <span class="automation-dashboard-card-icon">🔁</span>
+                                <h3>Automation Pipelines</h3>
+                                <p>View pipeline definitions that orchestrate reusable automation tasks.</p>
+                                <span class="automation-dashboard-card-action">Open module →</span>
+                            </a>
 
-                        <a class="automation-dashboard-card" href="/desktop/protected/ccore/metrics.html">
-                            <span class="automation-dashboard-card-icon">📈</span>
-                            <h2>CCore Metrics</h2>
-                            <p>Create, update, and delete PostgreSQL-backed CCore metric records.</p>
-                            <span class="automation-dashboard-card-action">Open module →</span>
-                        </a>
+                        </div>
+                    </section>
 
-                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
-                            <span class="automation-dashboard-card-icon">⚙️</span>
-                            <h2>Configurations</h2>
-                            <p>Future workspace for viewing and validating automation configuration files.</p>
-                            <span class="automation-dashboard-card-action">Planned</span>
-                        </a>
+                    <section class="automation-dashboard-section" aria-labelledby="ccore-modules-heading">
+                        <h2 id="ccore-modules-heading">CCore Modules</h2>
 
-                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
-                            <span class="automation-dashboard-card-icon">▶️</span>
-                            <h2>Execution History</h2>
-                            <p>Future workspace for pipeline and task execution runs, state, and logs.</p>
-                            <span class="automation-dashboard-card-action">Planned</span>
-                        </a>
+                        <div class="automation-dashboard-grid" aria-label="CCore modules">
 
-                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
-                            <span class="automation-dashboard-card-icon">📄</span>
-                            <h2>Reports</h2>
-                            <p>Future workspace for validation reports, artifacts, warnings, and failures.</p>
-                            <span class="automation-dashboard-card-action">Planned</span>
-                        </a>
+                            <a class="automation-dashboard-card" href="/desktop/protected/ccore/tasks.html">
+                                <span class="automation-dashboard-card-icon">🗄️</span>
+                                <h3>CCore Tasks</h3>
+                                <p>Create, update, and delete PostgreSQL-backed CCore task records.</p>
+                                <span class="automation-dashboard-card-action">Open module →</span>
+                            </a>
 
-                        <a class="automation-dashboard-card disabled" href="#" aria-disabled="true">
-                            <span class="automation-dashboard-card-icon">🛡️</span>
-                            <h2>Governance</h2>
-                            <p>Future workspace for script governance inspection and automation compliance.</p>
-                            <span class="automation-dashboard-card-action">Planned</span>
-                        </a>
+                            <a class="automation-dashboard-card" href="/desktop/protected/ccore/metrics.html">
+                                <span class="automation-dashboard-card-icon">📈</span>
+                                <h3>CCore Metrics</h3>
+                                <p>Create, update, and delete PostgreSQL-backed CCore metric records.</p>
+                                <span class="automation-dashboard-card-action">Open module →</span>
+                            </a>
 
+                        </div>
                     </section>
 
                 </div>
