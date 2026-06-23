@@ -31,7 +31,7 @@
                     <header class="ccore-task-details-header">
                         <h1 id="ccoreTaskDetailsTitle">CCore Task Details</h1>
                         <p>
-                            Manage the task definition, configure a runtime provider and implementer, execute the task,
+                            Manage the task definition, configure runtime metadata, execute the task,
                             inspect execution history, and view the selected execution report.
                         </p>
                     </header>
@@ -106,10 +106,24 @@
                                 </select>
                             </label>
 
-                            <label class="ccore-task-details-field" for="ccoreExecutionImplementerInput">
-                                <span>Implementer</span>
-                                <select id="ccoreExecutionImplementerInput" disabled>
-                                    <option value="">Loading implementers...</option>
+                            <label class="ccore-task-details-field" for="ccoreExecutionImplementerTypeInput">
+                                <span>Implementer Type</span>
+                                <select id="ccoreExecutionImplementerTypeInput" disabled>
+                                    <option value="">Loading implementer types...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionTargetInput">
+                                <span>Target / Doer</span>
+                                <select id="ccoreExecutionTargetInput" disabled>
+                                    <option value="">Loading targets...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionConfigurationInput">
+                                <span>Configuration</span>
+                                <select id="ccoreExecutionConfigurationInput" disabled>
+                                    <option value="">Loading configurations...</option>
                                 </select>
                             </label>
 
@@ -150,12 +164,14 @@
                                         <th>Started</th>
                                         <th>Completed</th>
                                         <th>Provider</th>
-                                        <th>Implementer</th>
+                                        <th>Implementer Type</th>
+                                        <th>Target</th>
+                                        <th>Configuration</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ccoreExecutionTableBody">
                                     <tr>
-                                        <td colspan="5" class="shared-table-empty-state">No executions found for this task.</td>
+                                        <td colspan="7" class="shared-table-empty-state">No executions found for this task.</td>
                                     </tr>
                                 </tbody>
                             </table>

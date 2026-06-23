@@ -4,12 +4,11 @@
  * Responsibilities:
  * - Load one persisted CCore task when taskId is provided.
  * - Create, update, and delete rows in the ccore_tasks table.
- * - Load execution provider and implementer lookup metadata.
- * - Execute a task with selected provider/implementer IDs.
+ * - Load execution provider, implementer type, target, and configuration metadata.
+ * - Execute a task with selected runtime metadata IDs.
  * - Render execution history and selected execution report.
  */
 
-const CCORE_TASK_STATUSES_LOADING_MESSAGE = "Loading task statuses...";
 const CCORE_TASK_STATUSES_EMPTY_MESSAGE = "No task statuses are configured.";
 const CCORE_TASK_DETAILS_ERROR_MESSAGE = "CCore task details could not be loaded.";
 const CCORE_TASK_NAME_REQUIRED_MESSAGE = "Task name is required.";
@@ -21,15 +20,17 @@ const CCORE_TASK_SAVE_ERROR_MESSAGE = "Task could not be saved.";
 const CCORE_TASK_DELETE_CONFIRM_MESSAGE = "Delete this CCore task?";
 const CCORE_TASK_DELETE_ERROR_MESSAGE = "Task could not be deleted.";
 const CCORE_EXECUTION_LOOKUPS_ERROR_MESSAGE = "Execution configuration metadata could not be loaded.";
-const CCORE_EXECUTION_REQUIRED_MESSAGE = "Select both an execution provider and an implementer.";
+const CCORE_EXECUTION_REQUIRED_MESSAGE = "Select provider, implementer type, target, and configuration.";
 const CCORE_EXECUTION_ERROR_MESSAGE = "Task execution could not be completed.";
 const CCORE_EXECUTION_HISTORY_ERROR_MESSAGE = "Execution history could not be loaded.";
-const CCORE_EXECUTION_TABLE_COLUMN_COUNT = 5;
+const CCORE_EXECUTION_TABLE_COLUMN_COUNT = 7;
 const CCORE_EXECUTION_PAGE_SIZE = 5;
 
 let ccoreTaskStatuses = [];
 let ccoreExecutionProviders = [];
-let ccoreExecutionImplementers = [];
+let ccoreExecutionImplementerTypes = [];
+let ccoreExecutionTargets = [];
+let ccoreExecutionConfigurations = [];
 let ccoreExecutions = [];
 let ccoreExecutionSearchTerm = "";
 let ccoreExecutionCurrentPage = 1;
@@ -77,6 +78,7 @@ function parseLookupResponse(responseData, propertyName) {
         throw new Error(`The backend did not return ${propertyName}.`);
     }
     return responseData[propertyName].map((item) => ({
+        ...item,
         id: Number(item.id),
         label: String(item.label || "")
     }));
@@ -190,17 +192,45 @@ async function loadCCoreTaskStatuses() {
     renderLookupOptions("ccoreTaskStatusInput", ccoreTaskStatuses, CCORE_TASK_STATUSES_EMPTY_MESSAGE);
 }
 
+function getFilteredExecutionTargets() {
+    const selectedImplementerTypeId = Number(document.getElementById("ccoreExecutionImplementerTypeInput").value);
+    return ccoreExecutionTargets.filter((target) => Number(target.implementerTypeId) === selectedImplementerTypeId);
+}
+
+function getFilteredExecutionConfigurations() {
+    const selectedTargetId = Number(document.getElementById("ccoreExecutionTargetInput").value);
+    return ccoreExecutionConfigurations.filter((configuration) => Number(configuration.targetId) === selectedTargetId);
+}
+
+function refreshExecutionTargetOptions() {
+    const filteredTargets = getFilteredExecutionTargets();
+    renderLookupOptions("ccoreExecutionTargetInput", filteredTargets, "No targets configured for this implementer type.");
+    document.getElementById("ccoreExecutionTargetInput").value = getDefaultLookupId(filteredTargets);
+    refreshExecutionConfigurationOptions();
+}
+
+function refreshExecutionConfigurationOptions() {
+    const filteredConfigurations = getFilteredExecutionConfigurations();
+    renderLookupOptions("ccoreExecutionConfigurationInput", filteredConfigurations, "No configurations configured for this target.");
+    document.getElementById("ccoreExecutionConfigurationInput").value = getDefaultLookupId(filteredConfigurations);
+}
+
 async function loadExecutionLookups() {
-    const [providersResponse, implementersResponse] = await Promise.all([
+    const [providersResponse, implementerTypesResponse, targetsResponse, configurationsResponse] = await Promise.all([
         getJson(CCORE_API_ENDPOINTS.tasks.executionProviders),
-        getJson(CCORE_API_ENDPOINTS.tasks.executionImplementers)
+        getJson(CCORE_API_ENDPOINTS.tasks.executionImplementerTypes),
+        getJson(CCORE_API_ENDPOINTS.tasks.executionTargets),
+        getJson(CCORE_API_ENDPOINTS.tasks.executionConfigurations)
     ]);
     ccoreExecutionProviders = parseLookupResponse(providersResponse, "providers");
-    ccoreExecutionImplementers = parseLookupResponse(implementersResponse, "implementers");
+    ccoreExecutionImplementerTypes = parseLookupResponse(implementerTypesResponse, "implementerTypes");
+    ccoreExecutionTargets = parseLookupResponse(targetsResponse, "targets");
+    ccoreExecutionConfigurations = parseLookupResponse(configurationsResponse, "configurations");
     renderLookupOptions("ccoreExecutionProviderInput", ccoreExecutionProviders, "No providers configured.");
-    renderLookupOptions("ccoreExecutionImplementerInput", ccoreExecutionImplementers, "No implementers configured.");
+    renderLookupOptions("ccoreExecutionImplementerTypeInput", ccoreExecutionImplementerTypes, "No implementer types configured.");
     document.getElementById("ccoreExecutionProviderInput").value = getDefaultLookupId(ccoreExecutionProviders);
-    document.getElementById("ccoreExecutionImplementerInput").value = getDefaultLookupId(ccoreExecutionImplementers);
+    document.getElementById("ccoreExecutionImplementerTypeInput").value = getDefaultLookupId(ccoreExecutionImplementerTypes);
+    refreshExecutionTargetOptions();
 }
 
 async function loadCCoreTaskDetails(taskId) {
@@ -279,7 +309,10 @@ function getFilteredExecutions() {
     return ccoreExecutions.filter((execution) => [
         execution.statusLabel,
         execution.providerLabel,
-        execution.implementerLabel,
+        execution.implementerTypeLabel,
+        execution.targetLabel,
+        execution.targetReference,
+        execution.configurationLabel,
         execution.requestedBy,
         execution.startedAt,
         execution.completedAt,
@@ -321,7 +354,9 @@ function renderCCoreExecutionHistory() {
             <td>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.startedAt))}</td>
             <td>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.completedAt || execution.failedAt))}</td>
             <td>${escapeCCoreTaskValue(execution.providerLabel)}</td>
-            <td>${escapeCCoreTaskValue(execution.implementerLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.implementerTypeLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.targetLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.configurationLabel)}</td>
         </tr>
     `).join("");
     document.querySelectorAll("#ccoreExecutionTableBody tr[data-execution-id]").forEach((row) => {
@@ -376,7 +411,10 @@ function renderExecutionReport(execution) {
             <div class="ccore-execution-report-item"><span>Execution ID</span><strong>${escapeCCoreTaskValue(execution.executionId)}</strong></div>
             <div class="ccore-execution-report-item"><span>Status</span><strong>${escapeCCoreTaskValue(execution.statusLabel)}</strong></div>
             <div class="ccore-execution-report-item"><span>Provider</span><strong>${escapeCCoreTaskValue(execution.providerLabel)}</strong></div>
-            <div class="ccore-execution-report-item"><span>Implementer</span><strong>${escapeCCoreTaskValue(execution.implementerLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Implementer Type</span><strong>${escapeCCoreTaskValue(execution.implementerTypeLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Target</span><strong>${escapeCCoreTaskValue(execution.targetLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Target Reference</span><strong>${escapeCCoreTaskValue(execution.targetReference)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Configuration</span><strong>${escapeCCoreTaskValue(execution.configurationLabel)}</strong></div>
             <div class="ccore-execution-report-item"><span>Started</span><strong>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.startedAt))}</strong></div>
             <div class="ccore-execution-report-item"><span>Completed</span><strong>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.completedAt || execution.failedAt))}</strong></div>
         </div>
@@ -394,8 +432,10 @@ async function executeCCoreTask() {
         return;
     }
     const providerId = Number(document.getElementById("ccoreExecutionProviderInput").value);
-    const implementerId = Number(document.getElementById("ccoreExecutionImplementerInput").value);
-    if (!providerId || !implementerId) {
+    const implementerTypeId = Number(document.getElementById("ccoreExecutionImplementerTypeInput").value);
+    const targetId = Number(document.getElementById("ccoreExecutionTargetInput").value);
+    const configurationId = Number(document.getElementById("ccoreExecutionConfigurationInput").value);
+    if (!providerId || !implementerTypeId || !targetId || !configurationId) {
         showCCoreTaskDetailsMessage(CCORE_EXECUTION_REQUIRED_MESSAGE, "error");
         return;
     }
@@ -405,7 +445,9 @@ async function executeCCoreTask() {
     try {
         const responseData = await postJson(CCORE_API_ENDPOINTS.tasks.execute(currentCCoreTaskId), {
             providerId,
-            implementerId,
+            implementerTypeId,
+            targetId,
+            configurationId,
             requestedBy: "system",
             inputPayload: {}
         });
@@ -428,6 +470,8 @@ async function executeCCoreTask() {
 function setupExecutionEventHandlers() {
     document.getElementById("executeCCoreTaskButton").addEventListener("click", executeCCoreTask);
     document.getElementById("refreshCCoreExecutionsButton").addEventListener("click", loadCCoreExecutionHistory);
+    document.getElementById("ccoreExecutionImplementerTypeInput").addEventListener("change", refreshExecutionTargetOptions);
+    document.getElementById("ccoreExecutionTargetInput").addEventListener("change", refreshExecutionConfigurationOptions);
     document.getElementById("ccoreExecutionSearchInput").addEventListener("input", (event) => {
         ccoreExecutionSearchTerm = event.target.value || "";
         ccoreExecutionCurrentPage = 1;

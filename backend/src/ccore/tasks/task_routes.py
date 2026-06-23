@@ -126,9 +126,9 @@ def handle_get_ccore_execution_providers(handler, task_execution_service) -> Non
     )
 
 
-def handle_get_ccore_execution_implementers(handler, task_execution_service) -> None:
+def handle_get_ccore_execution_implementer_types(handler, task_execution_service) -> None:
     try:
-        implementers = task_execution_service.get_execution_implementers()
+        implementer_types = task_execution_service.get_execution_implementer_types()
 
     except Exception as error:
         _send_server_error(handler, error)
@@ -138,7 +138,41 @@ def handle_get_ccore_execution_implementers(handler, task_execution_service) -> 
         handler,
         200,
         {
-            "implementers": ccore_task_execution_mapper.implementers_to_response(implementers),
+            "implementerTypes": ccore_task_execution_mapper.implementer_types_to_response(implementer_types),
+        },
+    )
+
+
+def handle_get_ccore_execution_targets(handler, task_execution_service) -> None:
+    try:
+        targets = task_execution_service.get_execution_targets()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "targets": ccore_task_execution_mapper.targets_to_response(targets),
+        },
+    )
+
+
+def handle_get_ccore_execution_configurations(handler, task_execution_service) -> None:
+    try:
+        configurations = task_execution_service.get_execution_configurations()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "configurations": ccore_task_execution_mapper.configurations_to_response(configurations),
         },
     )
 
@@ -299,7 +333,9 @@ def handle_execute_ccore_task_path(
     execution_request = TaskExecutionRequest(
         task_id=task_id,
         execution_provider_id=int(request_data.get("providerId", 0)),
-        execution_implementer_id=int(request_data.get("implementerId", 0)),
+        execution_implementer_type_id=int(request_data.get("implementerTypeId", 0)),
+        execution_target_id=int(request_data.get("targetId", 0)),
+        execution_configuration_id=int(request_data.get("configurationId", 0)),
         requested_by=request_data.get("requestedBy", "system"),
         input_payload=request_data.get("inputPayload", {}),
     )
@@ -344,7 +380,9 @@ def task_execution_result_to_response(result: TaskExecutionResult) -> dict:
         "status": result.status,
         "message": result.message,
         "providerName": result.provider_name,
-        "implementerName": result.implementer_name,
+        "implementerTypeName": result.implementer_type_name,
+        "targetName": result.target_name,
+        "configurationName": result.configuration_name,
         "executionDetails": result.execution_details,
         "errorDetails": result.error_details,
     }

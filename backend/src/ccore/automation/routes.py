@@ -54,7 +54,9 @@ def handle_run_ccore_task(
     execution_request = TaskExecutionRequest(
         task_id=task_id,
         execution_provider_id=int(request_data.get("providerId", 0)),
-        execution_implementer_id=int(request_data.get("implementerId", 0)),
+        execution_implementer_type_id=int(request_data.get("implementerTypeId", 0)),
+        execution_target_id=int(request_data.get("targetId", 0)),
+        execution_configuration_id=int(request_data.get("configurationId", 0)),
         requested_by=request_data.get("requestedBy", "system"),
         input_payload=request_data.get("inputPayload", {}),
     )
@@ -91,7 +93,9 @@ def task_execution_result_to_response(result: TaskExecutionResult) -> dict:
         "status": result.status,
         "message": result.message,
         "providerName": result.provider_name,
-        "implementerName": result.implementer_name,
+        "implementerTypeName": result.implementer_type_name,
+        "targetName": result.target_name,
+        "configurationName": result.configuration_name,
         "executionDetails": result.execution_details,
         "errorDetails": result.error_details,
     }

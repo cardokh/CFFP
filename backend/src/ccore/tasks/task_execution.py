@@ -4,7 +4,7 @@ CCore task execution domain objects.
 Responsibilities:
 - Represent one execution run of a registered CCore task.
 - Keep task definitions separate from task execution instances.
-- Represent execution provider and implementer lookup metadata.
+- Represent execution provider, implementer type, target, and configuration metadata.
 - Carry execution payloads, snapshots, reports, and lifecycle timestamps.
 """
 
@@ -20,9 +20,36 @@ class CCoreExecutionProvider:
 
 
 @dataclass(frozen=True)
-class CCoreExecutionImplementer:
-    execution_implementer_id: int
-    implementer_label: str
+class CCoreExecutionImplementerType:
+    execution_implementer_type_id: int
+    implementer_type_label: str
+    sort_order: int
+
+
+@dataclass(frozen=True)
+class CCoreExecutionTarget:
+    execution_target_id: int
+    execution_implementer_type_id: int
+    target_label: str
+    target_reference: str
+    sort_order: int
+
+
+@dataclass(frozen=True)
+class CCoreExecutionConfiguration:
+    execution_configuration_id: int
+    execution_target_id: int
+    configuration_label: str
+    configuration_description: str | None
+    sort_order: int
+
+
+@dataclass(frozen=True)
+class CCoreExecutionConfigurationElement:
+    execution_configuration_element_id: int
+    execution_configuration_id: int
+    element_name: str
+    element_value: str
     sort_order: int
 
 
@@ -32,10 +59,16 @@ class CCoreTaskExecution:
     task_id: str
     execution_status_id: int
     execution_provider_id: int
-    execution_implementer_id: int
+    execution_implementer_type_id: int
+    execution_target_id: int
+    execution_configuration_id: int
     status_label: str | None = None
     provider_label: str | None = None
-    implementer_label: str | None = None
+    implementer_type_label: str | None = None
+    target_label: str | None = None
+    target_reference: str | None = None
+    configuration_label: str | None = None
+    configuration_description: str | None = None
     requested_by: str = "system"
     input_payload: dict[str, Any] | None = None
     configuration_snapshot: dict[str, Any] | None = None

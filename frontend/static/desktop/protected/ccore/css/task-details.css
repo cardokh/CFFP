@@ -98,6 +98,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+    grid-column: 1 / -1;
 }
 
 .ccore-execution-toolbar {
@@ -118,7 +119,7 @@
 .ccore-execution-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
 }
 
 .ccore-execution-table th,

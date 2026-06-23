@@ -1,130 +1,39 @@
 /*
- * Shared API endpoint definitions.
+ * Shared frontend API endpoint definitions.
  *
  * Responsibilities:
- * - Centralize backend API endpoint paths.
- * - Avoid hardcoded API route strings in page controllers.
- * - Provide reusable endpoint builders for entity-specific routes.
- * - Keep frontend API usage aligned with backend routing.
+ * - Centralize frontend API endpoint strings.
+ * - Keep page controllers free from hardcoded backend paths.
+ * - Provide small endpoint builders for identifier-based resources.
  */
 
-const LLA_API_ENDPOINTS = {
+const CCORE_API_ENDPOINTS = {
     auth: {
         login: "/api/auth/login",
         register: "/api/auth/register",
         forgotPassword: "/api/auth/forgot-password"
     },
 
-    student: {
-        lessons: {
-            byUserId(userId) {
-                return `/api/student/lessons/${userId}`;
-            }
-        },
-
-        progress: {
-            byUserId(userId) {
-                return `/api/student/progress/${userId}`;
-            }
-        }
+    ai: {
+        speechGenerate: "/api/ai/speech/generate"
     },
 
     admin: {
-        referenceData: {
-            lessonFormOptions: "/api/admin/reference-data/lesson-form-options"
-        },
+        users: "/api/admin/users",
 
-        users: {
-            list: "/api/admin/users",
-            create: "/api/admin/users",
-
-            byId(userId) {
-                return `/api/admin/users/${userId}`;
-            }
-        },
-
-        lessonCategories: {
-            list: "/api/admin/lesson-categories",
-            create: "/api/admin/lesson-categories",
-
-            byId(categoryId) {
-                return `/api/admin/lesson-categories/${categoryId}`;
-            }
-        },
-
-        learningItems: {
-            list: "/api/admin/learning-items",
-            create: "/api/admin/learning-items",
-
-            byId(learningItemId) {
-                return `/api/admin/learning-items/${learningItemId}`;
-            },
-
-            examples(learningItemId) {
-                return `/api/admin/learning-items/examples/${learningItemId}`;
-            }
-        },
-
-        quizQuestions: {
-            list: "/api/admin/quiz-questions",
-            create: "/api/admin/quiz-questions",
-
-            byId(questionId) {
-                return `/api/admin/quiz-questions/${questionId}`;
-            }
-        },
-
-        quizQuestionOptions: {
-            byQuestionId(questionId) {
-                return `/api/admin/quiz-questions-options/${questionId}`;
-            },
-
-            byId(optionId) {
-                return `/api/admin/quiz-question-options/${optionId}`;
-            }
-        },
-
-        lessons: {
-            list: "/api/admin/lessons",
-            create: "/api/admin/lessons",
-
-            byId(lessonId) {
-                return `/api/admin/lessons/${lessonId}`;
-            },
-
-            learningItems(lessonId) {
-                return `/api/admin/lessons-learning-items/${lessonId}`;
-            },
-
-            quizQuestions(lessonId) {
-                return `/api/admin/lessons-quiz-questions/${lessonId}`;
-            }
-        },
-
-        userLessons: {
-            byUserId(userId) {
-                return `/api/admin/user-lessons/${userId}`;
-            },
-
-            markInProgress(userId) {
-                return `/api/admin/user-lessons/in-progress/${userId}`;
-            },
-
-            markCompleted(userId) {
-                return `/api/admin/user-lessons/completed/${userId}`;
-            }
+        userById(userId) {
+            return `/api/admin/users/${encodeURIComponent(userId)}`;
         }
-    }
-};
+    },
 
-
-const CCORE_API_ENDPOINTS = {
     tasks: {
         list: "/api/ccore/tasks",
         create: "/api/ccore/tasks",
         statuses: "/api/ccore/task-statuses",
         executionProviders: "/api/ccore/execution-providers",
-        executionImplementers: "/api/ccore/execution-implementers",
+        executionImplementerTypes: "/api/ccore/execution-implementer-types",
+        executionTargets: "/api/ccore/execution-targets",
+        executionConfigurations: "/api/ccore/execution-configurations",
 
         byId(taskId) {
             return `/api/ccore/tasks/${encodeURIComponent(taskId)}`;
