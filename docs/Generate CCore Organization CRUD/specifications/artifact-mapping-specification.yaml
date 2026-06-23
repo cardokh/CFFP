@@ -1,0 +1,333 @@
+specVersion: "1.0"
+documentType: "ArtifactMappingSpecification"
+purpose: >
+  Defines where each generated artifact type is allowed to be staged and applied
+  during the Generate CRUD Module pipeline. The AI generator must not invent file
+  destinations. Every artifact must match one artifact mapping rule.
+
+scope:
+  automationTask: "Generate CRUD Module"
+  firstTargetEntity: "Organization"
+  moduleArea: "ccore"
+  sourceOfTruth:
+    - "docs/Automation Factory/specifications/template_crud_spec.yaml"
+    - "docs/Automation Factory/specifications/ccore_organizations_spec.yaml"
+    - "docs/Automation Factory/architecture/technology-decisions.md"
+    - "repository inspection summary"
+
+rules:
+  noUnmappedArtifacts: true
+  repositoryRelativePathsOnly: true
+  noAbsolutePaths: true
+  wholeFileArtifactsOnly: true
+  stageBeforeApply: true
+  overwriteRequiresExplicitMapping: true
+  createParentDirectoriesOnlyWhenMapped: true
+  failIfTargetPathUnknown: true
+  failIfDestinationConflictsWithGoldenReference: true
+
+pathVariables:
+  repositoryRoot: "."
+  moduleArea: "ccore"
+  entitySlug: "${entity.slug}"
+  entityPluralSlug: "${entity.pluralSlug}"
+  entityPascalCase: "${entity.pascalCase}"
+  entitySnakeCase: "${entity.snakeCase}"
+  goldenReferenceModule: "${generation.goldenReferenceModule}"
+
+staging:
+  root: "generated/automation_factory/${execution.id}"
+  manifestPath: "generated/automation_factory/${execution.id}/artifact_manifest.json"
+  validationReportPath: "generated/automation_factory/${execution.id}/validation_report.json"
+  executionReportPath: "generated/automation_factory/${execution.id}/execution_report.json"
+  generatedFilesRoot: "generated/automation_factory/${execution.id}/files"
+
+artifactTypes:
+  database_schema_config:
+    description: "Database schema/entity configuration consumed by existing database scripts."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/entities.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "contains_target_entity"
+      - "preserves_existing_entities"
+
+  database_create_schema_config:
+    description: "PostgreSQL schema creation configuration."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/postgres_create_schema.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "preserves_existing_schema_config"
+      - "contains_target_tables"
+
+  database_seed_data_config:
+    description: "Seed data configuration for generated CCore entity."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/postgres_seed_data.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "preserves_existing_seed_data"
+      - "contains_required_seed_rows"
+
+  backend_model:
+    description: "Backend dataclass/domain model for the generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/models.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "matches_golden_reference_style"
+
+  backend_repository:
+    description: "Repository layer for persistence access."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/repositories.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "no_hardcoded_connection"
+      - "matches_golden_reference_style"
+
+  backend_service:
+    description: "Service/manager layer for generated CRUD behavior."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/services.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "uses_repository_layer"
+      - "matches_golden_reference_style"
+
+  backend_schemas:
+    description: "Request/response schema or DTO definitions matching current CCore pattern."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/schemas.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "matches_golden_reference_style"
+
+  backend_api_routes:
+    description: "API route definitions for list, get, create, update, and delete."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/routes.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "route_prefix_matches_specification"
+      - "matches_golden_reference_style"
+
+  backend_package_init:
+    description: "Package initialization file for generated backend module."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/__init__.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+
+  backend_route_registry_update:
+    description: "Whole-file replacement for route registry when the generated API must be registered."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/api/module_route_registry.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_routes"
+      - "contains_generated_route_registration"
+
+  backend_api_paths_update:
+    description: "Whole-file replacement for API path constants if required by the golden reference."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/api/api_paths.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_paths"
+      - "contains_generated_entity_paths"
+
+  backend_service_factory_update:
+    description: "Whole-file replacement for service factory/container registration if required."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/application/service_factory.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+      - path: "backend/src/ccore/application/service_container.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_services"
+      - "contains_generated_service_registration"
+
+  frontend_list_page:
+    description: "Protected desktop CCore list page for generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/${entityPluralSlug}.html"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "html_parse_basic"
+      - "uses_existing_layout_pattern"
+      - "references_generated_js_css"
+
+  frontend_detail_page:
+    description: "Protected desktop CCore detail/create/edit page for generated entity when the golden reference uses details pages."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/${entitySlug}-details.html"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "html_parse_basic"
+      - "uses_existing_layout_pattern"
+      - "references_generated_js_css"
+
+  frontend_list_javascript:
+    description: "Vanilla JavaScript controller/client for generated list page."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/js/${entityPluralSlug}.js"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "syntax_check_if_available"
+      - "uses_configured_api_paths"
+      - "matches_golden_reference_style"
+
+  frontend_detail_javascript:
+    description: "Vanilla JavaScript controller/client for generated detail/create/edit page."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/js/${entitySlug}-details.js"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "syntax_check_if_available"
+      - "uses_configured_api_paths"
+      - "matches_golden_reference_style"
+
+  frontend_list_css:
+    description: "CSS for generated list page, following existing CCore CSS conventions."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/css/${entityPluralSlug}.css"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "uses_existing_css_conventions"
+      - "no_new_css_framework"
+
+  frontend_detail_css:
+    description: "CSS for generated detail page, following existing CCore CSS conventions."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/css/${entitySlug}-details.css"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "uses_existing_css_conventions"
+      - "no_new_css_framework"
+
+  frontend_navigation_update:
+    description: "Whole-file replacement for navigation/sidebar registration if required by the inspected repository."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "${frontend.navigation.fileFromSpecification}"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "preserves_existing_navigation_entries"
+      - "contains_generated_navigation_entry"
+      - "path_is_resolved_from_specification"
+
+  validation_script:
+    description: "Optional generated validation script for the generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/automation_factory/validation/${entityPluralSlug}_validation.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "repository_relative_paths_only"
+
+  documentation_report:
+    description: "Generated documentation or execution notes for the generated module."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "docs/Automation Factory/reports/${execution.id}_${entityPluralSlug}_generation_report.md"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "markdown_exists"
+
+forbiddenArtifactTypes:
+  - name: "unmapped_file"
+    reason: "Every generated file must match an explicit artifact type."
+  - name: "manual_instruction_only"
+    reason: "The goal is executable automation, not manual copy/paste instructions."
+  - name: "partial_patch"
+    reason: "Whole-file replacements only."
+  - name: "new_framework_dependency"
+    reason: "New dependencies require explicit approval before generation."
+
+conflictHandling:
+  duplicateTargetPath: "fail"
+  missingArtifactMapping: "fail"
+  missingPathVariable: "fail"
+  unresolvedSpecificationValue: "fail"
+  existingFileReplacementWithoutMapping: "fail"
