@@ -5,6 +5,7 @@ Responsibilities:
 - Convert metric request contracts to domain objects.
 - Convert metric domain objects and reference data to API response dictionaries.
 - Keep API field names camelCase while preserving database/domain names internally.
+- Keep machine identifiers numeric and human-readable labels separate.
 """
 
 from backend.src.ccore.metrics.metric import CCoreMetric
@@ -13,7 +14,6 @@ from backend.src.ccore.metrics.metric_constants import (
     CCORE_METRIC_API_FIELD_METRIC_ID,
     CCORE_METRIC_API_FIELD_METRIC_KEY,
     CCORE_METRIC_API_FIELD_METRIC_NAME,
-    CCORE_METRIC_API_FIELD_METRIC_TYPE,
     CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
     CCORE_METRIC_API_FIELD_METRIC_TYPE_LABEL,
     CCORE_METRIC_TYPE_API_FIELD_ID,
@@ -56,7 +56,6 @@ class CCoreMetricMapper:
             CCORE_METRIC_API_FIELD_METRIC_ID: metric.metric_id,
             CCORE_METRIC_API_FIELD_METRIC_NAME: metric.metric_name,
             CCORE_METRIC_API_FIELD_METRIC_KEY: metric.metric_key,
-            CCORE_METRIC_API_FIELD_METRIC_TYPE: metric.metric_type_label,
             CCORE_METRIC_API_FIELD_METRIC_TYPE_ID: metric.metric_type_id,
             CCORE_METRIC_API_FIELD_METRIC_TYPE_LABEL: metric.metric_type_label,
             CCORE_METRIC_API_FIELD_CREATED_AT: metric.created_at,
