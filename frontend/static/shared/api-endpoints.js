@@ -123,9 +123,19 @@ const CCORE_API_ENDPOINTS = {
         list: "/api/ccore/tasks",
         create: "/api/ccore/tasks",
         statuses: "/api/ccore/task-statuses",
+        executionProviders: "/api/ccore/execution-providers",
+        executionImplementers: "/api/ccore/execution-implementers",
 
         byId(taskId) {
             return `/api/ccore/tasks/${encodeURIComponent(taskId)}`;
+        },
+
+        execute(taskId) {
+            return `/api/ccore/tasks/${encodeURIComponent(taskId)}/execute`;
+        },
+
+        executions(taskId) {
+            return `/api/ccore/tasks/${encodeURIComponent(taskId)}/executions`;
         }
     },
 

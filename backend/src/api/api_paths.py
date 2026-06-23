@@ -32,6 +32,8 @@ API_PATH_AUTOMATION_PIPELINES_PREFIX = "/api/automation/pipelines/"
 API_PATH_CCORE_TASKS = "/api/ccore/tasks"
 API_PATH_CCORE_TASKS_PREFIX = "/api/ccore/tasks/"
 API_PATH_CCORE_TASK_STATUSES = "/api/ccore/task-statuses"
+API_PATH_CCORE_EXECUTION_PROVIDERS = "/api/ccore/execution-providers"
+API_PATH_CCORE_EXECUTION_IMPLEMENTERS = "/api/ccore/execution-implementers"
 
 API_PATH_CCORE_METRICS = "/api/ccore/metrics"
 API_PATH_CCORE_METRICS_PREFIX = "/api/ccore/metrics/"

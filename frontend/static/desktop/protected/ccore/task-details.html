@@ -31,8 +31,8 @@
                     <header class="ccore-task-details-header">
                         <h1 id="ccoreTaskDetailsTitle">CCore Task Details</h1>
                         <p>
-                            CRUD: Create/Read/Update/ and Delete persisted CCore tasks stored in PostgreSQL table
-                            <code>ccore_tasks</code>.
+                            Manage the task definition, configure a runtime provider and implementer, execute the task,
+                            inspect execution history, and view the selected execution report.
                         </p>
                     </header>
 
@@ -49,7 +49,7 @@
                                 </label>
 
                                 <label class="ccore-task-details-field" for="ccoreTaskStatusInput">
-                                    <span>Status</span>
+                                    <span>Task Status</span>
                                     <select id="ccoreTaskStatusInput" required disabled>
                                         <option value="">Loading statuses...</option>
                                     </select>
@@ -94,6 +94,80 @@
                             </button>
                         </div>
                     </section>
+
+                    <fieldset id="ccoreExecutionConfigurationPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution Configuration</legend>
+
+                        <div class="ccore-execution-configuration-grid">
+                            <label class="ccore-task-details-field" for="ccoreExecutionProviderInput">
+                                <span>Provider</span>
+                                <select id="ccoreExecutionProviderInput" disabled>
+                                    <option value="">Loading providers...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionImplementerInput">
+                                <span>Implementer</span>
+                                <select id="ccoreExecutionImplementerInput" disabled>
+                                    <option value="">Loading implementers...</option>
+                                </select>
+                            </label>
+
+                            <div class="ccore-execution-action-cell">
+                                <button id="executeCCoreTaskButton" class="shared-button primary" type="button">
+                                    Execute Task
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset id="ccoreExecutionHistoryPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution History</legend>
+
+                        <section class="shared-table-toolbar ccore-execution-toolbar">
+                            <div class="shared-table-toolbar-left">
+                                <input id="ccoreExecutionSearchInput" class="ccore-execution-search" type="search"
+                                    placeholder="Search executions">
+                            </div>
+                            <div class="shared-table-toolbar-center">
+                                <button id="ccoreExecutionPrevButton" class="shared-button secondary" type="button">‹ Prev</button>
+                                <span id="ccoreExecutionPageIndicator">Page 1 of 1</span>
+                                <button id="ccoreExecutionNextButton" class="shared-button secondary" type="button">Next ›</button>
+                            </div>
+                            <div class="shared-table-toolbar-right">
+                                <span id="ccoreExecutionCountLabel">0 executions</span>
+                                <button id="refreshCCoreExecutionsButton" class="shared-button secondary" type="button">
+                                    Refresh
+                                </button>
+                            </div>
+                        </section>
+
+                        <div class="ccore-execution-table-shell">
+                            <table class="ccore-execution-table">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Started</th>
+                                        <th>Completed</th>
+                                        <th>Provider</th>
+                                        <th>Implementer</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ccoreExecutionTableBody">
+                                    <tr>
+                                        <td colspan="5" class="shared-table-empty-state">No executions found for this task.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </fieldset>
+
+                    <fieldset id="ccoreExecutionReportPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution Report</legend>
+                        <div id="ccoreExecutionReportContent" class="ccore-execution-report-empty">
+                            No execution selected.
+                        </div>
+                    </fieldset>
 
                 </div>
 

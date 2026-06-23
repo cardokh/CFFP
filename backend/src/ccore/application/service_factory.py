@@ -59,7 +59,6 @@ from backend.src.ccore.tasks.task_service import (
     CCoreTaskStatusService,
 )
 from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
-from backend.src.ccore.tasks.task_execution_runner import CCoreTaskRunnerRegistry
 from src.core.users.password_service import PasswordService
 from src.core.users.user_repository import UserRepository
 from src.core.users.user_service import UserService
@@ -174,9 +173,6 @@ def build_ccore_task_service():
         task_repository=task_repository,
         task_validator=task_validator,
         task_execution_repository=task_execution_repository,
-        task_runner_registry=CCoreTaskRunnerRegistry(
-            project_root=get_path("projectRoot")
-        ),
     )
 
 

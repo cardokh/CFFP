@@ -38,6 +38,8 @@ from src.api.api_paths import (
     API_PATH_CCORE_TASKS,
     API_PATH_CCORE_TASKS_PREFIX,
     API_PATH_CCORE_TASK_STATUSES,
+    API_PATH_CCORE_EXECUTION_PROVIDERS,
+    API_PATH_CCORE_EXECUTION_IMPLEMENTERS,
     API_PATH_ECHO_PREFIX,
     API_PATH_HEALTH,
 )
@@ -84,6 +86,8 @@ from backend.src.ccore.tasks.task_routes import (
     handle_delete_ccore_task,
     handle_get_ccore_task_path,
     handle_get_ccore_task_statuses,
+    handle_get_ccore_execution_providers,
+    handle_get_ccore_execution_implementers,
     handle_get_ccore_tasks,
     handle_post_ccore_task_path,
     handle_update_ccore_task,
@@ -151,6 +155,14 @@ def build_core_route_registry(
                 API_PATH_CCORE_TASK_STATUSES: lambda: handle_get_ccore_task_statuses(
                     handler,
                     services.ccore_task_status_service,
+                ),
+                API_PATH_CCORE_EXECUTION_PROVIDERS: lambda: handle_get_ccore_execution_providers(
+                    handler,
+                    services.task_execution_service,
+                ),
+                API_PATH_CCORE_EXECUTION_IMPLEMENTERS: lambda: handle_get_ccore_execution_implementers(
+                    handler,
+                    services.task_execution_service,
                 ),
                 API_PATH_CCORE_METRICS: lambda: handle_get_ccore_metrics(
                     handler,
