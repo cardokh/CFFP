@@ -7,20 +7,20 @@ Responsibilities:
 - Provide one shared access point for services used by route handlers.
 
 Architecture:
-app.py -> service_container -> services -> repositories -> SQLite
+app.py -> service_container -> services -> repositories -> database infrastructure
 """
 
 from types import SimpleNamespace
 
 from backend.src.ccore.application.service_factory import (
     build_ai_speech_service,
+    build_ai_speech_validator,
     build_automation_pipeline_service,
     build_automation_task_service,
     build_ccore_metric_service,
     build_ccore_metric_type_service,
     build_ccore_task_service,
     build_ccore_task_status_service,
-    build_ai_speech_validator,
     build_learning_item_service,
     build_lesson_category_service,
     build_lesson_learning_item_assignment_service,
@@ -29,9 +29,10 @@ from backend.src.ccore.application.service_factory import (
     build_quiz_question_option_service,
     build_quiz_question_service,
     build_reference_data_service,
+    build_student_progress_service,
+    build_task_execution_service,
     build_user_lesson_assignment_service,
     build_users_service,
-    build_student_progress_service,
 )
 
 
@@ -43,6 +44,8 @@ def build_service_container() -> SimpleNamespace:
     explicit dependencies from the route registry instead of constructing services
     themselves or resolving them indirectly through the HTTP handler.
     """
+    ccore_task_service = build_ccore_task_service()
+
     return SimpleNamespace(
         users_service=build_users_service(),
         lesson_category_service=build_lesson_category_service(),
@@ -59,7 +62,10 @@ def build_service_container() -> SimpleNamespace:
         ai_speech_validator=build_ai_speech_validator(),
         automation_task_service=build_automation_task_service(),
         automation_pipeline_service=build_automation_pipeline_service(),
-        ccore_task_service=build_ccore_task_service(),
+        ccore_task_service=ccore_task_service,
+        task_execution_service=build_task_execution_service(
+            ccore_task_service=ccore_task_service,
+        ),
         ccore_task_status_service=build_ccore_task_status_service(),
         ccore_metric_service=build_ccore_metric_service(),
         ccore_metric_type_service=build_ccore_metric_type_service(),

@@ -9,16 +9,16 @@ Responsibilities:
 """
 
 from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
+from backend.src.ccore.tasks.task_execution_constants import (
+    CCORE_TASK_EXECUTION_STATUS_BLOCKED,
+)
 from backend.src.ccore.tasks.task_repository_contract import (
     CCoreTaskRepositoryProtocol,
     CCoreTaskStatusRepositoryProtocol,
 )
 from backend.src.ccore.tasks.task_status import CCoreTaskStatus
 from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
-from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
-from backend.src.ccore.tasks.task_execution_constants import (
-    CCORE_TASK_EXECUTION_STATUS_BLOCKED,
-)
 
 
 class CCoreTaskService:
@@ -52,6 +52,18 @@ class CCoreTaskService:
 
         return self.task_repository.update_task(task)
 
+    def update_task_status(
+        self,
+        task_id: str,
+        status_code: str,
+    ) -> CCoreTask | None:
+        self.task_validator.validate_task_id(task_id)
+
+        if not self.task_validator.status_repository.status_exists(status_code):
+            raise ValueError(f"Invalid CCore task status code: {status_code}")
+
+        return self.task_repository.update_task_status(task_id, status_code)
+
     def delete_task(self, task_id: str) -> bool:
         self.task_validator.validate_task_id(task_id)
 
@@ -76,12 +88,16 @@ class CCoreTaskService:
                     runner_code=None,
                     report_json={
                         "status": "BLOCKED",
-                        "message": f"No Automation Factory runner is registered for task: {task.task_name}.",
+                        "message": (
+                            "No Automation Factory runner is registered for task: "
+                            f"{task.task_name}."
+                        ),
                     },
                 )
             )
 
         runner_result = runner.execute(task)
+
         return self.task_execution_repository.create_execution(
             CCoreTaskExecution(
                 execution_id=None,
@@ -95,11 +111,13 @@ class CCoreTaskService:
     def get_latest_execution(self, task_id: str) -> CCoreTaskExecution | None:
         self.task_validator.validate_task_id(task_id)
         self._validate_execution_dependencies()
+
         return self.task_execution_repository.find_latest_by_task_id(task_id)
 
     def get_execution_history(self, task_id: str) -> list[CCoreTaskExecution]:
         self.task_validator.validate_task_id(task_id)
         self._validate_execution_dependencies()
+
         return self.task_execution_repository.find_by_task_id(task_id)
 
     def _validate_execution_dependencies(self) -> None:

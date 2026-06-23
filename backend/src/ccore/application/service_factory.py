@@ -13,6 +13,8 @@ API -> Service Factory -> Services -> Repositories -> Database
 from backend.src.ccore.shared.app_config import DATABASE_PATH, get_app_setting
 from backend.src.ccore.shared.app_path_utils import get_path
 
+from backend.src.ccore.automation.services import TaskExecutionService
+
 from src.core.ai.ai_speech.ai_speech_provider_mapper import (
     AiSpeechProviderMapper,
 )
@@ -163,14 +165,26 @@ def build_ccore_task_repositories():
 
 
 def build_ccore_task_service():
-    task_repository, status_repository, task_execution_repository = build_ccore_task_repositories()
+    task_repository, status_repository, task_execution_repository = (
+        build_ccore_task_repositories()
+    )
     task_validator = CCoreTaskValidator(status_repository=status_repository)
 
     return CCoreTaskService(
         task_repository=task_repository,
         task_validator=task_validator,
         task_execution_repository=task_execution_repository,
-        task_runner_registry=CCoreTaskRunnerRegistry(project_root=get_path("projectRoot")),
+        task_runner_registry=CCoreTaskRunnerRegistry(
+            project_root=get_path("projectRoot")
+        ),
+    )
+
+
+def build_task_execution_service(
+    ccore_task_service: CCoreTaskService,
+):
+    return TaskExecutionService(
+        ccore_task_service=ccore_task_service,
     )
 
 

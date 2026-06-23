@@ -6,16 +6,19 @@ Responsibilities:
 - Handle CCore task reference-data requests.
 - Delegate request payload parsing to API request contracts.
 - Delegate business use cases to CCoreTaskService.
+- Delegate task execution requests to TaskExecutionService.
 - Return consistent JSON responses.
 """
 
 from urllib.parse import unquote
 
-from src.api.api_paths import API_PATH_CCORE_TASKS_PREFIX
-from src.api.route_utils import read_json_body, send_json
+from backend.src.ccore.automation.contracts import (
+    TaskExecutionRequest,
+    TaskExecutionResult,
+)
 from backend.src.ccore.tasks.task_contracts import CCoreTaskRequestParser
-from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
 from backend.src.ccore.tasks.task_execution_mapper import CCoreTaskExecutionMapper
+from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
 from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_CREATED_SUCCESS_MESSAGE,
     CCORE_TASK_DELETED_SUCCESS_MESSAGE,
@@ -27,6 +30,10 @@ from backend.src.ccore.tasks.task_messages import (
     CCORE_TASK_NOT_FOUND_MESSAGE,
     CCORE_TASK_UPDATED_SUCCESS_MESSAGE,
 )
+from src.api.api_paths import API_PATH_CCORE_TASKS_PREFIX
+from src.api.route_utils import read_json_body, send_json
+
+CCORE_TASK_EXECUTE_SUFFIX = "/execute"
 
 ccore_task_mapper = CCoreTaskMapper()
 ccore_task_execution_mapper = CCoreTaskExecutionMapper()
@@ -56,7 +63,12 @@ def _send_validation_error(handler, message: str) -> None:
 
 
 def _send_not_found_error(handler) -> None:
-    _send_error(handler, 404, CCORE_TASK_ERROR_CODE_NOT_FOUND, CCORE_TASK_NOT_FOUND_MESSAGE)
+    _send_error(
+        handler,
+        404,
+        CCORE_TASK_ERROR_CODE_NOT_FOUND,
+        CCORE_TASK_NOT_FOUND_MESSAGE,
+    )
 
 
 def _send_server_error(handler, error: Exception) -> None:
@@ -105,9 +117,9 @@ def handle_get_ccore_task_path(handler, ccore_task_service, path: str) -> None:
     handle_get_ccore_task_by_id(handler, ccore_task_service, path)
 
 
-def handle_post_ccore_task_path(handler, ccore_task_service, path: str) -> None:
-    if path.endswith("/execute"):
-        handle_execute_ccore_task(handler, ccore_task_service, path)
+def handle_post_ccore_task_path(handler, task_execution_service, path: str) -> None:
+    if path.endswith(CCORE_TASK_EXECUTE_SUFFIX):
+        handle_execute_ccore_task_path(handler, task_execution_service, path)
         return
 
     _send_validation_error(handler, CCORE_TASK_INVALID_ID_MESSAGE)
@@ -235,12 +247,30 @@ def handle_delete_ccore_task(handler, ccore_task_service, path: str) -> None:
     )
 
 
+def handle_execute_ccore_task_path(
+    handler,
+    task_execution_service,
+    path: str,
+) -> None:
+    task_id = extract_ccore_task_id_from_suffix_path(
+        path,
+        CCORE_TASK_EXECUTE_SUFFIX,
+    )
+    request_data = read_json_body(handler)
 
-def handle_execute_ccore_task(handler, ccore_task_service, path: str) -> None:
-    task_id = extract_ccore_task_id_from_suffix_path(path, "/execute")
+    if request_data is None:
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
+        return
+
+    execution_request = TaskExecutionRequest(
+        task_id=task_id,
+        execution_mode=request_data.get("executionMode", "manual"),
+        requested_by=request_data.get("requestedBy", "system"),
+        input_payload=request_data.get("inputPayload", {}),
+    )
 
     try:
-        execution = ccore_task_service.execute_task(task_id)
+        result = task_execution_service.run_task(task_id, execution_request)
 
     except ValueError as error:
         _send_validation_error(handler, str(error))
@@ -250,18 +280,38 @@ def handle_execute_ccore_task(handler, ccore_task_service, path: str) -> None:
         _send_server_error(handler, error)
         return
 
-    if execution is None:
-        _send_not_found_error(handler)
-        return
+    status_code = 200
+
+    if result.status == "FAILED":
+        status_code = 500
 
     _send_success(
         handler,
-        201,
+        status_code,
         {
-            "message": "CCore task execution completed.",
-            "execution": ccore_task_execution_mapper.domain_to_response(execution),
+            "message": result.message,
+            "execution": task_execution_result_to_response(result),
         },
     )
+
+
+def handle_execute_ccore_task(
+    handler,
+    task_execution_service,
+    path: str,
+) -> None:
+    handle_execute_ccore_task_path(handler, task_execution_service, path)
+
+
+def task_execution_result_to_response(result: TaskExecutionResult) -> dict:
+    return {
+        "taskId": result.task_id,
+        "status": result.status,
+        "message": result.message,
+        "providerName": result.provider_name,
+        "executionDetails": result.execution_details,
+        "errorDetails": result.error_details,
+    }
 
 
 def handle_get_ccore_task_executions(handler, ccore_task_service, path: str) -> None:
@@ -285,6 +335,7 @@ def handle_get_ccore_task_executions(handler, ccore_task_service, path: str) -> 
             "executions": ccore_task_execution_mapper.domains_to_response(executions),
         },
     )
+
 
 def extract_ccore_task_id(path: str) -> str:
     if not path.startswith(API_PATH_CCORE_TASKS_PREFIX):

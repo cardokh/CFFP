@@ -52,16 +52,14 @@ class CCoreTaskRepository:
     def find_all_tasks(self) -> list[CCoreTask]:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    f"""
+                cursor.execute(f"""
                     SELECT
                         {self._task_select_columns()}
                     FROM {CCORE_TASKS_TABLE_NAME} task
                     INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
                         ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
                     ORDER BY task.{CCORE_TASK_CREATED_AT_COLUMN} DESC, task.{CCORE_TASK_NAME_COLUMN} ASC
-                    """
-                )
+                    """)
 
                 rows = cursor.fetchall()
 
@@ -167,6 +165,43 @@ class CCoreTaskRepository:
 
         return self._map_row_to_task(row)
 
+    def update_task_status(self, task_id: str, status_code: str) -> CCoreTask | None:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE {CCORE_TASKS_TABLE_NAME}
+                    SET
+                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
+                    RETURNING
+                        {CCORE_TASK_ID_COLUMN},
+                        {CCORE_TASK_NAME_COLUMN},
+                        {CCORE_TASK_STATUS_CODE_COLUMN},
+                        (
+                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
+                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
+                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
+                        {CCORE_TASK_CREATED_AT_COLUMN},
+                        {CCORE_TASK_UPDATED_AT_COLUMN}
+                    """,
+                    (
+                        status_code,
+                        task_id,
+                    ),
+                )
+
+                row = cursor.fetchone()
+
+            connection.commit()
+
+        if row is None:
+            return None
+
+        return self._map_row_to_task(row)
+
     def delete_task(self, task_id: str) -> bool:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
@@ -199,16 +234,14 @@ class CCoreTaskStatusRepository:
     def find_all_statuses(self) -> list[CCoreTaskStatus]:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    f"""
+                cursor.execute(f"""
                     SELECT
                         {CCORE_TASK_STATUS_CODE_COLUMN},
                         {CCORE_TASK_STATUS_LABEL_COLUMN},
                         {CCORE_TASK_STATUS_SORT_ORDER_COLUMN}
                     FROM {CCORE_TASK_STATUSES_TABLE_NAME}
                     ORDER BY {CCORE_TASK_STATUS_SORT_ORDER_COLUMN} ASC, {CCORE_TASK_STATUS_LABEL_COLUMN} ASC
-                    """
-                )
+                    """)
 
                 rows = cursor.fetchall()
 
