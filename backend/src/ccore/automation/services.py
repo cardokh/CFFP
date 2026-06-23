@@ -17,6 +17,7 @@ from backend.src.ccore.tasks.task_execution_constants import (
     CCORE_TASK_EXECUTION_DEFAULT_CONFIGURATION_ID,
     CCORE_TASK_EXECUTION_DEFAULT_IMPLEMENTER_TYPE_ID,
     CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_ID,
+    CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID,
     CCORE_TASK_EXECUTION_DEFAULT_REQUESTED_BY,
     CCORE_TASK_EXECUTION_DEFAULT_TARGET_ID,
     CCORE_TASK_EXECUTION_STATUS_ID_BLOCKED,
@@ -39,7 +40,11 @@ from .contracts import (
     TaskExecutionRequest,
     TaskExecutionResult,
 )
-from .providers import LocalExecutionProvider, NoOpExecutionImplementer
+from .providers import (
+    LocalExecutionProvider,
+    NoOpExecutionImplementer,
+    PythonScriptExecutionImplementer,
+)
 
 DEFAULT_TASK_TYPE = "generic"
 LOCAL_PROVIDER_ID = CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_ID
@@ -59,6 +64,7 @@ class TaskExecutionService:
         self.ccore_task_service = ccore_task_service
         self.execution_provider = execution_provider or LocalExecutionProvider()
         self.execution_implementer = execution_implementer or NoOpExecutionImplementer()
+        self.python_script_execution_implementer = PythonScriptExecutionImplementer()
         self.task_execution_repository = task_execution_repository or getattr(
             ccore_task_service,
             "task_execution_repository",
@@ -278,7 +284,8 @@ class TaskExecutionService:
                 ),
             )
 
-        if context.execution_implementer_type_id != NO_OP_IMPLEMENTER_TYPE_ID:
+        selected_implementer = self._resolve_execution_implementer(context)
+        if selected_implementer is None:
             return self._build_blocked_result(
                 context=context,
                 message=(
@@ -287,16 +294,18 @@ class TaskExecutionService:
                 ),
             )
 
-        if context.execution_target_id != NO_OP_TARGET_ID or context.execution_configuration_id != NO_OP_CONFIGURATION_ID:
-            return self._build_blocked_result(
-                context=context,
-                message=(
-                    "The selected target/configuration combination is registered as metadata, "
-                    "but no concrete doer adapter is configured for it yet."
-                ),
-            )
+        return self.execution_provider.run(context, selected_implementer)
 
-        return self.execution_provider.run(context, self.execution_implementer)
+    def _resolve_execution_implementer(self, context: TaskExecutionContext) -> ExecutionImplementer | None:
+        if context.execution_implementer_type_id == NO_OP_IMPLEMENTER_TYPE_ID:
+            if context.execution_target_id != NO_OP_TARGET_ID or context.execution_configuration_id != NO_OP_CONFIGURATION_ID:
+                return None
+            return self.execution_implementer
+
+        if context.execution_implementer_type_id == CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID:
+            return self.python_script_execution_implementer
+
+        return None
 
     def _build_configuration_snapshot(self, task, request: TaskExecutionRequest, context: TaskExecutionContext) -> dict:
         return {
