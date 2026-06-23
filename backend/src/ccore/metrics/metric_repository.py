@@ -16,7 +16,7 @@ from backend.src.ccore.metrics.metric_constants import (
     CCORE_METRIC_ID_COLUMN,
     CCORE_METRIC_KEY_COLUMN,
     CCORE_METRIC_NAME_COLUMN,
-    CCORE_METRIC_TYPE_CODE_COLUMN,
+    CCORE_METRIC_TYPE_ID_COLUMN,
     CCORE_METRIC_TYPE_LABEL_COLUMN,
     CCORE_METRIC_TYPE_SORT_ORDER_COLUMN,
     CCORE_METRIC_TYPES_TABLE_NAME,
@@ -34,10 +34,20 @@ class CCoreMetricRepository:
             metric_id=str(row[0]),
             metric_name=row[1],
             metric_key=row[2],
-            metric_type_code=row[3],
+            metric_type_id=row[3],
             metric_type_label=row[4],
             created_at=row[5].isoformat() if row[5] is not None else None,
         )
+
+    def _metric_select_columns(self) -> str:
+        return f"""
+            metric.{CCORE_METRIC_ID_COLUMN},
+            metric.{CCORE_METRIC_NAME_COLUMN},
+            metric.{CCORE_METRIC_KEY_COLUMN},
+            metric.{CCORE_METRIC_TYPE_ID_COLUMN},
+            metric_type.{CCORE_METRIC_TYPE_LABEL_COLUMN},
+            metric.{CCORE_METRIC_CREATED_AT_COLUMN}
+        """
 
     def find_all_metrics(self) -> list[CCoreMetric]:
         with self.db_manager.get_connection() as connection:
@@ -45,15 +55,10 @@ class CCoreMetricRepository:
                 cursor.execute(
                     f"""
                     SELECT
-                        metric.{CCORE_METRIC_ID_COLUMN},
-                        metric.{CCORE_METRIC_NAME_COLUMN},
-                        metric.{CCORE_METRIC_KEY_COLUMN},
-                        metric.{CCORE_METRIC_TYPE_CODE_COLUMN},
-                        metric_type.{CCORE_METRIC_TYPE_LABEL_COLUMN},
-                        metric.{CCORE_METRIC_CREATED_AT_COLUMN}
+                        {self._metric_select_columns()}
                     FROM {CCORE_METRICS_TABLE_NAME} metric
                     INNER JOIN {CCORE_METRIC_TYPES_TABLE_NAME} metric_type
-                        ON metric_type.{CCORE_METRIC_TYPE_CODE_COLUMN} = metric.{CCORE_METRIC_TYPE_CODE_COLUMN}
+                        ON metric_type.{CCORE_METRIC_TYPE_ID_COLUMN} = metric.{CCORE_METRIC_TYPE_ID_COLUMN}
                     ORDER BY metric.{CCORE_METRIC_CREATED_AT_COLUMN} DESC, metric.{CCORE_METRIC_NAME_COLUMN} ASC
                     """
                 )
@@ -68,15 +73,10 @@ class CCoreMetricRepository:
                 cursor.execute(
                     f"""
                     SELECT
-                        metric.{CCORE_METRIC_ID_COLUMN},
-                        metric.{CCORE_METRIC_NAME_COLUMN},
-                        metric.{CCORE_METRIC_KEY_COLUMN},
-                        metric.{CCORE_METRIC_TYPE_CODE_COLUMN},
-                        metric_type.{CCORE_METRIC_TYPE_LABEL_COLUMN},
-                        metric.{CCORE_METRIC_CREATED_AT_COLUMN}
+                        {self._metric_select_columns()}
                     FROM {CCORE_METRICS_TABLE_NAME} metric
                     INNER JOIN {CCORE_METRIC_TYPES_TABLE_NAME} metric_type
-                        ON metric_type.{CCORE_METRIC_TYPE_CODE_COLUMN} = metric.{CCORE_METRIC_TYPE_CODE_COLUMN}
+                        ON metric_type.{CCORE_METRIC_TYPE_ID_COLUMN} = metric.{CCORE_METRIC_TYPE_ID_COLUMN}
                     WHERE metric.{CCORE_METRIC_ID_COLUMN} = %s
                     """,
                     (metric_id,),
@@ -98,7 +98,7 @@ class CCoreMetricRepository:
                         {CCORE_METRIC_ID_COLUMN},
                         {CCORE_METRIC_NAME_COLUMN},
                         {CCORE_METRIC_KEY_COLUMN},
-                        {CCORE_METRIC_TYPE_CODE_COLUMN}
+                        {CCORE_METRIC_TYPE_ID_COLUMN}
                     )
                     VALUES (
                         gen_random_uuid(),
@@ -106,30 +106,25 @@ class CCoreMetricRepository:
                         %s,
                         %s
                     )
-                    RETURNING
-                        {CCORE_METRIC_ID_COLUMN},
-                        {CCORE_METRIC_NAME_COLUMN},
-                        {CCORE_METRIC_KEY_COLUMN},
-                        {CCORE_METRIC_TYPE_CODE_COLUMN},
-                        (
-                            SELECT {CCORE_METRIC_TYPE_LABEL_COLUMN}
-                            FROM {CCORE_METRIC_TYPES_TABLE_NAME}
-                            WHERE {CCORE_METRIC_TYPE_CODE_COLUMN} = {CCORE_METRICS_TABLE_NAME}.{CCORE_METRIC_TYPE_CODE_COLUMN}
-                        ) AS {CCORE_METRIC_TYPE_LABEL_COLUMN},
-                        {CCORE_METRIC_CREATED_AT_COLUMN}
+                    RETURNING {CCORE_METRIC_ID_COLUMN}
                     """,
                     (
                         metric.metric_name,
                         metric.metric_key,
-                        metric.metric_type_code,
+                        metric.metric_type_id,
                     ),
                 )
 
-                row = cursor.fetchone()
+                metric_id = str(cursor.fetchone()[0])
 
             connection.commit()
 
-        return self._map_row_to_metric(row)
+        created_metric = self.find_by_id(metric_id)
+
+        if created_metric is None:
+            raise RuntimeError(f"Created CCore metric could not be read: {metric_id}")
+
+        return created_metric
 
     def update_metric(self, metric: CCoreMetric) -> CCoreMetric | None:
         with self.db_manager.get_connection() as connection:
@@ -140,24 +135,14 @@ class CCoreMetricRepository:
                     SET
                         {CCORE_METRIC_NAME_COLUMN} = %s,
                         {CCORE_METRIC_KEY_COLUMN} = %s,
-                        {CCORE_METRIC_TYPE_CODE_COLUMN} = %s
+                        {CCORE_METRIC_TYPE_ID_COLUMN} = %s
                     WHERE {CCORE_METRIC_ID_COLUMN} = %s
-                    RETURNING
-                        {CCORE_METRIC_ID_COLUMN},
-                        {CCORE_METRIC_NAME_COLUMN},
-                        {CCORE_METRIC_KEY_COLUMN},
-                        {CCORE_METRIC_TYPE_CODE_COLUMN},
-                        (
-                            SELECT {CCORE_METRIC_TYPE_LABEL_COLUMN}
-                            FROM {CCORE_METRIC_TYPES_TABLE_NAME}
-                            WHERE {CCORE_METRIC_TYPE_CODE_COLUMN} = {CCORE_METRICS_TABLE_NAME}.{CCORE_METRIC_TYPE_CODE_COLUMN}
-                        ) AS {CCORE_METRIC_TYPE_LABEL_COLUMN},
-                        {CCORE_METRIC_CREATED_AT_COLUMN}
+                    RETURNING {CCORE_METRIC_ID_COLUMN}
                     """,
                     (
                         metric.metric_name,
                         metric.metric_key,
-                        metric.metric_type_code,
+                        metric.metric_type_id,
                         metric.metric_id,
                     ),
                 )
@@ -169,7 +154,7 @@ class CCoreMetricRepository:
         if row is None:
             return None
 
-        return self._map_row_to_metric(row)
+        return self.find_by_id(str(row[0]))
 
     def delete_metric(self, metric_id: str) -> bool:
         with self.db_manager.get_connection() as connection:
@@ -195,7 +180,7 @@ class CCoreMetricTypeRepository:
 
     def _map_row_to_type(self, row) -> CCoreMetricType:
         return CCoreMetricType(
-            metric_type_code=row[0],
+            metric_type_id=row[0],
             metric_type_label=row[1],
             sort_order=row[2],
         )
@@ -206,7 +191,7 @@ class CCoreMetricTypeRepository:
                 cursor.execute(
                     f"""
                     SELECT
-                        {CCORE_METRIC_TYPE_CODE_COLUMN},
+                        {CCORE_METRIC_TYPE_ID_COLUMN},
                         {CCORE_METRIC_TYPE_LABEL_COLUMN},
                         {CCORE_METRIC_TYPE_SORT_ORDER_COLUMN}
                     FROM {CCORE_METRIC_TYPES_TABLE_NAME}
@@ -218,16 +203,16 @@ class CCoreMetricTypeRepository:
 
         return [self._map_row_to_type(row) for row in rows]
 
-    def type_exists(self, metric_type_code: str) -> bool:
+    def type_exists(self, metric_type_id: int) -> bool:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""
                     SELECT 1
                     FROM {CCORE_METRIC_TYPES_TABLE_NAME}
-                    WHERE {CCORE_METRIC_TYPE_CODE_COLUMN} = %s
+                    WHERE {CCORE_METRIC_TYPE_ID_COLUMN} = %s
                     """,
-                    (metric_type_code,),
+                    (metric_type_id,),
                 )
 
                 return cursor.fetchone() is not None

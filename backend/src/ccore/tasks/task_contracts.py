@@ -4,18 +4,14 @@ CCore task API request contracts.
 Responsibilities:
 - Represent task create/update request data at the API boundary.
 - Validate public JSON/API payload shape before domain mapping.
-- Keep route handlers independent from request field extraction details.
-
-Naming rule:
-- JSON/API fields are camelCase.
-- Python contract attributes are snake_case.
+- Keep API parsing independent from repository and service logic.
 """
 
 from dataclasses import dataclass
 from typing import Any
 
 from backend.src.ccore.tasks.task_constants import (
-    CCORE_TASK_API_FIELD_STATUS,
+    CCORE_TASK_API_FIELD_STATUS_ID,
     CCORE_TASK_API_FIELD_TASK_NAME,
 )
 from backend.src.ccore.tasks.task_messages import (
@@ -27,26 +23,25 @@ from backend.src.ccore.tasks.task_messages import (
 
 _CREATE_TASK_FIELDS = {
     CCORE_TASK_API_FIELD_TASK_NAME,
-    CCORE_TASK_API_FIELD_STATUS,
+    CCORE_TASK_API_FIELD_STATUS_ID,
 }
-
 _UPDATE_TASK_FIELDS = {
     CCORE_TASK_API_FIELD_TASK_NAME,
-    CCORE_TASK_API_FIELD_STATUS,
+    CCORE_TASK_API_FIELD_STATUS_ID,
 }
 
 
 @dataclass(frozen=True)
 class CreateCCoreTaskRequest:
     task_name: str
-    status_code: str | None = None
+    status_id: int | None = None
 
 
 @dataclass(frozen=True)
 class UpdateCCoreTaskRequest:
     task_id: str
     task_name: str
-    status_code: str
+    status_id: int
 
 
 class CCoreTaskRequestParser:
@@ -54,22 +49,38 @@ class CCoreTaskRequestParser:
         self._validate_payload_object(payload)
         self._validate_known_fields(payload, _CREATE_TASK_FIELDS)
 
-        task_name = self._require_text(payload, CCORE_TASK_API_FIELD_TASK_NAME, CCORE_TASK_NAME_REQUIRED_MESSAGE)
-        status_code = self._optional_text(payload, CCORE_TASK_API_FIELD_STATUS)
+        task_name = self._require_text(
+            payload,
+            CCORE_TASK_API_FIELD_TASK_NAME,
+            CCORE_TASK_NAME_REQUIRED_MESSAGE,
+        )
+        status_id = self._optional_integer(payload, CCORE_TASK_API_FIELD_STATUS_ID)
 
-        return CreateCCoreTaskRequest(task_name=task_name, status_code=status_code)
+        return CreateCCoreTaskRequest(task_name=task_name, status_id=status_id)
 
-    def parse_update_request(self, task_id: str, payload: dict[str, Any]) -> UpdateCCoreTaskRequest:
+    def parse_update_request(
+        self,
+        task_id: str,
+        payload: dict[str, Any],
+    ) -> UpdateCCoreTaskRequest:
         self._validate_payload_object(payload)
         self._validate_known_fields(payload, _UPDATE_TASK_FIELDS)
 
-        task_name = self._require_text(payload, CCORE_TASK_API_FIELD_TASK_NAME, CCORE_TASK_NAME_REQUIRED_MESSAGE)
-        status_code = self._require_text(payload, CCORE_TASK_API_FIELD_STATUS, CCORE_TASK_STATUS_REQUIRED_MESSAGE)
+        task_name = self._require_text(
+            payload,
+            CCORE_TASK_API_FIELD_TASK_NAME,
+            CCORE_TASK_NAME_REQUIRED_MESSAGE,
+        )
+        status_id = self._require_integer(
+            payload,
+            CCORE_TASK_API_FIELD_STATUS_ID,
+            CCORE_TASK_STATUS_REQUIRED_MESSAGE,
+        )
 
         return UpdateCCoreTaskRequest(
             task_id=task_id,
             task_name=task_name,
-            status_code=status_code,
+            status_id=status_id,
         )
 
     def _validate_payload_object(self, payload: dict[str, Any]) -> None:
@@ -113,3 +124,32 @@ class CCoreTaskRequestParser:
             return None
 
         return text_value
+
+    def _require_integer(
+        self,
+        payload: dict[str, Any],
+        field_name: str,
+        message: str,
+    ) -> int:
+        value = self._optional_integer(payload, field_name)
+
+        if value is None:
+            raise ValueError(message)
+
+        return value
+
+    def _optional_integer(self, payload: dict[str, Any], field_name: str) -> int | None:
+        value = payload.get(field_name)
+
+        if value is None:
+            return None
+
+        try:
+            integer_value = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(CCORE_TASK_STATUS_REQUIRED_MESSAGE) from exc
+
+        if integer_value <= 0:
+            raise ValueError(CCORE_TASK_STATUS_REQUIRED_MESSAGE)
+
+        return integer_value

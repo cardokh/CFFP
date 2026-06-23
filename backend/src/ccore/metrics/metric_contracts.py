@@ -5,10 +5,6 @@ Responsibilities:
 - Represent metric create/update request data at the API boundary.
 - Validate public JSON/API payload shape before domain mapping.
 - Keep route handlers independent from request field extraction details.
-
-Naming rule:
-- JSON/API fields are camelCase.
-- Python contract attributes are snake_case.
 """
 
 from dataclasses import dataclass
@@ -17,7 +13,7 @@ from typing import Any
 from backend.src.ccore.metrics.metric_constants import (
     CCORE_METRIC_API_FIELD_METRIC_KEY,
     CCORE_METRIC_API_FIELD_METRIC_NAME,
-    CCORE_METRIC_API_FIELD_METRIC_TYPE,
+    CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
 )
 from backend.src.ccore.metrics.metric_messages import (
     CCORE_METRIC_KEY_REQUIRED_MESSAGE,
@@ -30,13 +26,13 @@ from backend.src.ccore.metrics.metric_messages import (
 _CREATE_METRIC_FIELDS = {
     CCORE_METRIC_API_FIELD_METRIC_NAME,
     CCORE_METRIC_API_FIELD_METRIC_KEY,
-    CCORE_METRIC_API_FIELD_METRIC_TYPE,
+    CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
 }
 
 _UPDATE_METRIC_FIELDS = {
     CCORE_METRIC_API_FIELD_METRIC_NAME,
     CCORE_METRIC_API_FIELD_METRIC_KEY,
-    CCORE_METRIC_API_FIELD_METRIC_TYPE,
+    CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
 }
 
 
@@ -44,7 +40,7 @@ _UPDATE_METRIC_FIELDS = {
 class CreateCCoreMetricRequest:
     metric_name: str
     metric_key: str
-    metric_type_code: str | None = None
+    metric_type_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -52,7 +48,7 @@ class UpdateCCoreMetricRequest:
     metric_id: str
     metric_name: str
     metric_key: str
-    metric_type_code: str
+    metric_type_id: int
 
 
 class CCoreMetricRequestParser:
@@ -60,29 +56,56 @@ class CCoreMetricRequestParser:
         self._validate_payload_object(payload)
         self._validate_known_fields(payload, _CREATE_METRIC_FIELDS)
 
-        metric_name = self._require_text(payload, CCORE_METRIC_API_FIELD_METRIC_NAME, CCORE_METRIC_NAME_REQUIRED_MESSAGE)
-        metric_key = self._require_text(payload, CCORE_METRIC_API_FIELD_METRIC_KEY, CCORE_METRIC_KEY_REQUIRED_MESSAGE)
-        metric_type_code = self._optional_text(payload, CCORE_METRIC_API_FIELD_METRIC_TYPE)
+        metric_name = self._require_text(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_NAME,
+            CCORE_METRIC_NAME_REQUIRED_MESSAGE,
+        )
+        metric_key = self._require_text(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_KEY,
+            CCORE_METRIC_KEY_REQUIRED_MESSAGE,
+        )
+        metric_type_id = self._optional_integer(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
+        )
 
         return CreateCCoreMetricRequest(
             metric_name=metric_name,
             metric_key=metric_key,
-            metric_type_code=metric_type_code,
+            metric_type_id=metric_type_id,
         )
 
-    def parse_update_request(self, metric_id: str, payload: dict[str, Any]) -> UpdateCCoreMetricRequest:
+    def parse_update_request(
+        self,
+        metric_id: str,
+        payload: dict[str, Any],
+    ) -> UpdateCCoreMetricRequest:
         self._validate_payload_object(payload)
         self._validate_known_fields(payload, _UPDATE_METRIC_FIELDS)
 
-        metric_name = self._require_text(payload, CCORE_METRIC_API_FIELD_METRIC_NAME, CCORE_METRIC_NAME_REQUIRED_MESSAGE)
-        metric_key = self._require_text(payload, CCORE_METRIC_API_FIELD_METRIC_KEY, CCORE_METRIC_KEY_REQUIRED_MESSAGE)
-        metric_type_code = self._require_text(payload, CCORE_METRIC_API_FIELD_METRIC_TYPE, CCORE_METRIC_TYPE_REQUIRED_MESSAGE)
+        metric_name = self._require_text(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_NAME,
+            CCORE_METRIC_NAME_REQUIRED_MESSAGE,
+        )
+        metric_key = self._require_text(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_KEY,
+            CCORE_METRIC_KEY_REQUIRED_MESSAGE,
+        )
+        metric_type_id = self._require_integer(
+            payload,
+            CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
+            CCORE_METRIC_TYPE_REQUIRED_MESSAGE,
+        )
 
         return UpdateCCoreMetricRequest(
             metric_id=metric_id,
             metric_name=metric_name,
             metric_key=metric_key,
-            metric_type_code=metric_type_code,
+            metric_type_id=metric_type_id,
         )
 
     def _validate_payload_object(self, payload: dict[str, Any]) -> None:
@@ -126,3 +149,32 @@ class CCoreMetricRequestParser:
             return None
 
         return text_value
+
+    def _require_integer(
+        self,
+        payload: dict[str, Any],
+        field_name: str,
+        message: str,
+    ) -> int:
+        value = self._optional_integer(payload, field_name)
+
+        if value is None:
+            raise ValueError(message)
+
+        return value
+
+    def _optional_integer(self, payload: dict[str, Any], field_name: str) -> int | None:
+        value = payload.get(field_name)
+
+        if value is None:
+            return None
+
+        try:
+            integer_value = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(CCORE_METRIC_TYPE_REQUIRED_MESSAGE) from exc
+
+        if integer_value <= 0:
+            raise ValueError(CCORE_METRIC_TYPE_REQUIRED_MESSAGE)
+
+        return integer_value

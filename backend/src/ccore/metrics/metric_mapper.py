@@ -14,11 +14,12 @@ from backend.src.ccore.metrics.metric_constants import (
     CCORE_METRIC_API_FIELD_METRIC_KEY,
     CCORE_METRIC_API_FIELD_METRIC_NAME,
     CCORE_METRIC_API_FIELD_METRIC_TYPE,
+    CCORE_METRIC_API_FIELD_METRIC_TYPE_ID,
     CCORE_METRIC_API_FIELD_METRIC_TYPE_LABEL,
-    CCORE_METRIC_DEFAULT_TYPE_CODE,
-    CCORE_METRIC_TYPE_API_FIELD_CODE,
+    CCORE_METRIC_TYPE_API_FIELD_ID,
     CCORE_METRIC_TYPE_API_FIELD_LABEL,
     CCORE_METRIC_TYPE_API_FIELD_SORT_ORDER,
+    CCORE_METRIC_TYPE_ID_COUNTER,
 )
 from backend.src.ccore.metrics.metric_contracts import (
     CreateCCoreMetricRequest,
@@ -36,7 +37,7 @@ class CCoreMetricMapper:
             metric_id=None,
             metric_name=request.metric_name,
             metric_key=request.metric_key,
-            metric_type_code=request.metric_type_code or CCORE_METRIC_DEFAULT_TYPE_CODE,
+            metric_type_id=request.metric_type_id or CCORE_METRIC_TYPE_ID_COUNTER,
         )
 
     def update_request_to_domain(
@@ -47,7 +48,7 @@ class CCoreMetricMapper:
             metric_id=request.metric_id,
             metric_name=request.metric_name,
             metric_key=request.metric_key,
-            metric_type_code=request.metric_type_code,
+            metric_type_id=request.metric_type_id,
         )
 
     def domain_to_response(self, metric: CCoreMetric) -> dict:
@@ -55,7 +56,8 @@ class CCoreMetricMapper:
             CCORE_METRIC_API_FIELD_METRIC_ID: metric.metric_id,
             CCORE_METRIC_API_FIELD_METRIC_NAME: metric.metric_name,
             CCORE_METRIC_API_FIELD_METRIC_KEY: metric.metric_key,
-            CCORE_METRIC_API_FIELD_METRIC_TYPE: metric.metric_type_code,
+            CCORE_METRIC_API_FIELD_METRIC_TYPE: metric.metric_type_label,
+            CCORE_METRIC_API_FIELD_METRIC_TYPE_ID: metric.metric_type_id,
             CCORE_METRIC_API_FIELD_METRIC_TYPE_LABEL: metric.metric_type_label,
             CCORE_METRIC_API_FIELD_CREATED_AT: metric.created_at,
         }
@@ -65,7 +67,7 @@ class CCoreMetricMapper:
 
     def type_to_response(self, metric_type: CCoreMetricType) -> dict:
         return {
-            CCORE_METRIC_TYPE_API_FIELD_CODE: metric_type.metric_type_code,
+            CCORE_METRIC_TYPE_API_FIELD_ID: metric_type.metric_type_id,
             CCORE_METRIC_TYPE_API_FIELD_LABEL: metric_type.metric_type_label,
             CCORE_METRIC_TYPE_API_FIELD_SORT_ORDER: metric_type.sort_order,
         }

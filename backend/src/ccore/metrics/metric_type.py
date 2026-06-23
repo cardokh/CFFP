@@ -11,6 +11,6 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class CCoreMetricType:
-    metric_type_code: str
+    metric_type_id: int
     metric_type_label: str
     sort_order: int

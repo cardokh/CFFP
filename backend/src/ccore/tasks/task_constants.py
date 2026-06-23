@@ -2,7 +2,7 @@
 CCore task constants.
 
 Responsibilities:
-- Centralize task table names, column names, default values, and API field names.
+- Centralize task table names, column names, lookup IDs, and API field names.
 - Avoid duplicated literal values across repositories, services, routes, and mappers.
 - Keep task-specific constants inside the CCore task boundary.
 """

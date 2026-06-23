@@ -18,7 +18,7 @@ class CCoreTaskExecutionRepositoryProtocol(Protocol):
     def update_execution_status(
         self,
         execution_id: str,
-        status_code: str,
+        execution_status_id: int,
     ) -> CCoreTaskExecution | None:
         """Update the lifecycle status for one task execution."""
 
@@ -33,7 +33,7 @@ class CCoreTaskExecutionRepositoryProtocol(Protocol):
     def update_execution_result(
         self,
         execution_id: str,
-        status_code: str,
+        execution_status_id: int,
         execution_report: dict,
         error_details: dict | None = None,
     ) -> CCoreTaskExecution | None:

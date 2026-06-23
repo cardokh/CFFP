@@ -15,7 +15,7 @@ from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_CREATED_AT_COLUMN,
     CCORE_TASK_ID_COLUMN,
     CCORE_TASK_NAME_COLUMN,
-    CCORE_TASK_STATUS_CODE_COLUMN,
+    CCORE_TASK_STATUS_ID_COLUMN,
     CCORE_TASK_STATUS_LABEL_COLUMN,
     CCORE_TASK_STATUS_SORT_ORDER_COLUMN,
     CCORE_TASK_STATUSES_TABLE_NAME,
@@ -33,7 +33,7 @@ class CCoreTaskRepository:
         return CCoreTask(
             task_id=str(row[0]),
             task_name=row[1],
-            status_code=row[2],
+            status_id=row[2],
             status_label=row[3],
             created_at=row[4].isoformat() if row[4] is not None else None,
             updated_at=row[5].isoformat() if row[5] is not None else None,
@@ -43,7 +43,7 @@ class CCoreTaskRepository:
         return f"""
             task.{CCORE_TASK_ID_COLUMN},
             task.{CCORE_TASK_NAME_COLUMN},
-            task.{CCORE_TASK_STATUS_CODE_COLUMN},
+            task.{CCORE_TASK_STATUS_ID_COLUMN},
             status.{CCORE_TASK_STATUS_LABEL_COLUMN},
             task.{CCORE_TASK_CREATED_AT_COLUMN},
             task.{CCORE_TASK_UPDATED_AT_COLUMN}
@@ -57,7 +57,7 @@ class CCoreTaskRepository:
                         {self._task_select_columns()}
                     FROM {CCORE_TASKS_TABLE_NAME} task
                     INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
-                        ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
+                        ON status.{CCORE_TASK_STATUS_ID_COLUMN} = task.{CCORE_TASK_STATUS_ID_COLUMN}
                     ORDER BY task.{CCORE_TASK_CREATED_AT_COLUMN} DESC, task.{CCORE_TASK_NAME_COLUMN} ASC
                     """)
 
@@ -74,7 +74,7 @@ class CCoreTaskRepository:
                         {self._task_select_columns()}
                     FROM {CCORE_TASKS_TABLE_NAME} task
                     INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
-                        ON status.{CCORE_TASK_STATUS_CODE_COLUMN} = task.{CCORE_TASK_STATUS_CODE_COLUMN}
+                        ON status.{CCORE_TASK_STATUS_ID_COLUMN} = task.{CCORE_TASK_STATUS_ID_COLUMN}
                     WHERE task.{CCORE_TASK_ID_COLUMN} = %s
                     """,
                     (task_id,),
@@ -95,36 +95,31 @@ class CCoreTaskRepository:
                     INSERT INTO {CCORE_TASKS_TABLE_NAME} (
                         {CCORE_TASK_ID_COLUMN},
                         {CCORE_TASK_NAME_COLUMN},
-                        {CCORE_TASK_STATUS_CODE_COLUMN}
+                        {CCORE_TASK_STATUS_ID_COLUMN}
                     )
                     VALUES (
                         gen_random_uuid(),
                         %s,
                         %s
                     )
-                    RETURNING
-                        {CCORE_TASK_ID_COLUMN},
-                        {CCORE_TASK_NAME_COLUMN},
-                        {CCORE_TASK_STATUS_CODE_COLUMN},
-                        (
-                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
-                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
-                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
-                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
-                        {CCORE_TASK_CREATED_AT_COLUMN},
-                        {CCORE_TASK_UPDATED_AT_COLUMN}
+                    RETURNING {CCORE_TASK_ID_COLUMN}
                     """,
                     (
                         task.task_name,
-                        task.status_code,
+                        task.status_id,
                     ),
                 )
 
-                row = cursor.fetchone()
+                task_id = str(cursor.fetchone()[0])
 
             connection.commit()
 
-        return self._map_row_to_task(row)
+        created_task = self.find_by_id(task_id)
+
+        if created_task is None:
+            raise RuntimeError(f"Created CCore task could not be read: {task_id}")
+
+        return created_task
 
     def update_task(self, task: CCoreTask) -> CCoreTask | None:
         with self.db_manager.get_connection() as connection:
@@ -134,24 +129,14 @@ class CCoreTaskRepository:
                     UPDATE {CCORE_TASKS_TABLE_NAME}
                     SET
                         {CCORE_TASK_NAME_COLUMN} = %s,
-                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_STATUS_ID_COLUMN} = %s,
                         {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
                     WHERE {CCORE_TASK_ID_COLUMN} = %s
-                    RETURNING
-                        {CCORE_TASK_ID_COLUMN},
-                        {CCORE_TASK_NAME_COLUMN},
-                        {CCORE_TASK_STATUS_CODE_COLUMN},
-                        (
-                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
-                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
-                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
-                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
-                        {CCORE_TASK_CREATED_AT_COLUMN},
-                        {CCORE_TASK_UPDATED_AT_COLUMN}
+                    RETURNING {CCORE_TASK_ID_COLUMN}
                     """,
                     (
                         task.task_name,
-                        task.status_code,
+                        task.status_id,
                         task.task_id,
                     ),
                 )
@@ -163,32 +148,22 @@ class CCoreTaskRepository:
         if row is None:
             return None
 
-        return self._map_row_to_task(row)
+        return self.find_by_id(str(row[0]))
 
-    def update_task_status(self, task_id: str, status_code: str) -> CCoreTask | None:
+    def update_task_status(self, task_id: str, status_id: int) -> CCoreTask | None:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""
                     UPDATE {CCORE_TASKS_TABLE_NAME}
                     SET
-                        {CCORE_TASK_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_STATUS_ID_COLUMN} = %s,
                         {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
                     WHERE {CCORE_TASK_ID_COLUMN} = %s
-                    RETURNING
-                        {CCORE_TASK_ID_COLUMN},
-                        {CCORE_TASK_NAME_COLUMN},
-                        {CCORE_TASK_STATUS_CODE_COLUMN},
-                        (
-                            SELECT {CCORE_TASK_STATUS_LABEL_COLUMN}
-                            FROM {CCORE_TASK_STATUSES_TABLE_NAME}
-                            WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = {CCORE_TASKS_TABLE_NAME}.{CCORE_TASK_STATUS_CODE_COLUMN}
-                        ) AS {CCORE_TASK_STATUS_LABEL_COLUMN},
-                        {CCORE_TASK_CREATED_AT_COLUMN},
-                        {CCORE_TASK_UPDATED_AT_COLUMN}
+                    RETURNING {CCORE_TASK_ID_COLUMN}
                     """,
                     (
-                        status_code,
+                        status_id,
                         task_id,
                     ),
                 )
@@ -200,7 +175,7 @@ class CCoreTaskRepository:
         if row is None:
             return None
 
-        return self._map_row_to_task(row)
+        return self.find_by_id(str(row[0]))
 
     def delete_task(self, task_id: str) -> bool:
         with self.db_manager.get_connection() as connection:
@@ -226,7 +201,7 @@ class CCoreTaskStatusRepository:
 
     def _map_row_to_status(self, row) -> CCoreTaskStatus:
         return CCoreTaskStatus(
-            status_code=row[0],
+            status_id=row[0],
             status_label=row[1],
             sort_order=row[2],
         )
@@ -236,7 +211,7 @@ class CCoreTaskStatusRepository:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
                     SELECT
-                        {CCORE_TASK_STATUS_CODE_COLUMN},
+                        {CCORE_TASK_STATUS_ID_COLUMN},
                         {CCORE_TASK_STATUS_LABEL_COLUMN},
                         {CCORE_TASK_STATUS_SORT_ORDER_COLUMN}
                     FROM {CCORE_TASK_STATUSES_TABLE_NAME}
@@ -247,16 +222,16 @@ class CCoreTaskStatusRepository:
 
         return [self._map_row_to_status(row) for row in rows]
 
-    def status_exists(self, status_code: str) -> bool:
+    def status_exists(self, status_id: int) -> bool:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"""
                     SELECT 1
                     FROM {CCORE_TASK_STATUSES_TABLE_NAME}
-                    WHERE {CCORE_TASK_STATUS_CODE_COLUMN} = %s
+                    WHERE {CCORE_TASK_STATUS_ID_COLUMN} = %s
                     """,
-                    (status_code,),
+                    (status_id,),
                 )
 
                 return cursor.fetchone() is not None

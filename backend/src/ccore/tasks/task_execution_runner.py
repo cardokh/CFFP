@@ -24,8 +24,8 @@ from typing import Protocol
 
 from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_execution_constants import (
-    CCORE_TASK_EXECUTION_STATUS_COMPLETED,
-    CCORE_TASK_EXECUTION_STATUS_FAILED,
+    CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED,
+    CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
     CCORE_TASK_RUNNER_GENERATE_DOCUMENTATION,
     CCORE_TASK_RUNNER_INSPECT_PROJECT,
     CCORE_TASK_RUNNER_VALIDATE_PROJECT,
@@ -759,10 +759,10 @@ class CCoreTaskRunnerRegistry:
 
 def _build_runner_result(runner_code: str, report: dict) -> dict:
     return {
-        "status_code": (
-            CCORE_TASK_EXECUTION_STATUS_COMPLETED
+        "execution_status_id": (
+            CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
             if report.get("status") == STATUS_PASSED
-            else CCORE_TASK_EXECUTION_STATUS_FAILED
+            else CCORE_TASK_EXECUTION_STATUS_ID_FAILED
         ),
         "runner_code": runner_code,
         "report": report,

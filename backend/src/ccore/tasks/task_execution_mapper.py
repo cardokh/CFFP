@@ -21,6 +21,7 @@ from backend.src.ccore.tasks.task_execution_constants import (
     CCORE_TASK_EXECUTION_API_FIELD_REQUESTED_BY,
     CCORE_TASK_EXECUTION_API_FIELD_STARTED_AT,
     CCORE_TASK_EXECUTION_API_FIELD_STATUS,
+    CCORE_TASK_EXECUTION_API_FIELD_STATUS_ID,
     CCORE_TASK_EXECUTION_API_FIELD_STATUS_LABEL,
     CCORE_TASK_EXECUTION_API_FIELD_TASK_ID,
     CCORE_TASK_EXECUTION_API_FIELD_UPDATED_AT,
@@ -33,7 +34,8 @@ class CCoreTaskExecutionMapper:
         return {
             CCORE_TASK_EXECUTION_API_FIELD_EXECUTION_ID: execution.execution_id,
             CCORE_TASK_EXECUTION_API_FIELD_TASK_ID: execution.task_id,
-            CCORE_TASK_EXECUTION_API_FIELD_STATUS: execution.status_code,
+            CCORE_TASK_EXECUTION_API_FIELD_STATUS: execution.status_label,
+            CCORE_TASK_EXECUTION_API_FIELD_STATUS_ID: execution.execution_status_id,
             CCORE_TASK_EXECUTION_API_FIELD_STATUS_LABEL: execution.status_label,
             CCORE_TASK_EXECUTION_API_FIELD_PROVIDER_PROFILE: execution.provider_profile,
             CCORE_TASK_EXECUTION_API_FIELD_EXECUTION_MODE: execution.execution_mode,

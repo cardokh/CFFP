@@ -6,6 +6,7 @@
  * - Create, update, and delete rows in the ccore_tasks table.
  * - Keep list-page navigation separate from record maintenance.
  * - Keep frontend endpoint usage centralized through CCORE_API_ENDPOINTS.
+ * - Use the integer-based task status contract: { id: Number, label: String }.
  */
 
 const CCORE_TASK_STATUSES_LOADING_MESSAGE =
@@ -93,10 +94,14 @@ function hideCCoreTaskDetailsMessage() {
 }
 
 
-function normalizeCCoreTaskStatus(status) {
-    return String(status || "")
-        .trim()
-        .toUpperCase();
+function parseCCoreTaskStatusId(value) {
+    const statusId = Number(value);
+
+    if (!Number.isInteger(statusId) || statusId <= 0) {
+        return null;
+    }
+
+    return statusId;
 }
 
 
@@ -115,10 +120,19 @@ function formatCCoreTaskDate(value) {
 }
 
 
+function getDefaultCCoreTaskStatusId(statuses = ccoreTaskStatuses) {
+    if (!Array.isArray(statuses) || statuses.length === 0) {
+        return "";
+    }
+
+    return statuses[0].id;
+}
+
+
 function normalizeCCoreTaskFormSnapshot(formData) {
     return {
         taskName: String(formData.taskName || "").trim(),
-        status: normalizeCCoreTaskStatus(formData.status)
+        statusId: parseCCoreTaskStatusId(formData.statusId)
     };
 }
 
@@ -137,7 +151,7 @@ function hasCCoreTaskFormChanged(formData) {
 
     return (
         currentFormData.taskName !== originalCCoreTaskFormData.taskName ||
-        currentFormData.status !== originalCCoreTaskFormData.status
+        currentFormData.statusId !== originalCCoreTaskFormData.statusId
     );
 }
 
@@ -148,21 +162,15 @@ function getCCoreTaskIdFromUrl() {
 }
 
 
-function getDefaultCCoreTaskStatusCode() {
-    if (ccoreTaskStatuses.length === 0) {
-        return "";
-    }
-
-    return ccoreTaskStatuses[0].code;
-}
-
-
 function parseCCoreTaskStatusesResponse(responseData) {
     if (!responseData || !Array.isArray(responseData.statuses)) {
         throw new Error("The backend did not return a CCore task status list.");
     }
 
-    return responseData.statuses;
+    return responseData.statuses.map((status) => ({
+        id: Number(status.id),
+        label: String(status.label || "")
+    }));
 }
 
 
@@ -175,26 +183,30 @@ function parseCCoreTaskResponse(responseData) {
 }
 
 
-function renderCCoreTaskStatusOptions() {
-    const statusInput = getCCoreTaskStatusInput();
+function renderCCoreTaskStatusOptions(statuses = ccoreTaskStatuses, selectElementId = "ccoreTaskStatusInput") {
+    const statusInput = document.getElementById(selectElementId);
 
     if (!statusInput) {
         return;
     }
 
-    if (ccoreTaskStatuses.length === 0) {
-        statusInput.innerHTML = `<option value="">${escapeCCoreTaskValue(CCORE_TASK_STATUSES_EMPTY_MESSAGE)}</option>`;
+    statusInput.innerHTML = "";
+
+    if (!Array.isArray(statuses) || statuses.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = CCORE_TASK_STATUSES_EMPTY_MESSAGE;
+        statusInput.appendChild(option);
         statusInput.disabled = true;
         return;
     }
 
-    statusInput.innerHTML = ccoreTaskStatuses
-        .map((status) => `
-            <option value="${escapeCCoreTaskValue(status.code)}">
-                ${escapeCCoreTaskValue(status.label)}
-            </option>
-        `)
-        .join("");
+    statuses.forEach((status) => {
+        const option = document.createElement("option");
+        option.value = String(status.id);
+        option.textContent = status.label;
+        statusInput.appendChild(option);
+    });
 
     statusInput.disabled = false;
 }
@@ -223,10 +235,12 @@ function setCCoreTaskDetailsMode(mode) {
 
 
 function getCCoreTaskFormData() {
+    const statusInput = getCCoreTaskStatusInput();
+
     return {
         taskId: document.getElementById("ccoreTaskIdInput").value,
         taskName: document.getElementById("ccoreTaskNameInput").value.trim(),
-        status: getCCoreTaskStatusInput().value
+        statusId: Number(statusInput.value)
     };
 }
 
@@ -236,7 +250,7 @@ function populateCCoreTaskDetails(task) {
 
     document.getElementById("ccoreTaskIdInput").value = currentCCoreTaskId;
     document.getElementById("ccoreTaskNameInput").value = task.taskName || "";
-    document.getElementById("ccoreTaskStatusInput").value = normalizeCCoreTaskStatus(task.status);
+    document.getElementById("ccoreTaskStatusInput").value = String(task.statusId);
     document.getElementById("ccoreTaskCreatedAtInput").value = formatCCoreTaskDate(task.createdAt);
     document.getElementById("ccoreTaskDisplayIdInput").value = currentCCoreTaskId || "New task";
 
@@ -250,7 +264,7 @@ function resetCCoreTaskDetailsForCreate() {
 
     document.getElementById("ccoreTaskIdInput").value = "";
     document.getElementById("ccoreTaskNameInput").value = "";
-    document.getElementById("ccoreTaskStatusInput").value = getDefaultCCoreTaskStatusCode();
+    document.getElementById("ccoreTaskStatusInput").value = String(getDefaultCCoreTaskStatusId());
     document.getElementById("ccoreTaskCreatedAtInput").value = "—";
     document.getElementById("ccoreTaskDisplayIdInput").value = "New task";
 
@@ -269,7 +283,7 @@ async function loadCCoreTaskStatuses() {
 
     const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.statuses);
     ccoreTaskStatuses = parseCCoreTaskStatusesResponse(responseData);
-    renderCCoreTaskStatusOptions();
+    renderCCoreTaskStatusOptions(ccoreTaskStatuses, "ccoreTaskStatusInput");
 }
 
 
@@ -283,18 +297,41 @@ async function loadCCoreTaskDetails(taskId) {
 }
 
 
-async function saveCCoreTask(event) {
+async function saveCCoreTask(taskName, statusId) {
+    return postJson(
+        CCORE_API_ENDPOINTS.tasks.create,
+        {
+            taskName,
+            statusId
+        }
+    );
+}
+
+
+async function updateCCoreTask(taskId, taskName, statusId) {
+    return putJson(
+        CCORE_API_ENDPOINTS.tasks.byId(taskId),
+        {
+            taskName,
+            statusId
+        }
+    );
+}
+
+
+async function handleSaveCCoreTaskSubmit(event) {
     event.preventDefault();
     hideCCoreTaskDetailsMessage();
 
     const formData = getCCoreTaskFormData();
+    const normalizedFormData = normalizeCCoreTaskFormSnapshot(formData);
 
-    if (!formData.taskName) {
+    if (!normalizedFormData.taskName) {
         showCCoreTaskDetailsMessage(CCORE_TASK_NAME_REQUIRED_MESSAGE, "error");
         return;
     }
 
-    if (!formData.status) {
+    if (!normalizedFormData.statusId) {
         showCCoreTaskDetailsMessage(CCORE_TASK_STATUS_REQUIRED_MESSAGE, "error");
         return;
     }
@@ -308,22 +345,17 @@ async function saveCCoreTask(event) {
         let responseData;
 
         if (formData.taskId) {
-            responseData = await putJson(
-                CCORE_API_ENDPOINTS.tasks.byId(formData.taskId),
-                {
-                    taskName: formData.taskName,
-                    status: formData.status
-                }
+            responseData = await updateCCoreTask(
+                formData.taskId,
+                normalizedFormData.taskName,
+                normalizedFormData.statusId
             );
 
             showCCoreTaskDetailsMessage(CCORE_TASK_UPDATED_SUCCESS_MESSAGE, "success");
         } else {
-            responseData = await postJson(
-                CCORE_API_ENDPOINTS.tasks.create,
-                {
-                    taskName: formData.taskName,
-                    status: formData.status
-                }
+            responseData = await saveCCoreTask(
+                normalizedFormData.taskName,
+                normalizedFormData.statusId
             );
 
             showCCoreTaskDetailsMessage(CCORE_TASK_CREATED_SUCCESS_MESSAGE, "success");
@@ -368,7 +400,7 @@ async function deleteCCoreTask() {
 
 
 async function setupCCoreTaskDetailsPage() {
-    document.getElementById("ccoreTaskDetailsForm").addEventListener("submit", saveCCoreTask);
+    document.getElementById("ccoreTaskDetailsForm").addEventListener("submit", handleSaveCCoreTaskSubmit);
     document.getElementById("deleteCCoreTaskButton").addEventListener("click", deleteCCoreTask);
 
     try {

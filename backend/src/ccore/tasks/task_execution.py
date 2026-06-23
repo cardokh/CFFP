@@ -15,7 +15,7 @@ from typing import Any
 class CCoreTaskExecution:
     execution_id: str | None
     task_id: str
-    status_code: str
+    execution_status_id: int
     status_label: str | None = None
     provider_profile: str = "prefect"
     execution_mode: str = "manual"

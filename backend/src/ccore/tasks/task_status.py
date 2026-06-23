@@ -11,6 +11,6 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class CCoreTaskStatus:
-    status_code: str
+    status_id: int
     status_label: str
     sort_order: int

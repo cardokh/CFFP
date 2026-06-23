@@ -13,27 +13,29 @@ from backend.src.ccore.infrastructure.database_contracts import (
     DatabaseConnectionProviderProtocol,
 )
 from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
-
-CCORE_TASK_EXECUTIONS_TABLE_NAME = "ccore_task_executions"
-CCORE_TASK_EXECUTION_STATUSES_TABLE_NAME = "ccore_task_execution_statuses"
-
-CCORE_TASK_EXECUTION_ID_COLUMN = "execution_id"
-CCORE_TASK_EXECUTION_TASK_ID_COLUMN = "task_id"
-CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN = "status_code"
-CCORE_TASK_EXECUTION_STATUS_LABEL_COLUMN = "status_label"
-CCORE_TASK_EXECUTION_PROVIDER_PROFILE_COLUMN = "provider_profile"
-CCORE_TASK_EXECUTION_MODE_COLUMN = "execution_mode"
-CCORE_TASK_EXECUTION_REQUESTED_BY_COLUMN = "requested_by"
-CCORE_TASK_EXECUTION_INPUT_PAYLOAD_COLUMN = "input_payload"
-CCORE_TASK_EXECUTION_CONFIGURATION_SNAPSHOT_COLUMN = "configuration_snapshot"
-CCORE_TASK_EXECUTION_VALIDATION_SNAPSHOT_COLUMN = "validation_snapshot"
-CCORE_TASK_EXECUTION_REPORT_COLUMN = "execution_report"
-CCORE_TASK_EXECUTION_ERROR_DETAILS_COLUMN = "error_details"
-CCORE_TASK_EXECUTION_STARTED_AT_COLUMN = "started_at"
-CCORE_TASK_EXECUTION_COMPLETED_AT_COLUMN = "completed_at"
-CCORE_TASK_EXECUTION_FAILED_AT_COLUMN = "failed_at"
-CCORE_TASK_EXECUTION_CREATED_AT_COLUMN = "created_at"
-CCORE_TASK_EXECUTION_UPDATED_AT_COLUMN = "updated_at"
+from backend.src.ccore.tasks.task_execution_constants import (
+    CCORE_TASK_EXECUTION_COMPLETED_AT_COLUMN,
+    CCORE_TASK_EXECUTION_CONFIGURATION_SNAPSHOT_COLUMN,
+    CCORE_TASK_EXECUTION_CREATED_AT_COLUMN,
+    CCORE_TASK_EXECUTION_ERROR_DETAILS_COLUMN,
+    CCORE_TASK_EXECUTION_FAILED_AT_COLUMN,
+    CCORE_TASK_EXECUTION_ID_COLUMN,
+    CCORE_TASK_EXECUTION_INPUT_PAYLOAD_COLUMN,
+    CCORE_TASK_EXECUTION_MODE_COLUMN,
+    CCORE_TASK_EXECUTION_PROVIDER_PROFILE_COLUMN,
+    CCORE_TASK_EXECUTION_REPORT_COLUMN,
+    CCORE_TASK_EXECUTION_REQUESTED_BY_COLUMN,
+    CCORE_TASK_EXECUTION_STARTED_AT_COLUMN,
+    CCORE_TASK_EXECUTION_STATUSES_TABLE_NAME,
+    CCORE_TASK_EXECUTION_STATUS_ID_COLUMN,
+    CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED,
+    CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
+    CCORE_TASK_EXECUTION_STATUS_LABEL_COLUMN,
+    CCORE_TASK_EXECUTION_TASK_ID_COLUMN,
+    CCORE_TASK_EXECUTION_UPDATED_AT_COLUMN,
+    CCORE_TASK_EXECUTION_VALIDATION_SNAPSHOT_COLUMN,
+    CCORE_TASK_EXECUTIONS_TABLE_NAME,
+)
 
 
 class CCoreTaskExecutionRepository:
@@ -44,7 +46,7 @@ class CCoreTaskExecutionRepository:
         return CCoreTaskExecution(
             execution_id=str(row[0]),
             task_id=str(row[1]),
-            status_code=row[2],
+            execution_status_id=row[2],
             status_label=row[3],
             provider_profile=row[4],
             execution_mode=row[5],
@@ -65,7 +67,7 @@ class CCoreTaskExecutionRepository:
         return f"""
             execution.{CCORE_TASK_EXECUTION_ID_COLUMN},
             execution.{CCORE_TASK_EXECUTION_TASK_ID_COLUMN},
-            execution.{CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN},
+            execution.{CCORE_TASK_EXECUTION_STATUS_ID_COLUMN},
             status.{CCORE_TASK_EXECUTION_STATUS_LABEL_COLUMN},
             execution.{CCORE_TASK_EXECUTION_PROVIDER_PROFILE_COLUMN},
             execution.{CCORE_TASK_EXECUTION_MODE_COLUMN},
@@ -89,7 +91,7 @@ class CCoreTaskExecutionRepository:
                     f"""
                     INSERT INTO {CCORE_TASK_EXECUTIONS_TABLE_NAME} (
                         {CCORE_TASK_EXECUTION_TASK_ID_COLUMN},
-                        {CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN},
+                        {CCORE_TASK_EXECUTION_STATUS_ID_COLUMN},
                         {CCORE_TASK_EXECUTION_PROVIDER_PROFILE_COLUMN},
                         {CCORE_TASK_EXECUTION_MODE_COLUMN},
                         {CCORE_TASK_EXECUTION_REQUESTED_BY_COLUMN},
@@ -121,7 +123,7 @@ class CCoreTaskExecutionRepository:
                     """,
                     (
                         execution.task_id,
-                        execution.status_code,
+                        execution.execution_status_id,
                         execution.provider_profile,
                         execution.execution_mode,
                         execution.requested_by,
@@ -129,11 +131,7 @@ class CCoreTaskExecutionRepository:
                         Json(execution.configuration_snapshot or {}),
                         Json(execution.validation_snapshot or {}),
                         Json(execution.execution_report or {}),
-                        (
-                            Json(execution.error_details)
-                            if execution.error_details is not None
-                            else None
-                        ),
+                        Json(execution.error_details) if execution.error_details is not None else None,
                         execution.started_at,
                         execution.completed_at,
                         execution.failed_at,
@@ -155,7 +153,7 @@ class CCoreTaskExecutionRepository:
     def update_execution_status(
         self,
         execution_id: str,
-        status_code: str,
+        execution_status_id: int,
     ) -> CCoreTaskExecution | None:
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
@@ -163,13 +161,13 @@ class CCoreTaskExecutionRepository:
                     f"""
                     UPDATE {CCORE_TASK_EXECUTIONS_TABLE_NAME}
                     SET
-                        {CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_EXECUTION_STATUS_ID_COLUMN} = %s,
                         {CCORE_TASK_EXECUTION_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
                     WHERE {CCORE_TASK_EXECUTION_ID_COLUMN} = %s
                     RETURNING {CCORE_TASK_EXECUTION_ID_COLUMN}
                     """,
                     (
-                        status_code,
+                        execution_status_id,
                         execution_id,
                     ),
                 )
@@ -189,9 +187,6 @@ class CCoreTaskExecutionRepository:
         configuration_snapshot: dict,
         validation_snapshot: dict,
     ) -> CCoreTaskExecution | None:
-        """
-        Persist the configuration and validation snapshots for one task execution.
-        """
         with self.db_manager.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -223,15 +218,19 @@ class CCoreTaskExecutionRepository:
     def update_execution_result(
         self,
         execution_id: str,
-        status_code: str,
+        execution_status_id: int,
         execution_report: dict,
         error_details: dict | None = None,
     ) -> CCoreTaskExecution | None:
         completed_at_expression = (
-            "CURRENT_TIMESTAMP" if status_code == "COMPLETED" else "NULL"
+            "CURRENT_TIMESTAMP"
+            if execution_status_id == CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
+            else "NULL"
         )
         failed_at_expression = (
-            "CURRENT_TIMESTAMP" if status_code == "FAILED" else "NULL"
+            "CURRENT_TIMESTAMP"
+            if execution_status_id == CCORE_TASK_EXECUTION_STATUS_ID_FAILED
+            else "NULL"
         )
 
         with self.db_manager.get_connection() as connection:
@@ -240,7 +239,7 @@ class CCoreTaskExecutionRepository:
                     f"""
                     UPDATE {CCORE_TASK_EXECUTIONS_TABLE_NAME}
                     SET
-                        {CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN} = %s,
+                        {CCORE_TASK_EXECUTION_STATUS_ID_COLUMN} = %s,
                         {CCORE_TASK_EXECUTION_REPORT_COLUMN} = %s,
                         {CCORE_TASK_EXECUTION_ERROR_DETAILS_COLUMN} = %s,
                         {CCORE_TASK_EXECUTION_COMPLETED_AT_COLUMN} = {completed_at_expression},
@@ -250,7 +249,7 @@ class CCoreTaskExecutionRepository:
                     RETURNING {CCORE_TASK_EXECUTION_ID_COLUMN}
                     """,
                     (
-                        status_code,
+                        execution_status_id,
                         Json(execution_report or {}),
                         Json(error_details) if error_details is not None else None,
                         execution_id,
@@ -275,8 +274,8 @@ class CCoreTaskExecutionRepository:
                         {self._execution_select_columns()}
                     FROM {CCORE_TASK_EXECUTIONS_TABLE_NAME} execution
                     INNER JOIN {CCORE_TASK_EXECUTION_STATUSES_TABLE_NAME} status
-                        ON status.{CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN}
-                        = execution.{CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN}
+                        ON status.{CCORE_TASK_EXECUTION_STATUS_ID_COLUMN}
+                        = execution.{CCORE_TASK_EXECUTION_STATUS_ID_COLUMN}
                     WHERE execution.{CCORE_TASK_EXECUTION_ID_COLUMN} = %s
                     """,
                     (execution_id,),
@@ -312,8 +311,8 @@ class CCoreTaskExecutionRepository:
                         {self._execution_select_columns()}
                     FROM {CCORE_TASK_EXECUTIONS_TABLE_NAME} execution
                     INNER JOIN {CCORE_TASK_EXECUTION_STATUSES_TABLE_NAME} status
-                        ON status.{CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN}
-                        = execution.{CCORE_TASK_EXECUTION_STATUS_CODE_COLUMN}
+                        ON status.{CCORE_TASK_EXECUTION_STATUS_ID_COLUMN}
+                        = execution.{CCORE_TASK_EXECUTION_STATUS_ID_COLUMN}
                     WHERE execution.{CCORE_TASK_EXECUTION_TASK_ID_COLUMN} = %s
                     ORDER BY execution.{CCORE_TASK_EXECUTION_CREATED_AT_COLUMN} DESC
                     {limit_clause}

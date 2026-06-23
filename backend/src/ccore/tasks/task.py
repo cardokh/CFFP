@@ -14,7 +14,7 @@ from dataclasses import dataclass
 class CCoreTask:
     task_id: str | None
     task_name: str
-    status_code: str
+    status_id: int
     status_label: str | None = None
     created_at: str | None = None
     updated_at: str | None = None

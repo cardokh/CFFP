@@ -31,13 +31,13 @@ class CCoreMetricValidator:
     def validate_create_metric(self, metric: CCoreMetric) -> None:
         self._validate_metric_name(metric.metric_name)
         self._validate_metric_key(metric.metric_key)
-        self._validate_metric_type(metric.metric_type_code)
+        self._validate_metric_type(metric.metric_type_id)
 
     def validate_update_metric(self, metric: CCoreMetric) -> None:
         self.validate_metric_id(metric.metric_id)
         self._validate_metric_name(metric.metric_name)
         self._validate_metric_key(metric.metric_key)
-        self._validate_metric_type(metric.metric_type_code)
+        self._validate_metric_type(metric.metric_type_id)
 
     def _validate_metric_name(self, metric_name: str | None) -> None:
         if not metric_name or not str(metric_name).strip():
@@ -47,9 +47,9 @@ class CCoreMetricValidator:
         if not metric_key or not str(metric_key).strip():
             raise ValueError(CCORE_METRIC_KEY_REQUIRED_MESSAGE)
 
-    def _validate_metric_type(self, metric_type_code: str | None) -> None:
-        if not metric_type_code or not str(metric_type_code).strip():
+    def _validate_metric_type(self, metric_type_id: int | None) -> None:
+        if metric_type_id is None:
             raise ValueError(CCORE_METRIC_TYPE_REQUIRED_MESSAGE)
 
-        if not self.type_repository.type_exists(str(metric_type_code).strip()):
+        if not self.type_repository.type_exists(int(metric_type_id)):
             raise ValueError(CCORE_METRIC_TYPE_INVALID_MESSAGE)

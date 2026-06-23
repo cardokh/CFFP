@@ -11,14 +11,15 @@ from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_constants import (
     CCORE_TASK_API_FIELD_CREATED_AT,
     CCORE_TASK_API_FIELD_STATUS,
+    CCORE_TASK_API_FIELD_STATUS_ID,
     CCORE_TASK_API_FIELD_STATUS_LABEL,
     CCORE_TASK_API_FIELD_TASK_ID,
     CCORE_TASK_API_FIELD_TASK_NAME,
     CCORE_TASK_API_FIELD_UPDATED_AT,
-    CCORE_TASK_DEFAULT_STATUS_CODE,
-    CCORE_TASK_STATUS_API_FIELD_CODE,
+    CCORE_TASK_STATUS_API_FIELD_ID,
     CCORE_TASK_STATUS_API_FIELD_LABEL,
     CCORE_TASK_STATUS_API_FIELD_SORT_ORDER,
+    CCORE_TASK_STATUS_ID_PENDING,
 )
 from backend.src.ccore.tasks.task_contracts import (
     CreateCCoreTaskRequest,
@@ -35,7 +36,7 @@ class CCoreTaskMapper:
         return CCoreTask(
             task_id=None,
             task_name=request.task_name,
-            status_code=request.status_code or CCORE_TASK_DEFAULT_STATUS_CODE,
+            status_id=request.status_id or CCORE_TASK_STATUS_ID_PENDING,
         )
 
     def update_request_to_domain(
@@ -45,14 +46,15 @@ class CCoreTaskMapper:
         return CCoreTask(
             task_id=request.task_id,
             task_name=request.task_name,
-            status_code=request.status_code,
+            status_id=request.status_id,
         )
 
     def domain_to_response(self, task: CCoreTask) -> dict:
         return {
             CCORE_TASK_API_FIELD_TASK_ID: task.task_id,
             CCORE_TASK_API_FIELD_TASK_NAME: task.task_name,
-            CCORE_TASK_API_FIELD_STATUS: task.status_code,
+            CCORE_TASK_API_FIELD_STATUS: task.status_label,
+            CCORE_TASK_API_FIELD_STATUS_ID: task.status_id,
             CCORE_TASK_API_FIELD_STATUS_LABEL: task.status_label,
             CCORE_TASK_API_FIELD_CREATED_AT: task.created_at,
             CCORE_TASK_API_FIELD_UPDATED_AT: task.updated_at,
@@ -63,7 +65,7 @@ class CCoreTaskMapper:
 
     def status_to_response(self, status: CCoreTaskStatus) -> dict:
         return {
-            CCORE_TASK_STATUS_API_FIELD_CODE: status.status_code,
+            CCORE_TASK_STATUS_API_FIELD_ID: status.status_id,
             CCORE_TASK_STATUS_API_FIELD_LABEL: status.status_label,
             CCORE_TASK_STATUS_API_FIELD_SORT_ORDER: status.sort_order,
         }

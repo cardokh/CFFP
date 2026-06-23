@@ -24,10 +24,12 @@ from backend.src.ccore.tasks.task_execution_constants import (
     CCORE_TASK_EXECUTION_DEFAULT_MODE,
     CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_PROFILE,
     CCORE_TASK_EXECUTION_DEFAULT_REQUESTED_BY,
-    CCORE_TASK_EXECUTION_STATUS_COMPLETED,
-    CCORE_TASK_EXECUTION_STATUS_FAILED,
-    CCORE_TASK_EXECUTION_STATUS_PENDING,
-    CCORE_TASK_EXECUTION_STATUS_RUNNING,
+    CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED,
+    CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
+    CCORE_TASK_EXECUTION_STATUS_ID_PENDING,
+    CCORE_TASK_EXECUTION_STATUS_ID_RUNNING,
+    CCORE_TASK_EXECUTION_STATUS_LABEL_COMPLETED,
+    CCORE_TASK_EXECUTION_STATUS_LABEL_FAILED,
 )
 from backend.src.ccore.tasks.task_execution_repository_contract import (
     CCoreTaskExecutionRepositoryProtocol,
@@ -100,7 +102,7 @@ class TaskExecutionService:
         try:
             running_execution = self.task_execution_repository.update_execution_status(
                 execution_id=str(execution.execution_id),
-                status_code=CCORE_TASK_EXECUTION_STATUS_RUNNING,
+                execution_status_id=CCORE_TASK_EXECUTION_STATUS_ID_RUNNING,
             )
 
             if running_execution is None:
@@ -141,7 +143,7 @@ class TaskExecutionService:
 
             result = self.execution_provider.run(context)
 
-            final_status = result.status or CCORE_TASK_EXECUTION_STATUS_COMPLETED
+            final_status_id = self._map_result_status_to_execution_status_id(result.status)
             execution_report = self._build_execution_report(
                 execution=execution,
                 result=result,
@@ -149,7 +151,7 @@ class TaskExecutionService:
 
             final_execution = self.task_execution_repository.update_execution_result(
                 execution_id=str(execution.execution_id),
-                status_code=final_status,
+                execution_status_id=final_status_id,
                 execution_report=execution_report,
                 error_details=result.error_details,
             )
@@ -174,7 +176,7 @@ class TaskExecutionService:
 
             self.task_execution_repository.update_execution_result(
                 execution_id=str(execution.execution_id),
-                status_code=CCORE_TASK_EXECUTION_STATUS_FAILED,
+                execution_status_id=CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
                 execution_report=self._build_execution_report(
                     execution=execution,
                     result=error_result,
@@ -198,7 +200,7 @@ class TaskExecutionService:
         execution = CCoreTaskExecution(
             execution_id=None,
             task_id=task_id,
-            status_code=CCORE_TASK_EXECUTION_STATUS_PENDING,
+            execution_status_id=CCORE_TASK_EXECUTION_STATUS_ID_PENDING,
             provider_profile=CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_PROFILE,
             execution_mode=request.execution_mode or CCORE_TASK_EXECUTION_DEFAULT_MODE,
             requested_by=request.requested_by
@@ -301,6 +303,17 @@ class TaskExecutionService:
             ],
         }
 
+
+    def _map_result_status_to_execution_status_id(self, status: str | None) -> int:
+        """Map provider result status text into CCore execution status IDs."""
+        if status == CCORE_TASK_EXECUTION_STATUS_LABEL_FAILED:
+            return CCORE_TASK_EXECUTION_STATUS_ID_FAILED
+
+        if status == CCORE_TASK_EXECUTION_STATUS_LABEL_COMPLETED or status is None:
+            return CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
+
+        return CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
+
     def _build_execution_report(
         self,
         execution: CCoreTaskExecution,
@@ -328,7 +341,7 @@ class TaskExecutionService:
         """Build a provider-compatible failure result for orchestration errors."""
         return TaskExecutionResult(
             task_id=task_id,
-            status=CCORE_TASK_EXECUTION_STATUS_FAILED,
+            status=CCORE_TASK_EXECUTION_STATUS_LABEL_FAILED,
             message=str(exc),
             provider_name="TaskExecutionService",
             execution_details={

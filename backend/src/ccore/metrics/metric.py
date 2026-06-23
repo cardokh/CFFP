@@ -14,6 +14,6 @@ class CCoreMetric:
     metric_id: str | None
     metric_name: str
     metric_key: str
-    metric_type_code: str
+    metric_type_id: int
     metric_type_label: str | None = None
     created_at: str | None = None

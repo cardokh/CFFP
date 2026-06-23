@@ -11,7 +11,7 @@ Responsibilities:
 from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
 from backend.src.ccore.tasks.task_execution_constants import (
-    CCORE_TASK_EXECUTION_STATUS_BLOCKED,
+    CCORE_TASK_EXECUTION_STATUS_ID_BLOCKED,
 )
 from backend.src.ccore.tasks.task_repository_contract import (
     CCoreTaskRepositoryProtocol,
@@ -55,14 +55,14 @@ class CCoreTaskService:
     def update_task_status(
         self,
         task_id: str,
-        status_code: str,
+        status_id: int,
     ) -> CCoreTask | None:
         self.task_validator.validate_task_id(task_id)
 
-        if not self.task_validator.status_repository.status_exists(status_code):
-            raise ValueError(f"Invalid CCore task status code: {status_code}")
+        if not self.task_validator.status_repository.status_exists(status_id):
+            raise ValueError(f"Invalid CCore task status code: {status_id}")
 
-        return self.task_repository.update_task_status(task_id, status_code)
+        return self.task_repository.update_task_status(task_id, status_id)
 
     def delete_task(self, task_id: str) -> bool:
         self.task_validator.validate_task_id(task_id)
@@ -84,7 +84,7 @@ class CCoreTaskService:
                 CCoreTaskExecution(
                     execution_id=None,
                     task_id=task_id,
-                    status_code=CCORE_TASK_EXECUTION_STATUS_BLOCKED,
+                    status_id=CCORE_TASK_EXECUTION_STATUS_ID_BLOCKED,
                     runner_code=None,
                     report_json={
                         "status": "BLOCKED",
@@ -102,7 +102,7 @@ class CCoreTaskService:
             CCoreTaskExecution(
                 execution_id=None,
                 task_id=task_id,
-                status_code=runner_result["status_code"],
+                status_id=runner_result["status_id"],
                 runner_code=runner_result["runner_code"],
                 report_json=runner_result["report"],
             )
