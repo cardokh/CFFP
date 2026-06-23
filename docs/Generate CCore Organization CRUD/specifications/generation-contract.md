@@ -69,13 +69,13 @@ The entity specification is the source of truth for the target module.
 For the first execution, the source specification is:
 
 ```text
-docs/Automation Factory/specifications/ccore_organizations_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
 ```
 
 The reusable template is:
 
 ```text
-docs/Automation Factory/specifications/template_crud_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml
 ```
 
 The generator must not generate entity behavior that is not present in the specification.
@@ -85,7 +85,7 @@ The generator must not generate entity behavior that is not present in the speci
 The generator must obey:
 
 ```text
-docs/Automation Factory/architecture/technology-decisions.md
+docs/Generate CCore Organization CRUD/architecture/technology-decisions.md
 ```
 
 If the specification and technology decisions conflict, generation must stop and report the conflict.
@@ -97,7 +97,7 @@ The generator must not introduce new frameworks, libraries, runtime dependencies
 The generator must obey:
 
 ```text
-docs/Automation Factory/specifications/artifact-mapping-specification.yaml
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
 ```
 
 The generator must not decide file destinations by itself.
@@ -184,14 +184,14 @@ Failing with a useful missing-information report is preferred over generating in
 The generation pipeline must assemble AI context from these controlled inputs:
 
 ```text
-docs/Automation Factory/architecture/technology-decisions.md
-docs/Automation Factory/specifications/generation-contract.md
-docs/Automation Factory/specifications/artifact-mapping-specification.yaml
-docs/Automation Factory/specifications/template_crud_spec.yaml
-docs/Automation Factory/specifications/ccore_organizations_spec.yaml
-docs/Automation Factory/specifications/ai-artifact-manifest-contract.md
-docs/Automation Factory/specifications/crud-generation-validation-rules.md
-docs/Automation Factory/workflow/generate-crud-module-pipeline.md
+docs/Generate CCore Organization CRUD/architecture/technology-decisions.md
+docs/Generate CCore Organization CRUD/specifications/generation-contract.md
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
+docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md
+docs/Generate CCore Organization CRUD/specifications/crud-generation-validation-rules.md
+docs/Generate CCore Organization CRUD/workflow/generate-crud-module-pipeline.md
 ```
 
 The pipeline must also include a repository inspection summary and golden reference file contents collected at execution time.
@@ -211,7 +211,7 @@ The generator must return a structured artifact manifest.
 The artifact manifest must conform to:
 
 ```text
-docs/Automation Factory/specifications/ai-artifact-manifest-contract.md
+docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md
 ```
 
 Each generated artifact entry must include:

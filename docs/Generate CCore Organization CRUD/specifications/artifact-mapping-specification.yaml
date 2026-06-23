@@ -10,9 +10,9 @@ scope:
   firstTargetEntity: "Organization"
   moduleArea: "ccore"
   sourceOfTruth:
-    - "docs/Automation Factory/specifications/template_crud_spec.yaml"
-    - "docs/Automation Factory/specifications/ccore_organizations_spec.yaml"
-    - "docs/Automation Factory/architecture/technology-decisions.md"
+    - "docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml"
+    - "docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml"
+    - "docs/Generate CCore Organization CRUD/architecture/technology-decisions.md"
     - "repository inspection summary"
 
 rules:
@@ -310,7 +310,7 @@ artifactTypes:
       - "create_new_file"
       - "replace_existing_file"
     applyTargets:
-      - path: "docs/Automation Factory/reports/${execution.id}_${entityPluralSlug}_generation_report.md"
+      - path: "docs/Generate CCore Organization CRUD/reports/${execution.id}_${entityPluralSlug}_generation_report.md"
         operation: "create_or_replace_whole_file"
     validation:
       - "markdown_exists"

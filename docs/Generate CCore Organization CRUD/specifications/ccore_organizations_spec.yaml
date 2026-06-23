@@ -528,7 +528,7 @@ pipelineExecution:
     - "write_execution_report"
 
 reporting:
-  executionReportFile: "docs/Automation Factory/reports/REP-ORG-001_validation.json"
+  executionReportFile: "docs/Generate CCore Organization CRUD/reports/REP-ORG-001_validation.json"
   include:
     specificationSummary: true
     repositoryInspectionSummary: true

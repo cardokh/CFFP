@@ -46,7 +46,7 @@ Then the pipeline runs all internal steps sequentially.
 Input:
 
 ```text
-docs/Automation Factory/specifications/ccore_organizations_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
 ```
 
 Output:
@@ -120,11 +120,12 @@ The AI context must include:
 
 - Full specification.
 - Technology decisions.
-- Working agreement.
+- README and task scope.
 - CCore vertical slice blueprint.
 - Repository inspection summary.
 - Golden reference file contents.
-- Output contract.
+- AI artifact manifest contract.
+- Success criteria.
 
 The prompt must instruct the AI to generate a complete artifact manifest, not direct edits.
 
@@ -202,14 +203,14 @@ The first experiment is successful when one Automation Factory execution can gen
 Before generation, the pipeline must load the approved document set defined in:
 
 ```text
-docs/Automation Factory/workflow/generate-crud-module-document-set.md
+docs/Generate CCore Organization CRUD/workflow/generate-crud-module-document-set.md
 ```
 
 The following documents are mandatory control documents for the first Organization CRUD generation attempt:
 
 ```text
-docs/Automation Factory/specifications/generation-contract.md
-docs/Automation Factory/specifications/artifact-mapping-specification.yaml
+docs/Generate CCore Organization CRUD/specifications/generation-contract.md
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
 ```
 
 The Generation Contract controls how AI is allowed to generate artifacts.
