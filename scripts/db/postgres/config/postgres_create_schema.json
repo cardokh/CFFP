@@ -7,8 +7,8 @@
         "ccore_task_statuses": {
             "columns": [
                 {
-                    "name": "status_code",
-                    "type": "VARCHAR(50)",
+                    "name": "status_id",
+                    "type": "INTEGER",
                     "primaryKey": true
                 },
                 {
@@ -36,10 +36,9 @@
                     "nullable": false
                 },
                 {
-                    "name": "status_code",
-                    "type": "VARCHAR(50)",
-                    "nullable": false,
-                    "default": "'PENDING'"
+                    "name": "status_id",
+                    "type": "INTEGER",
+                    "nullable": false
                 },
                 {
                     "name": "created_at",
@@ -58,12 +57,12 @@
                 {
                     "type": "foreignKey",
                     "columns": [
-                        "status_code"
+                        "status_id"
                     ],
                     "references": {
                         "table": "ccore_task_statuses",
                         "columns": [
-                            "status_code"
+                            "status_id"
                         ]
                     },
                     "onDelete": "RESTRICT"
@@ -73,8 +72,8 @@
         "ccore_metric_types": {
             "columns": [
                 {
-                    "name": "metric_type_code",
-                    "type": "VARCHAR(50)",
+                    "name": "metric_type_id",
+                    "type": "INTEGER",
                     "primaryKey": true
                 },
                 {
@@ -108,10 +107,9 @@
                     "unique": true
                 },
                 {
-                    "name": "metric_type_code",
-                    "type": "VARCHAR(50)",
-                    "nullable": false,
-                    "default": "'COUNTER'"
+                    "name": "metric_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
                 },
                 {
                     "name": "created_at",
@@ -130,12 +128,12 @@
                 {
                     "type": "foreignKey",
                     "columns": [
-                        "metric_type_code"
+                        "metric_type_id"
                     ],
                     "references": {
                         "table": "ccore_metric_types",
                         "columns": [
-                            "metric_type_code"
+                            "metric_type_id"
                         ]
                     },
                     "onDelete": "RESTRICT"
@@ -145,8 +143,8 @@
         "ccore_task_execution_statuses": {
             "columns": [
                 {
-                    "name": "status_code",
-                    "type": "VARCHAR(50)",
+                    "name": "execution_status_id",
+                    "type": "INTEGER",
                     "primaryKey": true
                 },
                 {
@@ -175,28 +173,24 @@
                     "nullable": false
                 },
                 {
-                    "name": "status_code",
-                    "type": "VARCHAR(50)",
-                    "nullable": false,
-                    "default": "'PENDING'"
+                    "name": "execution_status_id",
+                    "type": "INTEGER",
+                    "nullable": false
                 },
                 {
                     "name": "provider_profile",
                     "type": "VARCHAR(100)",
-                    "nullable": false,
-                    "default": "'prefect'"
+                    "nullable": false
                 },
                 {
                     "name": "execution_mode",
                     "type": "VARCHAR(50)",
-                    "nullable": false,
-                    "default": "'manual'"
+                    "nullable": false
                 },
                 {
                     "name": "requested_by",
                     "type": "VARCHAR(255)",
-                    "nullable": false,
-                    "default": "'system'"
+                    "nullable": false
                 },
                 {
                     "name": "input_payload",
@@ -272,12 +266,12 @@
                 {
                     "type": "foreignKey",
                     "columns": [
-                        "status_code"
+                        "execution_status_id"
                     ],
                     "references": {
                         "table": "ccore_task_execution_statuses",
                         "columns": [
-                            "status_code"
+                            "execution_status_id"
                         ]
                     },
                     "onDelete": "RESTRICT"
