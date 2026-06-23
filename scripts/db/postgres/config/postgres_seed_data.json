@@ -103,28 +103,151 @@
             ]
         },
         {
-            "table": "ccore_execution_implementers",
-            "conflictColumn": "execution_implementer_id",
+            "table": "ccore_execution_implementer_types",
+            "conflictColumn": "execution_implementer_type_id",
             "rows": [
                 {
-                    "execution_implementer_id": 1,
-                    "implementer_label": "No-op Implementer",
+                    "execution_implementer_type_id": 1,
+                    "implementer_type_label": "No-op Implementer Type",
                     "sort_order": 10
                 },
                 {
-                    "execution_implementer_id": 2,
-                    "implementer_label": "Python Script Implementer",
+                    "execution_implementer_type_id": 2,
+                    "implementer_type_label": "Python Script Implementer Type",
                     "sort_order": 20
                 },
                 {
-                    "execution_implementer_id": 3,
-                    "implementer_label": "Shell Command Implementer",
+                    "execution_implementer_type_id": 3,
+                    "implementer_type_label": "Shell Command Implementer Type",
                     "sort_order": 30
                 },
                 {
-                    "execution_implementer_id": 4,
-                    "implementer_label": "AI Implementer",
+                    "execution_implementer_type_id": 4,
+                    "implementer_type_label": "AI Implementer Type",
                     "sort_order": 40
+                }
+            ]
+        },
+        {
+            "table": "ccore_execution_targets",
+            "conflictColumn": "execution_target_id",
+            "rows": [
+                {
+                    "execution_target_id": 1,
+                    "execution_implementer_type_id": 1,
+                    "target_label": "No-op Execution Target",
+                    "target_reference": "noop",
+                    "sort_order": 10
+                },
+                {
+                    "execution_target_id": 2,
+                    "execution_implementer_type_id": 3,
+                    "target_label": "Bootstrap Project Windows Script",
+                    "target_reference": "scripts/bootstrap/bootstrap_project_windows.ps1",
+                    "sort_order": 20
+                },
+                {
+                    "execution_target_id": 3,
+                    "execution_implementer_type_id": 2,
+                    "target_label": "Create Folder Python Script",
+                    "target_reference": "scripts/workspace/create_folder.py",
+                    "sort_order": 30
+                },
+                {
+                    "execution_target_id": 4,
+                    "execution_implementer_type_id": 2,
+                    "target_label": "Validate Project Python Script",
+                    "target_reference": "scripts/workspace/validate_project.py",
+                    "sort_order": 40
+                }
+            ]
+        },
+        {
+            "table": "ccore_execution_configurations",
+            "conflictColumn": "execution_configuration_id",
+            "rows": [
+                {
+                    "execution_configuration_id": 1,
+                    "execution_target_id": 1,
+                    "configuration_label": "No-op Default Configuration",
+                    "configuration_description": "Default configuration for safe no-op execution validation.",
+                    "sort_order": 10
+                },
+                {
+                    "execution_configuration_id": 2,
+                    "execution_target_id": 2,
+                    "configuration_label": "Bootstrap Project Default Configuration",
+                    "configuration_description": "Default configuration for bootstrapping a project workspace.",
+                    "sort_order": 20
+                },
+                {
+                    "execution_configuration_id": 3,
+                    "execution_target_id": 3,
+                    "configuration_label": "Create Folder Default Configuration",
+                    "configuration_description": "Default configuration for creating a folder through a Python script.",
+                    "sort_order": 30
+                },
+                {
+                    "execution_configuration_id": 4,
+                    "execution_target_id": 4,
+                    "configuration_label": "Validate Project Default Configuration",
+                    "configuration_description": "Default configuration for validating a project workspace.",
+                    "sort_order": 40
+                }
+            ]
+        },
+        {
+            "table": "ccore_execution_configuration_elements",
+            "conflictColumn": "execution_configuration_element_id",
+            "rows": [
+                {
+                    "execution_configuration_element_id": 1,
+                    "execution_configuration_id": 1,
+                    "element_name": "resultMessage",
+                    "element_value": "No-op execution completed successfully.",
+                    "sort_order": 10
+                },
+                {
+                    "execution_configuration_element_id": 2,
+                    "execution_configuration_id": 2,
+                    "element_name": "scriptName",
+                    "element_value": "bootstrap_project_windows.ps1",
+                    "sort_order": 10
+                },
+                {
+                    "execution_configuration_element_id": 3,
+                    "execution_configuration_id": 2,
+                    "element_name": "installDependencies",
+                    "element_value": "false",
+                    "sort_order": 20
+                },
+                {
+                    "execution_configuration_element_id": 4,
+                    "execution_configuration_id": 2,
+                    "element_name": "cleanWorkspace",
+                    "element_value": "false",
+                    "sort_order": 30
+                },
+                {
+                    "execution_configuration_element_id": 5,
+                    "execution_configuration_id": 3,
+                    "element_name": "folderPath",
+                    "element_value": "generated/sample-folder",
+                    "sort_order": 10
+                },
+                {
+                    "execution_configuration_element_id": 6,
+                    "execution_configuration_id": 3,
+                    "element_name": "createParents",
+                    "element_value": "true",
+                    "sort_order": 20
+                },
+                {
+                    "execution_configuration_element_id": 7,
+                    "execution_configuration_id": 4,
+                    "element_name": "validationMode",
+                    "element_value": "standard",
+                    "sort_order": 10
                 }
             ]
         },

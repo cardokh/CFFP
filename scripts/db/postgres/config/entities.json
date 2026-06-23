@@ -4,7 +4,10 @@
         "ccore_tasks",
         "ccore_task_execution_statuses",
         "ccore_execution_providers",
-        "ccore_execution_implementers",
+        "ccore_execution_implementer_types",
+        "ccore_execution_targets",
+        "ccore_execution_configurations",
+        "ccore_execution_configuration_elements",
         "ccore_task_executions",
         "ccore_metric_types",
         "ccore_metrics"

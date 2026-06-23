@@ -69,77 +69,6 @@
                 }
             ]
         },
-        "ccore_metric_types": {
-            "columns": [
-                {
-                    "name": "metric_type_id",
-                    "type": "INTEGER",
-                    "primaryKey": true
-                },
-                {
-                    "name": "metric_type_label",
-                    "type": "VARCHAR(100)",
-                    "nullable": false
-                },
-                {
-                    "name": "sort_order",
-                    "type": "INTEGER",
-                    "nullable": false
-                }
-            ]
-        },
-        "ccore_metrics": {
-            "columns": [
-                {
-                    "name": "metric_id",
-                    "type": "UUID",
-                    "primaryKey": true
-                },
-                {
-                    "name": "metric_name",
-                    "type": "VARCHAR(255)",
-                    "nullable": false
-                },
-                {
-                    "name": "metric_key",
-                    "type": "VARCHAR(150)",
-                    "nullable": false,
-                    "unique": true
-                },
-                {
-                    "name": "metric_type_id",
-                    "type": "INTEGER",
-                    "nullable": false
-                },
-                {
-                    "name": "created_at",
-                    "type": "TIMESTAMP WITH TIME ZONE",
-                    "nullable": false,
-                    "default": "CURRENT_TIMESTAMP"
-                },
-                {
-                    "name": "updated_at",
-                    "type": "TIMESTAMP WITH TIME ZONE",
-                    "nullable": false,
-                    "default": "CURRENT_TIMESTAMP"
-                }
-            ],
-            "constraints": [
-                {
-                    "type": "foreignKey",
-                    "columns": [
-                        "metric_type_id"
-                    ],
-                    "references": {
-                        "table": "ccore_metric_types",
-                        "columns": [
-                            "metric_type_id"
-                        ]
-                    },
-                    "onDelete": "RESTRICT"
-                }
-            ]
-        },
         "ccore_task_execution_statuses": {
             "columns": [
                 {
@@ -178,15 +107,15 @@
                 }
             ]
         },
-        "ccore_execution_implementers": {
+        "ccore_execution_implementer_types": {
             "columns": [
                 {
-                    "name": "execution_implementer_id",
+                    "name": "execution_implementer_type_id",
                     "type": "INTEGER",
                     "primaryKey": true
                 },
                 {
-                    "name": "implementer_label",
+                    "name": "implementer_type_label",
                     "type": "VARCHAR(100)",
                     "nullable": false
                 },
@@ -194,6 +123,138 @@
                     "name": "sort_order",
                     "type": "INTEGER",
                     "nullable": false
+                }
+            ]
+        },
+        "ccore_execution_targets": {
+            "columns": [
+                {
+                    "name": "execution_target_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "execution_implementer_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "target_label",
+                    "type": "VARCHAR(150)",
+                    "nullable": false
+                },
+                {
+                    "name": "target_reference",
+                    "type": "VARCHAR(500)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_implementer_type_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_implementer_types",
+                        "columns": [
+                            "execution_implementer_type_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "ccore_execution_configurations": {
+            "columns": [
+                {
+                    "name": "execution_configuration_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "execution_target_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "configuration_label",
+                    "type": "VARCHAR(150)",
+                    "nullable": false
+                },
+                {
+                    "name": "configuration_description",
+                    "type": "VARCHAR(500)",
+                    "nullable": true
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_target_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_targets",
+                        "columns": [
+                            "execution_target_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "ccore_execution_configuration_elements": {
+            "columns": [
+                {
+                    "name": "execution_configuration_element_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "execution_configuration_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "element_name",
+                    "type": "VARCHAR(150)",
+                    "nullable": false
+                },
+                {
+                    "name": "element_value",
+                    "type": "VARCHAR(1000)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_configuration_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_configurations",
+                        "columns": [
+                            "execution_configuration_id"
+                        ]
+                    },
+                    "onDelete": "CASCADE"
                 }
             ]
         },
@@ -221,7 +282,17 @@
                     "nullable": false
                 },
                 {
-                    "name": "execution_implementer_id",
+                    "name": "execution_implementer_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "execution_target_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "execution_configuration_id",
                     "type": "INTEGER",
                     "nullable": false
                 },
@@ -330,12 +401,109 @@
                 {
                     "type": "foreignKey",
                     "columns": [
-                        "execution_implementer_id"
+                        "execution_implementer_type_id"
                     ],
                     "references": {
-                        "table": "ccore_execution_implementers",
+                        "table": "ccore_execution_implementer_types",
                         "columns": [
-                            "execution_implementer_id"
+                            "execution_implementer_type_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_target_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_targets",
+                        "columns": [
+                            "execution_target_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_configuration_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_configurations",
+                        "columns": [
+                            "execution_configuration_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                }
+            ]
+        },
+        "ccore_metric_types": {
+            "columns": [
+                {
+                    "name": "metric_type_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "metric_type_label",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ]
+        },
+        "ccore_metrics": {
+            "columns": [
+                {
+                    "name": "metric_id",
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                {
+                    "name": "metric_name",
+                    "type": "VARCHAR(255)",
+                    "nullable": false
+                },
+                {
+                    "name": "metric_key",
+                    "type": "VARCHAR(150)",
+                    "nullable": false,
+                    "unique": true
+                },
+                {
+                    "name": "metric_type_id",
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ],
+            "constraints": [
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "metric_type_id"
+                    ],
+                    "references": {
+                        "table": "ccore_metric_types",
+                        "columns": [
+                            "metric_type_id"
                         ]
                     },
                     "onDelete": "RESTRICT"
