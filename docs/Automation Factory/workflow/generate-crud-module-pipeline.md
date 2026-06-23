@@ -194,3 +194,26 @@ The final report must include:
 ## Success Definition
 
 The first experiment is successful when one Automation Factory execution can generate and apply a working Organization CRUD vertical slice that follows the CCore Task golden reference.
+
+---
+
+## Required Control Documents
+
+Before generation, the pipeline must load the approved document set defined in:
+
+```text
+docs/Automation Factory/workflow/generate-crud-module-document-set.md
+```
+
+The following documents are mandatory control documents for the first Organization CRUD generation attempt:
+
+```text
+docs/Automation Factory/specifications/generation-contract.md
+docs/Automation Factory/specifications/artifact-mapping-specification.yaml
+```
+
+The Generation Contract controls how AI is allowed to generate artifacts.
+
+The Artifact Mapping Specification controls where generated artifacts may be staged and applied.
+
+If either file is missing or incomplete, the pipeline must stop before invoking AI.
