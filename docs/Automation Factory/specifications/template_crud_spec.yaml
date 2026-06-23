@@ -1,0 +1,352 @@
+specVersion: "1.0"
+specKind: "crud-module-generation-specification"
+
+# -----------------------------------------------------------------------------
+# PURPOSE
+# -----------------------------------------------------------------------------
+# This file is the reusable source-of-truth template for the Automation Factory
+# "Generate CRUD Module" task.
+#
+# The generator must treat this specification as mandatory input. If a required
+# value is blank, null, UNKNOWN, or TODO, generation must stop and ask for the
+# missing information. The generator must not guess.
+# -----------------------------------------------------------------------------
+
+generationRequest:
+  taskName: "Generate CRUD Module"
+  generationMode: "full_vertical_slice"
+  applyMode: "stage_validate_then_apply"
+  targetModuleArea: "ccore"
+  goldenReference:
+    backendModule: "backend/src/ccore/tasks"
+    frontendListPage: "frontend/static/desktop/protected/ccore/tasks.html"
+    frontendDetailsPage: "frontend/static/desktop/protected/ccore/task-details.html"
+    frontendListController: "frontend/static/desktop/protected/ccore/js/tasks.js"
+    frontendDetailsController: "frontend/static/desktop/protected/ccore/js/task-details.js"
+    frontendListCss: "frontend/static/desktop/protected/ccore/css/tasks.css"
+    frontendDetailsCss: "frontend/static/desktop/protected/ccore/css/task-details.css"
+
+noGuessingPolicy:
+  enabled: true
+  stopOnMissingRequiredValue: true
+  stopOnAmbiguousArchitecture: true
+  stopOnUnresolvedFilePattern: true
+  stopOnUnknownTechnologyDecision: true
+  requiredQuestionBehavior: "ask_user_before_generation"
+  forbiddenBehavior:
+    - "Do not invent database tables, fields, or seed data."
+    - "Do not invent package paths."
+    - "Do not invent frontend routes or navigation locations."
+    - "Do not switch libraries or frameworks without explicit approval."
+    - "Do not generate direct repository changes before staging and validation."
+
+technologyStack:
+  database:
+    provider: "REQUIRED"             # Current inspected baseline: postgresql
+    driverOrAccessLayer: "REQUIRED"  # Current inspected baseline: psycopg2
+    migrationOrSchemaStrategy: "REQUIRED" # Current baseline: scripts/db/postgres config-driven scripts
+    primaryKeyStrategy: "REQUIRED"   # Example: integer_identity / uuid / other
+    idColumnType: "REQUIRED"
+    timestampStrategy: "REQUIRED"
+  backend:
+    language: "python"
+    routeStyle: "REQUIRED"           # Current baseline: custom route dispatcher/registry
+    domainObjectStyle: "REQUIRED"    # Current baseline: dataclass
+    requestContractStyle: "REQUIRED" # Current baseline: explicit parser classes
+    serviceStyle: "REQUIRED"         # Current baseline: service + repository protocol
+    repositoryStyle: "REQUIRED"      # Current baseline: concrete repository with db provider protocol
+    asyncSessions: "REQUIRED"        # Current baseline: false
+  frontend:
+    renderingStyle: "REQUIRED"       # Current baseline: static_html
+    javascriptStyle: "REQUIRED"      # Current baseline: vanilla_js
+    stylingSystem: "REQUIRED"        # Current baseline: existing_shared_css
+    listDetailsPattern: "REQUIRED"   # Current baseline: CCore tasks list + details
+  ai:
+    provider: "REQUIRED"             # Example: gemini
+    model: "REQUIRED"
+    temperature: 0
+    outputFormat: "artifact_manifest"
+  orchestration:
+    provider: "REQUIRED"             # Example: prefect
+    executionMode: "sequential_stop_on_failure"
+
+entity:
+  name: "REQUIRED"                   # Example: Organization
+  pluralName: "REQUIRED"             # Example: Organizations
+  variableName: "REQUIRED"           # Example: organization
+  variablePluralName: "REQUIRED"     # Example: organizations
+  slug: "REQUIRED"                   # Example: organizations
+  displayName: "REQUIRED"
+  displayPluralName: "REQUIRED"
+  description: "REQUIRED"
+  ownershipBoundary: "REQUIRED"      # Example: CCore platform-owned entity
+
+relatedEntities:
+  lookups: []                         # Define lookup/reference entities here.
+  parents: []
+  children: []
+  manyToMany: []
+
+databaseLayer:
+  schemaName: "REQUIRED"
+  schemaConfigFiles:
+    entitiesConfig: "REQUIRED"
+    schemaConfig: "REQUIRED"
+    seedConfig: "REQUIRED"
+  tables:
+    - logicalName: "REQUIRED"
+      tableName: "REQUIRED"
+      purpose: "REQUIRED"
+      primaryKey:
+        columnName: "REQUIRED"
+        sqlType: "REQUIRED"
+        generationStrategy: "REQUIRED"
+      columns:
+        - columnName: "REQUIRED"
+          sqlType: "REQUIRED"
+          nullable: false
+          default: null
+          description: "REQUIRED"
+          publicApiField: "REQUIRED"
+          pythonField: "REQUIRED"
+          frontendField: "REQUIRED"
+      constraints:
+        - constraintName: "REQUIRED"
+          type: "REQUIRED"           # primary_key / foreign_key / unique / check / not_null
+          columns: []
+          references:
+            tableName: null
+            columnNames: []
+          onDelete: null
+          onUpdate: null
+          expression: null
+      indexes:
+        - indexName: "REQUIRED"
+          unique: false
+          columns: []
+          expression: null
+      seedData:
+        required: true
+        rows:
+          - {}
+
+backendLayer:
+  basePackage: "backend/src/ccore"
+  targetPackage: "REQUIRED"
+  files:
+    domainObject: "REQUIRED"
+    constants: "REQUIRED"
+    messages: "REQUIRED"
+    contracts: "REQUIRED"
+    mapper: "REQUIRED"
+    validator: "REQUIRED"
+    repositoryProtocol: "REQUIRED"
+    repositoryImplementation: "REQUIRED"
+    service: "REQUIRED"
+    routes: "REQUIRED"
+    initFile: "REQUIRED"
+  classNames:
+    domainObject: "REQUIRED"
+    requestParser: "REQUIRED"
+    createRequest: "REQUIRED"
+    updateRequest: "REQUIRED"
+    mapper: "REQUIRED"
+    validator: "REQUIRED"
+    repositoryProtocol: "REQUIRED"
+    repositoryImplementation: "REQUIRED"
+    service: "REQUIRED"
+  apiContract:
+    prefixConstantName: "REQUIRED"
+    routePrefix: "REQUIRED"
+    responseCollectionField: "REQUIRED"
+    responseSingleField: "REQUIRED"
+    publicFields:
+      - fieldName: "REQUIRED"
+        sourcePythonField: "REQUIRED"
+        required: true
+    createPayloadFields: []
+    updatePayloadFields: []
+    errorCodes:
+      validation: "REQUIRED"
+      notFound: "REQUIRED"
+      server: "REQUIRED"
+  serviceMethods:
+    - "list"
+    - "get_by_id"
+    - "create"
+    - "update"
+    - "delete"
+  repositoryMethods:
+    - "find_all"
+    - "find_by_id"
+    - "create"
+    - "update"
+    - "delete"
+  routeHandlers:
+    - method: "GET"
+      operation: "list"
+      path: ""
+    - method: "GET"
+      operation: "get_by_id"
+      path: "/{id}"
+    - method: "POST"
+      operation: "create"
+      path: ""
+    - method: "PUT"
+      operation: "update"
+      path: "/{id}"
+    - method: "DELETE"
+      operation: "delete"
+      path: "/{id}"
+  registrations:
+    apiPathsFile: "REQUIRED"
+    moduleRouteRegistryFile: "REQUIRED"
+    serviceFactoryFile: "REQUIRED"
+    serviceContainerFile: "REQUIRED"
+
+frontendLayer:
+  baseDirectory: "frontend/static/desktop/protected/ccore"
+  targetDirectory: "REQUIRED"
+  pages:
+    list:
+      htmlFile: "REQUIRED"
+      jsFile: "REQUIRED"
+      cssFile: "REQUIRED"
+      title: "REQUIRED"
+      description: "REQUIRED"
+      tableColumns:
+        - fieldName: "REQUIRED"
+          label: "REQUIRED"
+          sortable: true
+          visible: true
+      toolbar:
+        backLink: "REQUIRED"
+        createLink: "REQUIRED"
+        searchEnabled: true
+        paginationEnabled: true
+        refreshEnabled: true
+      rowClick:
+        enabled: true
+        targetDetailsPage: "REQUIRED"
+    details:
+      htmlFile: "REQUIRED"
+      jsFile: "REQUIRED"
+      cssFile: "REQUIRED"
+      titleCreate: "REQUIRED"
+      titleEdit: "REQUIRED"
+      formFields:
+        - fieldName: "REQUIRED"
+          label: "REQUIRED"
+          inputType: "REQUIRED"      # text / number / checkbox / select / textarea
+          required: false
+          lookupSource: null
+      actions:
+        back: true
+        create: true
+        update: true
+        delete: true
+        unchangedSubmitDetection: true
+  apiEndpoints:
+    list: "REQUIRED"
+    getById: "REQUIRED"
+    create: "REQUIRED"
+    update: "REQUIRED"
+    delete: "REQUIRED"
+    lookups: []
+  navigation:
+    addMenuEntry: "REQUIRED"
+    menuFile: "REQUIRED_IF_addMenuEntry_TRUE"
+    label: "REQUIRED_IF_addMenuEntry_TRUE"
+    url: "REQUIRED_IF_addMenuEntry_TRUE"
+
+aiGenerationRules:
+  promptInputs:
+    includeThisSpecification: true
+    includeTechnologyDecisions: true
+    includeGoldenReferenceFiles: true
+    includeArchitectureBlueprint: true
+    includeWorkingAgreement: true
+  outputContract:
+    format: "artifact_manifest"
+    stagedDirectory: "REQUIRED"
+    manifestFile: "REQUIRED"
+    generatedFilesMustIncludeFullContent: true
+    noPatchFragments: true
+    noMarkdownCodeFenceOnlyOutput: true
+
+validationLayer:
+  stageOnlyBeforeValidation: true
+  stopOnFirstFatalFailure: true
+  compileValidation:
+    pythonCompile: true
+    frontendJavaScriptSyntax: true
+  backendValidation:
+    requiredFilesExist: true
+    importsResolve: true
+    routeRegistrationExists: true
+    serviceFactoryRegistrationExists: true
+    repositoryProtocolUsedByService: true
+    concreteRepositoryUsesDatabaseProviderProtocol: true
+    requestParserUsedByRoutes: true
+    mapperUsedByRoutes: true
+    structuredErrorsUsed: true
+  frontendValidation:
+    requiredFilesExist: true
+    usesSharedCss: true
+    usesCanonicalApiFields: true
+    noActionsColumnOnListPage: true
+    rowClickOpensDetailsPage: true
+    detailsPageOwnsCreateUpdateDelete: true
+  databaseValidation:
+    schemaArtifactExists: true
+    seedArtifactExists: true
+    foreignKeysMatchSpecification: true
+    uniqueConstraintsMatchSpecification: true
+    seedRowsMatchSpecification: true
+  architectureValidation:
+    forbiddenPatterns:
+      - "hardcoded absolute paths"
+      - "entity-specific logic inside generic factory"
+      - "manual patch markers"
+      - "unapproved technology switch"
+      - "frontend hardcoded lookup lists when reference data is specified"
+    requiredPatterns:
+      - "follows CCore vertical slice blueprint"
+      - "matches ccore_tasks golden reference structure"
+      - "uses repository protocol"
+      - "uses concrete repository"
+      - "uses service layer"
+      - "uses request parser/contracts"
+      - "uses mapper"
+      - "uses validator"
+
+pipelineExecution:
+  automationTaskName: "Generate CRUD Module"
+  provider: "Local Provider"
+  implementerType: "Prefect AI Flow Implementer Type"
+  target: "Generate CRUD Module"
+  configurationName: "REQUIRED"
+  sequentialSteps:
+    - "read_specification"
+    - "validate_specification_completeness"
+    - "inspect_repository"
+    - "collect_golden_reference_files"
+    - "build_ai_context"
+    - "generate_artifact_manifest"
+    - "write_staged_artifacts"
+    - "validate_staged_artifacts"
+    - "apply_staged_artifacts"
+    - "write_execution_report"
+
+reporting:
+  executionReportFile: "REQUIRED"
+  include:
+    specificationSummary: true
+    repositoryInspectionSummary: true
+    technologyDecisionSummary: true
+    aiPromptSummary: true
+    generatedArtifactManifest: true
+    validationResults: true
+    appliedFiles: true
+    skippedFiles: true
+    failureReason: true
