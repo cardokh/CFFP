@@ -5,10 +5,12 @@ from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_execution_constants import (
     CCORE_TASK_EXECUTION_STATUS_FAILED,
     CCORE_TASK_EXECUTION_STATUS_SUCCEEDED,
+    CCORE_TASK_RUNNER_INSPECT_PROJECT,
     CCORE_TASK_RUNNER_VALIDATE_PROJECT,
 )
 from backend.src.ccore.tasks.task_execution_runner import (
     CCoreTaskRunnerRegistry,
+    INSPECT_PROJECT_TASK_NAME,
     VALIDATE_PROJECT_TASK_NAME,
 )
 
@@ -21,6 +23,14 @@ SEED_PATH = PROJECT_ROOT / "scripts" / "db" / "postgres" / "config" / "postgres_
 def _load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as file:
         return json.load(file)
+
+
+def _build_task(task_id: str, task_name: str) -> CCoreTask:
+    return CCoreTask(
+        task_id=task_id,
+        task_name=task_name,
+        status_code="PENDING",
+    )
 
 
 def test_task_execution_tables_are_part_of_postgres_schema():
@@ -48,11 +58,7 @@ def test_task_execution_statuses_are_seeded():
 
 def test_validate_project_runner_is_registered_as_first_executable_task():
     registry = CCoreTaskRunnerRegistry(project_root=PROJECT_ROOT)
-    task = CCoreTask(
-        task_id="22222222-2222-2222-2222-222222222222",
-        task_name=VALIDATE_PROJECT_TASK_NAME,
-        status_code="PENDING",
-    )
+    task = _build_task("22222222-2222-2222-2222-222222222222", VALIDATE_PROJECT_TASK_NAME)
 
     runner = registry.get_runner_for_task(task)
 
@@ -62,11 +68,7 @@ def test_validate_project_runner_is_registered_as_first_executable_task():
 
 def test_validate_project_runner_executes_through_automation_factory():
     registry = CCoreTaskRunnerRegistry(project_root=PROJECT_ROOT)
-    task = CCoreTask(
-        task_id="22222222-2222-2222-2222-222222222222",
-        task_name=VALIDATE_PROJECT_TASK_NAME,
-        status_code="PENDING",
-    )
+    task = _build_task("22222222-2222-2222-2222-222222222222", VALIDATE_PROJECT_TASK_NAME)
 
     result = registry.get_runner_for_task(task).execute(task)
 
@@ -82,5 +84,37 @@ def test_validate_project_runner_executes_through_automation_factory():
         "python_compilation",
         "javascript_syntax",
         "unit_tests",
+    ]
+    assert result["report"]["summary"]["sectionCount"] == 4
+
+
+def test_inspect_project_runner_is_registered_as_second_executable_task():
+    registry = CCoreTaskRunnerRegistry(project_root=PROJECT_ROOT)
+    task = _build_task("33333333-3333-3333-3333-333333333333", INSPECT_PROJECT_TASK_NAME)
+
+    runner = registry.get_runner_for_task(task)
+
+    assert runner is not None
+    assert runner.runner_code == CCORE_TASK_RUNNER_INSPECT_PROJECT
+
+
+def test_inspect_project_runner_executes_through_automation_factory():
+    registry = CCoreTaskRunnerRegistry(project_root=PROJECT_ROOT)
+    task = _build_task("33333333-3333-3333-3333-333333333333", INSPECT_PROJECT_TASK_NAME)
+
+    result = registry.get_runner_for_task(task).execute(task)
+
+    assert result["runner_code"] == CCORE_TASK_RUNNER_INSPECT_PROJECT
+    assert result["status_code"] in {
+        CCORE_TASK_EXECUTION_STATUS_SUCCEEDED,
+        CCORE_TASK_EXECUTION_STATUS_FAILED,
+    }
+    assert result["report"]["task"]["name"] == INSPECT_PROJECT_TASK_NAME
+    section_names = [section["name"] for section in result["report"]["sections"]]
+    assert section_names == [
+        "project_structure",
+        "naming_conventions",
+        "hardcoded_paths",
+        "automation_factory_contracts",
     ]
     assert result["report"]["summary"]["sectionCount"] == 4

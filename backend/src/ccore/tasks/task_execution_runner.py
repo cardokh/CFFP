@@ -5,7 +5,7 @@ Responsibilities:
 - Execute registered CCore platform tasks through the Automation Factory layer.
 - Use Prefect as the orchestration boundary for task execution.
 - Keep concrete task runner logic behind a small runner registry.
-- Produce structured validation reports that can later be consumed by pipelines and UI.
+- Produce structured reports that can later be consumed by pipelines and UI.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ import compileall
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -26,14 +27,24 @@ from backend.src.ccore.tasks.task import CCoreTask
 from backend.src.ccore.tasks.task_execution_constants import (
     CCORE_TASK_EXECUTION_STATUS_FAILED,
     CCORE_TASK_EXECUTION_STATUS_SUCCEEDED,
+    CCORE_TASK_RUNNER_INSPECT_PROJECT,
     CCORE_TASK_RUNNER_VALIDATE_PROJECT,
 )
 
 VALIDATE_PROJECT_TASK_NAME = "Validate Project"
+INSPECT_PROJECT_TASK_NAME = "Inspect Project"
 
 STATUS_PASSED = "PASSED"
 STATUS_FAILED = "FAILED"
 STATUS_SKIPPED = "SKIPPED"
+
+SNAKE_CASE_FILE_NAME_PATTERN = re.compile(r"^[a-z][a-z0-9_]*\.py$")
+ABSOLUTE_PATH_PATTERNS = [
+    re.compile(r"[A-Za-z]:\\\\"),
+    re.compile(r"/Users/"),
+    re.compile(r"/home/"),
+    re.compile(r"/mnt/"),
+]
 
 
 class CCoreTaskRunnerProtocol(Protocol):
@@ -266,6 +277,147 @@ def run_ccore_unit_tests_step(project_root: str) -> dict:
     )
 
 
+@task(name="Inspect CCore Project Structure")
+def inspect_project_structure_step(project_root: str) -> dict:
+    root = Path(project_root).resolve()
+    required_paths = [
+        "backend/src/ccore/tasks",
+        "backend/src/ccore/metrics",
+        "backend/src/ccore/application/service_factory.py",
+        "backend/tests/test_ccore_task_execution_framework_contract.py",
+        "scripts/db/postgres/config/entities.json",
+        "scripts/db/postgres/config/postgres_create_schema.json",
+        "scripts/db/postgres/config/postgres_seed_data.json",
+        "frontend/static/desktop/protected/ccore/js/tasks.js",
+        "frontend/static/desktop/protected/ccore/js/task-details.js",
+    ]
+    checks = []
+
+    for relative_path in required_paths:
+        path = root / relative_path
+        status = STATUS_PASSED if path.exists() else STATUS_FAILED
+        message = "Required CCore path exists." if path.exists() else "Required CCore path is missing."
+        checks.append(_build_check(relative_path, status, message))
+
+    return _build_section("project_structure", checks)
+
+
+@task(name="Inspect CCore Naming Conventions")
+def inspect_naming_conventions_step(project_root: str) -> dict:
+    root = Path(project_root).resolve()
+    ccore_source_path = root / "backend" / "src" / "ccore"
+
+    if not ccore_source_path.is_dir():
+        return _build_section(
+            "naming_conventions",
+            [_build_check("backend/src/ccore", STATUS_FAILED, "CCore source directory does not exist.")],
+        )
+
+    invalid_files = []
+    for python_file in sorted(ccore_source_path.rglob("*.py")):
+        if python_file.name == "__init__.py":
+            continue
+        if not SNAKE_CASE_FILE_NAME_PATTERN.match(python_file.name):
+            invalid_files.append(python_file.relative_to(root).as_posix())
+
+    if invalid_files:
+        return _build_section(
+            "naming_conventions",
+            [
+                _build_check(
+                    "backend/src/ccore/**/*.py",
+                    STATUS_FAILED,
+                    "Python CCore files must use snake_case names: " + ", ".join(invalid_files[:20]),
+                )
+            ],
+        )
+
+    return _build_section(
+        "naming_conventions",
+        [_build_check("backend/src/ccore/**/*.py", STATUS_PASSED, "All CCore Python files use snake_case names.")],
+    )
+
+
+@task(name="Inspect CCore Hardcoded Paths")
+def inspect_hardcoded_paths_step(project_root: str) -> dict:
+    root = Path(project_root).resolve()
+    scanned_roots = [
+        root / "backend" / "src" / "ccore",
+        root / "frontend" / "static" / "desktop" / "protected" / "ccore" / "js",
+        root / "scripts" / "tests",
+    ]
+    extensions = {".py", ".js", ".ps1"}
+    findings = []
+
+    for scanned_root in scanned_roots:
+        if not scanned_root.exists():
+            continue
+        for file_path in sorted(path for path in scanned_root.rglob("*") if path.is_file() and path.suffix in extensions):
+            text = file_path.read_text(encoding="utf-8", errors="ignore")
+            for pattern in ABSOLUTE_PATH_PATTERNS:
+                if pattern.search(text):
+                    findings.append(file_path.relative_to(root).as_posix())
+                    break
+
+    if findings:
+        return _build_section(
+            "hardcoded_paths",
+            [
+                _build_check(
+                    "ccore-source-hardcoded-paths",
+                    STATUS_FAILED,
+                    "Potential hardcoded absolute paths found in: " + ", ".join(findings[:20]),
+                )
+            ],
+        )
+
+    return _build_section(
+        "hardcoded_paths",
+        [_build_check("ccore-source-hardcoded-paths", STATUS_PASSED, "No hardcoded absolute paths found in scanned CCore files.")],
+    )
+
+
+@task(name="Inspect CCore Automation Factory Contracts")
+def inspect_automation_factory_contracts_step(project_root: str) -> dict:
+    root = Path(project_root).resolve()
+    runner_file = root / "backend" / "src" / "ccore" / "tasks" / "task_execution_runner.py"
+    constants_file = root / "backend" / "src" / "ccore" / "tasks" / "task_execution_constants.py"
+    checks = []
+
+    if not runner_file.is_file():
+        checks.append(_build_check("task_execution_runner.py", STATUS_FAILED, "Task execution runner file is missing."))
+    else:
+        runner_text = runner_file.read_text(encoding="utf-8")
+        checks.append(
+            _build_check(
+                "ValidateProjectTaskRunner",
+                STATUS_PASSED if "ValidateProjectTaskRunner" in runner_text else STATUS_FAILED,
+                "Validate Project runner is present." if "ValidateProjectTaskRunner" in runner_text else "Validate Project runner is missing.",
+            )
+        )
+        checks.append(
+            _build_check(
+                "InspectProjectTaskRunner",
+                STATUS_PASSED if "InspectProjectTaskRunner" in runner_text else STATUS_FAILED,
+                "Inspect Project runner is present." if "InspectProjectTaskRunner" in runner_text else "Inspect Project runner is missing.",
+            )
+        )
+
+    if not constants_file.is_file():
+        checks.append(_build_check("task_execution_constants.py", STATUS_FAILED, "Task execution constants file is missing."))
+    else:
+        constants_text = constants_file.read_text(encoding="utf-8")
+        checks.append(
+            _build_check(
+                "CCORE_TASK_RUNNER_INSPECT_PROJECT",
+                STATUS_PASSED if "CCORE_TASK_RUNNER_INSPECT_PROJECT" in constants_text else STATUS_FAILED,
+                "Inspect Project runner constant is present." if "CCORE_TASK_RUNNER_INSPECT_PROJECT" in constants_text else "Inspect Project runner constant is missing.",
+            )
+        )
+
+    return _build_section("automation_factory_contracts", checks)
+
+
 @flow(name="CCore Validate Project")
 def validate_project_flow(project_root: str) -> dict:
     configuration_section = validate_project_configuration_step(project_root)
@@ -275,11 +427,85 @@ def validate_project_flow(project_root: str) -> dict:
     sections = [configuration_section, python_section, javascript_section, unit_tests_section]
     status = _aggregate_status(sections)
 
+    return _build_report(
+        schema_version="1.1",
+        task_name=VALIDATE_PROJECT_TASK_NAME,
+        runner_code=CCORE_TASK_RUNNER_VALIDATE_PROJECT,
+        status=status,
+        sections=sections,
+    )
+
+
+@flow(name="CCore Inspect Project")
+def inspect_project_flow(project_root: str) -> dict:
+    structure_section = inspect_project_structure_step(project_root)
+    naming_section = inspect_naming_conventions_step(project_root)
+    hardcoded_paths_section = inspect_hardcoded_paths_step(project_root)
+    contracts_section = inspect_automation_factory_contracts_step(project_root)
+    sections = [structure_section, naming_section, hardcoded_paths_section, contracts_section]
+    status = _aggregate_status(sections)
+
+    return _build_report(
+        schema_version="1.0",
+        task_name=INSPECT_PROJECT_TASK_NAME,
+        runner_code=CCORE_TASK_RUNNER_INSPECT_PROJECT,
+        status=status,
+        sections=sections,
+    )
+
+
+class ValidateProjectTaskRunner:
+    runner_code = CCORE_TASK_RUNNER_VALIDATE_PROJECT
+
+    def __init__(self, project_root):
+        self.project_root = Path(project_root).resolve()
+
+    def execute(self, task: CCoreTask) -> dict:
+        report = validate_project_flow(str(self.project_root))
+        return _build_runner_result(self.runner_code, report)
+
+
+class InspectProjectTaskRunner:
+    runner_code = CCORE_TASK_RUNNER_INSPECT_PROJECT
+
+    def __init__(self, project_root):
+        self.project_root = Path(project_root).resolve()
+
+    def execute(self, task: CCoreTask) -> dict:
+        report = inspect_project_flow(str(self.project_root))
+        return _build_runner_result(self.runner_code, report)
+
+
+class CCoreTaskRunnerRegistry:
+    def __init__(self, project_root):
+        self.project_root = Path(project_root).resolve()
+        self.runners_by_task_name = {
+            VALIDATE_PROJECT_TASK_NAME: ValidateProjectTaskRunner(self.project_root),
+            INSPECT_PROJECT_TASK_NAME: InspectProjectTaskRunner(self.project_root),
+        }
+
+    def get_runner_for_task(self, task: CCoreTask) -> CCoreTaskRunnerProtocol | None:
+        return self.runners_by_task_name.get(task.task_name)
+
+
+def _build_runner_result(runner_code: str, report: dict) -> dict:
     return {
-        "schemaVersion": "1.1",
+        "status_code": (
+            CCORE_TASK_EXECUTION_STATUS_SUCCEEDED
+            if report.get("status") == STATUS_PASSED
+            else CCORE_TASK_EXECUTION_STATUS_FAILED
+        ),
+        "runner_code": runner_code,
+        "report": report,
+    }
+
+
+def _build_report(schema_version: str, task_name: str, runner_code: str, status: str, sections: list[dict]) -> dict:
+    return {
+        "schemaVersion": schema_version,
         "task": {
-            "name": VALIDATE_PROJECT_TASK_NAME,
-            "runnerCode": CCORE_TASK_RUNNER_VALIDATE_PROJECT,
+            "name": task_name,
+            "runnerCode": runner_code,
         },
         "status": status,
         "sections": sections,
@@ -291,36 +517,6 @@ def validate_project_flow(project_root: str) -> dict:
         },
         "generatedAt": datetime.now(timezone.utc).isoformat(),
     }
-
-
-class ValidateProjectTaskRunner:
-    runner_code = CCORE_TASK_RUNNER_VALIDATE_PROJECT
-
-    def __init__(self, project_root):
-        self.project_root = Path(project_root).resolve()
-
-    def execute(self, task: CCoreTask) -> dict:
-        report = validate_project_flow(str(self.project_root))
-        return {
-            "status_code": (
-                CCORE_TASK_EXECUTION_STATUS_SUCCEEDED
-                if report.get("status") == STATUS_PASSED
-                else CCORE_TASK_EXECUTION_STATUS_FAILED
-            ),
-            "runner_code": self.runner_code,
-            "report": report,
-        }
-
-
-class CCoreTaskRunnerRegistry:
-    def __init__(self, project_root):
-        self.project_root = Path(project_root).resolve()
-        self.runners_by_task_name = {
-            VALIDATE_PROJECT_TASK_NAME: ValidateProjectTaskRunner(self.project_root),
-        }
-
-    def get_runner_for_task(self, task: CCoreTask) -> CCoreTaskRunnerProtocol | None:
-        return self.runners_by_task_name.get(task.task_name)
 
 
 def _build_check(check_id: str, status: str, message: str) -> dict:

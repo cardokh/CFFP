@@ -1,5 +1,5 @@
 <#
-Validates CFFP Automation Factory Story 2 task execution with one command.
+Validates CFFP Automation Factory task execution with one command.
 Run from the repository root after the backend is running and bootstrap has completed.
 
 Usage:
@@ -73,11 +73,78 @@ function Get-ExecutionId {
     return $null
 }
 
-Write-Host "CFFP Story 2 validation: CCore task execution framework"
+function Invoke-TaskExecutionValidation {
+    param(
+        [array]$Tasks,
+        [string]$TaskName,
+        [array]$ExpectedSections
+    )
+
+    $selectedTask = $Tasks | Where-Object { (Get-TaskName $_) -eq $TaskName } | Select-Object -First 1
+    if ($null -eq $selectedTask) {
+        Write-Fail "$TaskName task was not found in CCore task registry"
+        return
+    }
+
+    $selectedTaskId = Get-TaskId $selectedTask
+    if ([string]::IsNullOrWhiteSpace($selectedTaskId)) {
+        Write-Fail "$TaskName task did not include a task id"
+        return
+    }
+
+    Write-Pass "$TaskName task found: $selectedTaskId"
+
+    Write-Step "Executing $TaskName task through CCore"
+    $encodedTaskId = [System.Uri]::EscapeDataString($selectedTaskId)
+    $executeResponse = Invoke-JsonRequest -Method "POST" -Url "$BaseUrl/api/ccore/tasks/$encodedTaskId/execute"
+    if (-not $executeResponse.success) {
+        Write-Fail "$TaskName execute endpoint returned success=false"
+        return
+    }
+
+    if ($null -eq $executeResponse.execution) {
+        Write-Fail "$TaskName execute endpoint did not return an execution object"
+        return
+    }
+
+    $executionId = Get-ExecutionId $executeResponse.execution
+    Write-Pass "$TaskName execution completed with status: $($executeResponse.execution.status)"
+    Write-Pass "$TaskName execution id: $executionId"
+
+    if ($null -eq $executeResponse.execution.report) {
+        Write-Fail "$TaskName execution did not include a report"
+    }
+    else {
+        Write-Pass "$TaskName execution report returned"
+        $sectionNames = @($executeResponse.execution.report.sections | ForEach-Object { $_.name })
+        foreach ($expectedSection in $ExpectedSections) {
+            if ($sectionNames -contains $expectedSection) {
+                Write-Pass "$TaskName report contains $expectedSection section"
+            }
+            else {
+                Write-Fail "$TaskName report missing $expectedSection section"
+            }
+        }
+    }
+
+    Write-Step "Checking $TaskName execution history"
+    $historyResponse = Invoke-JsonRequest -Method "GET" -Url "$BaseUrl/api/ccore/tasks/$encodedTaskId/executions"
+    if (-not $historyResponse.success) {
+        Write-Fail "$TaskName execution history endpoint returned success=false"
+    }
+    elseif ($null -eq $historyResponse.executions -or $historyResponse.executions.Count -lt 1) {
+        Write-Fail "$TaskName execution history did not contain any executions"
+    }
+    else {
+        Write-Pass "$TaskName execution history contains $($historyResponse.executions.Count) execution(s)"
+    }
+}
+
+Write-Host "CFFP Automation Factory validation: CCore executable tasks"
 Write-Host "Repository: $(Get-Location)"
 Write-Host "Backend URL: $BaseUrl"
 
-Write-Step "Checking Story 2 files"
+Write-Step "Checking Automation Factory files"
 Assert-FileExists "backend/src/api/route_registry.py"
 Assert-FileExists "backend/src/ccore/application/service_factory.py"
 Assert-FileExists "backend/src/ccore/tasks/task_routes.py"
@@ -93,7 +160,7 @@ Assert-FileExists "scripts/db/postgres/config/entities.json"
 Assert-FileExists "scripts/db/postgres/config/postgres_create_schema.json"
 Assert-FileExists "scripts/db/postgres/config/postgres_seed_data.json"
 
-Write-Step "Compiling Story 2 Python files"
+Write-Step "Compiling Automation Factory Python files"
 try {
     $PythonFiles = @(
         "backend/src/api/route_registry.py",
@@ -111,14 +178,14 @@ try {
 
     python -m py_compile @PythonFiles
     if ($LASTEXITCODE -eq 0) {
-        Write-Pass "Story 2 Python files compiled"
+        Write-Pass "Automation Factory Python files compiled"
     }
     else {
         Write-Fail "Python compilation failed with exit code $LASTEXITCODE"
     }
 }
 catch {
-    Write-Fail "Could not compile Story 2 Python files: $($_.Exception.Message)"
+    Write-Fail "Could not compile Automation Factory Python files: $($_.Exception.Message)"
 }
 
 Write-Step "Checking CCore task API"
@@ -129,63 +196,18 @@ try {
     }
     else {
         Write-Pass "CCore task API responded"
-    }
-
-    $validateTask = $tasksResponse.tasks | Where-Object { (Get-TaskName $_) -eq "Validate Project" } | Select-Object -First 1
-    if ($null -eq $validateTask) {
-        Write-Fail "Validate Project task was not found in CCore task registry"
-    }
-    else {
-        $validateTaskId = Get-TaskId $validateTask
-        if ([string]::IsNullOrWhiteSpace($validateTaskId)) {
-            Write-Fail "Validate Project task did not include a task id"
-        }
-        else {
-            Write-Pass "Validate Project task found: $validateTaskId"
-
-            Write-Step "Executing Validate Project task through CCore"
-            $encodedTaskId = [System.Uri]::EscapeDataString($validateTaskId)
-            $executeResponse = Invoke-JsonRequest -Method "POST" -Url "$BaseUrl/api/ccore/tasks/$encodedTaskId/execute"
-            if (-not $executeResponse.success) {
-                Write-Fail "CCore execute endpoint returned success=false"
-            }
-            elseif ($null -eq $executeResponse.execution) {
-                Write-Fail "CCore execute endpoint did not return an execution object"
-            }
-            else {
-                $executionId = Get-ExecutionId $executeResponse.execution
-                Write-Pass "Execution completed with status: $($executeResponse.execution.status)"
-                Write-Pass "Execution id: $executionId"
-
-                if ($null -eq $executeResponse.execution.report) {
-                    Write-Fail "Execution did not include a report"
-                }
-                else {
-                    Write-Pass "Execution report returned"
-                    $sectionNames = @($executeResponse.execution.report.sections | ForEach-Object { $_.name })
-                    foreach ($expectedSection in @("configuration", "python_compilation", "javascript_syntax", "unit_tests")) {
-                        if ($sectionNames -contains $expectedSection) {
-                            Write-Pass "Validation report contains $expectedSection section"
-                        }
-                        else {
-                            Write-Fail "Validation report missing $expectedSection section"
-                        }
-                    }
-                }
-            }
-
-            Write-Step "Checking CCore execution history"
-            $historyResponse = Invoke-JsonRequest -Method "GET" -Url "$BaseUrl/api/ccore/tasks/$encodedTaskId/executions"
-            if (-not $historyResponse.success) {
-                Write-Fail "CCore execution history endpoint returned success=false"
-            }
-            elseif ($null -eq $historyResponse.executions -or $historyResponse.executions.Count -lt 1) {
-                Write-Fail "CCore execution history did not contain any executions"
-            }
-            else {
-                Write-Pass "CCore execution history contains $($historyResponse.executions.Count) execution(s)"
-            }
-        }
+        Invoke-TaskExecutionValidation -Tasks $tasksResponse.tasks -TaskName "Validate Project" -ExpectedSections @(
+            "configuration",
+            "python_compilation",
+            "javascript_syntax",
+            "unit_tests"
+        )
+        Invoke-TaskExecutionValidation -Tasks $tasksResponse.tasks -TaskName "Inspect Project" -ExpectedSections @(
+            "project_structure",
+            "naming_conventions",
+            "hardcoded_paths",
+            "automation_factory_contracts"
+        )
     }
 }
 catch {
@@ -195,11 +217,11 @@ catch {
 Write-Host ""
 Write-Host "========================================"
 if ($Failures.Count -eq 0) {
-    Write-Host "STORY 2 VALIDATION PASSED" -ForegroundColor Green
+    Write-Host "AUTOMATION FACTORY VALIDATION PASSED" -ForegroundColor Green
     exit 0
 }
 
-Write-Host "STORY 2 VALIDATION FAILED" -ForegroundColor Red
+Write-Host "AUTOMATION FACTORY VALIDATION FAILED" -ForegroundColor Red
 foreach ($Failure in $Failures) {
     Write-Host "- $Failure" -ForegroundColor Red
 }
