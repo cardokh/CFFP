@@ -183,6 +183,43 @@ class CCoreTaskExecutionRepository:
 
         return self.find_by_execution_id(str(row[0]))
 
+    def update_execution_snapshots(
+        self,
+        execution_id: str,
+        configuration_snapshot: dict,
+        validation_snapshot: dict,
+    ) -> CCoreTaskExecution | None:
+        """
+        Persist the configuration and validation snapshots for one task execution.
+        """
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE {CCORE_TASK_EXECUTIONS_TABLE_NAME}
+                    SET
+                        {CCORE_TASK_EXECUTION_CONFIGURATION_SNAPSHOT_COLUMN} = %s,
+                        {CCORE_TASK_EXECUTION_VALIDATION_SNAPSHOT_COLUMN} = %s,
+                        {CCORE_TASK_EXECUTION_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
+                    WHERE {CCORE_TASK_EXECUTION_ID_COLUMN} = %s
+                    RETURNING {CCORE_TASK_EXECUTION_ID_COLUMN}
+                    """,
+                    (
+                        Json(configuration_snapshot or {}),
+                        Json(validation_snapshot or {}),
+                        execution_id,
+                    ),
+                )
+
+                row = cursor.fetchone()
+
+            connection.commit()
+
+        if row is None:
+            return None
+
+        return self.find_by_execution_id(str(row[0]))
+
     def update_execution_result(
         self,
         execution_id: str,
