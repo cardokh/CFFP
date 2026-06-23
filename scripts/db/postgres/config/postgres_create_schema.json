@@ -159,6 +159,44 @@
                 }
             ]
         },
+        "ccore_execution_providers": {
+            "columns": [
+                {
+                    "name": "execution_provider_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "provider_label",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ]
+        },
+        "ccore_execution_implementers": {
+            "columns": [
+                {
+                    "name": "execution_implementer_id",
+                    "type": "INTEGER",
+                    "primaryKey": true
+                },
+                {
+                    "name": "implementer_label",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "sort_order",
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            ]
+        },
         "ccore_task_executions": {
             "columns": [
                 {
@@ -178,13 +216,13 @@
                     "nullable": false
                 },
                 {
-                    "name": "provider_profile",
-                    "type": "VARCHAR(100)",
+                    "name": "execution_provider_id",
+                    "type": "INTEGER",
                     "nullable": false
                 },
                 {
-                    "name": "execution_mode",
-                    "type": "VARCHAR(50)",
+                    "name": "execution_implementer_id",
+                    "type": "INTEGER",
                     "nullable": false
                 },
                 {
@@ -272,6 +310,32 @@
                         "table": "ccore_task_execution_statuses",
                         "columns": [
                             "execution_status_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_provider_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_providers",
+                        "columns": [
+                            "execution_provider_id"
+                        ]
+                    },
+                    "onDelete": "RESTRICT"
+                },
+                {
+                    "type": "foreignKey",
+                    "columns": [
+                        "execution_implementer_id"
+                    ],
+                    "references": {
+                        "table": "ccore_execution_implementers",
+                        "columns": [
+                            "execution_implementer_id"
                         ]
                     },
                     "onDelete": "RESTRICT"

@@ -3,6 +3,8 @@
         "ccore_task_statuses",
         "ccore_tasks",
         "ccore_task_execution_statuses",
+        "ccore_execution_providers",
+        "ccore_execution_implementers",
         "ccore_task_executions",
         "ccore_metric_types",
         "ccore_metrics"

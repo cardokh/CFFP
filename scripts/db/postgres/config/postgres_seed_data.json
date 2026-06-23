@@ -87,6 +87,48 @@
             ]
         },
         {
+            "table": "ccore_execution_providers",
+            "conflictColumn": "execution_provider_id",
+            "rows": [
+                {
+                    "execution_provider_id": 1,
+                    "provider_label": "Local Provider",
+                    "sort_order": 10
+                },
+                {
+                    "execution_provider_id": 2,
+                    "provider_label": "Prefect Provider",
+                    "sort_order": 20
+                }
+            ]
+        },
+        {
+            "table": "ccore_execution_implementers",
+            "conflictColumn": "execution_implementer_id",
+            "rows": [
+                {
+                    "execution_implementer_id": 1,
+                    "implementer_label": "No-op Implementer",
+                    "sort_order": 10
+                },
+                {
+                    "execution_implementer_id": 2,
+                    "implementer_label": "Python Script Implementer",
+                    "sort_order": 20
+                },
+                {
+                    "execution_implementer_id": 3,
+                    "implementer_label": "Shell Command Implementer",
+                    "sort_order": 30
+                },
+                {
+                    "execution_implementer_id": 4,
+                    "implementer_label": "AI Implementer",
+                    "sort_order": 40
+                }
+            ]
+        },
+        {
             "table": "ccore_metric_types",
             "conflictColumn": "metric_type_id",
             "rows": [
