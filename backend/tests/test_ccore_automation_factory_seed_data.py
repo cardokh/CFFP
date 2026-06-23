@@ -22,6 +22,11 @@ EXPECTED_AUTOMATION_FACTORY_TASKS = [
         "task_name": "Inspect Project",
         "status_code": "PENDING",
     },
+    {
+        "task_id": "44444444-4444-4444-4444-444444444444",
+        "task_name": "Generate Documentation",
+        "status_code": "PENDING",
+    },
 ]
 
 
