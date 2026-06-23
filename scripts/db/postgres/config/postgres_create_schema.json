@@ -166,7 +166,8 @@
                 {
                     "name": "execution_id",
                     "type": "UUID",
-                    "primaryKey": true
+                    "primaryKey": true,
+                    "default": "gen_random_uuid()"
                 },
                 {
                     "name": "task_id",
@@ -176,33 +177,79 @@
                 {
                     "name": "status_code",
                     "type": "VARCHAR(50)",
-                    "nullable": false
+                    "nullable": false,
+                    "default": "'PENDING'"
                 },
                 {
-                    "name": "runner_code",
+                    "name": "provider_profile",
                     "type": "VARCHAR(100)",
-                    "nullable": true
+                    "nullable": false,
+                    "default": "'prefect'"
                 },
                 {
-                    "name": "report_json",
+                    "name": "execution_mode",
+                    "type": "VARCHAR(50)",
+                    "nullable": false,
+                    "default": "'manual'"
+                },
+                {
+                    "name": "requested_by",
+                    "type": "VARCHAR(255)",
+                    "nullable": false,
+                    "default": "'system'"
+                },
+                {
+                    "name": "input_payload",
                     "type": "JSONB",
                     "nullable": false,
                     "default": "'{}'::jsonb"
                 },
                 {
-                    "name": "started_at",
-                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "name": "configuration_snapshot",
+                    "type": "JSONB",
                     "nullable": false,
-                    "default": "CURRENT_TIMESTAMP"
+                    "default": "'{}'::jsonb"
                 },
                 {
-                    "name": "finished_at",
-                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "name": "validation_snapshot",
+                    "type": "JSONB",
                     "nullable": false,
-                    "default": "CURRENT_TIMESTAMP"
+                    "default": "'{}'::jsonb"
+                },
+                {
+                    "name": "execution_report",
+                    "type": "JSONB",
+                    "nullable": false,
+                    "default": "'{}'::jsonb"
+                },
+                {
+                    "name": "error_details",
+                    "type": "JSONB",
+                    "nullable": true
+                },
+                {
+                    "name": "started_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": true
+                },
+                {
+                    "name": "completed_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": true
+                },
+                {
+                    "name": "failed_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": true
                 },
                 {
                     "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
                     "type": "TIMESTAMP WITH TIME ZONE",
                     "nullable": false,
                     "default": "CURRENT_TIMESTAMP"

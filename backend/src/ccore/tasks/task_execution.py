@@ -2,9 +2,9 @@
 CCore task execution domain objects.
 
 Responsibilities:
-- Represent one execution of a registered CCore task.
+- Represent one execution run of a registered CCore task.
 - Keep task definitions separate from task execution instances.
-- Carry execution report data produced by Automation Factory runners.
+- Carry execution payloads, snapshots, reports, and lifecycle timestamps.
 """
 
 from dataclasses import dataclass
@@ -17,8 +17,16 @@ class CCoreTaskExecution:
     task_id: str
     status_code: str
     status_label: str | None = None
-    runner_code: str | None = None
-    report_json: dict[str, Any] | None = None
+    provider_profile: str = "prefect"
+    execution_mode: str = "manual"
+    requested_by: str = "system"
+    input_payload: dict[str, Any] | None = None
+    configuration_snapshot: dict[str, Any] | None = None
+    validation_snapshot: dict[str, Any] | None = None
+    execution_report: dict[str, Any] | None = None
+    error_details: dict[str, Any] | None = None
     started_at: str | None = None
-    finished_at: str | None = None
+    completed_at: str | None = None
+    failed_at: str | None = None
     created_at: str | None = None
+    updated_at: str | None = None
