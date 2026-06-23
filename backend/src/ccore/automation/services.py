@@ -6,6 +6,7 @@ Responsibilities:
 - Validate selected execution provider, implementer type, target, and configuration metadata.
 - Create and update execution records.
 - Build provider-independent execution contexts.
+- Resolve runtime providers and implementers through registries.
 - Invoke the configured provider and implementer boundary.
 - Persist execution lifecycle state transitions, snapshots, reports, and errors.
 """
@@ -14,12 +15,10 @@ from typing import Optional
 
 from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
 from backend.src.ccore.tasks.task_execution_constants import (
-    CCORE_TASK_EXECUTION_DEFAULT_CONFIGURATION_ID,
     CCORE_TASK_EXECUTION_DEFAULT_IMPLEMENTER_TYPE_ID,
     CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_ID,
-    CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID,
     CCORE_TASK_EXECUTION_DEFAULT_REQUESTED_BY,
-    CCORE_TASK_EXECUTION_DEFAULT_TARGET_ID,
+    CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID,
     CCORE_TASK_EXECUTION_STATUS_ID_BLOCKED,
     CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED,
     CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
@@ -47,10 +46,36 @@ from .providers import (
 )
 
 DEFAULT_TASK_TYPE = "generic"
-LOCAL_PROVIDER_ID = CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_ID
-NO_OP_IMPLEMENTER_TYPE_ID = CCORE_TASK_EXECUTION_DEFAULT_IMPLEMENTER_TYPE_ID
-NO_OP_TARGET_ID = CCORE_TASK_EXECUTION_DEFAULT_TARGET_ID
-NO_OP_CONFIGURATION_ID = CCORE_TASK_EXECUTION_DEFAULT_CONFIGURATION_ID
+
+
+class ExecutionProviderRegistry:
+    """Registry that maps execution provider metadata identifiers to provider adapters."""
+
+    def __init__(self, providers: Optional[dict[int, ExecutionProvider]] = None):
+        self._providers: dict[int, ExecutionProvider] = dict(providers or {})
+
+    def register(self, execution_provider_id: int, provider: ExecutionProvider) -> None:
+        self._providers[execution_provider_id] = provider
+
+    def resolve(self, execution_provider_id: int) -> ExecutionProvider | None:
+        return self._providers.get(execution_provider_id)
+
+
+class ExecutionImplementerRegistry:
+    """Registry that maps execution implementer type metadata identifiers to doer adapters."""
+
+    def __init__(self, implementers: Optional[dict[int, ExecutionImplementer]] = None):
+        self._implementers: dict[int, ExecutionImplementer] = dict(implementers or {})
+
+    def register(
+        self,
+        execution_implementer_type_id: int,
+        implementer: ExecutionImplementer,
+    ) -> None:
+        self._implementers[execution_implementer_type_id] = implementer
+
+    def resolve(self, execution_implementer_type_id: int) -> ExecutionImplementer | None:
+        return self._implementers.get(execution_implementer_type_id)
 
 
 class TaskExecutionService:
@@ -60,15 +85,21 @@ class TaskExecutionService:
         execution_provider: Optional[ExecutionProvider] = None,
         execution_implementer: Optional[ExecutionImplementer] = None,
         task_execution_repository: Optional[CCoreTaskExecutionRepositoryProtocol] = None,
+        execution_provider_registry: Optional[ExecutionProviderRegistry] = None,
+        execution_implementer_registry: Optional[ExecutionImplementerRegistry] = None,
     ):
         self.ccore_task_service = ccore_task_service
-        self.execution_provider = execution_provider or LocalExecutionProvider()
-        self.execution_implementer = execution_implementer or NoOpExecutionImplementer()
-        self.python_script_execution_implementer = PythonScriptExecutionImplementer()
         self.task_execution_repository = task_execution_repository or getattr(
             ccore_task_service,
             "task_execution_repository",
             None,
+        )
+        self.execution_provider_registry = execution_provider_registry or self._build_default_provider_registry(
+            local_provider=execution_provider or LocalExecutionProvider(),
+        )
+        self.execution_implementer_registry = execution_implementer_registry or self._build_default_implementer_registry(
+            no_op_implementer=execution_implementer or NoOpExecutionImplementer(),
+            python_script_implementer=PythonScriptExecutionImplementer(),
         )
 
     def get_execution_providers(self):
@@ -95,10 +126,16 @@ class TaskExecutionService:
             raise ValueError(f"Automation task context '{task_id}' not found.")
 
         provider = self._get_required_provider(request.execution_provider_id)
-        implementer_type = self._get_required_implementer_type(request.execution_implementer_type_id)
+        implementer_type = self._get_required_implementer_type(
+            request.execution_implementer_type_id
+        )
         target = self._get_required_target(request.execution_target_id)
-        configuration = self._get_required_configuration(request.execution_configuration_id)
-        configuration_elements = self._get_configuration_elements(request.execution_configuration_id)
+        configuration = self._get_required_configuration(
+            request.execution_configuration_id
+        )
+        configuration_elements = self._get_configuration_elements(
+            request.execution_configuration_id
+        )
 
         self._validate_runtime_metadata_consistency(
             implementer_type=implementer_type,
@@ -158,7 +195,10 @@ class TaskExecutionService:
 
             result = self._run_selected_runtime(context)
             final_status_id = self._map_result_status_to_execution_status_id(result.status)
-            execution_report = self._build_execution_report(execution=execution, result=result)
+            execution_report = self._build_execution_report(
+                execution=execution,
+                result=result,
+            )
 
             final_execution = self.task_execution_repository.update_execution_result(
                 execution_id=str(execution.execution_id),
@@ -173,7 +213,10 @@ class TaskExecutionService:
                     f"{execution.execution_id}"
                 )
 
-            return self._with_execution_id(result=result, execution_id=str(execution.execution_id))
+            return self._with_execution_id(
+                result=result,
+                execution_id=str(execution.execution_id),
+            )
 
         except Exception as exc:
             error_result = self._build_failed_result(
@@ -184,10 +227,35 @@ class TaskExecutionService:
             self.task_execution_repository.update_execution_result(
                 execution_id=str(execution.execution_id),
                 execution_status_id=CCORE_TASK_EXECUTION_STATUS_ID_FAILED,
-                execution_report=self._build_execution_report(execution=execution, result=error_result),
+                execution_report=self._build_execution_report(
+                    execution=execution,
+                    result=error_result,
+                ),
                 error_details=error_result.error_details,
             )
             return error_result
+
+    def _build_default_provider_registry(
+        self,
+        local_provider: ExecutionProvider,
+    ) -> ExecutionProviderRegistry:
+        return ExecutionProviderRegistry(
+            {
+                CCORE_TASK_EXECUTION_DEFAULT_PROVIDER_ID: local_provider,
+            }
+        )
+
+    def _build_default_implementer_registry(
+        self,
+        no_op_implementer: ExecutionImplementer,
+        python_script_implementer: ExecutionImplementer,
+    ) -> ExecutionImplementerRegistry:
+        return ExecutionImplementerRegistry(
+            {
+                CCORE_TASK_EXECUTION_DEFAULT_IMPLEMENTER_TYPE_ID: no_op_implementer,
+                CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID: python_script_implementer,
+            }
+        )
 
     def _validate_execution_repository_configured(self) -> None:
         if self.task_execution_repository is None:
@@ -206,11 +274,15 @@ class TaskExecutionService:
             execution_implementer_type_id
         )
         if implementer_type is None:
-            raise ValueError(f"Invalid execution implementer type id: {execution_implementer_type_id}")
+            raise ValueError(
+                f"Invalid execution implementer type id: {execution_implementer_type_id}"
+            )
         return implementer_type
 
     def _get_required_target(self, execution_target_id: int):
-        target = self.task_execution_repository.find_execution_target_by_id(execution_target_id)
+        target = self.task_execution_repository.find_execution_target_by_id(
+            execution_target_id
+        )
         if target is None:
             raise ValueError(f"Invalid execution target id: {execution_target_id}")
         return target
@@ -220,7 +292,9 @@ class TaskExecutionService:
             execution_configuration_id
         )
         if configuration is None:
-            raise ValueError(f"Invalid execution configuration id: {execution_configuration_id}")
+            raise ValueError(
+                f"Invalid execution configuration id: {execution_configuration_id}"
+            )
         return configuration
 
     def _get_configuration_elements(self, execution_configuration_id: int) -> dict[str, str]:
@@ -229,13 +303,27 @@ class TaskExecutionService:
         )
         return {element.element_name: element.element_value for element in elements}
 
-    def _validate_runtime_metadata_consistency(self, implementer_type, target, configuration) -> None:
-        if target.execution_implementer_type_id != implementer_type.execution_implementer_type_id:
-            raise ValueError("Execution target does not belong to the selected implementer type.")
+    def _validate_runtime_metadata_consistency(
+        self,
+        implementer_type,
+        target,
+        configuration,
+    ) -> None:
+        if (
+            target.execution_implementer_type_id
+            != implementer_type.execution_implementer_type_id
+        ):
+            raise ValueError(
+                "Execution target does not belong to the selected implementer type."
+            )
         if configuration.execution_target_id != target.execution_target_id:
             raise ValueError("Execution configuration does not belong to the selected target.")
 
-    def _create_pending_execution(self, task_id: str, request: TaskExecutionRequest) -> CCoreTaskExecution:
+    def _create_pending_execution(
+        self,
+        task_id: str,
+        request: TaskExecutionRequest,
+    ) -> CCoreTaskExecution:
         execution = CCoreTaskExecution(
             execution_id=None,
             task_id=task_id,
@@ -253,7 +341,16 @@ class TaskExecutionService:
         )
         return self.task_execution_repository.create_execution(execution)
 
-    def _build_execution_context(self, task, request: TaskExecutionRequest, provider, implementer_type, target, configuration, configuration_elements: dict[str, str]) -> TaskExecutionContext:
+    def _build_execution_context(
+        self,
+        task,
+        request: TaskExecutionRequest,
+        provider,
+        implementer_type,
+        target,
+        configuration,
+        configuration_elements: dict[str, str],
+    ) -> TaskExecutionContext:
         return TaskExecutionContext(
             task_id=str(task.task_id),
             task_name=task.task_name,
@@ -275,7 +372,8 @@ class TaskExecutionService:
         )
 
     def _run_selected_runtime(self, context: TaskExecutionContext) -> TaskExecutionResult:
-        if context.execution_provider_id != LOCAL_PROVIDER_ID:
+        provider = self.execution_provider_registry.resolve(context.execution_provider_id)
+        if provider is None:
             return self._build_blocked_result(
                 context=context,
                 message=(
@@ -284,8 +382,10 @@ class TaskExecutionService:
                 ),
             )
 
-        selected_implementer = self._resolve_execution_implementer(context)
-        if selected_implementer is None:
+        implementer = self.execution_implementer_registry.resolve(
+            context.execution_implementer_type_id
+        )
+        if implementer is None:
             return self._build_blocked_result(
                 context=context,
                 message=(
@@ -294,20 +394,14 @@ class TaskExecutionService:
                 ),
             )
 
-        return self.execution_provider.run(context, selected_implementer)
+        return provider.run(context, implementer)
 
-    def _resolve_execution_implementer(self, context: TaskExecutionContext) -> ExecutionImplementer | None:
-        if context.execution_implementer_type_id == NO_OP_IMPLEMENTER_TYPE_ID:
-            if context.execution_target_id != NO_OP_TARGET_ID or context.execution_configuration_id != NO_OP_CONFIGURATION_ID:
-                return None
-            return self.execution_implementer
-
-        if context.execution_implementer_type_id == CCORE_TASK_EXECUTION_PYTHON_SCRIPT_IMPLEMENTER_TYPE_ID:
-            return self.python_script_execution_implementer
-
-        return None
-
-    def _build_configuration_snapshot(self, task, request: TaskExecutionRequest, context: TaskExecutionContext) -> dict:
+    def _build_configuration_snapshot(
+        self,
+        task,
+        request: TaskExecutionRequest,
+        context: TaskExecutionContext,
+    ) -> dict:
         return {
             "task": {
                 "taskId": str(task.task_id),
@@ -332,17 +426,50 @@ class TaskExecutionService:
             },
         }
 
-    def _build_validation_snapshot(self, task, request: TaskExecutionRequest, context: TaskExecutionContext) -> dict:
+    def _build_validation_snapshot(
+        self,
+        task,
+        request: TaskExecutionRequest,
+        context: TaskExecutionContext,
+    ) -> dict:
         return {
             "status": "PASSED",
             "checks": [
-                {"code": "TASK_EXISTS", "passed": task is not None, "message": "Automation task definition was found."},
-                {"code": "EXECUTION_PROVIDER_SELECTED", "passed": context.execution_provider_id > 0, "message": "Execution provider was selected."},
-                {"code": "EXECUTION_IMPLEMENTER_TYPE_SELECTED", "passed": context.execution_implementer_type_id > 0, "message": "Execution implementer type was selected."},
-                {"code": "EXECUTION_TARGET_SELECTED", "passed": context.execution_target_id > 0, "message": "Execution target was selected."},
-                {"code": "EXECUTION_CONFIGURATION_SELECTED", "passed": context.execution_configuration_id > 0, "message": "Execution configuration was selected."},
-                {"code": "EXECUTION_CONTEXT_CREATED", "passed": context is not None, "message": "Execution context was created."},
-                {"code": "INPUT_PAYLOAD_AVAILABLE", "passed": request.input_payload is not None, "message": "Execution input payload is available."},
+                {
+                    "code": "TASK_EXISTS",
+                    "passed": task is not None,
+                    "message": "Automation task definition was found.",
+                },
+                {
+                    "code": "EXECUTION_PROVIDER_SELECTED",
+                    "passed": context.execution_provider_id > 0,
+                    "message": "Execution provider was selected.",
+                },
+                {
+                    "code": "EXECUTION_IMPLEMENTER_TYPE_SELECTED",
+                    "passed": context.execution_implementer_type_id > 0,
+                    "message": "Execution implementer type was selected.",
+                },
+                {
+                    "code": "EXECUTION_TARGET_SELECTED",
+                    "passed": context.execution_target_id > 0,
+                    "message": "Execution target was selected.",
+                },
+                {
+                    "code": "EXECUTION_CONFIGURATION_SELECTED",
+                    "passed": context.execution_configuration_id > 0,
+                    "message": "Execution configuration was selected.",
+                },
+                {
+                    "code": "EXECUTION_CONTEXT_CREATED",
+                    "passed": context is not None,
+                    "message": "Execution context was created.",
+                },
+                {
+                    "code": "INPUT_PAYLOAD_AVAILABLE",
+                    "passed": request.input_payload is not None,
+                    "message": "Execution input payload is available.",
+                },
             ],
         }
 
@@ -355,7 +482,11 @@ class TaskExecutionService:
             return CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
         return CCORE_TASK_EXECUTION_STATUS_ID_COMPLETED
 
-    def _build_execution_report(self, execution: CCoreTaskExecution, result: TaskExecutionResult) -> dict:
+    def _build_execution_report(
+        self,
+        execution: CCoreTaskExecution,
+        result: TaskExecutionResult,
+    ) -> dict:
         return {
             "executionId": str(execution.execution_id),
             "taskId": result.task_id,
@@ -369,7 +500,11 @@ class TaskExecutionService:
             "errorDetails": result.error_details,
         }
 
-    def _build_blocked_result(self, context: TaskExecutionContext, message: str) -> TaskExecutionResult:
+    def _build_blocked_result(
+        self,
+        context: TaskExecutionContext,
+        message: str,
+    ) -> TaskExecutionResult:
         return TaskExecutionResult(
             task_id=context.task_id,
             status=CCORE_TASK_EXECUTION_STATUS_LABEL_BLOCKED,
@@ -386,7 +521,12 @@ class TaskExecutionService:
             },
         )
 
-    def _build_failed_result(self, task_id: str, execution_id: str, exc: Exception) -> TaskExecutionResult:
+    def _build_failed_result(
+        self,
+        task_id: str,
+        execution_id: str,
+        exc: Exception,
+    ) -> TaskExecutionResult:
         return TaskExecutionResult(
             task_id=task_id,
             status=CCORE_TASK_EXECUTION_STATUS_LABEL_FAILED,
@@ -399,7 +539,11 @@ class TaskExecutionService:
             error_details={"exception": type(exc).__name__, "message": str(exc)},
         )
 
-    def _with_execution_id(self, result: TaskExecutionResult, execution_id: str) -> TaskExecutionResult:
+    def _with_execution_id(
+        self,
+        result: TaskExecutionResult,
+        execution_id: str,
+    ) -> TaskExecutionResult:
         execution_details = dict(result.execution_details or {})
         execution_details["executionId"] = execution_id
         return TaskExecutionResult(
