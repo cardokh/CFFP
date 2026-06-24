@@ -1,0 +1,111 @@
+{
+    "artifacts": [
+        {
+            "artifactType": "backend_package_init",
+            "changeType": "create",
+            "content": "\"\"\"Generated CCore Organization CRUD module.\"\"\"\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create package marker for the generated Organization module.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/__init__.py"
+        },
+        {
+            "artifactType": "backend_model",
+            "changeType": "create",
+            "content": "from __future__ import annotations\n\nfrom dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Organization:\n    organization_id: int\n    organization_type_id: int\n    organization_name: str\n    organization_code: str\n    description: str | None\n    is_active: bool\n    created_at: str | None = None\n    updated_at: str | None = None\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create provider-generated Organization domain model in staging.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/models.py"
+        },
+        {
+            "artifactType": "backend_schemas",
+            "changeType": "create",
+            "content": "from __future__ import annotations\n\nfrom dataclasses import asdict\n\nfrom .models import Organization\n\n\ndef organization_to_response(organization: Organization) -> dict:\n    return asdict(organization)\n\n\ndef organization_collection_to_response(organizations: list[Organization]) -> dict:\n    return {\"items\": [organization_to_response(item) for item in organizations]}\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create provider-generated request/response schema helpers in staging.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/schemas.py"
+        },
+        {
+            "artifactType": "backend_repository",
+            "changeType": "create",
+            "content": "from __future__ import annotations\n\nfrom typing import Protocol\n\nfrom .models import Organization\n\n\nclass OrganizationRepository(Protocol):\n    def list_organizations(self) -> list[Organization]:\n        ...\n\n    def get_organization(self, organization_id: int) -> Organization | None:\n        ...\n\n\nclass InMemoryOrganizationRepository:\n    def __init__(self, organizations: list[Organization] | None = None):\n        self._organizations = organizations or []\n\n    def list_organizations(self) -> list[Organization]:\n        return list(self._organizations)\n\n    def get_organization(self, organization_id: int) -> Organization | None:\n        for organization in self._organizations:\n            if organization.organization_id == organization_id:\n                return organization\n        return None\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create provider-generated repository contract and in-memory implementation in staging.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/repositories.py"
+        },
+        {
+            "artifactType": "backend_service",
+            "changeType": "create",
+            "content": "from __future__ import annotations\n\nfrom .models import Organization\nfrom .repositories import OrganizationRepository\n\n\nclass OrganizationService:\n    def __init__(self, repository: OrganizationRepository):\n        self._repository = repository\n\n    def list_organizations(self) -> list[Organization]:\n        return self._repository.list_organizations()\n\n    def get_organization(self, organization_id: int) -> Organization | None:\n        return self._repository.get_organization(organization_id)\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create provider-generated service layer in staging.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/services.py"
+        },
+        {
+            "artifactType": "backend_api_routes",
+            "changeType": "create",
+            "content": "from __future__ import annotations\n\nfrom .schemas import organization_collection_to_response, organization_to_response\nfrom .services import OrganizationService\n\nAPI_PATH_CCORE_ORGANIZATIONS = \"/api/ccore/organizations\"\n\n\ndef list_organizations(service: OrganizationService) -> dict:\n    return organization_collection_to_response(service.list_organizations())\n\n\ndef get_organization(service: OrganizationService, organization_id: int) -> dict:\n    organization = service.get_organization(organization_id)\n    if organization is None:\n        return {\"error\": \"CCORE_ORGANIZATION_NOT_FOUND\"}\n    return organization_to_response(organization)\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create provider-generated route declarations in staging.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "backend/src/ccore/organizations/routes.py"
+        },
+        {
+            "artifactType": "frontend_list_page",
+            "changeType": "create",
+            "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>CCore Organizations</title>\n    <link rel=\"stylesheet\" href=\"./css/organizations.css\">\n</head>\n<body>\n    <main class=\"ccore-organizations-page\">\n        <header>\n            <h1>CCore Organizations</h1>\n            <p>Manage CCore organizations.</p>\n        </header>\n        <section id=\"organizations-status\" aria-live=\"polite\">Loading organizations...</section>\n        <table id=\"organizations-table\">\n            <thead>\n                <tr>\n                    <th>Name</th>\n                    <th>Code</th>\n                    <th>Type</th>\n                    <th>Active</th>\n                    <th>Updated</th>\n                </tr>\n            </thead>\n            <tbody></tbody>\n        </table>\n    </main>\n    <script src=\"./js/organizations.js\"></script>\n</body>\n</html>\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create staged list page for Organization CRUD.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "frontend/static/desktop/protected/ccore/organizations.html"
+        },
+        {
+            "artifactType": "frontend_list_js",
+            "changeType": "create",
+            "content": "const ORGANIZATIONS_ENDPOINT = \"/api/ccore/organizations\";\n\nasync function loadOrganizations() {\n    const statusElement = document.getElementById(\"organizations-status\");\n    const tableBody = document.querySelector(\"#organizations-table tbody\");\n\n    try {\n        const response = await fetch(ORGANIZATIONS_ENDPOINT);\n        const payload = await response.json();\n        const items = payload.items || [];\n\n        tableBody.innerHTML = items.map((organization) => `\n            <tr data-organization-id=\"${organization.organization_id}\">\n                <td>${organization.organization_name || \"\"}</td>\n                <td>${organization.organization_code || \"\"}</td>\n                <td>${organization.organization_type_name || \"\"}</td>\n                <td>${organization.is_active ? \"Yes\" : \"No\"}</td>\n                <td>${organization.updated_at || \"\"}</td>\n            </tr>\n        `).join(\"\");\n\n        statusElement.textContent = `${items.length} organization(s) loaded.`;\n    } catch (error) {\n        statusElement.textContent = \"Could not load organizations.\";\n    }\n}\n\ndocument.addEventListener(\"DOMContentLoaded\", loadOrganizations);\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create staged list-page script for Organization CRUD.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "frontend/static/desktop/protected/ccore/js/organizations.js"
+        },
+        {
+            "artifactType": "frontend_css",
+            "changeType": "create",
+            "content": ".ccore-organizations-page {\n    max-width: 1100px;\n    margin: 0 auto;\n    padding: 24px;\n}\n\n#organizations-table {\n    width: 100%;\n    border-collapse: collapse;\n}\n\n#organizations-table th,\n#organizations-table td {\n    padding: 8px 10px;\n    text-align: left;\n    border-bottom: 1px solid #ddd;\n}\n",
+            "contentEncoding": "utf-8",
+            "reason": "Create staged list-page styling for Organization CRUD.",
+            "sourceReference": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+            "targetPath": "frontend/static/desktop/protected/ccore/css/organizations.css"
+        }
+    ],
+    "generationNotes": [
+        "Manifest generated by replaceable local provider for Iteration 2 engine validation.",
+        "Artifact generation timestamp: deterministic-local-execution"
+    ],
+    "generationRequest": {
+        "goldenReference": [
+            "compiled into master-context.md"
+        ],
+        "sourceSpecification": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+        "targetEntity": "Organization",
+        "taskName": "Generate CRUD Module"
+    },
+    "manifestVersion": "1.0",
+    "requiredManualDecisions": [],
+    "technologyStack": {
+        "aiModel": "deterministic-artifact-manifest-v1",
+        "aiProvider": "local-deterministic-manifest-provider",
+        "backend": "Python standard library route-compatible staged artifacts",
+        "database": "PostgreSQL-compatible configuration staged later by validation/apply pipeline",
+        "frontend": "Static HTML/CSS/JavaScript",
+        "orchestration": "CFFP Automation Factory"
+    },
+    "validationHints": [
+        "Stage artifacts only; do not apply to production source in Iteration 2.",
+        "Compile staged Python files before validation/apply iteration."
+    ]
+}

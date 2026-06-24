@@ -1,0 +1,39 @@
+{
+    "generationName": "CFFP AI Generation Engine",
+    "generationVersion": "1.0",
+    "target": "Generate CCore Organization CRUD",
+    "inputs": {
+        "masterContextPath": "docs/Generate CCore Organization CRUD/compiled/master-context.md"
+    },
+    "outputs": {
+        "stagingRoot": "generated/automation_factory/{executionId}"
+    },
+    "timing": {
+        "mode": "deterministic"
+    },
+    "prompt": {
+        "promptId": "generate-crud-module-from-master-context-v1",
+        "systemInstruction": "You are generating staged artifacts for the CFFP Automation Factory task: Generate CRUD Module -> Organization. Use only the compiled master context below as source input.",
+        "rules": [
+            "Use only master-context.md as compiler input.",
+            "Do not guess missing architecture.",
+            "Do not introduce vendor-specific LLM dependencies.",
+            "Return a valid JSON artifact manifest.",
+            "Generate whole-file artifacts only.",
+            "Stage generated artifacts; never apply directly to production source."
+        ],
+        "requiredOutput": "Return only valid JSON matching the AI Artifact Manifest Contract. Do not include markdown or commentary."
+    },
+    "provider": {
+        "type": "local-deterministic-manifest",
+        "config": {
+            "targetEntity": "Organization",
+            "moduleSlug": "organizations",
+            "apiPrefix": "/api/ccore/organizations",
+            "modelName": "deterministic-artifact-manifest-v1",
+            "modelVersion": "1.0",
+            "artifactGenerationTimestamp": "deterministic-local-execution"
+        },
+        "classPath": "scripts.factory.ai_generation_engine.ai_generation_providers.LocalDeterministicManifestProvider"
+    }
+}

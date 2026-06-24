@@ -1,0 +1,17 @@
+.ccore-organizations-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+#organizations-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#organizations-table th,
+#organizations-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}

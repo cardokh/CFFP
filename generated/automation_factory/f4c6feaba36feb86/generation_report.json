@@ -1,0 +1,174 @@
+{
+    "generationEngine": {
+        "name": "CFFP AI Generation Engine",
+        "version": "1.0",
+        "target": "Generate CCore Organization CRUD"
+    },
+    "summary": {
+        "status": "PASSED",
+        "executionId": "f4c6feaba36feb86",
+        "artifactCount": 9,
+        "stagingRoot": "generated/automation_factory/f4c6feaba36feb86",
+        "manifestPath": "generated/automation_factory/f4c6feaba36feb86/artifact_manifest.json",
+        "generationReportPath": "generated/automation_factory/f4c6feaba36feb86/generation_report.json"
+    },
+    "input": {
+        "masterContextPath": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+        "masterContextSha256": "546fe96251e48892f1d68f20ed136a0a5729ca52397fb3e10d6a0815880e24cc"
+    },
+    "promptMetadata": {
+        "promptId": "generate-crud-module-from-master-context-v1",
+        "sourcePath": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+        "sourceSha256": "546fe96251e48892f1d68f20ed136a0a5729ca52397fb3e10d6a0815880e24cc",
+        "promptSha256": "67af5af172bee630603dcde4317b1cdbef5dc10ab93169f29825401e5ecd3d62",
+        "characterCount": 212756,
+        "lineCount": 6277
+    },
+    "modelMetadata": {
+        "providerType": "local",
+        "modelName": "deterministic-artifact-manifest-v1",
+        "modelVersion": "1.0",
+        "vendor": "none",
+        "executionMode": "deterministic-local"
+    },
+    "providerMetadata": {
+        "providerId": "local-deterministic-manifest-provider",
+        "finishReason": "completed",
+        "responseSha256": "2e6f1fc9a309152472c796cec87f9ecc6e854eaae6247a2137b66eb767889c11",
+        "usage": {
+            "promptCharacterCount": 212756,
+            "promptLineCount": 6277,
+            "responseCharacterCount": 10367,
+            "responseLineCount": 111,
+            "tokenCountAvailable": false
+        }
+    },
+    "timing": {
+        "mode": "deterministic",
+        "elapsedMilliseconds": 0,
+        "measuredElapsedMillisecondsAvailable": true,
+        "measuredElapsedMillisecondsOmittedForDeterminism": true
+    },
+    "generatedArtifacts": [
+        {
+            "artifactType": "backend_package_init",
+            "targetPath": "backend/src/ccore/organizations/__init__.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/__init__.py",
+            "sha256": "74d3ff239986828772e7d4195b231b22102fa826a2cd58c3bb9f9164a6a8946c",
+            "sizeBytes": 48,
+            "lineCount": 1
+        },
+        {
+            "artifactType": "backend_model",
+            "targetPath": "backend/src/ccore/organizations/models.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/models.py",
+            "sha256": "89561139e1f75cc386ce5c53fd7cda862ab72062ede928d7ce86c4e505598d30",
+            "sizeBytes": 341,
+            "lineCount": 15
+        },
+        {
+            "artifactType": "backend_schemas",
+            "targetPath": "backend/src/ccore/organizations/schemas.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/schemas.py",
+            "sha256": "bba76c92a7a53184ad18ca6b2000e6bf21526b065aa4cae2f52a3a3c049bf279",
+            "sizeBytes": 368,
+            "lineCount": 13
+        },
+        {
+            "artifactType": "backend_repository",
+            "targetPath": "backend/src/ccore/organizations/repositories.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/repositories.py",
+            "sha256": "0bafef3bc8e6fcab260f7ac5a183256c453472b0d0b00c42c85ba9cf07dc18ce",
+            "sizeBytes": 806,
+            "lineCount": 27
+        },
+        {
+            "artifactType": "backend_service",
+            "targetPath": "backend/src/ccore/organizations/services.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/services.py",
+            "sha256": "43bef951e951887df28373edcbc613fa84116a5bd054d9b163c9290ea2a10069",
+            "sizeBytes": 499,
+            "lineCount": 15
+        },
+        {
+            "artifactType": "backend_api_routes",
+            "targetPath": "backend/src/ccore/organizations/routes.py",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/routes.py",
+            "sha256": "3b4e2df1cb3db5c04f6a422b7e47102dd179fd6d55c161227a8eb18822e0ed7a",
+            "sizeBytes": 642,
+            "lineCount": 17
+        },
+        {
+            "artifactType": "frontend_list_page",
+            "targetPath": "frontend/static/desktop/protected/ccore/organizations.html",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/frontend/static/desktop/protected/ccore/organizations.html",
+            "sha256": "ccac9062e1da9101ba8ec48c3fc6f3b27df585f3e8e2887bc16b57cfe8d3113d",
+            "sizeBytes": 867,
+            "lineCount": 30
+        },
+        {
+            "artifactType": "frontend_list_js",
+            "targetPath": "frontend/static/desktop/protected/ccore/js/organizations.js",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/frontend/static/desktop/protected/ccore/js/organizations.js",
+            "sha256": "43c7aaa0d52f51b3dd1dc28287f82aab29f99ffa97976fd7637d19ab6e916645",
+            "sizeBytes": 1153,
+            "lineCount": 28
+        },
+        {
+            "artifactType": "frontend_css",
+            "targetPath": "frontend/static/desktop/protected/ccore/css/organizations.css",
+            "stagedPath": "generated/automation_factory/f4c6feaba36feb86/files/frontend/static/desktop/protected/ccore/css/organizations.css",
+            "sha256": "4cd787d9a853fb90ae7ce5046cd512dd835169deae792a4c020384f039570fca",
+            "sizeBytes": 300,
+            "lineCount": 17
+        }
+    ],
+    "validation": {
+        "status": "PASSED",
+        "findingCount": 6,
+        "findings": [
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/__init__.py",
+                "message": "Python file compiles."
+            },
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/models.py",
+                "message": "Python file compiles."
+            },
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/schemas.py",
+                "message": "Python file compiles."
+            },
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/repositories.py",
+                "message": "Python file compiles."
+            },
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/services.py",
+                "message": "Python file compiles."
+            },
+            {
+                "status": "PASSED",
+                "severity": "INFO",
+                "path": "generated/automation_factory/f4c6feaba36feb86/files/backend/src/ccore/organizations/routes.py",
+                "message": "Python file compiles."
+            }
+        ]
+    },
+    "manifestSummary": {
+        "manifestVersion": "1.0",
+        "requiredManualDecisionCount": 0,
+        "validationHintCount": 2,
+        "generationNoteCount": 2
+    }
+}
