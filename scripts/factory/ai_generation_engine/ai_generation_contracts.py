@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Protocol
+from dataclasses import asdict, dataclass, field
+from typing import Any, Protocol
 
 
 @dataclass(frozen=True)
 class PromptMetadata:
-    """Metadata describing the prompt sent to the configured LLM provider."""
+    """Metadata for the exact prompt sent to a replaceable LLM provider."""
 
     prompt_id: str
     source_path: str
@@ -15,21 +15,59 @@ class PromptMetadata:
     character_count: int
     line_count: int
 
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
 
 @dataclass(frozen=True)
-class LlmGenerationResponse:
-    """Provider-independent LLM generation result."""
+class LlmGenerationOptions:
+    """Provider-independent generation options loaded from configuration."""
+
+    model: str | None = None
+    temperature: float | None = None
+    max_output_tokens: int | None = None
+    extra: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_config(cls, config: dict[str, Any]) -> "LlmGenerationOptions":
+        return cls(
+            model=config.get("model"),
+            temperature=config.get("temperature"),
+            max_output_tokens=config.get("maxOutputTokens"),
+            extra=dict(config.get("extra", {})),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "model": self.model,
+            "temperature": self.temperature,
+            "maxOutputTokens": self.max_output_tokens,
+            "extra": self.extra,
+        }
+
+
+@dataclass(frozen=True)
+class LlmGenerationResult:
+    """Provider-independent result returned by any LLM provider implementation."""
 
     provider_id: str
-    model_metadata: dict
+    model_metadata: dict[str, Any]
     response_text: str
-    response_sha256: str
-    finish_reason: str
-    usage_metadata: dict
+    finish_reason: str = "unknown"
+    usage_metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_report_dict(self, response_sha256: str) -> dict[str, Any]:
+        return {
+            "providerId": self.provider_id,
+            "modelMetadata": self.model_metadata,
+            "responseSha256": response_sha256,
+            "finishReason": self.finish_reason,
+            "usageMetadata": self.usage_metadata,
+        }
 
 
 class LlmProvider(Protocol):
-    """Replaceable contract for AI generation providers."""
+    """Replaceable LLM provider boundary for the AI Generation Engine."""
 
     provider_id: str
 
@@ -37,7 +75,6 @@ class LlmProvider(Protocol):
         self,
         *,
         prompt: str,
-        prompt_metadata: PromptMetadata,
-        provider_config: dict,
-    ) -> LlmGenerationResponse:
-        """Generate provider output from the supplied prompt."""
+        options: LlmGenerationOptions,
+    ) -> LlmGenerationResult:
+        """Generate raw provider output from a prompt and provider-neutral options."""

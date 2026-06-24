@@ -1,39 +1,36 @@
 {
     "generationName": "CFFP AI Generation Engine",
-    "generationVersion": "1.0",
-    "target": "Generate CCore Organization CRUD",
+    "generationVersion": "2.0",
     "inputs": {
         "masterContextPath": "docs/Generate CCore Organization CRUD/compiled/master-context.md"
     },
     "outputs": {
-        "stagingRoot": "generated/automation_factory/{executionId}"
-    },
-    "timing": {
-        "mode": "deterministic"
+        "stagingRoot": ".ccore_workspace/staging/{executionId}"
     },
     "prompt": {
-        "promptId": "generate-crud-module-from-master-context-v1",
-        "systemInstruction": "You are generating staged artifacts for the CFFP Automation Factory task: Generate CRUD Module -> Organization. Use only the compiled master context below as source input.",
+        "promptId": "ai-generation-engine-v2",
+        "systemInstruction": "You are generating staged artifacts for the CFFP Automation Factory. Use only the compiled master context below as contextual input.",
         "rules": [
-            "Use only master-context.md as compiler input.",
-            "Do not guess missing architecture.",
-            "Do not introduce vendor-specific LLM dependencies.",
-            "Return a valid JSON artifact manifest.",
+            "Use only master-context.md as contextual input.",
+            "Do not inspect or rely on live repository files.",
+            "Do not write to live source folders.",
+            "Return only valid JSON matching the AI Artifact Manifest Contract.",
+            "Use repository-relative targetPath values inside the manifest.",
             "Generate whole-file artifacts only.",
-            "Stage generated artifacts; never apply directly to production source."
+            "Do not include markdown fences, commentary, or extra text outside JSON."
         ],
-        "requiredOutput": "Return only valid JSON matching the AI Artifact Manifest Contract. Do not include markdown or commentary."
+        "requiredOutput": "Return JSON with this shape: { \"manifestVersion\": \"1.0\", \"artifacts\": [ { \"artifactType\": \"...\", \"targetPath\": \"repository/relative/path\", \"content\": \"whole file content\", \"reason\": \"why this artifact exists\" } ] }."
     },
     "provider": {
-        "type": "local-deterministic-manifest",
-        "config": {
-            "targetEntity": "Organization",
-            "moduleSlug": "organizations",
-            "apiPrefix": "/api/ccore/organizations",
-            "modelName": "deterministic-artifact-manifest-v1",
-            "modelVersion": "1.0",
-            "artifactGenerationTimestamp": "deterministic-local-execution"
-        },
-        "classPath": "scripts.factory.ai_generation_engine.ai_generation_providers.LocalDeterministicManifestProvider"
+        "type": "static-manifest-provider",
+        "classPath": "scripts.factory.ai_generation_engine.ai_generation_providers.StaticManifestLlmProvider",
+        "options": {
+            "model": "static-manifest-v1",
+            "temperature": 0,
+            "maxOutputTokens": 0,
+            "extra": {
+                "artifacts": []
+            }
+        }
     }
 }
