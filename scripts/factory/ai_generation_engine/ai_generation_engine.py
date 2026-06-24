@@ -49,7 +49,7 @@ class AiGenerationEngine(BaseScript):
         provider_result = provider.generate(prompt=prompt, options=options)
         response_sha256 = self._sha256(provider_result.response_text)
 
-        execution_id = self._execution_id(prompt_metadata.prompt_sha256, response_sha256)
+        execution_id = self._resolve_execution_id(prompt_metadata.prompt_sha256, response_sha256)
         workspace_paths = self._resolve_workspace_paths(execution_id)
 
         manifest = self._parse_provider_response(provider_result.response_text)
@@ -282,6 +282,12 @@ class AiGenerationEngine(BaseScript):
                 "liveSourceRootsTouched": [],
             },
         }
+
+    def _resolve_execution_id(self, prompt_sha256: str, response_sha256: str) -> str:
+        configured_execution_id = self.config.get("inputs", {}).get("executionId")
+        if isinstance(configured_execution_id, str) and configured_execution_id.strip():
+            return configured_execution_id.strip()
+        return self._execution_id(prompt_sha256, response_sha256)
 
     def _execution_id(self, prompt_sha256: str, response_sha256: str) -> str:
         seed = f"{self.config.get('generationName', self.script_name)}:{prompt_sha256}:{response_sha256}"
