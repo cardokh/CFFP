@@ -1,0 +1,108 @@
+{
+    "compilerName": "CFFP Master Context Compiler",
+    "compilerVersion": "1.0",
+    "target": "Generate CCore Organization CRUD",
+    "outputs": {
+        "masterContextPath": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+        "reportPath": "docs/Generate CCore Organization CRUD/compiled/master-context-compilation-report.json"
+    },
+    "providers": [
+        {
+            "type": "approved-document-set",
+            "config": {
+                "documentRoot": "docs/Generate CCore Organization CRUD",
+                "includeExtensions": [
+                    ".md",
+                    ".yaml",
+                    ".yml"
+                ],
+                "ignorePathParts": [
+                    "compiled"
+                ],
+                "approvedDocuments": [
+                    "README.md",
+                    "workflow/generate-crud-module-document-set.md",
+                    "architecture/technology-decisions.md",
+                    "architecture/ccore-vertical-slice-blueprint-v1.0.md",
+                    "specifications/generation-contract.md",
+                    "specifications/template_crud_spec.yaml",
+                    "specifications/ccore_organizations_spec.yaml",
+                    "specifications/artifact-mapping-specification.yaml",
+                    "specifications/ai-artifact-manifest-contract.md",
+                    "specifications/crud-generation-validation-rules.md",
+                    "specifications/crud-module-specification-readiness-checklist.md",
+                    "workflow/generate-crud-module-pipeline.md",
+                    "workflow/generation-prompt-template.md",
+                    "success-criteria.md",
+                    "golden-reference.md"
+                ]
+            }
+        },
+        {
+            "type": "repository-inspection",
+            "config": {
+                "inspectionRoots": [
+                    "backend/src/ccore/tasks",
+                    "backend/src/api",
+                    "frontend/static/desktop/protected/ccore",
+                    "backend/src/ccore/shared",
+                    "backend/src/ccore/infrastructure"
+                ],
+                "includeExtensions": [
+                    ".py",
+                    ".html",
+                    ".js",
+                    ".css",
+                    ".json"
+                ],
+                "ignorePathParts": [
+                    ".git",
+                    ".venv",
+                    "__pycache__"
+                ],
+                "maxFilesPerRoot": 250
+            }
+        },
+        {
+            "type": "golden-reference",
+            "config": {
+                "referenceGroups": [
+                    {
+                        "id": "backend-task-crud-reference",
+                        "paths": [
+                            "backend/src/ccore/tasks/task.py",
+                            "backend/src/ccore/tasks/task_constants.py",
+                            "backend/src/ccore/tasks/task_contracts.py",
+                            "backend/src/ccore/tasks/task_mapper.py",
+                            "backend/src/ccore/tasks/task_messages.py",
+                            "backend/src/ccore/tasks/task_repository.py",
+                            "backend/src/ccore/tasks/task_repository_contract.py",
+                            "backend/src/ccore/tasks/task_routes.py",
+                            "backend/src/ccore/tasks/task_service.py",
+                            "backend/src/ccore/tasks/task_validator.py"
+                        ],
+                        "includeExtensions": [
+                            ".py"
+                        ]
+                    },
+                    {
+                        "id": "frontend-task-crud-reference",
+                        "paths": [
+                            "frontend/static/desktop/protected/ccore/tasks.html",
+                            "frontend/static/desktop/protected/ccore/task-details.html",
+                            "frontend/static/desktop/protected/ccore/js/tasks.js",
+                            "frontend/static/desktop/protected/ccore/js/task-details.js",
+                            "frontend/static/desktop/protected/ccore/css/tasks.css",
+                            "frontend/static/desktop/protected/ccore/css/task-details.css"
+                        ],
+                        "includeExtensions": [
+                            ".html",
+                            ".js",
+                            ".css"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

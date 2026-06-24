@@ -1,0 +1,411 @@
+{
+    "compiler": {
+        "name": "CFFP Master Context Compiler",
+        "version": "1.0",
+        "target": "Generate CCore Organization CRUD"
+    },
+    "summary": {
+        "status": "PASSED",
+        "masterContextPath": "docs/Generate CCore Organization CRUD/compiled/master-context.md",
+        "masterContextSha256": "546fe96251e48892f1d68f20ed136a0a5729ca52397fb3e10d6a0815880e24cc",
+        "includedItemCount": 32,
+        "excludedInputCount": 0,
+        "findingCount": 0
+    },
+    "providers": [
+        {
+            "providerId": "approved-document-set",
+            "summary": {
+                "documentRoot": "docs/Generate CCore Organization CRUD",
+                "approvedDocumentCount": 15,
+                "includedDocumentCount": 15,
+                "excludedInputCount": 0
+            }
+        },
+        {
+            "providerId": "repository-inspection",
+            "summary": {
+                "inspectedRoots": [
+                    {
+                        "path": "backend/src/ccore/tasks",
+                        "exists": true,
+                        "fileCount": 18,
+                        "reportedFileCount": 18
+                    },
+                    {
+                        "path": "backend/src/api",
+                        "exists": true,
+                        "fileCount": 16,
+                        "reportedFileCount": 16
+                    },
+                    {
+                        "path": "frontend/static/desktop/protected/ccore",
+                        "exists": true,
+                        "fileCount": 9,
+                        "reportedFileCount": 9
+                    },
+                    {
+                        "path": "backend/src/ccore/shared",
+                        "exists": true,
+                        "fileCount": 5,
+                        "reportedFileCount": 5
+                    },
+                    {
+                        "path": "backend/src/ccore/infrastructure",
+                        "exists": true,
+                        "fileCount": 4,
+                        "reportedFileCount": 4
+                    }
+                ],
+                "reportedFileCount": 52
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "summary": {
+                "referenceGroupCount": 2,
+                "includedReferenceFileCount": 16,
+                "excludedInputCount": 0
+            }
+        }
+    ],
+    "includedInputs": [
+        {
+            "providerId": "approved-document-set",
+            "title": "README.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/README.md",
+            "metadata": {
+                "sizeBytes": 3447,
+                "lineCount": 108,
+                "sha256": "3029f4a33b3303508674bb82b2f0f74c4c0cca06cba959471ea78db949190e30"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "architecture/ccore-vertical-slice-blueprint-v1.0.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/architecture/ccore-vertical-slice-blueprint-v1.0.md",
+            "metadata": {
+                "sizeBytes": 4984,
+                "lineCount": 181,
+                "sha256": "c735915593196cddf376ee64fe2f68c0ae3b1602d423ce3d3b6b44f416e1d5dd"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "architecture/technology-decisions.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/architecture/technology-decisions.md",
+            "metadata": {
+                "sizeBytes": 2948,
+                "lineCount": 56,
+                "sha256": "1249d9780a8cd33ef45bd48e5301e9c92d0ab6eaea1de869173922e9ad95921b"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "golden-reference.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/golden-reference.md",
+            "metadata": {
+                "sizeBytes": 3402,
+                "lineCount": 113,
+                "sha256": "488e02deabf3aa502a565edc68977fcda21652b2dadfdc008e9dcda84c25ad60"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/ai-artifact-manifest-contract.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md",
+            "metadata": {
+                "sizeBytes": 2781,
+                "lineCount": 109,
+                "sha256": "88406e608a99b47dd3fbac66119d084f62a0c73e78f952b3fe5f9161d4a611cd"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/artifact-mapping-specification.yaml",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml",
+            "metadata": {
+                "sizeBytes": 11935,
+                "lineCount": 333,
+                "sha256": "cf33f035af27d80d88dc5f10a82d7d0492e72c92ac94df5ffc5455900b2680c9"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/ccore_organizations_spec.yaml",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml",
+            "metadata": {
+                "sizeBytes": 22481,
+                "lineCount": 541,
+                "sha256": "060cce94f394c4a375238a009f789a7ffc0172cff56f641634f5713726929d43"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/crud-generation-validation-rules.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/crud-generation-validation-rules.md",
+            "metadata": {
+                "sizeBytes": 3958,
+                "lineCount": 145,
+                "sha256": "b76efc9b79e1eeb26a083c1aaf73b2cfc256461af07759c5b39fad7599f25fe1"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/crud-module-specification-readiness-checklist.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/crud-module-specification-readiness-checklist.md",
+            "metadata": {
+                "sizeBytes": 6317,
+                "lineCount": 254,
+                "sha256": "7008567d28ed3f5b52a0012d71a74ea3a5c13b63007bd3922296ed9e0fa1114d"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/generation-contract.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/generation-contract.md",
+            "metadata": {
+                "sizeBytes": 8497,
+                "lineCount": 280,
+                "sha256": "1082e5fd48a1c95c137e6f85884784eec1bda3bc732043e85a9239939762c659"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "specifications/template_crud_spec.yaml",
+            "sourcePath": "docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml",
+            "metadata": {
+                "sizeBytes": 11323,
+                "lineCount": 352,
+                "sha256": "d81a188b2c1c2ab8a699f8f8211ba0fe348d087b6a2061cfd3b98b523179f02f"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "success-criteria.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/success-criteria.md",
+            "metadata": {
+                "sizeBytes": 3709,
+                "lineCount": 106,
+                "sha256": "af2383a8ca5918e6df7858367a0f0ad39e83d5bb937d42a6496c16343faed720"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "workflow/generate-crud-module-document-set.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/workflow/generate-crud-module-document-set.md",
+            "metadata": {
+                "sizeBytes": 4963,
+                "lineCount": 95,
+                "sha256": "b3dbfb370af950c10d16321a4402be2e5b8f41313886338edf595cbfd855b404"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "workflow/generate-crud-module-pipeline.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/workflow/generate-crud-module-pipeline.md",
+            "metadata": {
+                "sizeBytes": 6067,
+                "lineCount": 220,
+                "sha256": "3b0e97034e79735df291d472e19b9194c84937b42084e6d23d9fe08017777a6b"
+            }
+        },
+        {
+            "providerId": "approved-document-set",
+            "title": "workflow/generation-prompt-template.md",
+            "sourcePath": "docs/Generate CCore Organization CRUD/workflow/generation-prompt-template.md",
+            "metadata": {
+                "sizeBytes": 2770,
+                "lineCount": 110,
+                "sha256": "07b460996dfa47ceb9c9b91955123bc9a88d80e5e4abb092838fbb3bc7dffbac"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task.py",
+            "sourcePath": "backend/src/ccore/tasks/task.py",
+            "metadata": {
+                "sizeBytes": 511,
+                "lineCount": 20,
+                "sha256": "fd8ea061c54280157a3ab310440a199260b929226700408aea4388420e9f70b5",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_constants.py",
+            "sourcePath": "backend/src/ccore/tasks/task_constants.py",
+            "metadata": {
+                "sizeBytes": 1252,
+                "lineCount": 37,
+                "sha256": "43338cba7b7934570980b2e7d94b928b45d168a233c7c59d06c2616f518e5e8c",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_contracts.py",
+            "sourcePath": "backend/src/ccore/tasks/task_contracts.py",
+            "metadata": {
+                "sizeBytes": 4239,
+                "lineCount": 155,
+                "sha256": "4ef3ab7006ae012d7decff6d731ee3b0507f8b9e421490830b279902749a99e4",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_mapper.py",
+            "sourcePath": "backend/src/ccore/tasks/task_mapper.py",
+            "metadata": {
+                "sizeBytes": 2627,
+                "lineCount": 74,
+                "sha256": "372e456fb7c2855fb49711247340130b0e6176f8212160937902d89a261b76ed",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_messages.py",
+            "sourcePath": "backend/src/ccore/tasks/task_messages.py",
+            "metadata": {
+                "sizeBytes": 1224,
+                "lineCount": 29,
+                "sha256": "e0ab145728c9688ed17a1f0ab73f77af267d4a8606b515e122a51fb43b436392",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_repository.py",
+            "sourcePath": "backend/src/ccore/tasks/task_repository.py",
+            "metadata": {
+                "sizeBytes": 8212,
+                "lineCount": 237,
+                "sha256": "49541cc87a7f2660007cfa35599b554cdd376708516717822e4102b011ea53f3",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_repository_contract.py",
+            "sourcePath": "backend/src/ccore/tasks/task_repository_contract.py",
+            "metadata": {
+                "sizeBytes": 1055,
+                "lineCount": 33,
+                "sha256": "84e24c03de2a67cc66d8770098a232e2792385907967a3882f1a71fbcdf768bc",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_routes.py",
+            "sourcePath": "backend/src/ccore/tasks/task_routes.py",
+            "metadata": {
+                "sizeBytes": 11735,
+                "lineCount": 431,
+                "sha256": "06c0651eca9426e91bb176f4b43ec847b803a9a526ffeceee2a126c4b9f04d66",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_service.py",
+            "sourcePath": "backend/src/ccore/tasks/task_service.py",
+            "metadata": {
+                "sizeBytes": 3257,
+                "lineCount": 89,
+                "sha256": "e5158ff59790bc33afc5a9f5a6a653d6fdcdb8fd90cd5d0ce6ba689b10559622",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "backend-task-crud-reference: backend/src/ccore/tasks/task_validator.py",
+            "sourcePath": "backend/src/ccore/tasks/task_validator.py",
+            "metadata": {
+                "sizeBytes": 1755,
+                "lineCount": 47,
+                "sha256": "71c1103b26db9212dd45bf2eebf1ed8bbdc0a92d2c42030a709adee526bf1bee",
+                "referenceGroup": "backend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/css/task-details.css",
+            "sourcePath": "frontend/static/desktop/protected/ccore/css/task-details.css",
+            "metadata": {
+                "sizeBytes": 4602,
+                "lineCount": 224,
+                "sha256": "b26aabf69dd4512ab118574ea5a38bb3d0d58e62f2f843f99714f13322b75f1d",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/css/tasks.css",
+            "sourcePath": "frontend/static/desktop/protected/ccore/css/tasks.css",
+            "metadata": {
+                "sizeBytes": 2095,
+                "lineCount": 119,
+                "sha256": "f08677361edf340b9911665753433d32603bf597d7e5f2d6c15789a77c6981e7",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/js/task-details.js",
+            "sourcePath": "frontend/static/desktop/protected/ccore/js/task-details.js",
+            "metadata": {
+                "sizeBytes": 23663,
+                "lineCount": 510,
+                "sha256": "82b7377c64209bcdd1a348b365dc48952c96066a6f612517db4d08ec3c585fc4",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/js/tasks.js",
+            "sourcePath": "frontend/static/desktop/protected/ccore/js/tasks.js",
+            "metadata": {
+                "sizeBytes": 12315,
+                "lineCount": 489,
+                "sha256": "3a04cee14536558995884be209e8f521bdd8e0e2c204f9e808a800252352325c",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/task-details.html",
+            "sourcePath": "frontend/static/desktop/protected/ccore/task-details.html",
+            "metadata": {
+                "sizeBytes": 10426,
+                "lineCount": 211,
+                "sha256": "34c20378125e5e986af06cd147bc6beb359847ec9f0af6e9b76b5b1bc7c357b0",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "golden-reference",
+            "title": "frontend-task-crud-reference: frontend/static/desktop/protected/ccore/tasks.html",
+            "sourcePath": "frontend/static/desktop/protected/ccore/tasks.html",
+            "metadata": {
+                "sizeBytes": 6671,
+                "lineCount": 154,
+                "sha256": "8a1c37e379e40a9e0eab261ded3ec62728c242a12898b148dd55f7fac33bb935",
+                "referenceGroup": "frontend-task-crud-reference"
+            }
+        },
+        {
+            "providerId": "repository-inspection",
+            "title": "Repository Inspection Summary",
+            "sourcePath": "repository-runtime-inspection",
+            "metadata": {
+                "inspectedRootCount": 5,
+                "reportedFileCount": 52
+            }
+        }
+    ],
+    "excludedInputs": [],
+    "findings": []
+}

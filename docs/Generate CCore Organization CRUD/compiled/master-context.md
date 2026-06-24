@@ -1,0 +1,6263 @@
+# CFFP Master Context
+
+## Compilation Identity
+
+- compiler: `CFFP Master Context Compiler`
+- target: `Generate CCore Organization CRUD`
+- version: `1.0`
+
+## Provider Summary
+
+- `approved-document-set`: included=15, excluded=0, findings=0
+- `repository-inspection`: included=1, excluded=0, findings=0
+- `golden-reference`: included=16, excluded=0, findings=0
+
+## Provider: approved-document-set
+
+### Included Context Items
+
+#### README.md
+
+- source: `docs/Generate CCore Organization CRUD/README.md`
+- sha256: `3029f4a33b3303508674bb82b2f0f74c4c0cca06cba959471ea78db949190e30`
+- lines: `108`
+
+```text
+# Generate CCore Organization CRUD
+
+## Purpose
+
+This folder contains the complete, task-specific document set for the first real CFFP Automation Factory generation experiment:
+
+```text
+Generate CRUD Module -> Organization
+```
+
+The goal is to prove that the Automation Factory can generate one complete CCore vertical slice from a controlled specification, using AI only inside a staged, validated, no-guessing pipeline.
+
+This folder is intentionally separate from `docs/Automation Factory`.
+
+- `docs/Automation Factory` describes the reusable platform and long-term automation architecture.
+- `docs/Generate CCore Organization CRUD` describes one concrete generation task.
+
+## Scope
+
+This task is responsible for generating the Organization CRUD module, including the configured database artifacts, backend vertical slice, frontend pages/controllers/styles, registrations, validation output, and execution report.
+
+The task must not perform direct free-form repository edits.
+
+The required flow is:
+
+```text
+specification -> repository inspection -> AI generation -> artifact manifest -> staging -> validation -> apply -> execution report
+```
+
+## Required Reading Order
+
+Any human reviewer or AI assistant must read the documents in this order:
+
+1. `README.md`
+2. `workflow/generate-crud-module-document-set.md`
+3. `architecture/technology-decisions.md`
+4. `architecture/ccore-vertical-slice-blueprint-v1.0.md`
+5. `specifications/generation-contract.md`
+6. `specifications/template_crud_spec.yaml`
+7. `specifications/ccore_organizations_spec.yaml`
+8. `specifications/artifact-mapping-specification.yaml`
+9. `specifications/ai-artifact-manifest-contract.md`
+10. `specifications/crud-generation-validation-rules.md`
+11. `specifications/crud-module-specification-readiness-checklist.md`
+12. `workflow/generate-crud-module-pipeline.md`
+13. `workflow/generation-prompt-template.md`
+14. `success-criteria.md`
+15. `golden-reference.md`
+
+## Non-Negotiable Rules
+
+- Do not guess.
+- Do not invent missing architecture.
+- Do not introduce new frameworks.
+- Do not switch database technology.
+- Do not generate patch fragments.
+- Do not generate manual copy/paste instructions as implementation.
+- Do not apply generated code before validation passes.
+- Do not create files outside the artifact mapping specification.
+- Do not modify the golden reference module.
+- Stop and report missing information if any required decision is absent.
+
+## Authoritative Documents
+
+The authoritative input for the generated Organization module is:
+
+```text
+specifications/ccore_organizations_spec.yaml
+```
+
+The reusable schema for future CRUD module specifications is:
+
+```text
+specifications/template_crud_spec.yaml
+```
+
+The rules that control how AI may generate artifacts are:
+
+```text
+specifications/generation-contract.md
+specifications/ai-artifact-manifest-contract.md
+specifications/artifact-mapping-specification.yaml
+specifications/crud-generation-validation-rules.md
+```
+
+## Expected AI Output
+
+The AI must return a structured artifact manifest only.
+
+It must not return informal instructions, code snippets, or patch fragments.
+
+The artifact manifest must contain full file contents for each generated or replaced file.
+
+## Current Execution Status
+
+Before execution, check:
+
+```yaml
+approval.approvedForExecution
+```
+
+inside:
+
+```text
+specifications/ccore_organizations_spec.yaml
+```
+
+If this value is false, the pipeline must stop before invoking AI generation.
+```
+
+#### workflow/generate-crud-module-document-set.md
+
+- source: `docs/Generate CCore Organization CRUD/workflow/generate-crud-module-document-set.md`
+- sha256: `b3dbfb370af950c10d16321a4402be2e5b8f41313886338edf595cbfd855b404`
+- lines: `95`
+
+```text
+# Generate CRUD Module — Required Document Set
+
+## Purpose
+
+This document defines the self-contained document set for the concrete generation task:
+
+```text
+Generate CRUD Module -> Organization
+```
+
+The goal is to keep the context focused and avoid feeding unnecessary historical or platform-level documents into the AI generation pipeline.
+
+## Folder Policy
+
+This folder contains only the documents needed to prepare, run, validate, and review the first Organization CRUD generation experiment.
+
+Long-term Automation Factory platform documents may remain under:
+
+```text
+docs/Automation Factory
+```
+
+They should not be included in this task-specific AI context unless a required document in this folder explicitly references them.
+
+## Required Static Documents For This Task
+
+These documents should be included in the generation context or used directly by the pipeline.
+
+| Document | Why It Is Required |
+| --- | --- |
+| `README.md` | Entry point, scope, reading order, and non-negotiable rules. |
+| `architecture/technology-decisions.md` | Locks the current technology stack and prevents tool/framework guessing. |
+| `architecture/ccore-vertical-slice-blueprint-v1.0.md` | Defines the CCore vertical-slice architecture the generated CRUD module must follow. |
+| `golden-reference.md` | Identifies the concrete backend/frontend golden reference files. |
+| `specifications/generation-contract.md` | Defines how the AI is allowed to generate artifacts and what it must not do. |
+| `specifications/artifact-mapping-specification.yaml` | Defines where generated artifacts are allowed to be staged/applied. |
+| `specifications/template_crud_spec.yaml` | Reusable master structure for future CRUD specifications. |
+| `specifications/ccore_organizations_spec.yaml` | First real entity specification. Source of truth for Organization generation. |
+| `specifications/ai-artifact-manifest-contract.md` | Defines the required structured output from the AI generator. |
+| `specifications/crud-generation-validation-rules.md` | Defines validation gates before generated artifacts may be applied. |
+| `specifications/crud-module-specification-readiness-checklist.md` | Used before execution to confirm the Organization specification is complete. |
+| `workflow/generate-crud-module-pipeline.md` | Defines the sequential Prefect pipeline steps for the task. |
+| `workflow/generation-prompt-template.md` | Defines how the final AI prompt is assembled from controlled inputs. |
+| `success-criteria.md` | Defines success, controlled failure, and definition of done. |
+
+## Required Runtime Inputs Not Stored As Static Docs
+
+These inputs must be collected by the pipeline at execution time.
+
+| Runtime Input | Why It Is Required |
+| --- | --- |
+| Repository inspection summary | Prevents guessing about current code structure. |
+| Golden reference file contents from `ccore_tasks` | Gives the AI exact implementation patterns to replicate. |
+| Current generated artifact staging path | Ensures output is staged before apply. |
+| Execution metadata | Links generated output to an Automation Factory execution report. |
+| Approved task configuration values | Connects the UI-selected Automation Factory configuration to the generation pipeline. |
+
+## Documents Not Required In This Task Folder
+
+The following are useful project/platform documents, but they are not required inside this concrete task folder unless the task scope changes:
+
+- ADRs for authentication, authorization, roles, permissions, sessions, or organization isolation.
+- Historical architecture discovery notes.
+- General Automation Factory vision documents.
+- Previous reports from earlier experiments.
+- Jira exports.
+- High-level `.docx` project notes.
+
+If the Organization CRUD module later includes security behavior, authorization, session ownership, or organization isolation, the relevant ADRs should be copied or referenced explicitly at that time.
+
+## Recommended AI Context Assembly Order
+
+The pipeline should assemble the AI context in this order:
+
+1. `README.md`
+2. `specifications/generation-contract.md`
+3. `architecture/technology-decisions.md`
+4. `architecture/ccore-vertical-slice-blueprint-v1.0.md`
+5. `golden-reference.md`
+6. `specifications/template_crud_spec.yaml`
+7. `specifications/ccore_organizations_spec.yaml`
+8. `specifications/artifact-mapping-specification.yaml`
+9. `specifications/ai-artifact-manifest-contract.md`
+10. `specifications/crud-generation-validation-rules.md`
+11. `workflow/generate-crud-module-pipeline.md`
+12. `workflow/generation-prompt-template.md`
+13. `success-criteria.md`
+14. Runtime repository inspection summary.
+15. Runtime golden reference file contents.
+
+## Stop Rule
+
+If any required static document is missing, empty, internally inconsistent, or contains unresolved required decisions, the pipeline must stop before invoking AI generation.
+
+If runtime repository inspection contradicts the static documents, the pipeline must stop and report the conflict.
+```
+
+#### architecture/technology-decisions.md
+
+- source: `docs/Generate CCore Organization CRUD/architecture/technology-decisions.md`
+- sha256: `1249d9780a8cd33ef45bd48e5301e9c92d0ab6eaea1de869173922e9ad95921b`
+- lines: `56`
+
+```text
+# Automation Factory Technology Decisions
+
+## Purpose
+
+This document records the technology facts that the CRUD generation pipeline must use as source-of-truth. The generator must not infer or guess these values.
+
+## Inspected Baseline
+
+The current repository baseline shows the following CCore implementation facts:
+
+| Area | Current baseline |
+|---|---|
+| Backend language | Python |
+| HTTP framework/style | Custom route registry/dispatcher over Python handlers |
+| CCore golden reference | `backend/src/ccore/tasks` |
+| Frontend golden reference | `frontend/static/desktop/protected/ccore/tasks.html`, `task-details.html`, `css/tasks.css`, `css/task-details.css`, `js/tasks.js`, `js/task-details.js` |
+| Database manager | `backend/src/ccore/infrastructure/database.py` |
+| CCore database connection | PostgreSQL through `psycopg2` |
+| Database config | `scripts/db/postgres/config/database.json` |
+| Schema scripts | `scripts/db/postgres/postgres_create_schema.py` and config JSON |
+| Seed scripts | `scripts/db/postgres/postgres_seed_data.py` and config JSON |
+| Backend domain objects | `dataclasses` |
+| API request contracts | Explicit parser classes, not Pydantic in current CCore baseline |
+| Async database sessions | Not present in current CCore baseline |
+| Frontend | Static HTML, vanilla JavaScript, existing shared CSS |
+| Styling | Existing shared CSS files, not Tailwind in current CCore baseline |
+| AI provider infrastructure | Factory contains Gemini-related provider/tests/configuration |
+| Orchestration infrastructure | Factory contains Prefect provider/flow/test infrastructure |
+
+## No-Guessing Rule
+
+The generation pipeline must never silently switch technology choices.
+
+If the user wants a different target from the current baseline, such as Pydantic v2, async database sessions, SQLAlchemy, Tailwind, or another database layer, that must be documented as an explicit migration decision before generation.
+
+## Current Decision for First CRUD Generation Experiment
+
+For the first Organization CRUD generation experiment, the generator should follow the current repository baseline unless the user explicitly changes this document.
+
+Therefore:
+
+- Use PostgreSQL artifacts/configuration because the current CCore baseline uses PostgreSQL.
+- Use synchronous `psycopg2` repository style because that is what the current CCore repository uses.
+- Use dataclass domain objects and explicit request parser contracts because `ccore_tasks` uses that pattern.
+- Use vanilla JavaScript and existing shared CSS because the current CCore frontend uses that pattern.
+- Use the CCore Task CRUD implementation as the golden reference.
+
+## Explicit Non-Decisions
+
+These are not selected for the first generation experiment unless the user changes the architecture deliberately:
+
+- Pydantic v2 schemas.
+- Async database sessions.
+- Tailwind styling.
+- SQLAlchemy ORM.
+- Direct AI edits to repository files without staging and validation.
+```
+
+#### architecture/ccore-vertical-slice-blueprint-v1.0.md
+
+- source: `docs/Generate CCore Organization CRUD/architecture/ccore-vertical-slice-blueprint-v1.0.md`
+- sha256: `c735915593196cddf376ee64fe2f68c0ae3b1602d423ce3d3b6b44f416e1d5dd`
+- lines: `181`
+
+```text
+# CCore Vertical Slice Blueprint v1.0
+
+## Purpose
+
+This blueprint defines the golden implementation standard for CCore vertical slices. The current reference slice is `ccore_tasks`.
+
+Future slices, including `ccore_metrics`, must follow this structure before the Automation Factory is allowed to generate similar slices automatically.
+
+## Layering Rule
+
+```text
+API route
+→ API request contract/parser
+→ mapper
+→ service
+→ repository protocol
+→ concrete repository
+→ database connection provider protocol
+→ database manager/driver
+```
+
+No layer may skip the contract immediately below it.
+
+## Naming Rule
+
+```text
+PostgreSQL tables/columns: snake_case
+Python domain/internal: snake_case
+JSON/API: camelCase
+JavaScript: camelCase
+HTML/CSS: kebab-case
+Routes/URLs: kebab-case
+```
+
+## Public API Contract Rule
+
+External JSON must expose only canonical camelCase fields.
+
+For `ccore_tasks`, the task response contract is:
+
+```json
+{
+  "taskId": "...",
+  "taskName": "...",
+  "status": "...",
+  "statusLabel": "...",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+Legacy/transitional aliases such as `id`, `name`, `created_at`, and `updated_at` are not allowed in golden CCore slices.
+
+## Error Contract Rule
+
+API errors must use a structured error object.
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "CCORE_TASK_VALIDATION_ERROR",
+    "message": "Task name is required."
+  }
+}
+```
+
+Frontend API helpers must support this shape and must not require page controllers to parse transport-level errors manually.
+
+## Request Contract Rule
+
+Routes must not manually extract payload fields. They may only:
+
+1. Read JSON body.
+2. Delegate payload parsing/validation to a request contract/parser.
+3. Delegate request-to-domain conversion to a mapper.
+4. Delegate use-case execution to a service.
+5. Return mapped response DTOs.
+
+## Validation Rule
+
+Validation is split into two stages:
+
+1. API-boundary validation: JSON shape, supported fields, required public fields.
+2. Domain/use-case validation: domain object validity, ID validity, reference/lookup value validity.
+
+## Repository Rule
+
+Services depend on repository protocols.
+
+Concrete repositories depend on database connection/provider protocols, not concrete database managers.
+
+## Reference Data Rule
+
+Lookup values such as status/category/type must be represented through reference tables or reference providers. They must not be hardcoded in frontend option lists or service logic.
+
+## Persistence Metadata Rule
+
+CRUD tables must include standard metadata columns unless a slice documents why they are not applicable.
+
+```text
+created_at
+updated_at
+```
+
+The public API exposes these as:
+
+```text
+createdAt
+updatedAt
+```
+
+Update operations must refresh `updated_at`.
+
+## CCore List View UI Rule
+
+List pages are for browsing, searching, sorting, paginating, and selecting records.
+
+Standard list-page pattern:
+
+```text
+Header
+→ sortable table
+→ message area when needed
+→ toolbar with navigation, search, pagination, count, create, refresh
+```
+
+Rules:
+
+- The table is the primary content.
+- Supported columns are sortable.
+- Search and pagination live in the toolbar/footer area.
+- Rows are clickable and open the details page.
+- No per-row Actions column is used for standard CRUD list pages.
+
+## CCore Details View UI Rule
+
+Details pages are for inspecting and maintaining one record.
+
+Standard details-page pattern:
+
+```text
+Header
+→ details form/panel
+→ message area
+→ toolbar with Back, mode indicator, Delete, Create/Update
+```
+
+Rules:
+
+- Success/error/info messages appear above the toolbar.
+- Details fields should use compact two-column rows where practical.
+- Create/update/delete actions belong on the details page, not the list table.
+- If a user submits an unchanged edit form, the UI reports that no changes were made instead of sending an unnecessary update.
+
+## Frontend Constants Rule
+
+Page controllers may define page-specific constants for labels, status messages, and confirmation prompts.
+
+Repeated UI strings must not be duplicated across controller logic. They should be centralized at the top of the page controller or moved to shared frontend configuration when reused by multiple pages.
+
+## Automation Factory Rule
+
+A generated vertical slice must include:
+
+1. Domain objects.
+2. API request contracts/parsers.
+3. Response mapper.
+4. Validator.
+5. Repository protocol.
+6. Concrete repository.
+7. Service.
+8. Routes.
+9. Frontend API usage with canonical JSON fields.
+10. Focused contract/mapper/service/route tests.
+11. Frontend JavaScript syntax validation.
+12. Inspection metadata/reporting hooks.
+
+## Reference Implementation
+
+`backend/src/ccore/tasks` and `frontend/static/desktop/protected/ccore/tasks.html` / `task-details.html` are the golden reference candidates for CCore Blueprint v1.0 after strict API contracts, structured errors, request parsing, validation split, repository protocols, metadata columns, list/details UI rules, and focused tests are applied.
+```
+
+#### specifications/generation-contract.md
+
+- source: `docs/Generate CCore Organization CRUD/specifications/generation-contract.md`
+- sha256: `1082e5fd48a1c95c137e6f85884784eec1bda3bc732043e85a9239939762c659`
+- lines: `280`
+
+```text
+# CFFP Automation Factory — Generation Contract
+
+## Purpose
+
+This document defines how an AI generator is allowed to generate CCore CRUD modules.
+
+The CRUD module specification defines **what** must be generated.
+
+This Generation Contract defines **how** generation must behave.
+
+The purpose is to prevent guessing, hardcoding, architectural drift, unsafe repository modification, and undocumented assumptions.
+
+## Scope
+
+This contract applies to the Automation Factory task:
+
+```text
+Generate CRUD Module
+```
+
+The first execution target is:
+
+```text
+Organization
+```
+
+The same contract must apply when the task is later reused for Users, Modules, Roles, Permissions, Memberships, or any other CCore entity.
+
+## Non-Negotiable Rules
+
+### 1. No Guessing
+
+The generator must not invent missing information.
+
+If a required value is missing from the specification, technology decisions, artifact mapping, golden reference, or repository inspection summary, generation must stop and report the missing information.
+
+The generator must not infer critical implementation details from probability, convention, preference, or common practice.
+
+Examples of forbidden guessing:
+
+- choosing a database type not explicitly declared
+- choosing a CSS framework not explicitly declared
+- inventing a backend folder structure
+- inventing API naming conventions
+- inventing validation behavior
+- inventing route registration files
+- inventing navigation locations
+- inventing seed data
+- inventing authentication or authorization behavior
+
+### 2. Repository Inspection Is Mandatory
+
+Before generating artifacts, the pipeline must inspect the current repository.
+
+The generator must use inspected files as the factual source for current architecture, naming, structure, import style, route registration, frontend style, and CRUD behavior.
+
+The golden reference for the first CRUD generation task is:
+
+```text
+ccore_tasks
+```
+
+The generator must treat the Task CRUD implementation as the implementation blueprint unless the specification explicitly overrides a behavior.
+
+### 3. Specification Is the Source of Truth
+
+The entity specification is the source of truth for the target module.
+
+For the first execution, the source specification is:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
+```
+
+The reusable template is:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml
+```
+
+The generator must not generate entity behavior that is not present in the specification.
+
+### 4. Technology Decisions Are Binding
+
+The generator must obey:
+
+```text
+docs/Generate CCore Organization CRUD/architecture/technology-decisions.md
+```
+
+If the specification and technology decisions conflict, generation must stop and report the conflict.
+
+The generator must not introduce new frameworks, libraries, runtime dependencies, frontend frameworks, database drivers, or architectural layers unless explicitly approved.
+
+### 5. Artifact Mapping Is Binding
+
+The generator must obey:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
+```
+
+The generator must not decide file destinations by itself.
+
+Every generated artifact must map to a declared artifact type and destination rule.
+
+If a required artifact has no mapping rule, generation must stop.
+
+### 6. Whole-File Generation Only
+
+Generated application artifacts must be whole files.
+
+The generator must not produce partial snippets, line patches, diff fragments, or instructions requiring manual copy/paste.
+
+If an existing file must be changed, the generator must stage a complete replacement version of that file.
+
+### 7. Stage Before Apply
+
+The generator must never write directly into the active application source tree as its first output.
+
+Generated artifacts must first be written to a staging directory.
+
+The pipeline may apply staged files only after validation succeeds.
+
+If validation fails, no application source file may be modified.
+
+### 8. AI Output Is Untrusted
+
+AI-generated artifacts must be treated as untrusted until validated.
+
+Validation must run before apply.
+
+A successful AI response is not enough.
+
+The execution report must clearly show:
+
+- generated files
+- skipped files
+- validation status
+- apply status
+- failed checks
+- unresolved assumptions
+
+### 9. No Entity-Specific Logic Inside Generic Factory Code
+
+The generic Automation Factory implementation must not contain entity-specific rules such as:
+
+```text
+if entity == "organization"
+```
+
+Entity-specific behavior belongs in the entity specification and generated artifacts, not in the generic generator engine.
+
+### 10. No Hardcoded Absolute Paths
+
+The generator must not generate absolute machine-specific paths.
+
+All paths must be repository-relative or configuration-driven.
+
+Forbidden examples:
+
+```text
+C:\Users\...
+/home/...
+/Users/...
+```
+
+### 11. No Hidden Manual Steps
+
+The output must not require undocumented manual work.
+
+If a manual approval or external action is required, it must appear explicitly in the execution report.
+
+The goal is one Automation Factory execution from the user's perspective.
+
+### 12. Fail Closed
+
+If the generator is uncertain, it must fail closed.
+
+Failing with a useful missing-information report is preferred over generating incorrect code.
+
+## Required Input Documents
+
+The generation pipeline must assemble AI context from these controlled inputs:
+
+```text
+docs/Generate CCore Organization CRUD/architecture/technology-decisions.md
+docs/Generate CCore Organization CRUD/specifications/generation-contract.md
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
+docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
+docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md
+docs/Generate CCore Organization CRUD/specifications/crud-generation-validation-rules.md
+docs/Generate CCore Organization CRUD/workflow/generate-crud-module-pipeline.md
+```
+
+The pipeline must also include a repository inspection summary and golden reference file contents collected at execution time.
+
+## Required Golden Reference Inputs
+
+For the first CRUD generation task, the pipeline must inspect and include the relevant Task CRUD implementation files.
+
+The exact list must come from the pipeline specification and repository inspection.
+
+The generator must not rely on memory of the Task implementation.
+
+## Output Requirements
+
+The generator must return a structured artifact manifest.
+
+The artifact manifest must conform to:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md
+```
+
+Each generated artifact entry must include:
+
+- artifact id
+- artifact type
+- target path
+- generation status
+- full file content or staged file reference
+- dependencies
+- validation requirements
+- whether the file is new or a replacement
+
+## Conflict Handling
+
+If the generator detects a conflict between documents, it must stop and report:
+
+- conflicting documents
+- conflicting values
+- why the conflict blocks generation
+- what decision is needed from the user
+
+## Missing Information Handling
+
+If information is missing, the generator must not continue.
+
+The report must include a `missing_information` section containing:
+
+- missing field
+- source document where it should be defined
+- why it is needed
+- suggested decision options, only when options are directly supported by the inspected repository
+
+## Apply Rules
+
+Generated artifacts may be applied only when all required validation gates pass.
+
+If any validation gate fails, the pipeline must keep files in staging and mark the execution as failed or blocked.
+
+## Definition of Acceptable Generation
+
+A generation result is acceptable only if:
+
+1. It uses declared technology decisions.
+2. It follows the inspected golden reference.
+3. It satisfies the entity specification.
+4. It produces complete artifacts.
+5. It passes validation.
+6. It applies safely.
+7. It records a complete execution report.
+
+## Definition of Failure
+
+The generation attempt must be considered failed if:
+
+- unresolved required values remain
+- the AI invents architecture
+- generated files are partial
+- generated paths are not mapped
+- validation fails
+- apply fails
+- execution report is missing or incomplete
+
+Failure is acceptable if it is explicit, traceable, and useful.
+
+Silent guessing is not acceptable.
+```
+
+#### specifications/template_crud_spec.yaml
+
+- source: `docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml`
+- sha256: `d81a188b2c1c2ab8a699f8f8211ba0fe348d087b6a2061cfd3b98b523179f02f`
+- lines: `352`
+
+```text
+specVersion: "1.0"
+specKind: "crud-module-generation-specification"
+
+# -----------------------------------------------------------------------------
+# PURPOSE
+# -----------------------------------------------------------------------------
+# This file is the reusable source-of-truth template for the Automation Factory
+# "Generate CRUD Module" task.
+#
+# The generator must treat this specification as mandatory input. If a required
+# value is blank, null, UNKNOWN, or TODO, generation must stop and ask for the
+# missing information. The generator must not guess.
+# -----------------------------------------------------------------------------
+
+generationRequest:
+  taskName: "Generate CRUD Module"
+  generationMode: "full_vertical_slice"
+  applyMode: "stage_validate_then_apply"
+  targetModuleArea: "ccore"
+  goldenReference:
+    backendModule: "backend/src/ccore/tasks"
+    frontendListPage: "frontend/static/desktop/protected/ccore/tasks.html"
+    frontendDetailsPage: "frontend/static/desktop/protected/ccore/task-details.html"
+    frontendListController: "frontend/static/desktop/protected/ccore/js/tasks.js"
+    frontendDetailsController: "frontend/static/desktop/protected/ccore/js/task-details.js"
+    frontendListCss: "frontend/static/desktop/protected/ccore/css/tasks.css"
+    frontendDetailsCss: "frontend/static/desktop/protected/ccore/css/task-details.css"
+
+noGuessingPolicy:
+  enabled: true
+  stopOnMissingRequiredValue: true
+  stopOnAmbiguousArchitecture: true
+  stopOnUnresolvedFilePattern: true
+  stopOnUnknownTechnologyDecision: true
+  requiredQuestionBehavior: "ask_user_before_generation"
+  forbiddenBehavior:
+    - "Do not invent database tables, fields, or seed data."
+    - "Do not invent package paths."
+    - "Do not invent frontend routes or navigation locations."
+    - "Do not switch libraries or frameworks without explicit approval."
+    - "Do not generate direct repository changes before staging and validation."
+
+technologyStack:
+  database:
+    provider: "REQUIRED"             # Current inspected baseline: postgresql
+    driverOrAccessLayer: "REQUIRED"  # Current inspected baseline: psycopg2
+    migrationOrSchemaStrategy: "REQUIRED" # Current baseline: scripts/db/postgres config-driven scripts
+    primaryKeyStrategy: "REQUIRED"   # Example: integer_identity / uuid / other
+    idColumnType: "REQUIRED"
+    timestampStrategy: "REQUIRED"
+  backend:
+    language: "python"
+    routeStyle: "REQUIRED"           # Current baseline: custom route dispatcher/registry
+    domainObjectStyle: "REQUIRED"    # Current baseline: dataclass
+    requestContractStyle: "REQUIRED" # Current baseline: explicit parser classes
+    serviceStyle: "REQUIRED"         # Current baseline: service + repository protocol
+    repositoryStyle: "REQUIRED"      # Current baseline: concrete repository with db provider protocol
+    asyncSessions: "REQUIRED"        # Current baseline: false
+  frontend:
+    renderingStyle: "REQUIRED"       # Current baseline: static_html
+    javascriptStyle: "REQUIRED"      # Current baseline: vanilla_js
+    stylingSystem: "REQUIRED"        # Current baseline: existing_shared_css
+    listDetailsPattern: "REQUIRED"   # Current baseline: CCore tasks list + details
+  ai:
+    provider: "REQUIRED"             # Example: gemini
+    model: "REQUIRED"
+    temperature: 0
+    outputFormat: "artifact_manifest"
+  orchestration:
+    provider: "REQUIRED"             # Example: prefect
+    executionMode: "sequential_stop_on_failure"
+
+entity:
+  name: "REQUIRED"                   # Example: Organization
+  pluralName: "REQUIRED"             # Example: Organizations
+  variableName: "REQUIRED"           # Example: organization
+  variablePluralName: "REQUIRED"     # Example: organizations
+  slug: "REQUIRED"                   # Example: organizations
+  displayName: "REQUIRED"
+  displayPluralName: "REQUIRED"
+  description: "REQUIRED"
+  ownershipBoundary: "REQUIRED"      # Example: CCore platform-owned entity
+
+relatedEntities:
+  lookups: []                         # Define lookup/reference entities here.
+  parents: []
+  children: []
+  manyToMany: []
+
+databaseLayer:
+  schemaName: "REQUIRED"
+  schemaConfigFiles:
+    entitiesConfig: "REQUIRED"
+    schemaConfig: "REQUIRED"
+    seedConfig: "REQUIRED"
+  tables:
+    - logicalName: "REQUIRED"
+      tableName: "REQUIRED"
+      purpose: "REQUIRED"
+      primaryKey:
+        columnName: "REQUIRED"
+        sqlType: "REQUIRED"
+        generationStrategy: "REQUIRED"
+      columns:
+        - columnName: "REQUIRED"
+          sqlType: "REQUIRED"
+          nullable: false
+          default: null
+          description: "REQUIRED"
+          publicApiField: "REQUIRED"
+          pythonField: "REQUIRED"
+          frontendField: "REQUIRED"
+      constraints:
+        - constraintName: "REQUIRED"
+          type: "REQUIRED"           # primary_key / foreign_key / unique / check / not_null
+          columns: []
+          references:
+            tableName: null
+            columnNames: []
+          onDelete: null
+          onUpdate: null
+          expression: null
+      indexes:
+        - indexName: "REQUIRED"
+          unique: false
+          columns: []
+          expression: null
+      seedData:
+        required: true
+        rows:
+          - {}
+
+backendLayer:
+  basePackage: "backend/src/ccore"
+  targetPackage: "REQUIRED"
+  files:
+    domainObject: "REQUIRED"
+    constants: "REQUIRED"
+    messages: "REQUIRED"
+    contracts: "REQUIRED"
+    mapper: "REQUIRED"
+    validator: "REQUIRED"
+    repositoryProtocol: "REQUIRED"
+    repositoryImplementation: "REQUIRED"
+    service: "REQUIRED"
+    routes: "REQUIRED"
+    initFile: "REQUIRED"
+  classNames:
+    domainObject: "REQUIRED"
+    requestParser: "REQUIRED"
+    createRequest: "REQUIRED"
+    updateRequest: "REQUIRED"
+    mapper: "REQUIRED"
+    validator: "REQUIRED"
+    repositoryProtocol: "REQUIRED"
+    repositoryImplementation: "REQUIRED"
+    service: "REQUIRED"
+  apiContract:
+    prefixConstantName: "REQUIRED"
+    routePrefix: "REQUIRED"
+    responseCollectionField: "REQUIRED"
+    responseSingleField: "REQUIRED"
+    publicFields:
+      - fieldName: "REQUIRED"
+        sourcePythonField: "REQUIRED"
+        required: true
+    createPayloadFields: []
+    updatePayloadFields: []
+    errorCodes:
+      validation: "REQUIRED"
+      notFound: "REQUIRED"
+      server: "REQUIRED"
+  serviceMethods:
+    - "list"
+    - "get_by_id"
+    - "create"
+    - "update"
+    - "delete"
+  repositoryMethods:
+    - "find_all"
+    - "find_by_id"
+    - "create"
+    - "update"
+    - "delete"
+  routeHandlers:
+    - method: "GET"
+      operation: "list"
+      path: ""
+    - method: "GET"
+      operation: "get_by_id"
+      path: "/{id}"
+    - method: "POST"
+      operation: "create"
+      path: ""
+    - method: "PUT"
+      operation: "update"
+      path: "/{id}"
+    - method: "DELETE"
+      operation: "delete"
+      path: "/{id}"
+  registrations:
+    apiPathsFile: "REQUIRED"
+    moduleRouteRegistryFile: "REQUIRED"
+    serviceFactoryFile: "REQUIRED"
+    serviceContainerFile: "REQUIRED"
+
+frontendLayer:
+  baseDirectory: "frontend/static/desktop/protected/ccore"
+  targetDirectory: "REQUIRED"
+  pages:
+    list:
+      htmlFile: "REQUIRED"
+      jsFile: "REQUIRED"
+      cssFile: "REQUIRED"
+      title: "REQUIRED"
+      description: "REQUIRED"
+      tableColumns:
+        - fieldName: "REQUIRED"
+          label: "REQUIRED"
+          sortable: true
+          visible: true
+      toolbar:
+        backLink: "REQUIRED"
+        createLink: "REQUIRED"
+        searchEnabled: true
+        paginationEnabled: true
+        refreshEnabled: true
+      rowClick:
+        enabled: true
+        targetDetailsPage: "REQUIRED"
+    details:
+      htmlFile: "REQUIRED"
+      jsFile: "REQUIRED"
+      cssFile: "REQUIRED"
+      titleCreate: "REQUIRED"
+      titleEdit: "REQUIRED"
+      formFields:
+        - fieldName: "REQUIRED"
+          label: "REQUIRED"
+          inputType: "REQUIRED"      # text / number / checkbox / select / textarea
+          required: false
+          lookupSource: null
+      actions:
+        back: true
+        create: true
+        update: true
+        delete: true
+        unchangedSubmitDetection: true
+  apiEndpoints:
+    list: "REQUIRED"
+    getById: "REQUIRED"
+    create: "REQUIRED"
+    update: "REQUIRED"
+    delete: "REQUIRED"
+    lookups: []
+  navigation:
+    addMenuEntry: "REQUIRED"
+    menuFile: "REQUIRED_IF_addMenuEntry_TRUE"
+    label: "REQUIRED_IF_addMenuEntry_TRUE"
+    url: "REQUIRED_IF_addMenuEntry_TRUE"
+
+aiGenerationRules:
+  promptInputs:
+    includeThisSpecification: true
+    includeTechnologyDecisions: true
+    includeGoldenReferenceFiles: true
+    includeArchitectureBlueprint: true
+    includeWorkingAgreement: true
+  outputContract:
+    format: "artifact_manifest"
+    stagedDirectory: "REQUIRED"
+    manifestFile: "REQUIRED"
+    generatedFilesMustIncludeFullContent: true
+    noPatchFragments: true
+    noMarkdownCodeFenceOnlyOutput: true
+
+validationLayer:
+  stageOnlyBeforeValidation: true
+  stopOnFirstFatalFailure: true
+  compileValidation:
+    pythonCompile: true
+    frontendJavaScriptSyntax: true
+  backendValidation:
+    requiredFilesExist: true
+    importsResolve: true
+    routeRegistrationExists: true
+    serviceFactoryRegistrationExists: true
+    repositoryProtocolUsedByService: true
+    concreteRepositoryUsesDatabaseProviderProtocol: true
+    requestParserUsedByRoutes: true
+    mapperUsedByRoutes: true
+    structuredErrorsUsed: true
+  frontendValidation:
+    requiredFilesExist: true
+    usesSharedCss: true
+    usesCanonicalApiFields: true
+    noActionsColumnOnListPage: true
+    rowClickOpensDetailsPage: true
+    detailsPageOwnsCreateUpdateDelete: true
+  databaseValidation:
+    schemaArtifactExists: true
+    seedArtifactExists: true
+    foreignKeysMatchSpecification: true
+    uniqueConstraintsMatchSpecification: true
+    seedRowsMatchSpecification: true
+  architectureValidation:
+    forbiddenPatterns:
+      - "hardcoded absolute paths"
+      - "entity-specific logic inside generic factory"
+      - "manual patch markers"
+      - "unapproved technology switch"
+      - "frontend hardcoded lookup lists when reference data is specified"
+    requiredPatterns:
+      - "follows CCore vertical slice blueprint"
+      - "matches ccore_tasks golden reference structure"
+      - "uses repository protocol"
+      - "uses concrete repository"
+      - "uses service layer"
+      - "uses request parser/contracts"
+      - "uses mapper"
+      - "uses validator"
+
+pipelineExecution:
+  automationTaskName: "Generate CRUD Module"
+  provider: "Local Provider"
+  implementerType: "Prefect AI Flow Implementer Type"
+  target: "Generate CRUD Module"
+  configurationName: "REQUIRED"
+  sequentialSteps:
+    - "read_specification"
+    - "validate_specification_completeness"
+    - "inspect_repository"
+    - "collect_golden_reference_files"
+    - "build_ai_context"
+    - "generate_artifact_manifest"
+    - "write_staged_artifacts"
+    - "validate_staged_artifacts"
+    - "apply_staged_artifacts"
+    - "write_execution_report"
+
+reporting:
+  executionReportFile: "REQUIRED"
+  include:
+    specificationSummary: true
+    repositoryInspectionSummary: true
+    technologyDecisionSummary: true
+    aiPromptSummary: true
+    generatedArtifactManifest: true
+    validationResults: true
+    appliedFiles: true
+    skippedFiles: true
+    failureReason: true
+```
+
+#### specifications/ccore_organizations_spec.yaml
+
+- source: `docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml`
+- sha256: `060cce94f394c4a375238a009f789a7ffc0172cff56f641634f5713726929d43`
+- lines: `541`
+
+```text
+specVersion: "1.1"
+specKind: "crud-module-generation-specification"
+
+approval:
+  approvedForExecution: false
+  reason: "User must review and approve the proposed concrete values before this specification may drive generation."
+
+# -----------------------------------------------------------------------------
+# ORGANIZATION CRUD SPECIFICATION
+# -----------------------------------------------------------------------------
+# This file is the concrete source of truth for the first real Automation Factory
+# CRUD generation experiment.
+#
+# No generation may run unless approvedForExecution is true.
+# No generator may invent fields, paths, routes, files, database types, or UI
+# behavior outside this specification and the referenced golden files.
+# -----------------------------------------------------------------------------
+
+generationRequest:
+  taskName: "Generate CRUD Module"
+  generationMode: "full_vertical_slice"
+  applyMode: "stage_validate_then_apply"
+  targetModuleArea: "ccore"
+  targetEntity: "Organization"
+  goldenReference:
+    backendModule: "backend/src/ccore/tasks"
+    backendDomainObject: "backend/src/ccore/tasks/task.py"
+    backendConstants: "backend/src/ccore/tasks/task_constants.py"
+    backendMessages: "backend/src/ccore/tasks/task_messages.py"
+    backendContracts: "backend/src/ccore/tasks/task_contracts.py"
+    backendMapper: "backend/src/ccore/tasks/task_mapper.py"
+    backendValidator: "backend/src/ccore/tasks/task_validator.py"
+    backendRepositoryProtocol: "backend/src/ccore/tasks/task_repository_contract.py"
+    backendRepositoryImplementation: "backend/src/ccore/tasks/task_repository.py"
+    backendService: "backend/src/ccore/tasks/task_service.py"
+    backendRoutes: "backend/src/ccore/tasks/task_routes.py"
+    frontendListPage: "frontend/static/desktop/protected/ccore/tasks.html"
+    frontendDetailsPage: "frontend/static/desktop/protected/ccore/task-details.html"
+    frontendListController: "frontend/static/desktop/protected/ccore/js/tasks.js"
+    frontendDetailsController: "frontend/static/desktop/protected/ccore/js/task-details.js"
+    frontendListCss: "frontend/static/desktop/protected/ccore/css/tasks.css"
+    frontendDetailsCss: "frontend/static/desktop/protected/ccore/css/task-details.css"
+
+noGuessingPolicy:
+  enabled: true
+  stopOnMissingRequiredValue: true
+  stopOnAmbiguousArchitecture: true
+  stopOnUnresolvedFilePattern: true
+  stopOnUnknownTechnologyDecision: true
+  stopIfApprovalIsFalse: true
+  forbiddenMarkers:
+    - "REQUIRED_USER_DECISION"
+    - "USER_DECISION_REQUIRED"
+    - "REQUIRED_IF"
+    - "UNKNOWN"
+    - "TODO"
+
+technologyStack:
+  database:
+    provider: "postgresql"
+    driverOrAccessLayer: "psycopg2"
+    migrationOrSchemaStrategy: "configuration_driven_postgres_schema_and_seed_scripts"
+    schemaConfigDirectory: "scripts/db/postgres/config"
+    primaryKeyStrategy: "postgresql_integer_identity"
+    idColumnType: "INTEGER GENERATED BY DEFAULT AS IDENTITY"
+    timestampStrategy: "created_at and updated_at columns using TIMESTAMP WITH TIME ZONE and CURRENT_TIMESTAMP defaults"
+    currentSchemaToolingLimitations:
+      supportsNamedConstraints: false
+      supportsTableLevelUniqueConstraints: false
+      supportsIndexes: false
+      supportsOnUpdate: false
+      requiredGeneratorBehavior: "Generate schema config compatible with the current schema script unless a separate schema-tool upgrade task is approved."
+  backend:
+    language: "python"
+    routeStyle: "custom route registry/dispatcher"
+    domainObjectStyle: "dataclass"
+    requestContractStyle: "explicit parser classes"
+    serviceStyle: "service depends on repository protocol"
+    repositoryStyle: "concrete repository depends on database manager/provider abstraction"
+    asyncSessions: false
+    pydantic: false
+    fastapi: false
+    sqlalchemy: false
+  frontend:
+    renderingStyle: "static_html"
+    javascriptStyle: "vanilla_js"
+    stylingSystem: "existing_shared_css"
+    listDetailsPattern: "ccore_tasks golden reference"
+    tailwind: false
+  ai:
+    provider: "gemini"
+    model: "gemini-2.5-flash"
+    temperature: 0
+    outputFormat: "artifact_manifest_json"
+  orchestration:
+    provider: "prefect"
+    executionMode: "sequential_stop_on_failure"
+
+entity:
+  name: "Organization"
+  pluralName: "Organizations"
+  variableName: "organization"
+  variablePluralName: "organizations"
+  slug: "organizations"
+  displayName: "Organization"
+  displayPluralName: "Organizations"
+  description: "A CCore platform organization/tenant that owns users, module access, roles, and future organization-scoped data."
+  ownershipBoundary: "CCore platform-owned entity"
+
+relatedEntities:
+  lookups:
+    - name: "OrganizationType"
+      pluralName: "OrganizationTypes"
+      variableName: "organization_type"
+      variablePluralName: "organization_types"
+      slug: "organization-types"
+      tableName: "ccore_organization_types"
+      purpose: "Reference table that classifies organizations."
+  parents: []
+  children:
+    - futureEntity: "User"
+      relationship: "An organization can have many users through future membership/assignment tables."
+    - futureEntity: "Module"
+      relationship: "An organization can enable many modules through future organization-module assignment tables."
+  manyToMany: []
+
+databaseLayer:
+  schemaName: "public"
+  schemaConfigFiles:
+    entitiesConfig: "scripts/db/postgres/config/entities.json"
+    schemaConfig: "scripts/db/postgres/config/postgres_create_schema.json"
+    seedConfig: "scripts/db/postgres/config/postgres_seed_data.json"
+  requiredEntityListAdditions:
+    - "ccore_organization_types"
+    - "ccore_organizations"
+  tables:
+    - logicalName: "OrganizationType"
+      tableName: "ccore_organization_types"
+      purpose: "Lookup/reference table for organization classification."
+      seedConflictColumn: "organization_type_id"
+      primaryKey:
+        columnName: "organization_type_id"
+        sqlType: "INTEGER GENERATED BY DEFAULT AS IDENTITY"
+        generationStrategy: "postgresql_identity"
+      columns:
+        - columnName: "organization_type_id"
+          sqlType: "INTEGER GENERATED BY DEFAULT AS IDENTITY"
+          nullable: false
+          primaryKey: true
+          default: null
+          description: "Primary key."
+          publicApiField: "organizationTypeId"
+          pythonField: "organization_type_id"
+          frontendField: "organizationTypeId"
+        - columnName: "organization_type_code"
+          sqlType: "VARCHAR(50)"
+          nullable: false
+          unique: true
+          default: null
+          description: "Stable organization type code."
+          publicApiField: "organizationTypeCode"
+          pythonField: "organization_type_code"
+          frontendField: "organizationTypeCode"
+        - columnName: "organization_type_name"
+          sqlType: "VARCHAR(150)"
+          nullable: false
+          default: null
+          description: "Human-readable organization type name."
+          publicApiField: "organizationTypeName"
+          pythonField: "organization_type_name"
+          frontendField: "organizationTypeName"
+        - columnName: "sort_order"
+          sqlType: "INTEGER"
+          nullable: false
+          default: 0
+          description: "Display sort order."
+          publicApiField: "sortOrder"
+          pythonField: "sort_order"
+          frontendField: "sortOrder"
+        - columnName: "is_active"
+          sqlType: "BOOLEAN"
+          nullable: false
+          default: true
+          description: "Whether the organization type is selectable."
+          publicApiField: "isActive"
+          pythonField: "is_active"
+          frontendField: "isActive"
+      constraints:
+        primaryKey:
+          supportedByCurrentSchemaScript: true
+          implementedAs: "column primaryKey true"
+        uniqueOrganizationTypeCode:
+          supportedByCurrentSchemaScript: true
+          implementedAs: "column unique true"
+      seedData:
+        required: true
+        rows:
+          - organization_type_id: 1
+            organization_type_code: "PLATFORM"
+            organization_type_name: "Platform"
+            sort_order: 10
+            is_active: true
+          - organization_type_id: 2
+            organization_type_code: "CUSTOMER"
+            organization_type_name: "Customer"
+            sort_order: 20
+            is_active: true
+          - organization_type_id: 3
+            organization_type_code: "DEMO"
+            organization_type_name: "Demo"
+            sort_order: 30
+            is_active: true
+
+    - logicalName: "Organization"
+      tableName: "ccore_organizations"
+      purpose: "Stores CCore organizations/tenants."
+      seedConflictColumn: "organization_id"
+      primaryKey:
+        columnName: "organization_id"
+        sqlType: "INTEGER GENERATED BY DEFAULT AS IDENTITY"
+        generationStrategy: "postgresql_identity"
+      columns:
+        - columnName: "organization_id"
+          sqlType: "INTEGER GENERATED BY DEFAULT AS IDENTITY"
+          nullable: false
+          primaryKey: true
+          default: null
+          description: "Primary key."
+          publicApiField: "organizationId"
+          pythonField: "organization_id"
+          frontendField: "organizationId"
+        - columnName: "organization_type_id"
+          sqlType: "INTEGER"
+          nullable: false
+          default: null
+          description: "Foreign key to organization type."
+          publicApiField: "organizationTypeId"
+          pythonField: "organization_type_id"
+          frontendField: "organizationTypeId"
+        - columnName: "organization_name"
+          sqlType: "VARCHAR(255)"
+          nullable: false
+          default: null
+          description: "Organization name."
+          publicApiField: "organizationName"
+          pythonField: "organization_name"
+          frontendField: "organizationName"
+        - columnName: "organization_code"
+          sqlType: "VARCHAR(100)"
+          nullable: false
+          unique: true
+          default: null
+          description: "Stable organization code."
+          publicApiField: "organizationCode"
+          pythonField: "organization_code"
+          frontendField: "organizationCode"
+        - columnName: "description"
+          sqlType: "TEXT"
+          nullable: true
+          default: null
+          description: "Optional organization description."
+          publicApiField: "description"
+          pythonField: "description"
+          frontendField: "description"
+        - columnName: "is_active"
+          sqlType: "BOOLEAN"
+          nullable: false
+          default: true
+          description: "Whether the organization is active."
+          publicApiField: "isActive"
+          pythonField: "is_active"
+          frontendField: "isActive"
+        - columnName: "created_at"
+          sqlType: "TIMESTAMP WITH TIME ZONE"
+          nullable: false
+          default: "CURRENT_TIMESTAMP"
+          description: "Creation timestamp."
+          publicApiField: "createdAt"
+          pythonField: "created_at"
+          frontendField: "createdAt"
+        - columnName: "updated_at"
+          sqlType: "TIMESTAMP WITH TIME ZONE"
+          nullable: false
+          default: "CURRENT_TIMESTAMP"
+          description: "Last update timestamp."
+          publicApiField: "updatedAt"
+          pythonField: "updated_at"
+          frontendField: "updatedAt"
+      constraints:
+        primaryKey:
+          supportedByCurrentSchemaScript: true
+          implementedAs: "column primaryKey true"
+        foreignKeys:
+          - type: "foreignKey"
+            columns: ["organization_type_id"]
+            references:
+              table: "ccore_organization_types"
+              columns: ["organization_type_id"]
+            onDelete: "RESTRICT"
+        uniqueOrganizationCode:
+          supportedByCurrentSchemaScript: true
+          implementedAs: "column unique true"
+      indexes: []
+      seedData:
+        required: true
+        rows:
+          - organization_id: 1
+            organization_type_id: 1
+            organization_name: "CFFP"
+            organization_code: "CFFP"
+            description: "Default platform organization for the CFFP development environment."
+            is_active: true
+
+backendLayer:
+  basePackage: "backend/src/ccore"
+  targetPackage: "backend/src/ccore/organizations"
+  files:
+    domainObject: "backend/src/ccore/organizations/organization.py"
+    constants: "backend/src/ccore/organizations/organization_constants.py"
+    messages: "backend/src/ccore/organizations/organization_messages.py"
+    contracts: "backend/src/ccore/organizations/organization_contracts.py"
+    mapper: "backend/src/ccore/organizations/organization_mapper.py"
+    validator: "backend/src/ccore/organizations/organization_validator.py"
+    repositoryProtocol: "backend/src/ccore/organizations/organization_repository_contract.py"
+    repositoryImplementation: "backend/src/ccore/organizations/organization_repository.py"
+    service: "backend/src/ccore/organizations/organization_service.py"
+    routes: "backend/src/ccore/organizations/organization_routes.py"
+    initFile: "backend/src/ccore/organizations/__init__.py"
+  classNames:
+    domainObject: "CCoreOrganization"
+    lookupDomainObject: "CCoreOrganizationType"
+    requestParser: "CCoreOrganizationRequestParser"
+    createRequest: "CreateCCoreOrganizationRequest"
+    updateRequest: "UpdateCCoreOrganizationRequest"
+    mapper: "CCoreOrganizationMapper"
+    validator: "CCoreOrganizationValidator"
+    repositoryProtocol: "CCoreOrganizationRepositoryProtocol"
+    lookupRepositoryProtocol: "CCoreOrganizationTypeRepositoryProtocol"
+    repositoryImplementation: "CCoreOrganizationRepository"
+    lookupRepositoryImplementation: "CCoreOrganizationTypeRepository"
+    service: "CCoreOrganizationService"
+    lookupService: "CCoreOrganizationTypeService"
+  apiContract:
+    prefixConstantName: "API_PATH_CCORE_ORGANIZATIONS_PREFIX"
+    exactPathConstantName: "API_PATH_CCORE_ORGANIZATIONS"
+    lookupExactPathConstantName: "API_PATH_CCORE_ORGANIZATION_TYPES"
+    routePrefix: "/api/ccore/organizations"
+    routePrefixWithSlash: "/api/ccore/organizations/"
+    lookupRoutePrefix: "/api/ccore/organization-types"
+    responseCollectionField: "organizations"
+    responseSingleField: "organization"
+    lookupResponseCollectionField: "organizationTypes"
+    publicFields:
+      - { fieldName: "organizationId", sourcePythonField: "organization_id", required: true }
+      - { fieldName: "organizationTypeId", sourcePythonField: "organization_type_id", required: true }
+      - { fieldName: "organizationTypeCode", sourcePythonField: "organization_type_code", required: false }
+      - { fieldName: "organizationTypeName", sourcePythonField: "organization_type_name", required: false }
+      - { fieldName: "organizationName", sourcePythonField: "organization_name", required: true }
+      - { fieldName: "organizationCode", sourcePythonField: "organization_code", required: true }
+      - { fieldName: "description", sourcePythonField: "description", required: false }
+      - { fieldName: "isActive", sourcePythonField: "is_active", required: true }
+      - { fieldName: "createdAt", sourcePythonField: "created_at", required: false }
+      - { fieldName: "updatedAt", sourcePythonField: "updated_at", required: false }
+    createPayloadFields:
+      - "organizationTypeId"
+      - "organizationName"
+      - "organizationCode"
+      - "description"
+      - "isActive"
+    updatePayloadFields:
+      - "organizationTypeId"
+      - "organizationName"
+      - "organizationCode"
+      - "description"
+      - "isActive"
+    validationRules:
+      - field: "organizationTypeId"
+        rule: "required positive integer and must reference an active organization type"
+      - field: "organizationName"
+        rule: "required non-empty string, max 255 characters"
+      - field: "organizationCode"
+        rule: "required non-empty uppercase stable code, max 100 characters"
+      - field: "description"
+        rule: "optional string"
+      - field: "isActive"
+        rule: "optional boolean; default true when omitted"
+    errorCodes:
+      validation: "CCORE_ORGANIZATION_VALIDATION_ERROR"
+      notFound: "CCORE_ORGANIZATION_NOT_FOUND"
+      duplicateCode: "CCORE_ORGANIZATION_CODE_ALREADY_EXISTS"
+      server: "CCORE_ORGANIZATION_SERVER_ERROR"
+  registrations:
+    apiPathsFile: "backend/src/api/api_paths.py"
+    routeRegistryFile: "backend/src/api/route_registry.py"
+    serviceFactoryFile: "backend/src/ccore/application/service_factory.py"
+    serviceContainerFile: "backend/src/ccore/application/service_container.py"
+    requiredApiPathConstants:
+      - "API_PATH_CCORE_ORGANIZATIONS"
+      - "API_PATH_CCORE_ORGANIZATIONS_PREFIX"
+      - "API_PATH_CCORE_ORGANIZATION_TYPES"
+    requiredServiceContainerAttributes:
+      - "ccore_organization_service"
+      - "ccore_organization_type_service"
+
+frontendLayer:
+  baseDirectory: "frontend/static/desktop/protected/ccore"
+  targetDirectory: "frontend/static/desktop/protected/ccore"
+  pages:
+    list:
+      htmlFile: "frontend/static/desktop/protected/ccore/organizations.html"
+      jsFile: "frontend/static/desktop/protected/ccore/js/organizations.js"
+      cssFile: "frontend/static/desktop/protected/ccore/css/organizations.css"
+      title: "CCore Organizations"
+      description: "Manage CCore organizations."
+      tableColumns:
+        - { fieldName: "organizationName", label: "Name", sortable: true, visible: true }
+        - { fieldName: "organizationCode", label: "Code", sortable: true, visible: true }
+        - { fieldName: "organizationTypeName", label: "Type", sortable: true, visible: true }
+        - { fieldName: "isActive", label: "Active", sortable: true, visible: true }
+        - { fieldName: "updatedAt", label: "Updated", sortable: true, visible: true }
+      toolbar:
+        backLink: "/desktop/protected/automation/automation.html"
+        createLink: "./organization-details.html"
+        searchEnabled: true
+        paginationEnabled: true
+        refreshEnabled: true
+      rowClick:
+        enabled: true
+        targetDetailsPage: "./organization-details.html"
+        queryParameter: "organizationId"
+    details:
+      htmlFile: "frontend/static/desktop/protected/ccore/organization-details.html"
+      jsFile: "frontend/static/desktop/protected/ccore/js/organization-details.js"
+      cssFile: "frontend/static/desktop/protected/ccore/css/organization-details.css"
+      titleCreate: "Create Organization"
+      titleEdit: "Edit Organization"
+      formFields:
+        - { fieldName: "organizationTypeId", label: "Organization Type", inputType: "select", required: true, lookupSource: "organizationTypes" }
+        - { fieldName: "organizationName", label: "Name", inputType: "text", required: true, lookupSource: null }
+        - { fieldName: "organizationCode", label: "Code", inputType: "text", required: true, lookupSource: null }
+        - { fieldName: "description", label: "Description", inputType: "textarea", required: false, lookupSource: null }
+        - { fieldName: "isActive", label: "Active", inputType: "checkbox", required: false, lookupSource: null }
+      actions:
+        back: true
+        create: true
+        update: true
+        delete: true
+        unchangedSubmitDetection: true
+  apiEndpoints:
+    list: "/api/ccore/organizations"
+    getById: "/api/ccore/organizations/{organizationId}"
+    create: "/api/ccore/organizations"
+    update: "/api/ccore/organizations/{organizationId}"
+    delete: "/api/ccore/organizations/{organizationId}"
+    lookups:
+      - name: "organizationTypes"
+        endpoint: "/api/ccore/organization-types"
+  navigation:
+    addMenuEntry: false
+    reason: "No current CCore navigation/menu file has been selected as a source of truth. The first experiment can open the page directly. Navigation can be added after the user identifies the correct menu file."
+
+aiGenerationRules:
+  promptInputs:
+    includeThisSpecification: true
+    includeTechnologyDecisions: true
+    includeGoldenReferenceFiles: true
+    includeArchitectureBlueprint: true
+    includeWorkingAgreement: true
+    includeValidationRules: true
+    includeArtifactManifestContract: true
+  outputContract:
+    format: "artifact_manifest_json"
+    stagedDirectory: "generated/automation-factory/organizations"
+    manifestFile: "generated/automation-factory/organizations/artifact_manifest.json"
+    generatedFilesMustIncludeFullContent: true
+    noPatchFragments: true
+    noMarkdownCodeFenceOnlyOutput: true
+
+validationLayer:
+  stageOnlyBeforeValidation: true
+  stopOnFirstFatalFailure: true
+  compileValidation:
+    pythonCompile: true
+    frontendJavaScriptSyntax: true
+  backendValidation:
+    requiredFilesExist: true
+    importsResolve: true
+    routeRegistrationExists: true
+    serviceFactoryRegistrationExists: true
+    serviceContainerRegistrationExists: true
+    repositoryProtocolUsedByService: true
+    concreteRepositoryUsesDatabaseManager: true
+    requestParserUsedByRoutes: true
+    mapperUsedByRoutes: true
+    structuredErrorsUsed: true
+  frontendValidation:
+    requiredFilesExist: true
+    usesSharedCss: true
+    usesCanonicalApiFields: true
+    noActionsColumnOnListPage: true
+    rowClickOpensDetailsPage: true
+    detailsPageOwnsCreateUpdateDelete: true
+  databaseValidation:
+    schemaConfigUpdated: true
+    seedConfigUpdated: true
+    entitiesConfigUpdated: true
+    foreignKeysMatchSpecification: true
+    uniqueConstraintsMatchSpecification: true
+    seedRowsMatchSpecification: true
+
+pipelineExecution:
+  automationTaskName: "Generate CRUD Module"
+  provider: "Prefect Provider"
+  implementerType: "AI Implementer Type"
+  target: "Generate CRUD Module"
+  configurationName: "Generate Organization CRUD Module Configuration"
+  sequentialSteps:
+    - "read_specification"
+    - "validate_specification_completeness"
+    - "validate_user_approval"
+    - "inspect_repository"
+    - "collect_golden_reference_files"
+    - "build_ai_context"
+    - "generate_artifact_manifest"
+    - "write_staged_artifacts"
+    - "validate_staged_artifacts"
+    - "apply_staged_artifacts"
+    - "write_execution_report"
+
+reporting:
+  executionReportFile: "docs/Generate CCore Organization CRUD/reports/REP-ORG-001_validation.json"
+  include:
+    specificationSummary: true
+    repositoryInspectionSummary: true
+    technologyDecisionSummary: true
+    aiPromptSummary: true
+    generatedArtifactManifest: true
+    validationResults: true
+    appliedFiles: true
+    skippedFiles: true
+    failureReason: true
+```
+
+#### specifications/artifact-mapping-specification.yaml
+
+- source: `docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml`
+- sha256: `cf33f035af27d80d88dc5f10a82d7d0492e72c92ac94df5ffc5455900b2680c9`
+- lines: `333`
+
+```text
+specVersion: "1.0"
+documentType: "ArtifactMappingSpecification"
+purpose: >
+  Defines where each generated artifact type is allowed to be staged and applied
+  during the Generate CRUD Module pipeline. The AI generator must not invent file
+  destinations. Every artifact must match one artifact mapping rule.
+
+scope:
+  automationTask: "Generate CRUD Module"
+  firstTargetEntity: "Organization"
+  moduleArea: "ccore"
+  sourceOfTruth:
+    - "docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml"
+    - "docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml"
+    - "docs/Generate CCore Organization CRUD/architecture/technology-decisions.md"
+    - "repository inspection summary"
+
+rules:
+  noUnmappedArtifacts: true
+  repositoryRelativePathsOnly: true
+  noAbsolutePaths: true
+  wholeFileArtifactsOnly: true
+  stageBeforeApply: true
+  overwriteRequiresExplicitMapping: true
+  createParentDirectoriesOnlyWhenMapped: true
+  failIfTargetPathUnknown: true
+  failIfDestinationConflictsWithGoldenReference: true
+
+pathVariables:
+  repositoryRoot: "."
+  moduleArea: "ccore"
+  entitySlug: "${entity.slug}"
+  entityPluralSlug: "${entity.pluralSlug}"
+  entityPascalCase: "${entity.pascalCase}"
+  entitySnakeCase: "${entity.snakeCase}"
+  goldenReferenceModule: "${generation.goldenReferenceModule}"
+
+staging:
+  root: "generated/automation_factory/${execution.id}"
+  manifestPath: "generated/automation_factory/${execution.id}/artifact_manifest.json"
+  validationReportPath: "generated/automation_factory/${execution.id}/validation_report.json"
+  executionReportPath: "generated/automation_factory/${execution.id}/execution_report.json"
+  generatedFilesRoot: "generated/automation_factory/${execution.id}/files"
+
+artifactTypes:
+  database_schema_config:
+    description: "Database schema/entity configuration consumed by existing database scripts."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/entities.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "contains_target_entity"
+      - "preserves_existing_entities"
+
+  database_create_schema_config:
+    description: "PostgreSQL schema creation configuration."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/postgres_create_schema.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "preserves_existing_schema_config"
+      - "contains_target_tables"
+
+  database_seed_data_config:
+    description: "Seed data configuration for generated CCore entity."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/db/postgres/config/postgres_seed_data.json"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "json_parse"
+      - "preserves_existing_seed_data"
+      - "contains_required_seed_rows"
+
+  backend_model:
+    description: "Backend dataclass/domain model for the generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/models.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "matches_golden_reference_style"
+
+  backend_repository:
+    description: "Repository layer for persistence access."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/repositories.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "no_hardcoded_connection"
+      - "matches_golden_reference_style"
+
+  backend_service:
+    description: "Service/manager layer for generated CRUD behavior."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/services.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "uses_repository_layer"
+      - "matches_golden_reference_style"
+
+  backend_schemas:
+    description: "Request/response schema or DTO definitions matching current CCore pattern."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/schemas.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "matches_golden_reference_style"
+
+  backend_api_routes:
+    description: "API route definitions for list, get, create, update, and delete."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/routes.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "import_check"
+      - "route_prefix_matches_specification"
+      - "matches_golden_reference_style"
+
+  backend_package_init:
+    description: "Package initialization file for generated backend module."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/${entityPluralSlug}/__init__.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+
+  backend_route_registry_update:
+    description: "Whole-file replacement for route registry when the generated API must be registered."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/api/module_route_registry.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_routes"
+      - "contains_generated_route_registration"
+
+  backend_api_paths_update:
+    description: "Whole-file replacement for API path constants if required by the golden reference."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/api/api_paths.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_paths"
+      - "contains_generated_entity_paths"
+
+  backend_service_factory_update:
+    description: "Whole-file replacement for service factory/container registration if required."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "backend/src/ccore/application/service_factory.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+      - path: "backend/src/ccore/application/service_container.py"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "python_compile"
+      - "preserves_existing_services"
+      - "contains_generated_service_registration"
+
+  frontend_list_page:
+    description: "Protected desktop CCore list page for generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/${entityPluralSlug}.html"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "html_parse_basic"
+      - "uses_existing_layout_pattern"
+      - "references_generated_js_css"
+
+  frontend_detail_page:
+    description: "Protected desktop CCore detail/create/edit page for generated entity when the golden reference uses details pages."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/${entitySlug}-details.html"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "html_parse_basic"
+      - "uses_existing_layout_pattern"
+      - "references_generated_js_css"
+
+  frontend_list_javascript:
+    description: "Vanilla JavaScript controller/client for generated list page."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/js/${entityPluralSlug}.js"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "syntax_check_if_available"
+      - "uses_configured_api_paths"
+      - "matches_golden_reference_style"
+
+  frontend_detail_javascript:
+    description: "Vanilla JavaScript controller/client for generated detail/create/edit page."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/js/${entitySlug}-details.js"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "syntax_check_if_available"
+      - "uses_configured_api_paths"
+      - "matches_golden_reference_style"
+
+  frontend_list_css:
+    description: "CSS for generated list page, following existing CCore CSS conventions."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/css/${entityPluralSlug}.css"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "uses_existing_css_conventions"
+      - "no_new_css_framework"
+
+  frontend_detail_css:
+    description: "CSS for generated detail page, following existing CCore CSS conventions."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "frontend/static/desktop/protected/ccore/css/${entitySlug}-details.css"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "uses_existing_css_conventions"
+      - "no_new_css_framework"
+
+  frontend_navigation_update:
+    description: "Whole-file replacement for navigation/sidebar registration if required by the inspected repository."
+    allowedOperations:
+      - "replace_existing_file"
+    applyTargets:
+      - path: "${frontend.navigation.fileFromSpecification}"
+        operation: "replace_existing_file"
+        requiresExistingFile: true
+    validation:
+      - "preserves_existing_navigation_entries"
+      - "contains_generated_navigation_entry"
+      - "path_is_resolved_from_specification"
+
+  validation_script:
+    description: "Optional generated validation script for the generated entity."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "scripts/automation_factory/validation/${entityPluralSlug}_validation.py"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "python_compile"
+      - "repository_relative_paths_only"
+
+  documentation_report:
+    description: "Generated documentation or execution notes for the generated module."
+    allowedOperations:
+      - "create_new_file"
+      - "replace_existing_file"
+    applyTargets:
+      - path: "docs/Generate CCore Organization CRUD/reports/${execution.id}_${entityPluralSlug}_generation_report.md"
+        operation: "create_or_replace_whole_file"
+    validation:
+      - "markdown_exists"
+
+forbiddenArtifactTypes:
+  - name: "unmapped_file"
+    reason: "Every generated file must match an explicit artifact type."
+  - name: "manual_instruction_only"
+    reason: "The goal is executable automation, not manual copy/paste instructions."
+  - name: "partial_patch"
+    reason: "Whole-file replacements only."
+  - name: "new_framework_dependency"
+    reason: "New dependencies require explicit approval before generation."
+
+conflictHandling:
+  duplicateTargetPath: "fail"
+  missingArtifactMapping: "fail"
+  missingPathVariable: "fail"
+  unresolvedSpecificationValue: "fail"
+  existingFileReplacementWithoutMapping: "fail"
+```
+
+#### specifications/ai-artifact-manifest-contract.md
+
+- source: `docs/Generate CCore Organization CRUD/specifications/ai-artifact-manifest-contract.md`
+- sha256: `88406e608a99b47dd3fbac66119d084f62a0c73e78f952b3fe5f9161d4a611cd`
+- lines: `109`
+
+```text
+# AI Artifact Manifest Contract
+
+## Purpose
+
+The `Generate CRUD Module` task must not accept free-form AI output as implementation code.
+
+The AI must return a structured artifact manifest. The Automation Factory stages, validates, and applies the artifacts from that manifest.
+
+## Output Format
+
+The AI output must be valid JSON.
+
+The root object must use this structure:
+
+```json
+{
+  "manifestVersion": "1.0",
+  "generationRequest": {
+    "taskName": "Generate CRUD Module",
+    "targetEntity": "",
+    "sourceSpecification": "",
+    "goldenReference": []
+  },
+  "technologyStack": {
+    "database": "",
+    "backend": "",
+    "frontend": "",
+    "orchestration": "",
+    "aiProvider": "",
+    "aiModel": ""
+  },
+  "artifacts": [
+    {
+      "artifactType": "",
+      "targetPath": "",
+      "changeType": "create|replace",
+      "contentEncoding": "utf-8",
+      "content": "",
+      "reason": "",
+      "sourceReference": ""
+    }
+  ],
+  "requiredManualDecisions": [],
+  "validationHints": [],
+  "generationNotes": []
+}
+```
+
+## Manifest Rules
+
+- `artifacts` must contain full file contents.
+- Patch fragments are not allowed.
+- Markdown code fences are not allowed inside `content`.
+- `targetPath` must be repository-relative.
+- Absolute paths are forbidden.
+- Generated paths must match the concrete entity specification.
+- Every generated file must map to one declared output in the specification.
+- The AI must not create undeclared files unless it places the file in `requiredManualDecisions` and stops.
+- If a needed decision is missing, the AI must return no code artifacts and must populate `requiredManualDecisions`.
+
+## Allowed Artifact Types
+
+- `database_schema_config`
+- `database_seed_config`
+- `backend_domain_object`
+- `backend_constants`
+- `backend_messages`
+- `backend_contracts`
+- `backend_mapper`
+- `backend_validator`
+- `backend_repository_protocol`
+- `backend_repository_implementation`
+- `backend_service`
+- `backend_routes`
+- `backend_init`
+- `backend_api_paths_update`
+- `backend_route_registry_update`
+- `backend_service_factory_update`
+- `backend_service_container_update`
+- `frontend_list_html`
+- `frontend_details_html`
+- `frontend_list_js`
+- `frontend_details_js`
+- `frontend_css`
+- `frontend_navigation_update`
+- `test_file`
+- `validation_report`
+
+## Forbidden AI Output
+
+The AI must not output:
+
+- advice instead of artifacts
+- partial snippets
+- diff patches
+- shell commands as a replacement for artifacts
+- guessed architecture
+- guessed database choices
+- guessed frontend framework choices
+- guessed route paths
+- guessed file locations
+
+## Staging Rule
+
+The pipeline writes AI artifacts to the staging directory first.
+
+The pipeline then validates staged files.
+
+Only after validation succeeds may the pipeline apply files to the repository.
+```
+
+#### specifications/crud-generation-validation-rules.md
+
+- source: `docs/Generate CCore Organization CRUD/specifications/crud-generation-validation-rules.md`
+- sha256: `b76efc9b79e1eeb26a083c1aaf73b2cfc256461af07759c5b39fad7599f25fe1`
+- lines: `145`
+
+```text
+# CRUD Generation Validation Rules
+
+## Purpose
+
+These rules define what must be checked before AI-generated CRUD artifacts are applied to the repository.
+
+The Automation Factory must stage output, validate it, and only apply it if validation succeeds.
+
+## Specification Completeness Rules
+
+Fail if any of the following remain in the selected specification:
+
+- `REQUIRED`
+- `REQUIRED_USER_DECISION`
+- `UNKNOWN`
+- `TODO`
+- empty mandatory strings
+- unresolved conditional values such as `REQUIRED_IF_addMenuEntry_TRUE`
+
+## Technology Decision Rules
+
+Fail if generated artifacts use unapproved technologies.
+
+For the current inspected baseline, generated Organization CRUD must not introduce these unless an explicit migration decision exists:
+
+- Pydantic v2.
+- Async database sessions.
+- SQLAlchemy.
+- Tailwind.
+- New frontend framework.
+- New database provider.
+
+## Whole-File Rule
+
+Fail if AI output contains:
+
+- patch fragments,
+- diff hunks,
+- instructions instead of file content,
+- incomplete files,
+- manual copy/paste steps.
+
+Every generated or modified file must be represented as a whole-file replacement.
+
+## Backend Rules
+
+Generated backend must follow the CCore vertical slice blueprint.
+
+Required files for a normal CRUD slice:
+
+- domain object file,
+- constants file,
+- messages file,
+- request contracts/parser file,
+- mapper file,
+- validator file,
+- repository protocol file,
+- concrete repository file,
+- service file,
+- routes file,
+- `__init__.py`.
+
+Required architecture:
+
+```text
+routes -> request contracts/parser -> mapper -> service -> repository protocol -> concrete repository -> database provider protocol
+```
+
+Fail if:
+
+- routes manually parse business fields instead of using request parser contracts,
+- service directly depends on concrete repository,
+- repository directly creates database manager instead of receiving provider,
+- structured error contract is not used,
+- API response fields are not canonical camelCase,
+- Python compilation fails.
+
+## Frontend Rules
+
+Generated frontend must follow the CCore Tasks list/details pattern.
+
+Required behavior:
+
+- list page has sortable table,
+- list page has search/pagination/refresh toolbar,
+- list rows are clickable,
+- details page owns create/update/delete,
+- no per-row Actions column on the list page,
+- API fields use canonical camelCase,
+- page uses existing shared CSS conventions.
+
+Fail if:
+
+- hardcoded lookup lists are used when lookup reference API is specified,
+- JavaScript syntax validation fails,
+- page references unknown API fields,
+- page creates a different UI pattern without approval.
+
+## Database Rules
+
+Generated database artifacts must match the specification exactly.
+
+Fail if:
+
+- table names differ from specification,
+- column names differ from specification,
+- primary key strategy differs from specification,
+- foreign keys are missing or incorrect,
+- unique constraints are missing or incorrect,
+- seed data differs from specification,
+- generated SQL/config cannot be parsed by the existing schema/seed tooling.
+
+## Registration Rules
+
+Fail if generated backend routes are not registered in the appropriate route registry.
+
+Fail if generated services/repositories are not registered in service factory/container where required by the current CCore pattern.
+
+Fail if frontend navigation is requested but not added.
+
+## Hardcoding Rules
+
+Fail if generated files include:
+
+- absolute machine paths,
+- undeclared repository paths,
+- entity-specific logic inside generic Automation Factory code,
+- magic strings that should be constants,
+- lookup values duplicated in frontend instead of coming from API/reference data.
+
+## Report Rules
+
+Every execution must produce a report.
+
+The report must include:
+
+- pass/fail outcome,
+- selected task/provider/implementer/target/configuration,
+- specification file used,
+- AI provider/model used,
+- generated artifact list,
+- validation result list,
+- applied file list,
+- skipped file list,
+- failure reason.
+```
+
+#### specifications/crud-module-specification-readiness-checklist.md
+
+- source: `docs/Generate CCore Organization CRUD/specifications/crud-module-specification-readiness-checklist.md`
+- sha256: `7008567d28ed3f5b52a0012d71a74ea3a5c13b63007bd3922296ed9e0fa1114d`
+- lines: `254`
+
+```text
+# CRUD Module Specification Readiness Checklist
+
+## Purpose
+
+This checklist is the gate before the Automation Factory may execute the `Generate CRUD Module` task.
+
+The goal is to prevent guessing. If any required answer is missing, the pipeline must stop before AI generation.
+
+## Required Source Files
+
+The pipeline must receive these files as input:
+
+- `docs/Generate CCore Organization CRUD/architecture/technology-decisions.md`
+- `docs/Generate CCore Organization CRUD/architecture/ccore-vertical-slice-blueprint-v1.0.md`
+- `docs/Generate CCore Organization CRUD/workflow/cffp-working-agreement-v1.1.md`
+- `docs/Generate CCore Organization CRUD/workflow/generate-crud-module-pipeline.md`
+- `docs/Generate CCore Organization CRUD/specifications/crud-generation-validation-rules.md`
+- `docs/Generate CCore Organization CRUD/specifications/template_crud_spec.yaml`
+- one concrete entity specification, for example `ccore_organizations_spec.yaml`
+- the golden reference files listed in the concrete entity specification
+
+## Hard Stop Rules
+
+The pipeline must stop before AI generation if any input file contains unresolved markers:
+
+- `REQUIRED_USER_DECISION`
+- `USER_DECISION_REQUIRED`
+- `REQUIRED_IF`
+- `UNKNOWN`
+- `TODO`
+- blank mandatory values
+- null mandatory values
+
+## Technology Decision Gate
+
+The concrete specification must explicitly declare:
+
+- database provider
+- database driver/access layer
+- schema generation strategy
+- seed-data strategy
+- backend language
+- backend routing style
+- domain object style
+- API request contract style
+- service/repository layering style
+- frontend rendering style
+- frontend JavaScript style
+- frontend CSS/style system
+- AI provider
+- AI model
+- orchestration provider
+- execution mode
+
+The pipeline must not infer technology choices from package names, memories, or previous conversations.
+
+## Golden Reference Gate
+
+The concrete specification must list exact golden-reference files for:
+
+- backend domain object
+- backend constants
+- backend messages
+- backend contracts/request parser
+- backend mapper
+- backend validator
+- backend repository protocol
+- backend concrete repository
+- backend service
+- backend routes
+- route registration
+- service factory/container registration
+- frontend list HTML
+- frontend details HTML
+- frontend list JavaScript
+- frontend details JavaScript
+- frontend CSS
+
+If any golden-reference file is missing in the repository, the pipeline must stop.
+
+## Entity Specification Gate
+
+The concrete entity specification must explicitly declare:
+
+- entity name
+- plural name
+- variable name
+- plural variable name
+- slug
+- display name
+- ownership boundary
+- business purpose
+- lookup/reference entities
+- parent/child relationships
+- many-to-many relationships
+- all database tables
+- all fields/columns
+- all public API fields
+- all Python fields
+- all frontend field names
+- all validation rules
+- all seed data
+
+The pipeline must not invent additional fields.
+
+## Database Gate
+
+For every table, the specification must declare:
+
+- table name
+- primary key column
+- primary key type
+- primary key strategy
+- column names
+- SQL types
+- nullability
+- defaults
+- primary key constraints
+- foreign key constraints
+- unique constraints
+- indexes
+- seed data
+- conflict column for seed upsert
+
+The pipeline must not generate database artifacts from convention alone.
+
+## Backend Gate
+
+The concrete specification must declare exact generated file paths for:
+
+- domain object
+- constants
+- messages
+- contracts/request parser
+- mapper
+- validator
+- repository protocol
+- concrete repository
+- service
+- routes
+- `__init__.py`
+
+The concrete specification must declare exact class names for:
+
+- domain object
+- lookup domain object
+- request parser
+- create request
+- update request
+- mapper
+- validator
+- repository protocol
+- lookup repository protocol
+- concrete repository
+- service
+- lookup service
+
+## API Gate
+
+The concrete specification must declare:
+
+- route prefix
+- lookup route prefix, if any
+- collection response field
+- single-item response field
+- lookup response collection field, if any
+- create payload fields
+- update payload fields
+- public response fields
+- error codes
+- path constants to add
+- route registry file to update
+- service factory file to update
+- service container file to update
+
+## Frontend Gate
+
+The concrete specification must declare:
+
+- list page path
+- details page path
+- list controller path
+- details controller path
+- CSS paths
+- API endpoint constants/usage
+- table columns
+- form fields
+- lookup dropdown sources
+- toolbar behavior
+- row-click behavior
+- navigation/menu decision
+- exact menu file if a menu entry must be added
+
+## AI Context Gate
+
+The AI prompt must include:
+
+- the concrete entity specification
+- technology decisions
+- CCore vertical slice blueprint
+- working agreement
+- validation rules
+- golden reference backend files
+- golden reference frontend files
+- relevant route registry and service container files
+- relevant database config files
+
+The AI prompt must explicitly instruct the model to output a structured artifact manifest with full file contents only.
+
+## Validation Gate
+
+Generated artifacts must be staged first.
+
+Before applying files, the pipeline must validate:
+
+- specification completeness
+- artifact manifest schema
+- required files exist in staged output
+- generated Python compiles
+- generated JavaScript parses
+- generated SQL/config is syntactically valid according to the existing schema configuration pattern
+- route registration changes are present
+- service factory/container changes are present
+- backend layering follows the golden reference
+- frontend pages follow list/details pattern
+- no forbidden unresolved markers remain
+- no hardcoded absolute paths exist
+- no entity-specific branching is added to generic factory code
+
+## Apply Gate
+
+The pipeline may apply staged files only when validation succeeds.
+
+If validation fails:
+
+- no repository files are modified
+- the execution report explains the failure
+- staged artifacts remain available for inspection
+
+## Execution Report Gate
+
+The report must include:
+
+- specification summary
+- source files used
+- golden reference files used
+- AI model used
+- prompt summary
+- generated artifact manifest
+- staged files
+- validation results
+- applied files
+- skipped files
+- failure reason, if any
+```
+
+#### workflow/generate-crud-module-pipeline.md
+
+- source: `docs/Generate CCore Organization CRUD/workflow/generate-crud-module-pipeline.md`
+- sha256: `3b0e97034e79735df291d472e19b9194c84937b42084e6d23d9fe08017777a6b`
+- lines: `220`
+
+```text
+# Generate CRUD Module Pipeline
+
+## Purpose
+
+This workflow defines the first real Automation Factory task that should automate useful CCore development.
+
+The task is generic:
+
+```text
+Generate CRUD Module
+```
+
+The first execution target is:
+
+```text
+Organization
+```
+
+The same task should later be reused for Users, Modules, Roles, Permissions, Memberships, and other CCore entities by changing the specification file only.
+
+## Non-Negotiable Rule
+
+No guessing.
+
+If the specification, repository inspection, technology decision document, or golden reference does not contain enough information, the pipeline must stop and report the missing information.
+
+## User-Level Behavior
+
+From the user's perspective this should be one Automation Factory execution.
+
+The user selects:
+
+```text
+Provider: Local Provider
+Implementer Type: Prefect AI Flow Implementer Type
+Target: Generate CRUD Module
+Configuration: Generate Organization CRUD Module Configuration
+```
+
+Then the pipeline runs all internal steps sequentially.
+
+## Pipeline Steps
+
+### 1. Read specification
+
+Input:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/ccore_organizations_spec.yaml
+```
+
+Output:
+
+- Parsed generation specification.
+- Missing required values report.
+
+Failure condition:
+
+- Any `REQUIRED`, `REQUIRED_USER_DECISION`, `UNKNOWN`, empty mandatory field, or unresolved conditional value remains.
+
+### 2. Validate specification completeness
+
+The pipeline checks that the specification contains:
+
+- Technology stack.
+- Entity naming.
+- Database tables, columns, constraints, indexes, and seed data.
+- Backend files, classes, contracts, mappers, services, repositories, routes, and registrations.
+- Frontend pages, JavaScript controllers, CSS files, API endpoints, and navigation decisions.
+- Validation requirements.
+
+Failure condition:
+
+- Any mandatory block is incomplete.
+
+### 3. Inspect repository
+
+The pipeline inspects the current repository before generation.
+
+Required inspection targets:
+
+```text
+backend/src/ccore/tasks
+backend/src/ccore/application/service_factory.py
+backend/src/ccore/application/service_container.py
+backend/src/api/api_paths.py
+backend/src/api/module_route_registry.py
+backend/src/ccore/infrastructure/database.py
+frontend/static/desktop/protected/ccore/tasks.html
+frontend/static/desktop/protected/ccore/task-details.html
+frontend/static/desktop/protected/ccore/js/tasks.js
+frontend/static/desktop/protected/ccore/js/task-details.js
+frontend/static/desktop/protected/ccore/css/tasks.css
+frontend/static/desktop/protected/ccore/css/task-details.css
+scripts/db/postgres/config/entities.json
+scripts/db/postgres/config/postgres_create_schema.json
+scripts/db/postgres/config/postgres_seed_data.json
+```
+
+Output:
+
+- Repository inspection summary.
+- Confirmed golden-reference patterns.
+- Any conflicts between spec and repo.
+
+Failure condition:
+
+- Required reference files are missing.
+- The specification contradicts the inspected baseline without an explicit migration decision.
+
+### 4. Collect golden reference files
+
+The pipeline collects complete file contents from the CCore Tasks golden reference.
+
+These files are used as implementation examples, not as vague inspiration.
+
+### 5. Build AI context
+
+The AI context must include:
+
+- Full specification.
+- Technology decisions.
+- README and task scope.
+- CCore vertical slice blueprint.
+- Repository inspection summary.
+- Golden reference file contents.
+- AI artifact manifest contract.
+- Success criteria.
+
+The prompt must instruct the AI to generate a complete artifact manifest, not direct edits.
+
+### 6. Generate artifact manifest
+
+The AI must return a structured artifact manifest containing full file contents.
+
+The output must include:
+
+- New backend files.
+- Modified backend registration files if required.
+- New frontend files.
+- Modified navigation files if required.
+- Database schema/seed artifacts or config updates.
+- Tests/validation helpers if specified.
+
+Failure condition:
+
+- Missing required file.
+- Patch fragments instead of whole-file content.
+- Undeclared files.
+- Unapproved dependencies.
+
+### 7. Write staged artifacts
+
+The artifact writer writes generated output to a staging directory only.
+
+No repository application happens yet.
+
+### 8. Validate staged artifacts
+
+Validation runs against staged artifacts and affected repository context.
+
+Required validation categories:
+
+- Python compile validation.
+- JavaScript syntax validation.
+- Route registration validation.
+- Service/repository layering validation.
+- Database config/schema/seed validation.
+- Frontend contract validation.
+- Architecture rule validation.
+
+Failure condition:
+
+- Any fatal validation rule fails.
+
+### 9. Apply staged artifacts
+
+Only after validation passes may the pipeline apply generated artifacts to the repository.
+
+Application must be whole-file replacement only.
+
+### 10. Write execution report
+
+The final report must include:
+
+- Specification summary.
+- Technology decisions used.
+- AI provider/model used.
+- Generated artifact manifest.
+- Validation results.
+- Applied files.
+- Skipped files.
+- Failure reason if failed.
+
+## Success Definition
+
+The first experiment is successful when one Automation Factory execution can generate and apply a working Organization CRUD vertical slice that follows the CCore Task golden reference.
+
+---
+
+## Required Control Documents
+
+Before generation, the pipeline must load the approved document set defined in:
+
+```text
+docs/Generate CCore Organization CRUD/workflow/generate-crud-module-document-set.md
+```
+
+The following documents are mandatory control documents for the first Organization CRUD generation attempt:
+
+```text
+docs/Generate CCore Organization CRUD/specifications/generation-contract.md
+docs/Generate CCore Organization CRUD/specifications/artifact-mapping-specification.yaml
+```
+
+The Generation Contract controls how AI is allowed to generate artifacts.
+
+The Artifact Mapping Specification controls where generated artifacts may be staged and applied.
+
+If either file is missing or incomplete, the pipeline must stop before invoking AI.
+```
+
+#### workflow/generation-prompt-template.md
+
+- source: `docs/Generate CCore Organization CRUD/workflow/generation-prompt-template.md`
+- sha256: `07b460996dfa47ceb9c9b91955123bc9a88d80e5e4abb092838fbb3bc7dffbac`
+- lines: `110`
+
+```text
+# Generation Prompt Template
+
+## Purpose
+
+This document defines how the Automation Factory should assemble the AI prompt for the `Generate CRUD Module -> Organization` task.
+
+The final prompt must be assembled from controlled documents and runtime inspection output. It must not be written as a loose one-off prompt.
+
+## Prompt Assembly Inputs
+
+The final prompt must include these sections in this order:
+
+1. Task objective.
+2. No-guessing rule.
+3. Technology decisions.
+4. CCore vertical slice blueprint.
+5. Generation contract.
+6. Artifact mapping specification summary.
+7. Organization CRUD specification.
+8. AI artifact manifest contract.
+9. Validation rules.
+10. Repository inspection summary.
+11. Golden reference summary and selected file contents.
+12. Required output format.
+
+## Prompt Template
+
+```text
+You are generating artifacts for the CFFP Automation Factory task:
+
+Generate CRUD Module -> Organization
+
+You must follow all control documents and runtime inspection results provided below.
+
+NON-NEGOTIABLE RULES
+- Do not guess.
+- Do not invent missing architecture.
+- Do not introduce new frameworks or dependencies.
+- Do not output patches or snippets.
+- Do not modify files outside the allowed artifact mapping.
+- If required information is missing, return no code artifacts and list requiredManualDecisions.
+
+TECHNOLOGY DECISIONS
+{{technology_decisions}}
+
+CCORE VERTICAL SLICE BLUEPRINT
+{{ccore_vertical_slice_blueprint}}
+
+GENERATION CONTRACT
+{{generation_contract}}
+
+ARTIFACT MAPPING
+{{artifact_mapping_summary}}
+
+ENTITY SPECIFICATION
+{{ccore_organizations_spec}}
+
+AI ARTIFACT MANIFEST CONTRACT
+{{ai_artifact_manifest_contract}}
+
+VALIDATION RULES
+{{crud_generation_validation_rules}}
+
+REPOSITORY INSPECTION SUMMARY
+{{repository_inspection_summary}}
+
+GOLDEN REFERENCE SUMMARY
+{{golden_reference_summary}}
+
+GOLDEN REFERENCE FILE CONTENTS
+{{golden_reference_file_contents}}
+
+REQUIRED OUTPUT
+Return only a valid JSON artifact manifest matching the AI Artifact Manifest Contract.
+Do not wrap the JSON in markdown.
+Do not include commentary before or after the JSON.
+```
+
+## Missing Information Behavior
+
+If any required decision is missing, the AI must return a manifest with:
+
+```json
+{
+  "manifestVersion": "1.0",
+  "generationRequest": {},
+  "technologyStack": {},
+  "artifacts": [],
+  "requiredManualDecisions": [
+    {
+      "field": "",
+      "question": "",
+      "reason": ""
+    }
+  ],
+  "validationHints": [],
+  "generationNotes": []
+}
+```
+
+## Forbidden Prompt Behavior
+
+The prompt builder must not:
+
+- omit validation rules,
+- omit artifact mapping,
+- omit technology decisions,
+- provide only a high-level summary when exact specs are available,
+- include unrelated historical documents by default,
+- ask the AI to directly edit the repository.
+```
+
+#### success-criteria.md
+
+- source: `docs/Generate CCore Organization CRUD/success-criteria.md`
+- sha256: `af2383a8ca5918e6df7858367a0f0ad39e83d5bb937d42a6496c16343faed720`
+- lines: `106`
+
+```text
+# Success Criteria — Generate CCore Organization CRUD
+
+## Purpose
+
+This document defines when the first real Automation Factory CRUD generation experiment is considered successful.
+
+## User-Level Success
+
+The experiment succeeds when one Automation Factory task execution can generate a working Organization CRUD vertical slice using the approved specification and current CCore architecture.
+
+The user should not manually create database files, backend files, frontend files, route registrations, or navigation changes.
+
+## Required Successful Outcome
+
+A successful execution must produce:
+
+- staged artifacts,
+- validation report,
+- applied whole-file artifacts,
+- execution report,
+- Organization CRUD capability integrated into CCore.
+
+## Database Success Criteria
+
+The generated artifacts must include the configured database/schema/seed outputs required by the current repository baseline.
+
+Validation must confirm:
+
+- generated database artifacts match the approved Organization specification,
+- existing database configuration is preserved where required,
+- Organization-related objects are added without deleting unrelated existing definitions,
+- seed data is explicit and comes from the specification,
+- unsupported schema features are not silently invented.
+
+## Backend Success Criteria
+
+The generated backend must follow the CCore Task golden reference.
+
+Validation must confirm:
+
+- required Organization backend files exist,
+- Python files compile,
+- imports resolve within the current project structure where validation can check this,
+- routes use the existing route registration style,
+- service depends on repository protocol,
+- repository uses the approved database/provider pattern,
+- request parsing uses explicit contract/parser classes,
+- no Pydantic/async/SQLAlchemy code is introduced unless explicitly approved,
+- API response fields match the approved response contract.
+
+## Frontend Success Criteria
+
+The generated frontend must follow the existing CCore Task list/details pattern.
+
+Validation must confirm:
+
+- Organization list page exists,
+- Organization details/create/edit behavior exists according to the specification,
+- JavaScript uses vanilla JS and existing API conventions,
+- CSS follows existing shared CSS conventions,
+- no new frontend framework is introduced,
+- lookup handling follows the approved specification,
+- navigation changes are applied only if explicitly mapped.
+
+## Automation Factory Success Criteria
+
+The Automation Factory execution must:
+
+- load the approved document set,
+- inspect the repository before AI invocation,
+- invoke AI using a controlled prompt assembled from the approved documents,
+- receive a structured artifact manifest,
+- reject patches/snippets/manual instructions,
+- stage artifacts before applying,
+- validate staged artifacts,
+- apply only after validation succeeds,
+- write a complete execution report.
+
+## Failure Is Acceptable If Controlled
+
+The experiment is still valuable if generation fails for a clear, reported reason.
+
+Acceptable controlled failures include:
+
+- missing required specification value,
+- repository inspection conflict,
+- AI returned invalid manifest,
+- validation failed,
+- artifact path not mapped,
+- generated code did not compile.
+
+Unacceptable failures include:
+
+- silent guessing,
+- direct unvalidated repository modification,
+- partial patches,
+- hidden hardcoded paths,
+- invented frameworks,
+- missing execution report.
+
+## Definition of Done
+
+The task is done only when one of these is true:
+
+1. The Organization CRUD module is generated, validated, applied, and reported successfully.
+2. The pipeline stops safely with a complete failure report explaining exactly what is missing or invalid.
+```
+
+#### golden-reference.md
+
+- source: `docs/Generate CCore Organization CRUD/golden-reference.md`
+- sha256: `488e02deabf3aa502a565edc68977fcda21652b2dadfdc008e9dcda84c25ad60`
+- lines: `113`
+
+```text
+# Golden Reference — CCore Task CRUD
+
+## Purpose
+
+The Organization CRUD generator must follow an existing, working CCore CRUD implementation instead of inventing architecture.
+
+The golden reference for this task is the CCore Task module.
+
+## Backend Golden Reference
+
+The backend reference module is:
+
+```text
+backend/src/ccore/tasks
+```
+
+Reference files:
+
+```text
+backend/src/ccore/tasks/__init__.py
+backend/src/ccore/tasks/task.py
+backend/src/ccore/tasks/task_constants.py
+backend/src/ccore/tasks/task_contracts.py
+backend/src/ccore/tasks/task_mapper.py
+backend/src/ccore/tasks/task_messages.py
+backend/src/ccore/tasks/task_repository.py
+backend/src/ccore/tasks/task_repository_contract.py
+backend/src/ccore/tasks/task_routes.py
+backend/src/ccore/tasks/task_service.py
+backend/src/ccore/tasks/task_validator.py
+```
+
+Task execution files are useful as runtime examples but are not the primary CRUD reference unless the Organization spec explicitly requires execution behavior:
+
+```text
+backend/src/ccore/tasks/task_execution.py
+backend/src/ccore/tasks/task_execution_constants.py
+backend/src/ccore/tasks/task_execution_mapper.py
+backend/src/ccore/tasks/task_execution_repository.py
+backend/src/ccore/tasks/task_execution_repository_contract.py
+backend/src/ccore/tasks/task_execution_runner.py
+```
+
+## Frontend Golden Reference
+
+The frontend reference pages are:
+
+```text
+frontend/static/desktop/protected/ccore/tasks.html
+frontend/static/desktop/protected/ccore/task-details.html
+frontend/static/desktop/protected/ccore/js/tasks.js
+frontend/static/desktop/protected/ccore/js/task-details.js
+frontend/static/desktop/protected/ccore/css/tasks.css
+frontend/static/desktop/protected/ccore/css/task-details.css
+```
+
+## Patterns To Replicate
+
+The generated Organization module must replicate these patterns from the Task module:
+
+- vertical slice folder structure,
+- dataclass-style domain object,
+- constants file,
+- messages file,
+- explicit request contracts/parser classes,
+- mapper layer,
+- validator layer,
+- repository protocol,
+- concrete repository,
+- service layer,
+- route handler layer,
+- custom route registry style,
+- canonical API response format,
+- frontend list/details page pattern,
+- vanilla JavaScript controller pattern,
+- existing shared CSS conventions.
+
+## Patterns Not To Invent
+
+The generator must not introduce:
+
+- Pydantic schemas,
+- async database sessions,
+- SQLAlchemy,
+- Tailwind,
+- React/Vue/Angular,
+- a different route registration style,
+- a different API response style,
+- a different frontend layout pattern.
+
+## Repository Inspection Requirement
+
+This document is not a replacement for repository inspection.
+
+Before generation, the pipeline must read the actual golden reference files from the current repository and summarize the current patterns.
+
+If this document conflicts with inspected repository facts, the pipeline must stop and report the conflict.
+
+## Golden Reference Protection
+
+Generated Organization artifacts must not modify files under:
+
+```text
+backend/src/ccore/tasks
+frontend/static/desktop/protected/ccore/tasks.html
+frontend/static/desktop/protected/ccore/task-details.html
+frontend/static/desktop/protected/ccore/js/tasks.js
+frontend/static/desktop/protected/ccore/js/task-details.js
+frontend/static/desktop/protected/ccore/css/tasks.css
+frontend/static/desktop/protected/ccore/css/task-details.css
+```
+
+Those files are reference inputs only.
+```
+
+### Excluded Inputs
+
+- None
+
+### Findings
+
+- None
+
+## Provider: repository-inspection
+
+### Included Context Items
+
+#### Repository Inspection Summary
+
+- source: `repository-runtime-inspection`
+- sha256: `not-applicable`
+- lines: `not-applicable`
+
+```text
+# Repository Inspection Summary
+
+## Inspected Roots
+
+- `backend/src/ccore/tasks`: exists=true, files=18, reported=18
+- `backend/src/api`: exists=true, files=16, reported=16
+- `frontend/static/desktop/protected/ccore`: exists=true, files=9, reported=9
+- `backend/src/ccore/shared`: exists=true, files=5, reported=5
+- `backend/src/ccore/infrastructure`: exists=true, files=4, reported=4
+
+## Reported Files
+
+- `backend/src/api/__init__.py` | ext=.py | lines=0 | bytes=0 | sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- `backend/src/api/api_constants.py` | ext=.py | lines=45 | bytes=1254 | sha256=21228430843c7a36cd14dec457e56d3cf36f379f80a2434aba7c6c9ad2825212
+- `backend/src/api/api_paths.py` | ext=.py | lines=42 | bytes=1527 | sha256=da5080843e834cae7e38a411c1068c804047a6602600f77222836b6ad18b8caf
+- `backend/src/api/api_response_messages.py` | ext=.py | lines=20 | bytes=528 | sha256=247357c4ddcd938708a8e2a79f5610bf35d4f4fe947e09575660906a655b1f5e
+- `backend/src/api/app.py` | ext=.py | lines=109 | bytes=3196 | sha256=ddd0f84783898ce455f7988681e7600a2b7521bde579afcf29da0a60aadb2ef9
+- `backend/src/api/contract_utils.py` | ext=.py | lines=34 | bytes=897 | sha256=4fd9dbcf6ca4ff77fe05aef284e46615cb1bbd25bb5254092740a07320683bc7
+- `backend/src/api/http_methods.py` | ext=.py | lines=18 | bytes=478 | sha256=aa3e3df720fbf3b65ef3cb035e45729b51d5f94a5a7cfe6aadd2ec94fc435c42
+- `backend/src/api/module_route_registry.py` | ext=.py | lines=36 | bytes=1123 | sha256=35f5aa42a6aa42c54e94ec0c63883ad43601d48990eb63e50088517ac854fe0f
+- `backend/src/api/modules/__init__.py` | ext=.py | lines=0 | bytes=0 | sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- `backend/src/api/modules/lla/__init__.py` | ext=.py | lines=0 | bytes=0 | sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- `backend/src/api/modules/lla/lla_api_paths.py` | ext=.py | lines=58 | bytes=2138 | sha256=06812b1819e7312fc912397f78cea510b4563936263e73c125ab2a63ff360bd8
+- `backend/src/api/modules/lla/routes/lla_route_registry.py` | ext=.py | lines=325 | bytes=13506 | sha256=dd56e54c3c2dee2a9c7faceda887477eb843d7a81c7d8e1560e3fb939a38e8aa
+- `backend/src/api/route_dispatcher.py` | ext=.py | lines=173 | bytes=5190 | sha256=5972b651e35199cbed9fa91ba85b4a84620c278b9c6575acba1ce8ce57492bf0
+- `backend/src/api/route_registry.py` | ext=.py | lines=317 | bytes=11168 | sha256=9924eb64204cc0281e4a67dcfc3f07878de1e71c3a3717f215e71999ede011ae
+- `backend/src/api/route_registry_utils.py` | ext=.py | lines=29 | bytes=951 | sha256=b9f4ad175c659d180298609740d206494c52d81e716763ebbb3a94331953474f
+- `backend/src/api/route_utils.py` | ext=.py | lines=107 | bytes=2774 | sha256=ba56e2c19b0b8344fe25f0adf71ee653791c9988463f0e60c50b18082087bb7d
+- `backend/src/ccore/infrastructure/__init__.py` | ext=.py | lines=0 | bytes=0 | sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- `backend/src/ccore/infrastructure/database.py` | ext=.py | lines=88 | bytes=2957 | sha256=f7dbc2d3973e202dfb1ac0d58177a331f23feb5906f33e0590e09fd359962433
+- `backend/src/ccore/infrastructure/database_contracts.py` | ext=.py | lines=15 | bytes=445 | sha256=5a02b5de48eb8e277f6f4dcac851cd9adb5117b8d2103b9cf7018c2654b56731
+- `backend/src/ccore/infrastructure/postgres_database.py` | ext=.py | lines=3 | bytes=139 | sha256=6a5b441b7963b13dc5e1f7df7bb2ebbc3d99590b7f3a28f652987f89babe0f48
+- `backend/src/ccore/shared/app_config.py` | ext=.py | lines=61 | bytes=1318 | sha256=4c569a89d8260faa5e12337ad3a6ffd47608389b77617788c7546f867d97d3f6
+- `backend/src/ccore/shared/app_config_utils.py` | ext=.py | lines=11 | bytes=229 | sha256=f76f822ff43dcbe7ead1f5b122b05a9952db1c9c957ca375d975996db159733d
+- `backend/src/ccore/shared/app_path_utils.py` | ext=.py | lines=70 | bytes=1812 | sha256=cc85fd5555b2e82ed21549f0eacbb55f5aebb47f490b02272840d7acb20d6177
+- `backend/src/ccore/shared/config/app_config.json` | ext=.json | lines=6 | bytes=231 | sha256=93162ff2a6efb8950222a960485c0157abf07e318924d16830ed1d80141d1346
+- `backend/src/ccore/shared/config/app_path_utils.json` | ext=.json | lines=24 | bytes=1199 | sha256=30bbb397b9e70ba3bc7c058a92a328fa84210e33da356a33f36afb5d7ffe286f
+- `backend/src/ccore/tasks/__init__.py` | ext=.py | lines=1 | bytes=37 | sha256=5c37c950e08a60ebacb4e78cba242d613c90ea894757c6bcd25b8b886bbf36dc
+- `backend/src/ccore/tasks/task.py` | ext=.py | lines=20 | bytes=511 | sha256=fd8ea061c54280157a3ab310440a199260b929226700408aea4388420e9f70b5
+- `backend/src/ccore/tasks/task_constants.py` | ext=.py | lines=37 | bytes=1252 | sha256=43338cba7b7934570980b2e7d94b928b45d168a233c7c59d06c2616f518e5e8c
+- `backend/src/ccore/tasks/task_contracts.py` | ext=.py | lines=155 | bytes=4239 | sha256=4ef3ab7006ae012d7decff6d731ee3b0507f8b9e421490830b279902749a99e4
+- `backend/src/ccore/tasks/task_execution.py` | ext=.py | lines=82 | bytes=2321 | sha256=dd3dd795c507a3102450d536cba59333a897597d189cf079e2defd8256d003c3
+- `backend/src/ccore/tasks/task_execution_constants.py` | ext=.py | lines=101 | bytes=5390 | sha256=25678fd8b977236011b733425e38e4fbae8ecdfa26926562f88c5291d72e8499
+- `backend/src/ccore/tasks/task_execution_mapper.py` | ext=.py | lines=132 | bytes=6999 | sha256=40ef930229361c6be48e8399ae617d7d595ee1492493803f73f2fb14bf5741cc
+- `backend/src/ccore/tasks/task_execution_repository.py` | ext=.py | lines=409 | bytes=22209 | sha256=8ee6fde41bf46ed8e2bb1ca88fce8fd0c6052d1ab6d3ab09ab722021764fdb6f
+- `backend/src/ccore/tasks/task_execution_repository_contract.py` | ext=.py | lines=69 | bytes=3318 | sha256=22a5a01f5dcac02be78a6d27f8f5c730e76058fdb359d0359e9776a0187b5df5
+- `backend/src/ccore/tasks/task_execution_runner.py` | ext=.py | lines=834 | bytes=26446 | sha256=b0455f2a11bb1ef55ef17a906abbadef8028014dd18542332f257cc3cef5436f
+- `backend/src/ccore/tasks/task_mapper.py` | ext=.py | lines=74 | bytes=2627 | sha256=372e456fb7c2855fb49711247340130b0e6176f8212160937902d89a261b76ed
+- `backend/src/ccore/tasks/task_messages.py` | ext=.py | lines=29 | bytes=1224 | sha256=e0ab145728c9688ed17a1f0ab73f77af267d4a8606b515e122a51fb43b436392
+- `backend/src/ccore/tasks/task_repository.py` | ext=.py | lines=237 | bytes=8212 | sha256=49541cc87a7f2660007cfa35599b554cdd376708516717822e4102b011ea53f3
+- `backend/src/ccore/tasks/task_repository_contract.py` | ext=.py | lines=33 | bytes=1055 | sha256=84e24c03de2a67cc66d8770098a232e2792385907967a3882f1a71fbcdf768bc
+- `backend/src/ccore/tasks/task_routes.py` | ext=.py | lines=431 | bytes=11735 | sha256=06c0651eca9426e91bb176f4b43ec847b803a9a526ffeceee2a126c4b9f04d66
+- `backend/src/ccore/tasks/task_service.py` | ext=.py | lines=89 | bytes=3257 | sha256=e5158ff59790bc33afc5a9f5a6a653d6fdcdb8fd90cd5d0ce6ba689b10559622
+- `backend/src/ccore/tasks/task_status.py` | ext=.py | lines=16 | bytes=351 | sha256=0d4967a30cdcdeb85daa4097ae358adf52ccd521d2ce063a2c6366a33fe36555
+- `backend/src/ccore/tasks/task_validator.py` | ext=.py | lines=47 | bytes=1755 | sha256=71c1103b26db9212dd45bf2eebf1ed8bbdc0a92d2c42030a709adee526bf1bee
+- `frontend/static/desktop/protected/ccore/css/metrics.css` | ext=.css | lines=164 | bytes=2909 | sha256=ab21e18158159f16f4a55e4dfa6e1168920af5788b0812a41be39baa195884c2
+- `frontend/static/desktop/protected/ccore/css/task-details.css` | ext=.css | lines=224 | bytes=4602 | sha256=b26aabf69dd4512ab118574ea5a38bb3d0d58e62f2f843f99714f13322b75f1d
+- `frontend/static/desktop/protected/ccore/css/tasks.css` | ext=.css | lines=119 | bytes=2095 | sha256=f08677361edf340b9911665753433d32603bf597d7e5f2d6c15789a77c6981e7
+- `frontend/static/desktop/protected/ccore/js/metrics.js` | ext=.js | lines=510 | bytes=14255 | sha256=d0863eb993a7749e69168490a4accbdf46bcfec27aaf110a00a06ff6e8b286ea
+- `frontend/static/desktop/protected/ccore/js/task-details.js` | ext=.js | lines=510 | bytes=23663 | sha256=82b7377c64209bcdd1a348b365dc48952c96066a6f612517db4d08ec3c585fc4
+- `frontend/static/desktop/protected/ccore/js/tasks.js` | ext=.js | lines=489 | bytes=12315 | sha256=3a04cee14536558995884be209e8f521bdd8e0e2c204f9e808a800252352325c
+- `frontend/static/desktop/protected/ccore/metrics.html` | ext=.html | lines=159 | bytes=6923 | sha256=dca2df677facee689dc93cc18e981faac8ff69fbd3a4f04e660f74fe3faef88e
+- `frontend/static/desktop/protected/ccore/task-details.html` | ext=.html | lines=211 | bytes=10426 | sha256=34c20378125e5e986af06cd147bc6beb359847ec9f0af6e9b76b5b1bc7c357b0
+- `frontend/static/desktop/protected/ccore/tasks.html` | ext=.html | lines=154 | bytes=6671 | sha256=8a1c37e379e40a9e0eab261ded3ec62728c242a12898b148dd55f7fac33bb935
+```
+
+### Excluded Inputs
+
+- None
+
+### Findings
+
+- None
+
+## Provider: golden-reference
+
+### Included Context Items
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task.py
+
+- source: `backend/src/ccore/tasks/task.py`
+- sha256: `fd8ea061c54280157a3ab310440a199260b929226700408aea4388420e9f70b5`
+- lines: `20`
+
+```text
+"""
+CCore task domain object.
+
+Responsibilities:
+- Represent rows from the ccore_tasks PostgreSQL table as domain objects.
+- Keep database row structure separate from API response structure.
+- Carry standard CRUD metadata used by CCore vertical-slice blueprints.
+"""
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class CCoreTask:
+    task_id: str | None
+    task_name: str
+    status_id: int
+    status_label: str | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_constants.py
+
+- source: `backend/src/ccore/tasks/task_constants.py`
+- sha256: `43338cba7b7934570980b2e7d94b928b45d168a233c7c59d06c2616f518e5e8c`
+- lines: `37`
+
+```text
+"""
+CCore task constants.
+
+Responsibilities:
+- Centralize task table names, column names, lookup IDs, and API field names.
+- Avoid duplicated literal values across repositories, services, routes, and mappers.
+- Keep task-specific constants inside the CCore task boundary.
+"""
+
+CCORE_TASKS_TABLE_NAME = "ccore_tasks"
+CCORE_TASK_STATUSES_TABLE_NAME = "ccore_task_statuses"
+
+CCORE_TASK_ID_COLUMN = "task_id"
+CCORE_TASK_NAME_COLUMN = "task_name"
+CCORE_TASK_STATUS_ID_COLUMN = "status_id"
+CCORE_TASK_CREATED_AT_COLUMN = "created_at"
+CCORE_TASK_UPDATED_AT_COLUMN = "updated_at"
+
+CCORE_TASK_STATUS_LABEL_COLUMN = "status_label"
+CCORE_TASK_STATUS_SORT_ORDER_COLUMN = "sort_order"
+
+CCORE_TASK_STATUS_ID_PENDING = 1
+CCORE_TASK_STATUS_ID_RUNNING = 2
+CCORE_TASK_STATUS_ID_COMPLETED = 3
+CCORE_TASK_STATUS_ID_FAILED = 4
+
+CCORE_TASK_API_FIELD_TASK_ID = "taskId"
+CCORE_TASK_API_FIELD_TASK_NAME = "taskName"
+CCORE_TASK_API_FIELD_STATUS = "status"
+CCORE_TASK_API_FIELD_STATUS_ID = "statusId"
+CCORE_TASK_API_FIELD_STATUS_LABEL = "statusLabel"
+CCORE_TASK_API_FIELD_CREATED_AT = "createdAt"
+CCORE_TASK_API_FIELD_UPDATED_AT = "updatedAt"
+
+CCORE_TASK_STATUS_API_FIELD_ID = "id"
+CCORE_TASK_STATUS_API_FIELD_LABEL = "label"
+CCORE_TASK_STATUS_API_FIELD_SORT_ORDER = "sortOrder"
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_contracts.py
+
+- source: `backend/src/ccore/tasks/task_contracts.py`
+- sha256: `4ef3ab7006ae012d7decff6d731ee3b0507f8b9e421490830b279902749a99e4`
+- lines: `155`
+
+```text
+"""
+CCore task API request contracts.
+
+Responsibilities:
+- Represent task create/update request data at the API boundary.
+- Validate public JSON/API payload shape before domain mapping.
+- Keep API parsing independent from repository and service logic.
+"""
+
+from dataclasses import dataclass
+from typing import Any
+
+from backend.src.ccore.tasks.task_constants import (
+    CCORE_TASK_API_FIELD_STATUS_ID,
+    CCORE_TASK_API_FIELD_TASK_NAME,
+)
+from backend.src.ccore.tasks.task_messages import (
+    CCORE_TASK_NAME_REQUIRED_MESSAGE,
+    CCORE_TASK_PAYLOAD_OBJECT_REQUIRED_MESSAGE,
+    CCORE_TASK_STATUS_REQUIRED_MESSAGE,
+    CCORE_TASK_UNKNOWN_FIELD_MESSAGE,
+)
+
+_CREATE_TASK_FIELDS = {
+    CCORE_TASK_API_FIELD_TASK_NAME,
+    CCORE_TASK_API_FIELD_STATUS_ID,
+}
+_UPDATE_TASK_FIELDS = {
+    CCORE_TASK_API_FIELD_TASK_NAME,
+    CCORE_TASK_API_FIELD_STATUS_ID,
+}
+
+
+@dataclass(frozen=True)
+class CreateCCoreTaskRequest:
+    task_name: str
+    status_id: int | None = None
+
+
+@dataclass(frozen=True)
+class UpdateCCoreTaskRequest:
+    task_id: str
+    task_name: str
+    status_id: int
+
+
+class CCoreTaskRequestParser:
+    def parse_create_request(self, payload: dict[str, Any]) -> CreateCCoreTaskRequest:
+        self._validate_payload_object(payload)
+        self._validate_known_fields(payload, _CREATE_TASK_FIELDS)
+
+        task_name = self._require_text(
+            payload,
+            CCORE_TASK_API_FIELD_TASK_NAME,
+            CCORE_TASK_NAME_REQUIRED_MESSAGE,
+        )
+        status_id = self._optional_integer(payload, CCORE_TASK_API_FIELD_STATUS_ID)
+
+        return CreateCCoreTaskRequest(task_name=task_name, status_id=status_id)
+
+    def parse_update_request(
+        self,
+        task_id: str,
+        payload: dict[str, Any],
+    ) -> UpdateCCoreTaskRequest:
+        self._validate_payload_object(payload)
+        self._validate_known_fields(payload, _UPDATE_TASK_FIELDS)
+
+        task_name = self._require_text(
+            payload,
+            CCORE_TASK_API_FIELD_TASK_NAME,
+            CCORE_TASK_NAME_REQUIRED_MESSAGE,
+        )
+        status_id = self._require_integer(
+            payload,
+            CCORE_TASK_API_FIELD_STATUS_ID,
+            CCORE_TASK_STATUS_REQUIRED_MESSAGE,
+        )
+
+        return UpdateCCoreTaskRequest(
+            task_id=task_id,
+            task_name=task_name,
+            status_id=status_id,
+        )
+
+    def _validate_payload_object(self, payload: dict[str, Any]) -> None:
+        if not isinstance(payload, dict):
+            raise ValueError(CCORE_TASK_PAYLOAD_OBJECT_REQUIRED_MESSAGE)
+
+    def _validate_known_fields(
+        self,
+        payload: dict[str, Any],
+        supported_fields: set[str],
+    ) -> None:
+        unknown_fields = sorted(set(payload.keys()) - supported_fields)
+
+        if unknown_fields:
+            raise ValueError(
+                f"{CCORE_TASK_UNKNOWN_FIELD_MESSAGE}: {', '.join(unknown_fields)}"
+            )
+
+    def _require_text(
+        self,
+        payload: dict[str, Any],
+        field_name: str,
+        message: str,
+    ) -> str:
+        value = self._optional_text(payload, field_name)
+
+        if value is None:
+            raise ValueError(message)
+
+        return value
+
+    def _optional_text(self, payload: dict[str, Any], field_name: str) -> str | None:
+        value = payload.get(field_name)
+
+        if value is None:
+            return None
+
+        text_value = str(value).strip()
+
+        if not text_value:
+            return None
+
+        return text_value
+
+    def _require_integer(
+        self,
+        payload: dict[str, Any],
+        field_name: str,
+        message: str,
+    ) -> int:
+        value = self._optional_integer(payload, field_name)
+
+        if value is None:
+            raise ValueError(message)
+
+        return value
+
+    def _optional_integer(self, payload: dict[str, Any], field_name: str) -> int | None:
+        value = payload.get(field_name)
+
+        if value is None:
+            return None
+
+        try:
+            integer_value = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(CCORE_TASK_STATUS_REQUIRED_MESSAGE) from exc
+
+        if integer_value <= 0:
+            raise ValueError(CCORE_TASK_STATUS_REQUIRED_MESSAGE)
+
+        return integer_value
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_mapper.py
+
+- source: `backend/src/ccore/tasks/task_mapper.py`
+- sha256: `372e456fb7c2855fb49711247340130b0e6176f8212160937902d89a261b76ed`
+- lines: `74`
+
+```text
+"""
+CCore task mapper.
+
+Responsibilities:
+- Convert task request contracts to domain objects.
+- Convert task domain objects and reference data to API response dictionaries.
+- Keep API field names camelCase while preserving database/domain names internally.
+"""
+
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_constants import (
+    CCORE_TASK_API_FIELD_CREATED_AT,
+    CCORE_TASK_API_FIELD_STATUS,
+    CCORE_TASK_API_FIELD_STATUS_ID,
+    CCORE_TASK_API_FIELD_STATUS_LABEL,
+    CCORE_TASK_API_FIELD_TASK_ID,
+    CCORE_TASK_API_FIELD_TASK_NAME,
+    CCORE_TASK_API_FIELD_UPDATED_AT,
+    CCORE_TASK_STATUS_API_FIELD_ID,
+    CCORE_TASK_STATUS_API_FIELD_LABEL,
+    CCORE_TASK_STATUS_API_FIELD_SORT_ORDER,
+    CCORE_TASK_STATUS_ID_PENDING,
+)
+from backend.src.ccore.tasks.task_contracts import (
+    CreateCCoreTaskRequest,
+    UpdateCCoreTaskRequest,
+)
+from backend.src.ccore.tasks.task_status import CCoreTaskStatus
+
+
+class CCoreTaskMapper:
+    def create_request_to_domain(
+        self,
+        request: CreateCCoreTaskRequest,
+    ) -> CCoreTask:
+        return CCoreTask(
+            task_id=None,
+            task_name=request.task_name,
+            status_id=request.status_id or CCORE_TASK_STATUS_ID_PENDING,
+        )
+
+    def update_request_to_domain(
+        self,
+        request: UpdateCCoreTaskRequest,
+    ) -> CCoreTask:
+        return CCoreTask(
+            task_id=request.task_id,
+            task_name=request.task_name,
+            status_id=request.status_id,
+        )
+
+    def domain_to_response(self, task: CCoreTask) -> dict:
+        return {
+            CCORE_TASK_API_FIELD_TASK_ID: task.task_id,
+            CCORE_TASK_API_FIELD_TASK_NAME: task.task_name,
+            CCORE_TASK_API_FIELD_STATUS: task.status_label,
+            CCORE_TASK_API_FIELD_STATUS_ID: task.status_id,
+            CCORE_TASK_API_FIELD_STATUS_LABEL: task.status_label,
+            CCORE_TASK_API_FIELD_CREATED_AT: task.created_at,
+            CCORE_TASK_API_FIELD_UPDATED_AT: task.updated_at,
+        }
+
+    def domains_to_response(self, tasks: list[CCoreTask]) -> list[dict]:
+        return [self.domain_to_response(task) for task in tasks]
+
+    def status_to_response(self, status: CCoreTaskStatus) -> dict:
+        return {
+            CCORE_TASK_STATUS_API_FIELD_ID: status.status_id,
+            CCORE_TASK_STATUS_API_FIELD_LABEL: status.status_label,
+            CCORE_TASK_STATUS_API_FIELD_SORT_ORDER: status.sort_order,
+        }
+
+    def statuses_to_response(self, statuses: list[CCoreTaskStatus]) -> list[dict]:
+        return [self.status_to_response(status) for status in statuses]
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_messages.py
+
+- source: `backend/src/ccore/tasks/task_messages.py`
+- sha256: `e0ab145728c9688ed17a1f0ab73f77af267d4a8606b515e122a51fb43b436392`
+- lines: `29`
+
+```text
+"""
+CCore task response and validation messages.
+
+Responsibilities:
+- Centralize task-related API and validation messages.
+- Avoid duplicated response strings across route handlers, services, and validators.
+"""
+
+CCORE_TASK_CREATED_SUCCESS_MESSAGE = "CCore task created successfully."
+CCORE_TASK_UPDATED_SUCCESS_MESSAGE = "CCore task updated successfully."
+CCORE_TASK_DELETED_SUCCESS_MESSAGE = "CCore task deleted successfully."
+
+CCORE_TASK_NOT_FOUND_MESSAGE = "CCore task was not found."
+
+CCORE_TASK_INVALID_ID_MESSAGE = "A valid CCore task id is required."
+CCORE_TASK_ID_REQUIRED_MESSAGE = CCORE_TASK_INVALID_ID_MESSAGE
+
+CCORE_TASK_INVALID_JSON_BODY_MESSAGE = "Request body must contain valid JSON."
+CCORE_TASK_PAYLOAD_OBJECT_REQUIRED_MESSAGE = "Request body must be a JSON object."
+
+CCORE_TASK_UNKNOWN_FIELD_MESSAGE = "Unsupported task request field."
+
+CCORE_TASK_NAME_REQUIRED_MESSAGE = "Task name is required."
+CCORE_TASK_STATUS_REQUIRED_MESSAGE = "Task status is required."
+CCORE_TASK_STATUS_INVALID_MESSAGE = "Task status is not valid."
+
+CCORE_TASK_ERROR_CODE_VALIDATION = "CCORE_TASK_VALIDATION_ERROR"
+CCORE_TASK_ERROR_CODE_NOT_FOUND = "CCORE_TASK_NOT_FOUND"
+CCORE_TASK_ERROR_CODE_SERVER = "CCORE_TASK_SERVER_ERROR"
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_repository.py
+
+- source: `backend/src/ccore/tasks/task_repository.py`
+- sha256: `49541cc87a7f2660007cfa35599b554cdd376708516717822e4102b011ea53f3`
+- lines: `237`
+
+```text
+"""
+CCore task PostgreSQL repository.
+
+Responsibilities:
+- Execute ccore_tasks CRUD queries.
+- Map PostgreSQL rows to CCore task domain objects.
+- Keep SQL access isolated from routes and services.
+"""
+
+from backend.src.ccore.infrastructure.database_contracts import (
+    DatabaseConnectionProviderProtocol,
+)
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_constants import (
+    CCORE_TASK_CREATED_AT_COLUMN,
+    CCORE_TASK_ID_COLUMN,
+    CCORE_TASK_NAME_COLUMN,
+    CCORE_TASK_STATUS_ID_COLUMN,
+    CCORE_TASK_STATUS_LABEL_COLUMN,
+    CCORE_TASK_STATUS_SORT_ORDER_COLUMN,
+    CCORE_TASK_STATUSES_TABLE_NAME,
+    CCORE_TASKS_TABLE_NAME,
+    CCORE_TASK_UPDATED_AT_COLUMN,
+)
+from backend.src.ccore.tasks.task_status import CCoreTaskStatus
+
+
+class CCoreTaskRepository:
+    def __init__(self, db_manager: DatabaseConnectionProviderProtocol):
+        self.db_manager = db_manager
+
+    def _map_row_to_task(self, row) -> CCoreTask:
+        return CCoreTask(
+            task_id=str(row[0]),
+            task_name=row[1],
+            status_id=row[2],
+            status_label=row[3],
+            created_at=row[4].isoformat() if row[4] is not None else None,
+            updated_at=row[5].isoformat() if row[5] is not None else None,
+        )
+
+    def _task_select_columns(self) -> str:
+        return f"""
+            task.{CCORE_TASK_ID_COLUMN},
+            task.{CCORE_TASK_NAME_COLUMN},
+            task.{CCORE_TASK_STATUS_ID_COLUMN},
+            status.{CCORE_TASK_STATUS_LABEL_COLUMN},
+            task.{CCORE_TASK_CREATED_AT_COLUMN},
+            task.{CCORE_TASK_UPDATED_AT_COLUMN}
+        """
+
+    def find_all_tasks(self) -> list[CCoreTask]:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                    SELECT
+                        {self._task_select_columns()}
+                    FROM {CCORE_TASKS_TABLE_NAME} task
+                    INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
+                        ON status.{CCORE_TASK_STATUS_ID_COLUMN} = task.{CCORE_TASK_STATUS_ID_COLUMN}
+                    ORDER BY task.{CCORE_TASK_CREATED_AT_COLUMN} DESC, task.{CCORE_TASK_NAME_COLUMN} ASC
+                    """)
+
+                rows = cursor.fetchall()
+
+        return [self._map_row_to_task(row) for row in rows]
+
+    def find_by_id(self, task_id: str) -> CCoreTask | None:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    SELECT
+                        {self._task_select_columns()}
+                    FROM {CCORE_TASKS_TABLE_NAME} task
+                    INNER JOIN {CCORE_TASK_STATUSES_TABLE_NAME} status
+                        ON status.{CCORE_TASK_STATUS_ID_COLUMN} = task.{CCORE_TASK_STATUS_ID_COLUMN}
+                    WHERE task.{CCORE_TASK_ID_COLUMN} = %s
+                    """,
+                    (task_id,),
+                )
+
+                row = cursor.fetchone()
+
+        if row is None:
+            return None
+
+        return self._map_row_to_task(row)
+
+    def create_task(self, task: CCoreTask) -> CCoreTask:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    INSERT INTO {CCORE_TASKS_TABLE_NAME} (
+                        {CCORE_TASK_ID_COLUMN},
+                        {CCORE_TASK_NAME_COLUMN},
+                        {CCORE_TASK_STATUS_ID_COLUMN}
+                    )
+                    VALUES (
+                        gen_random_uuid(),
+                        %s,
+                        %s
+                    )
+                    RETURNING {CCORE_TASK_ID_COLUMN}
+                    """,
+                    (
+                        task.task_name,
+                        task.status_id,
+                    ),
+                )
+
+                task_id = str(cursor.fetchone()[0])
+
+            connection.commit()
+
+        created_task = self.find_by_id(task_id)
+
+        if created_task is None:
+            raise RuntimeError(f"Created CCore task could not be read: {task_id}")
+
+        return created_task
+
+    def update_task(self, task: CCoreTask) -> CCoreTask | None:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE {CCORE_TASKS_TABLE_NAME}
+                    SET
+                        {CCORE_TASK_NAME_COLUMN} = %s,
+                        {CCORE_TASK_STATUS_ID_COLUMN} = %s,
+                        {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
+                    RETURNING {CCORE_TASK_ID_COLUMN}
+                    """,
+                    (
+                        task.task_name,
+                        task.status_id,
+                        task.task_id,
+                    ),
+                )
+
+                row = cursor.fetchone()
+
+            connection.commit()
+
+        if row is None:
+            return None
+
+        return self.find_by_id(str(row[0]))
+
+    def update_task_status(self, task_id: str, status_id: int) -> CCoreTask | None:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE {CCORE_TASKS_TABLE_NAME}
+                    SET
+                        {CCORE_TASK_STATUS_ID_COLUMN} = %s,
+                        {CCORE_TASK_UPDATED_AT_COLUMN} = CURRENT_TIMESTAMP
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
+                    RETURNING {CCORE_TASK_ID_COLUMN}
+                    """,
+                    (
+                        status_id,
+                        task_id,
+                    ),
+                )
+
+                row = cursor.fetchone()
+
+            connection.commit()
+
+        if row is None:
+            return None
+
+        return self.find_by_id(str(row[0]))
+
+    def delete_task(self, task_id: str) -> bool:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    DELETE FROM {CCORE_TASKS_TABLE_NAME}
+                    WHERE {CCORE_TASK_ID_COLUMN} = %s
+                    """,
+                    (task_id,),
+                )
+
+                deleted_count = cursor.rowcount
+
+            connection.commit()
+
+        return deleted_count > 0
+
+
+class CCoreTaskStatusRepository:
+    def __init__(self, db_manager: DatabaseConnectionProviderProtocol):
+        self.db_manager = db_manager
+
+    def _map_row_to_status(self, row) -> CCoreTaskStatus:
+        return CCoreTaskStatus(
+            status_id=row[0],
+            status_label=row[1],
+            sort_order=row[2],
+        )
+
+    def find_all_statuses(self) -> list[CCoreTaskStatus]:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                    SELECT
+                        {CCORE_TASK_STATUS_ID_COLUMN},
+                        {CCORE_TASK_STATUS_LABEL_COLUMN},
+                        {CCORE_TASK_STATUS_SORT_ORDER_COLUMN}
+                    FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                    ORDER BY {CCORE_TASK_STATUS_SORT_ORDER_COLUMN} ASC, {CCORE_TASK_STATUS_LABEL_COLUMN} ASC
+                    """)
+
+                rows = cursor.fetchall()
+
+        return [self._map_row_to_status(row) for row in rows]
+
+    def status_exists(self, status_id: int) -> bool:
+        with self.db_manager.get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    SELECT 1
+                    FROM {CCORE_TASK_STATUSES_TABLE_NAME}
+                    WHERE {CCORE_TASK_STATUS_ID_COLUMN} = %s
+                    """,
+                    (status_id,),
+                )
+
+                return cursor.fetchone() is not None
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_repository_contract.py
+
+- source: `backend/src/ccore/tasks/task_repository_contract.py`
+- sha256: `84e24c03de2a67cc66d8770098a232e2792385907967a3882f1a71fbcdf768bc`
+- lines: `33`
+
+```text
+"""
+CCore task repository contracts.
+
+Responsibilities:
+- Define replaceable persistence contracts for CCore task services.
+- Keep services dependent on abstractions instead of concrete PostgreSQL repositories.
+- Support future SQLite, MySQL, test-double, or remote repository implementations.
+"""
+
+from typing import Protocol
+
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_status import CCoreTaskStatus
+
+
+class CCoreTaskRepositoryProtocol(Protocol):
+    def find_all_tasks(self) -> list[CCoreTask]: ...
+
+    def find_by_id(self, task_id: str) -> CCoreTask | None: ...
+
+    def create_task(self, task: CCoreTask) -> CCoreTask: ...
+
+    def update_task(self, task: CCoreTask) -> CCoreTask | None: ...
+
+    def update_task_status(self, task_id: str, status_id: int) -> CCoreTask | None: ...
+
+    def delete_task(self, task_id: str) -> bool: ...
+
+
+class CCoreTaskStatusRepositoryProtocol(Protocol):
+    def find_all_statuses(self) -> list[CCoreTaskStatus]: ...
+
+    def status_exists(self, status_id: int) -> bool: ...
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_routes.py
+
+- source: `backend/src/ccore/tasks/task_routes.py`
+- sha256: `06c0651eca9426e91bb176f4b43ec847b803a9a526ffeceee2a126c4b9f04d66`
+- lines: `431`
+
+```text
+"""
+CCore task API routes.
+
+Responsibilities:
+- Handle CCore task CRUD HTTP requests.
+- Handle CCore task reference-data requests.
+- Delegate request payload parsing to API request contracts.
+- Delegate business use cases to CCoreTaskService.
+- Delegate task execution requests to TaskExecutionService.
+- Return consistent JSON responses.
+"""
+
+from urllib.parse import unquote
+
+from backend.src.ccore.automation.contracts import (
+    TaskExecutionRequest,
+    TaskExecutionResult,
+)
+from backend.src.ccore.tasks.task_contracts import CCoreTaskRequestParser
+from backend.src.ccore.tasks.task_execution_mapper import CCoreTaskExecutionMapper
+from backend.src.ccore.tasks.task_mapper import CCoreTaskMapper
+from backend.src.ccore.tasks.task_messages import (
+    CCORE_TASK_CREATED_SUCCESS_MESSAGE,
+    CCORE_TASK_DELETED_SUCCESS_MESSAGE,
+    CCORE_TASK_ERROR_CODE_NOT_FOUND,
+    CCORE_TASK_ERROR_CODE_SERVER,
+    CCORE_TASK_ERROR_CODE_VALIDATION,
+    CCORE_TASK_INVALID_ID_MESSAGE,
+    CCORE_TASK_INVALID_JSON_BODY_MESSAGE,
+    CCORE_TASK_NOT_FOUND_MESSAGE,
+    CCORE_TASK_UPDATED_SUCCESS_MESSAGE,
+)
+from src.api.api_paths import API_PATH_CCORE_TASKS_PREFIX
+from src.api.route_utils import read_json_body, send_json
+
+CCORE_TASK_EXECUTE_SUFFIX = "/execute"
+
+ccore_task_mapper = CCoreTaskMapper()
+ccore_task_execution_mapper = CCoreTaskExecutionMapper()
+ccore_task_request_parser = CCoreTaskRequestParser()
+
+
+def _send_success(handler, status_code: int, payload: dict) -> None:
+    send_json(handler, status_code, {"success": True, **payload})
+
+
+def _send_error(handler, status_code: int, code: str, message: str) -> None:
+    send_json(
+        handler,
+        status_code,
+        {
+            "success": False,
+            "error": {
+                "code": code,
+                "message": message,
+            },
+        },
+    )
+
+
+def _send_validation_error(handler, message: str) -> None:
+    _send_error(handler, 400, CCORE_TASK_ERROR_CODE_VALIDATION, message)
+
+
+def _send_not_found_error(handler) -> None:
+    _send_error(
+        handler,
+        404,
+        CCORE_TASK_ERROR_CODE_NOT_FOUND,
+        CCORE_TASK_NOT_FOUND_MESSAGE,
+    )
+
+
+def _send_server_error(handler, error: Exception) -> None:
+    _send_error(handler, 500, CCORE_TASK_ERROR_CODE_SERVER, str(error))
+
+
+def handle_get_ccore_tasks(handler, ccore_task_service) -> None:
+    try:
+        tasks = ccore_task_service.get_all_tasks()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "tasks": ccore_task_mapper.domains_to_response(tasks),
+        },
+    )
+
+
+def handle_get_ccore_task_statuses(handler, ccore_task_status_service) -> None:
+    try:
+        statuses = ccore_task_status_service.get_all_statuses()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "statuses": ccore_task_mapper.statuses_to_response(statuses),
+        },
+    )
+
+
+def handle_get_ccore_execution_providers(handler, task_execution_service) -> None:
+    try:
+        providers = task_execution_service.get_execution_providers()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "providers": ccore_task_execution_mapper.providers_to_response(providers),
+        },
+    )
+
+
+def handle_get_ccore_execution_implementer_types(handler, task_execution_service) -> None:
+    try:
+        implementer_types = task_execution_service.get_execution_implementer_types()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "implementerTypes": ccore_task_execution_mapper.implementer_types_to_response(implementer_types),
+        },
+    )
+
+
+def handle_get_ccore_execution_targets(handler, task_execution_service) -> None:
+    try:
+        targets = task_execution_service.get_execution_targets()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "targets": ccore_task_execution_mapper.targets_to_response(targets),
+        },
+    )
+
+
+def handle_get_ccore_execution_configurations(handler, task_execution_service) -> None:
+    try:
+        configurations = task_execution_service.get_execution_configurations()
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "configurations": ccore_task_execution_mapper.configurations_to_response(configurations),
+        },
+    )
+
+
+def handle_get_ccore_task_path(handler, ccore_task_service, path: str) -> None:
+    if path.endswith("/executions"):
+        handle_get_ccore_task_executions(handler, ccore_task_service, path)
+        return
+
+    handle_get_ccore_task_by_id(handler, ccore_task_service, path)
+
+
+def handle_post_ccore_task_path(handler, task_execution_service, path: str) -> None:
+    if path.endswith(CCORE_TASK_EXECUTE_SUFFIX):
+        handle_execute_ccore_task_path(handler, task_execution_service, path)
+        return
+
+    _send_validation_error(handler, CCORE_TASK_INVALID_ID_MESSAGE)
+
+
+def handle_get_ccore_task_by_id(handler, ccore_task_service, path: str) -> None:
+    task_id = extract_ccore_task_id(path)
+
+    try:
+        task = ccore_task_service.get_task_by_id(task_id)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    if task is None:
+        _send_not_found_error(handler)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "task": ccore_task_mapper.domain_to_response(task),
+        },
+    )
+
+
+def handle_create_ccore_task(handler, ccore_task_service) -> None:
+    request_data = read_json_body(handler)
+
+    if request_data is None:
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
+        return
+
+    try:
+        create_request = ccore_task_request_parser.parse_create_request(request_data)
+        task = ccore_task_mapper.create_request_to_domain(create_request)
+        created_task = ccore_task_service.create_task(task)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        201,
+        {
+            "message": CCORE_TASK_CREATED_SUCCESS_MESSAGE,
+            "task": ccore_task_mapper.domain_to_response(created_task),
+        },
+    )
+
+
+def handle_update_ccore_task(handler, ccore_task_service, path: str) -> None:
+    task_id = extract_ccore_task_id(path)
+    request_data = read_json_body(handler)
+
+    if request_data is None:
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
+        return
+
+    try:
+        update_request = ccore_task_request_parser.parse_update_request(
+            task_id,
+            request_data,
+        )
+        task = ccore_task_mapper.update_request_to_domain(update_request)
+        updated_task = ccore_task_service.update_task(task)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    if updated_task is None:
+        _send_not_found_error(handler)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "message": CCORE_TASK_UPDATED_SUCCESS_MESSAGE,
+            "task": ccore_task_mapper.domain_to_response(updated_task),
+        },
+    )
+
+
+def handle_delete_ccore_task(handler, ccore_task_service, path: str) -> None:
+    task_id = extract_ccore_task_id(path)
+
+    try:
+        deleted = ccore_task_service.delete_task(task_id)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    if not deleted:
+        _send_not_found_error(handler)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "message": CCORE_TASK_DELETED_SUCCESS_MESSAGE,
+        },
+    )
+
+
+def handle_execute_ccore_task_path(
+    handler,
+    task_execution_service,
+    path: str,
+) -> None:
+    task_id = extract_ccore_task_id_from_suffix_path(
+        path,
+        CCORE_TASK_EXECUTE_SUFFIX,
+    )
+    request_data = read_json_body(handler)
+
+    if request_data is None:
+        _send_validation_error(handler, CCORE_TASK_INVALID_JSON_BODY_MESSAGE)
+        return
+
+    execution_request = TaskExecutionRequest(
+        task_id=task_id,
+        execution_provider_id=int(request_data.get("providerId", 0)),
+        execution_implementer_type_id=int(request_data.get("implementerTypeId", 0)),
+        execution_target_id=int(request_data.get("targetId", 0)),
+        execution_configuration_id=int(request_data.get("configurationId", 0)),
+        requested_by=request_data.get("requestedBy", "system"),
+        input_payload=request_data.get("inputPayload", {}),
+    )
+
+    try:
+        result = task_execution_service.run_task(task_id, execution_request)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    status_code = 200
+
+    if result.status == "FAILED":
+        status_code = 500
+
+    _send_success(
+        handler,
+        status_code,
+        {
+            "message": result.message,
+            "execution": task_execution_result_to_response(result),
+        },
+    )
+
+
+def handle_execute_ccore_task(
+    handler,
+    task_execution_service,
+    path: str,
+) -> None:
+    handle_execute_ccore_task_path(handler, task_execution_service, path)
+
+
+def task_execution_result_to_response(result: TaskExecutionResult) -> dict:
+    return {
+        "taskId": result.task_id,
+        "status": result.status,
+        "message": result.message,
+        "providerName": result.provider_name,
+        "implementerTypeName": result.implementer_type_name,
+        "targetName": result.target_name,
+        "configurationName": result.configuration_name,
+        "executionDetails": result.execution_details,
+        "errorDetails": result.error_details,
+    }
+
+
+def handle_get_ccore_task_executions(handler, ccore_task_service, path: str) -> None:
+    task_id = extract_ccore_task_id_from_suffix_path(path, "/executions")
+
+    try:
+        executions = ccore_task_service.get_execution_history(task_id)
+
+    except ValueError as error:
+        _send_validation_error(handler, str(error))
+        return
+
+    except Exception as error:
+        _send_server_error(handler, error)
+        return
+
+    _send_success(
+        handler,
+        200,
+        {
+            "executions": ccore_task_execution_mapper.domains_to_response(executions),
+        },
+    )
+
+
+def extract_ccore_task_id(path: str) -> str:
+    if not path.startswith(API_PATH_CCORE_TASKS_PREFIX):
+        raise ValueError(CCORE_TASK_INVALID_ID_MESSAGE)
+
+    task_id = unquote(path[len(API_PATH_CCORE_TASKS_PREFIX) :]).strip("/")
+
+    if not task_id:
+        raise ValueError(CCORE_TASK_INVALID_ID_MESSAGE)
+
+    return task_id
+
+
+def extract_ccore_task_id_from_suffix_path(path: str, suffix: str) -> str:
+    if not path.endswith(suffix):
+        raise ValueError(CCORE_TASK_INVALID_ID_MESSAGE)
+
+    base_path = path[: -len(suffix)]
+    return extract_ccore_task_id(base_path)
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_service.py
+
+- source: `backend/src/ccore/tasks/task_service.py`
+- sha256: `e5158ff59790bc33afc5a9f5a6a653d6fdcdb8fd90cd5d0ce6ba689b10559622`
+- lines: `89`
+
+```text
+"""
+CCore task application services.
+
+Responsibilities:
+- Coordinate CCore task CRUD use cases.
+- Expose task status reference data for UI/API consumers.
+- Provide read access to task execution history through the execution repository.
+- Keep API handlers independent from repository/database details.
+"""
+
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_execution import CCoreTaskExecution
+from backend.src.ccore.tasks.task_repository_contract import (
+    CCoreTaskRepositoryProtocol,
+    CCoreTaskStatusRepositoryProtocol,
+)
+from backend.src.ccore.tasks.task_status import CCoreTaskStatus
+from backend.src.ccore.tasks.task_validator import CCoreTaskValidator
+
+
+class CCoreTaskService:
+    def __init__(
+        self,
+        task_repository: CCoreTaskRepositoryProtocol,
+        task_validator: CCoreTaskValidator,
+        task_execution_repository=None,
+    ):
+        self.task_repository = task_repository
+        self.task_validator = task_validator
+        self.task_execution_repository = task_execution_repository
+
+    def get_all_tasks(self) -> list[CCoreTask]:
+        return self.task_repository.find_all_tasks()
+
+    def get_task_by_id(self, task_id: str) -> CCoreTask | None:
+        self.task_validator.validate_task_id(task_id)
+
+        return self.task_repository.find_by_id(task_id)
+
+    def create_task(self, task: CCoreTask) -> CCoreTask:
+        self.task_validator.validate_create_task(task)
+
+        return self.task_repository.create_task(task)
+
+    def update_task(self, task: CCoreTask) -> CCoreTask | None:
+        self.task_validator.validate_update_task(task)
+
+        return self.task_repository.update_task(task)
+
+    def update_task_status(
+        self,
+        task_id: str,
+        status_id: int,
+    ) -> CCoreTask | None:
+        self.task_validator.validate_task_id(task_id)
+
+        if not self.task_validator.status_repository.status_exists(status_id):
+            raise ValueError(f"Invalid CCore task status code: {status_id}")
+
+        return self.task_repository.update_task_status(task_id, status_id)
+
+    def delete_task(self, task_id: str) -> bool:
+        self.task_validator.validate_task_id(task_id)
+
+        return self.task_repository.delete_task(task_id)
+
+    def get_latest_execution(self, task_id: str) -> CCoreTaskExecution | None:
+        self.task_validator.validate_task_id(task_id)
+        self._validate_execution_repository_configured()
+
+        return self.task_execution_repository.find_latest_by_task_id(task_id)
+
+    def get_execution_history(self, task_id: str) -> list[CCoreTaskExecution]:
+        self.task_validator.validate_task_id(task_id)
+        self._validate_execution_repository_configured()
+
+        return self.task_execution_repository.find_by_task_id(task_id)
+
+    def _validate_execution_repository_configured(self) -> None:
+        if self.task_execution_repository is None:
+            raise ValueError("CCore task execution repository is not configured.")
+
+
+class CCoreTaskStatusService:
+    def __init__(self, status_repository: CCoreTaskStatusRepositoryProtocol):
+        self.status_repository = status_repository
+
+    def get_all_statuses(self) -> list[CCoreTaskStatus]:
+        return self.status_repository.find_all_statuses()
+```
+
+#### backend-task-crud-reference: backend/src/ccore/tasks/task_validator.py
+
+- source: `backend/src/ccore/tasks/task_validator.py`
+- sha256: `71c1103b26db9212dd45bf2eebf1ed8bbdc0a92d2c42030a709adee526bf1bee`
+- lines: `47`
+
+```text
+"""
+CCore task validator.
+
+Responsibilities:
+- Validate task domain objects before repository persistence.
+- Validate task identifiers before repository lookup/update/delete.
+- Keep validation rules outside routes and repositories.
+"""
+
+from backend.src.ccore.tasks.task import CCoreTask
+from backend.src.ccore.tasks.task_messages import (
+    CCORE_TASK_ID_REQUIRED_MESSAGE,
+    CCORE_TASK_NAME_REQUIRED_MESSAGE,
+    CCORE_TASK_STATUS_REQUIRED_MESSAGE,
+)
+from backend.src.ccore.tasks.task_repository_contract import (
+    CCoreTaskStatusRepositoryProtocol,
+)
+
+
+class CCoreTaskValidator:
+    def __init__(self, status_repository: CCoreTaskStatusRepositoryProtocol):
+        self.status_repository = status_repository
+
+    def validate_task_id(self, task_id: str | None) -> None:
+        if not task_id or not str(task_id).strip():
+            raise ValueError(CCORE_TASK_ID_REQUIRED_MESSAGE)
+
+    def validate_create_task(self, task: CCoreTask) -> None:
+        self._validate_task_name(task.task_name)
+        self._validate_task_status(task.status_id)
+
+    def validate_update_task(self, task: CCoreTask) -> None:
+        self.validate_task_id(task.task_id)
+        self._validate_task_name(task.task_name)
+        self._validate_task_status(task.status_id)
+
+    def _validate_task_name(self, task_name: str | None) -> None:
+        if not task_name or not str(task_name).strip():
+            raise ValueError(CCORE_TASK_NAME_REQUIRED_MESSAGE)
+
+    def _validate_task_status(self, status_id: int | None) -> None:
+        if status_id is None:
+            raise ValueError(CCORE_TASK_STATUS_REQUIRED_MESSAGE)
+
+        if not self.status_repository.status_exists(int(status_id)):
+            raise ValueError(f"Invalid CCore task status id: {status_id}")
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/css/task-details.css
+
+- source: `frontend/static/desktop/protected/ccore/css/task-details.css`
+- sha256: `b26aabf69dd4512ab118574ea5a38bb3d0d58e62f2f843f99714f13322b75f1d`
+- lines: `224`
+
+```text
+:root {
+    --protected-content-height:
+        calc(var(--protected-workspace-height) - var(--protected-workspace-padding-top) - var(--protected-workspace-padding-bottom) - var(--protected-header-height) - var(--protected-panel-gap));
+}
+
+#footer-panel-container {
+    display: none;
+}
+
+.ccore-task-details-content {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.ccore-task-details-header {
+    flex: 0 0 auto;
+    max-width: 980px;
+}
+
+.ccore-task-details-header h1 {
+    margin: 0 0 0.4rem;
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+
+.ccore-task-details-header p {
+    margin: 0;
+    color: #9bb0c8;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.ccore-task-details-card,
+.ccore-task-details-message,
+.ccore-task-details-toolbar,
+.ccore-execution-panel {
+    max-width: 980px;
+    min-width: 0;
+}
+
+.ccore-task-details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ccore-task-details-grid,
+.ccore-execution-configuration-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.ccore-task-details-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: #d9e7f7;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-task-details-field input,
+.ccore-task-details-field select,
+.ccore-execution-search {
+    border: 1px solid rgba(119, 183, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(6, 18, 33, 0.88);
+    color: #ffffff;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.9rem;
+}
+
+.ccore-task-details-field.readonly input {
+    color: #9bb0c8;
+    background: rgba(12, 28, 47, 0.72);
+}
+
+.ccore-task-details-mode,
+#ccoreExecutionPageIndicator,
+#ccoreExecutionCountLabel {
+    color: #9bb0c8;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-execution-action-cell {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    grid-column: 1 / -1;
+}
+
+.ccore-execution-toolbar {
+    margin-bottom: 0.75rem;
+}
+
+.ccore-execution-search {
+    min-width: 210px;
+}
+
+.ccore-execution-table-shell {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid rgba(80, 145, 214, 0.28);
+    border-radius: 10px;
+}
+
+.ccore-execution-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.ccore-execution-table th,
+.ccore-execution-table td {
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid rgba(80, 145, 214, 0.18);
+    text-align: left;
+    color: #ffffff;
+}
+
+.ccore-execution-table th {
+    background: rgba(35, 72, 110, 0.82);
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.ccore-execution-table tbody tr[data-execution-id] {
+    cursor: pointer;
+}
+
+.ccore-execution-table tbody tr[data-execution-id]:hover,
+.ccore-execution-table tbody tr.selected {
+    background: rgba(58, 116, 176, 0.32);
+}
+
+.ccore-execution-status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+    background: rgba(96, 165, 250, 0.2);
+    color: #bfdbfe;
+    font-weight: 800;
+}
+
+.ccore-execution-report-empty {
+    color: #9bb0c8;
+    font-size: 0.9rem;
+}
+
+.ccore-execution-report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+}
+
+.ccore-execution-report-item {
+    border: 1px solid rgba(119, 183, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.55rem 0.65rem;
+    background: rgba(6, 18, 33, 0.55);
+}
+
+.ccore-execution-report-item span {
+    display: block;
+    color: #9bb0c8;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.ccore-execution-report-item strong {
+    display: block;
+    margin-top: 0.2rem;
+    color: #ffffff;
+    font-size: 0.85rem;
+}
+
+.ccore-execution-report-block {
+    margin-top: 0.75rem;
+}
+
+.ccore-execution-report-block h3 {
+    margin: 0 0 0.35rem;
+    color: #d9e7f7;
+    font-size: 0.9rem;
+}
+
+.ccore-execution-report-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border: 1px solid rgba(119, 183, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.65rem;
+    background: rgba(6, 18, 33, 0.72);
+    color: #d9e7f7;
+    font-size: 0.8rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 840px) {
+    .ccore-task-details-grid,
+    .ccore-execution-configuration-grid,
+    .ccore-execution-report-grid {
+        grid-template-columns: 1fr;
+    }
+}
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/css/tasks.css
+
+- source: `frontend/static/desktop/protected/ccore/css/tasks.css`
+- sha256: `f08677361edf340b9911665753433d32603bf597d7e5f2d6c15789a77c6981e7`
+- lines: `119`
+
+```text
+:root {
+    --protected-content-height:
+        calc(var(--protected-workspace-height) - var(--protected-workspace-padding-top) - var(--protected-workspace-padding-bottom) - var(--protected-header-height) - var(--protected-panel-gap));
+}
+
+#footer-panel-container {
+    display: none;
+}
+
+.ccore-tasks-content {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 10px;
+
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.ccore-tasks-header {
+    flex: 0 0 auto;
+    max-width: 920px;
+}
+
+.ccore-tasks-kicker {
+    margin: 0 0 0.3rem;
+    color: #8fb7e4;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.ccore-tasks-header h1 {
+    margin: 0 0 0.4rem;
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+
+.ccore-tasks-header p {
+    margin: 0;
+    color: #9bb0c8;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.ccore-tasks-header code {
+    color: #b9dafc;
+}
+
+.ccore-tasks-card {
+    min-width: 0;
+}
+
+.ccore-tasks-table-card {
+    min-height: 0;
+}
+
+.ccore-tasks-table tbody tr[data-task-id] {
+    cursor: pointer;
+}
+
+.ccore-tasks-table tbody tr[data-task-id]:hover {
+    background: rgba(119, 183, 255, 0.08);
+}
+
+.ccore-task-name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.ccore-task-name {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.ccore-task-id {
+    color: #8194ac;
+    font-size: 0.72rem;
+}
+
+.ccore-task-status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.18rem 0.55rem;
+    background: rgba(143, 183, 228, 0.16);
+    color: #b9dafc;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.ccore-tasks-toolbar {
+    flex: 0 0 auto;
+}
+
+.ccore-tasks-count {
+    color: #9bb0c8;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-tasks-page-indicator {
+    color: #c7d9ee;
+    font-size: 0.82rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/js/task-details.js
+
+- source: `frontend/static/desktop/protected/ccore/js/task-details.js`
+- sha256: `82b7377c64209bcdd1a348b365dc48952c96066a6f612517db4d08ec3c585fc4`
+- lines: `510`
+
+```text
+/*
+ * CCore PostgreSQL task details page controller.
+ *
+ * Responsibilities:
+ * - Load one persisted CCore task when taskId is provided.
+ * - Create, update, and delete rows in the ccore_tasks table.
+ * - Load execution provider, implementer type, target, and configuration metadata.
+ * - Execute a task with selected runtime metadata IDs.
+ * - Render execution history and selected execution report.
+ */
+
+const CCORE_TASK_STATUSES_EMPTY_MESSAGE = "No task statuses are configured.";
+const CCORE_TASK_DETAILS_ERROR_MESSAGE = "CCore task details could not be loaded.";
+const CCORE_TASK_NAME_REQUIRED_MESSAGE = "Task name is required.";
+const CCORE_TASK_STATUS_REQUIRED_MESSAGE = "Task status is required.";
+const CCORE_TASK_NO_CHANGES_MESSAGE = "No changes to update.";
+const CCORE_TASK_CREATED_SUCCESS_MESSAGE = "Task created successfully.";
+const CCORE_TASK_UPDATED_SUCCESS_MESSAGE = "Task updated successfully.";
+const CCORE_TASK_SAVE_ERROR_MESSAGE = "Task could not be saved.";
+const CCORE_TASK_DELETE_CONFIRM_MESSAGE = "Delete this CCore task?";
+const CCORE_TASK_DELETE_ERROR_MESSAGE = "Task could not be deleted.";
+const CCORE_EXECUTION_LOOKUPS_ERROR_MESSAGE = "Execution configuration metadata could not be loaded.";
+const CCORE_EXECUTION_REQUIRED_MESSAGE = "Select provider, implementer type, target, and configuration.";
+const CCORE_EXECUTION_ERROR_MESSAGE = "Task execution could not be completed.";
+const CCORE_EXECUTION_HISTORY_ERROR_MESSAGE = "Execution history could not be loaded.";
+const CCORE_EXECUTION_TABLE_COLUMN_COUNT = 7;
+const CCORE_EXECUTION_PAGE_SIZE = 5;
+
+let ccoreTaskStatuses = [];
+let ccoreExecutionProviders = [];
+let ccoreExecutionImplementerTypes = [];
+let ccoreExecutionTargets = [];
+let ccoreExecutionConfigurations = [];
+let ccoreExecutions = [];
+let ccoreExecutionSearchTerm = "";
+let ccoreExecutionCurrentPage = 1;
+let selectedCCoreExecutionId = "";
+let currentCCoreTaskId = "";
+let originalCCoreTaskFormData = null;
+
+function escapeCCoreTaskValue(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function showCCoreTaskDetailsMessage(message, type = "info") {
+    const messageElement = document.getElementById("ccoreTaskDetailsMessage");
+    if (!messageElement) {
+        return;
+    }
+    messageElement.className = `form-message ${type} ccore-task-details-message`;
+    messageElement.textContent = message;
+}
+
+function hideCCoreTaskDetailsMessage() {
+    const messageElement = document.getElementById("ccoreTaskDetailsMessage");
+    if (!messageElement) {
+        return;
+    }
+    messageElement.className = "form-message info hidden ccore-task-details-message";
+    messageElement.textContent = "";
+}
+
+function formatCCoreTaskDate(value) {
+    if (!value) {
+        return "—";
+    }
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+}
+
+function parseLookupResponse(responseData, propertyName) {
+    if (!responseData || !Array.isArray(responseData[propertyName])) {
+        throw new Error(`The backend did not return ${propertyName}.`);
+    }
+    return responseData[propertyName].map((item) => ({
+        ...item,
+        id: Number(item.id),
+        label: String(item.label || "")
+    }));
+}
+
+function parseCCoreTaskResponse(responseData) {
+    if (!responseData || !responseData.task) {
+        throw new Error("The backend did not return a CCore task.");
+    }
+    return responseData.task;
+}
+
+function parseCCoreExecutionsResponse(responseData) {
+    if (!responseData || !Array.isArray(responseData.executions)) {
+        throw new Error("The backend did not return CCore task executions.");
+    }
+    return responseData.executions;
+}
+
+function renderLookupOptions(selectElementId, lookups, emptyMessage) {
+    const selectElement = document.getElementById(selectElementId);
+    if (!selectElement) {
+        return;
+    }
+    selectElement.innerHTML = "";
+    if (!Array.isArray(lookups) || lookups.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = emptyMessage;
+        selectElement.appendChild(option);
+        selectElement.disabled = true;
+        return;
+    }
+    lookups.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = String(item.id);
+        option.textContent = item.label;
+        selectElement.appendChild(option);
+    });
+    selectElement.disabled = false;
+}
+
+function getDefaultLookupId(lookups) {
+    if (!Array.isArray(lookups) || lookups.length === 0) {
+        return "";
+    }
+    return String(lookups[0].id);
+}
+
+function setCCoreTaskDetailsMode(mode) {
+    const isEditMode = mode === "edit";
+    document.getElementById("ccoreTaskDetailsTitle").textContent = isEditMode ? "CCore Task Details" : "Create CCore Task";
+    document.getElementById("ccoreTaskDetailsLegend").textContent = isEditMode ? "Task Details" : "Create Task";
+    document.getElementById("ccoreTaskDetailsMode").textContent = isEditMode ? "Edit mode" : "Create mode";
+    document.getElementById("saveCCoreTaskButton").textContent = isEditMode ? "Update Task" : "Create Task";
+    document.getElementById("deleteCCoreTaskButton").classList.toggle("hidden", !isEditMode);
+    document.getElementById("ccoreExecutionConfigurationPanel").classList.toggle("hidden", !isEditMode);
+    document.getElementById("ccoreExecutionHistoryPanel").classList.toggle("hidden", !isEditMode);
+    document.getElementById("ccoreExecutionReportPanel").classList.toggle("hidden", !isEditMode);
+}
+
+function getCCoreTaskFormData() {
+    return {
+        taskId: document.getElementById("ccoreTaskIdInput").value,
+        taskName: document.getElementById("ccoreTaskNameInput").value.trim(),
+        statusId: Number(document.getElementById("ccoreTaskStatusInput").value)
+    };
+}
+
+function normalizeCCoreTaskFormSnapshot(formData) {
+    return {
+        taskName: String(formData.taskName || "").trim(),
+        statusId: Number(formData.statusId)
+    };
+}
+
+function setOriginalCCoreTaskFormData(formData) {
+    originalCCoreTaskFormData = normalizeCCoreTaskFormSnapshot(formData);
+}
+
+function hasCCoreTaskFormChanged(formData) {
+    const normalized = normalizeCCoreTaskFormSnapshot(formData);
+    return JSON.stringify(normalized) !== JSON.stringify(originalCCoreTaskFormData);
+}
+
+function populateCCoreTaskDetails(task) {
+    currentCCoreTaskId = task.taskId || "";
+    document.getElementById("ccoreTaskIdInput").value = currentCCoreTaskId;
+    document.getElementById("ccoreTaskNameInput").value = task.taskName || "";
+    document.getElementById("ccoreTaskStatusInput").value = String(task.statusId);
+    document.getElementById("ccoreTaskCreatedAtInput").value = formatCCoreTaskDate(task.createdAt);
+    document.getElementById("ccoreTaskDisplayIdInput").value = currentCCoreTaskId || "New task";
+    setCCoreTaskDetailsMode(currentCCoreTaskId ? "edit" : "create");
+    setOriginalCCoreTaskFormData(getCCoreTaskFormData());
+}
+
+function resetCCoreTaskDetailsForCreate() {
+    currentCCoreTaskId = "";
+    document.getElementById("ccoreTaskIdInput").value = "";
+    document.getElementById("ccoreTaskNameInput").value = "";
+    document.getElementById("ccoreTaskStatusInput").value = getDefaultLookupId(ccoreTaskStatuses);
+    document.getElementById("ccoreTaskCreatedAtInput").value = "—";
+    document.getElementById("ccoreTaskDisplayIdInput").value = "New task";
+    setCCoreTaskDetailsMode("create");
+    setOriginalCCoreTaskFormData(getCCoreTaskFormData());
+}
+
+async function loadCCoreTaskStatuses() {
+    const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.statuses);
+    ccoreTaskStatuses = parseLookupResponse(responseData, "statuses");
+    renderLookupOptions("ccoreTaskStatusInput", ccoreTaskStatuses, CCORE_TASK_STATUSES_EMPTY_MESSAGE);
+}
+
+function getFilteredExecutionTargets() {
+    const selectedImplementerTypeId = Number(document.getElementById("ccoreExecutionImplementerTypeInput").value);
+    return ccoreExecutionTargets.filter((target) => Number(target.implementerTypeId) === selectedImplementerTypeId);
+}
+
+function getFilteredExecutionConfigurations() {
+    const selectedTargetId = Number(document.getElementById("ccoreExecutionTargetInput").value);
+    return ccoreExecutionConfigurations.filter((configuration) => Number(configuration.targetId) === selectedTargetId);
+}
+
+function refreshExecutionTargetOptions() {
+    const filteredTargets = getFilteredExecutionTargets();
+    renderLookupOptions("ccoreExecutionTargetInput", filteredTargets, "No targets configured for this implementer type.");
+    document.getElementById("ccoreExecutionTargetInput").value = getDefaultLookupId(filteredTargets);
+    refreshExecutionConfigurationOptions();
+}
+
+function refreshExecutionConfigurationOptions() {
+    const filteredConfigurations = getFilteredExecutionConfigurations();
+    renderLookupOptions("ccoreExecutionConfigurationInput", filteredConfigurations, "No configurations configured for this target.");
+    document.getElementById("ccoreExecutionConfigurationInput").value = getDefaultLookupId(filteredConfigurations);
+}
+
+async function loadExecutionLookups() {
+    const [providersResponse, implementerTypesResponse, targetsResponse, configurationsResponse] = await Promise.all([
+        getJson(CCORE_API_ENDPOINTS.tasks.executionProviders),
+        getJson(CCORE_API_ENDPOINTS.tasks.executionImplementerTypes),
+        getJson(CCORE_API_ENDPOINTS.tasks.executionTargets),
+        getJson(CCORE_API_ENDPOINTS.tasks.executionConfigurations)
+    ]);
+    ccoreExecutionProviders = parseLookupResponse(providersResponse, "providers");
+    ccoreExecutionImplementerTypes = parseLookupResponse(implementerTypesResponse, "implementerTypes");
+    ccoreExecutionTargets = parseLookupResponse(targetsResponse, "targets");
+    ccoreExecutionConfigurations = parseLookupResponse(configurationsResponse, "configurations");
+    renderLookupOptions("ccoreExecutionProviderInput", ccoreExecutionProviders, "No providers configured.");
+    renderLookupOptions("ccoreExecutionImplementerTypeInput", ccoreExecutionImplementerTypes, "No implementer types configured.");
+    document.getElementById("ccoreExecutionProviderInput").value = getDefaultLookupId(ccoreExecutionProviders);
+    document.getElementById("ccoreExecutionImplementerTypeInput").value = getDefaultLookupId(ccoreExecutionImplementerTypes);
+    refreshExecutionTargetOptions();
+}
+
+async function loadCCoreTaskDetails(taskId) {
+    hideCCoreTaskDetailsMessage();
+    const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.byId(taskId));
+    populateCCoreTaskDetails(parseCCoreTaskResponse(responseData));
+}
+
+async function saveCCoreTask(taskName, statusId) {
+    return postJson(CCORE_API_ENDPOINTS.tasks.create, { taskName, statusId });
+}
+
+async function updateCCoreTask(taskId, taskName, statusId) {
+    return putJson(CCORE_API_ENDPOINTS.tasks.byId(taskId), { taskName, statusId });
+}
+
+async function handleSaveCCoreTaskSubmit(event) {
+    event.preventDefault();
+    hideCCoreTaskDetailsMessage();
+    const formData = getCCoreTaskFormData();
+    const normalizedFormData = normalizeCCoreTaskFormSnapshot(formData);
+    if (!normalizedFormData.taskName) {
+        showCCoreTaskDetailsMessage(CCORE_TASK_NAME_REQUIRED_MESSAGE, "error");
+        return;
+    }
+    if (!normalizedFormData.statusId) {
+        showCCoreTaskDetailsMessage(CCORE_TASK_STATUS_REQUIRED_MESSAGE, "error");
+        return;
+    }
+    if (formData.taskId && !hasCCoreTaskFormChanged(formData)) {
+        showCCoreTaskDetailsMessage(CCORE_TASK_NO_CHANGES_MESSAGE, "info");
+        return;
+    }
+    try {
+        let responseData;
+        if (formData.taskId) {
+            responseData = await updateCCoreTask(formData.taskId, normalizedFormData.taskName, normalizedFormData.statusId);
+            showCCoreTaskDetailsMessage(CCORE_TASK_UPDATED_SUCCESS_MESSAGE, "success");
+        } else {
+            responseData = await saveCCoreTask(normalizedFormData.taskName, normalizedFormData.statusId);
+            showCCoreTaskDetailsMessage(CCORE_TASK_CREATED_SUCCESS_MESSAGE, "success");
+        }
+        const savedTask = parseCCoreTaskResponse(responseData);
+        populateCCoreTaskDetails(savedTask);
+        if (!formData.taskId && savedTask.taskId) {
+            window.history.replaceState({}, "", `./task-details.html?taskId=${encodeURIComponent(savedTask.taskId)}`);
+            await loadCCoreExecutionHistory();
+        }
+    } catch (error) {
+        showCCoreTaskDetailsMessage(error.message || CCORE_TASK_SAVE_ERROR_MESSAGE, "error");
+    }
+}
+
+async function deleteCCoreTask() {
+    const taskId = currentCCoreTaskId;
+    if (!taskId || !window.confirm(CCORE_TASK_DELETE_CONFIRM_MESSAGE)) {
+        return;
+    }
+    try {
+        await deleteJson(CCORE_API_ENDPOINTS.tasks.byId(taskId));
+        window.location.href = "./tasks.html";
+    } catch (error) {
+        showCCoreTaskDetailsMessage(error.message || CCORE_TASK_DELETE_ERROR_MESSAGE, "error");
+    }
+}
+
+function getCCoreTaskIdFromUrl() {
+    return new URLSearchParams(window.location.search).get("taskId") || "";
+}
+
+function getFilteredExecutions() {
+    const term = ccoreExecutionSearchTerm.trim().toLowerCase();
+    if (!term) {
+        return ccoreExecutions;
+    }
+    return ccoreExecutions.filter((execution) => [
+        execution.statusLabel,
+        execution.providerLabel,
+        execution.implementerTypeLabel,
+        execution.targetLabel,
+        execution.targetReference,
+        execution.configurationLabel,
+        execution.requestedBy,
+        execution.startedAt,
+        execution.completedAt,
+        execution.executionId
+    ].join(" ").toLowerCase().includes(term));
+}
+
+function renderCCoreExecutionPlaceholder(message) {
+    document.getElementById("ccoreExecutionTableBody").innerHTML = `
+        <tr>
+            <td colspan="${CCORE_EXECUTION_TABLE_COLUMN_COUNT}" class="shared-table-empty-state">
+                ${escapeCCoreTaskValue(message)}
+            </td>
+        </tr>
+    `;
+}
+
+function updateExecutionPager(totalRows) {
+    const pageCount = Math.max(1, Math.ceil(totalRows / CCORE_EXECUTION_PAGE_SIZE));
+    ccoreExecutionCurrentPage = Math.min(ccoreExecutionCurrentPage, pageCount);
+    document.getElementById("ccoreExecutionPageIndicator").textContent = `Page ${ccoreExecutionCurrentPage} of ${pageCount}`;
+    document.getElementById("ccoreExecutionCountLabel").textContent = `${totalRows} ${totalRows === 1 ? "execution" : "executions"}`;
+    document.getElementById("ccoreExecutionPrevButton").disabled = ccoreExecutionCurrentPage <= 1;
+    document.getElementById("ccoreExecutionNextButton").disabled = ccoreExecutionCurrentPage >= pageCount;
+}
+
+function renderCCoreExecutionHistory() {
+    const filtered = getFilteredExecutions();
+    updateExecutionPager(filtered.length);
+    if (filtered.length === 0) {
+        renderCCoreExecutionPlaceholder("No executions found for this task.");
+        return;
+    }
+    const startIndex = (ccoreExecutionCurrentPage - 1) * CCORE_EXECUTION_PAGE_SIZE;
+    const pageRows = filtered.slice(startIndex, startIndex + CCORE_EXECUTION_PAGE_SIZE);
+    document.getElementById("ccoreExecutionTableBody").innerHTML = pageRows.map((execution) => `
+        <tr data-execution-id="${escapeCCoreTaskValue(execution.executionId)}" class="${execution.executionId === selectedCCoreExecutionId ? "selected" : ""}">
+            <td><span class="ccore-execution-status-pill">${escapeCCoreTaskValue(execution.statusLabel)}</span></td>
+            <td>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.startedAt))}</td>
+            <td>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.completedAt || execution.failedAt))}</td>
+            <td>${escapeCCoreTaskValue(execution.providerLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.implementerTypeLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.targetLabel)}</td>
+            <td>${escapeCCoreTaskValue(execution.configurationLabel)}</td>
+        </tr>
+    `).join("");
+    document.querySelectorAll("#ccoreExecutionTableBody tr[data-execution-id]").forEach((row) => {
+        row.addEventListener("click", () => selectCCoreExecution(row.dataset.executionId));
+    });
+}
+
+async function loadCCoreExecutionHistory() {
+    if (!currentCCoreTaskId) {
+        return;
+    }
+    try {
+        const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.executions(currentCCoreTaskId));
+        ccoreExecutions = parseCCoreExecutionsResponse(responseData);
+        ccoreExecutionCurrentPage = 1;
+        if (!ccoreExecutions.some((execution) => execution.executionId === selectedCCoreExecutionId)) {
+            selectedCCoreExecutionId = "";
+            renderExecutionReport(null);
+        }
+        renderCCoreExecutionHistory();
+    } catch (error) {
+        showCCoreTaskDetailsMessage(error.message || CCORE_EXECUTION_HISTORY_ERROR_MESSAGE, "error");
+    }
+}
+
+function selectCCoreExecution(executionId) {
+    selectedCCoreExecutionId = executionId;
+    const execution = ccoreExecutions.find((item) => item.executionId === executionId) || null;
+    renderCCoreExecutionHistory();
+    renderExecutionReport(execution);
+}
+
+function renderJsonBlock(title, value) {
+    return `
+        <div class="ccore-execution-report-block">
+            <h3>${escapeCCoreTaskValue(title)}</h3>
+            <pre>${escapeCCoreTaskValue(JSON.stringify(value || {}, null, 2))}</pre>
+        </div>
+    `;
+}
+
+function renderExecutionReport(execution) {
+    const reportContent = document.getElementById("ccoreExecutionReportContent");
+    if (!execution) {
+        reportContent.className = "ccore-execution-report-empty";
+        reportContent.textContent = "No execution selected.";
+        return;
+    }
+    reportContent.className = "";
+    reportContent.innerHTML = `
+        <div class="ccore-execution-report-grid">
+            <div class="ccore-execution-report-item"><span>Execution ID</span><strong>${escapeCCoreTaskValue(execution.executionId)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Status</span><strong>${escapeCCoreTaskValue(execution.statusLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Provider</span><strong>${escapeCCoreTaskValue(execution.providerLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Implementer Type</span><strong>${escapeCCoreTaskValue(execution.implementerTypeLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Target</span><strong>${escapeCCoreTaskValue(execution.targetLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Target Reference</span><strong>${escapeCCoreTaskValue(execution.targetReference)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Configuration</span><strong>${escapeCCoreTaskValue(execution.configurationLabel)}</strong></div>
+            <div class="ccore-execution-report-item"><span>Started</span><strong>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.startedAt))}</strong></div>
+            <div class="ccore-execution-report-item"><span>Completed</span><strong>${escapeCCoreTaskValue(formatCCoreTaskDate(execution.completedAt || execution.failedAt))}</strong></div>
+        </div>
+        ${renderJsonBlock("Configuration Snapshot", execution.configurationSnapshot)}
+        ${renderJsonBlock("Validation Snapshot", execution.validationSnapshot)}
+        ${renderJsonBlock("Execution Report", execution.executionReport)}
+        ${renderJsonBlock("Error Details", execution.errorDetails)}
+    `;
+}
+
+async function executeCCoreTask() {
+    hideCCoreTaskDetailsMessage();
+    if (!currentCCoreTaskId) {
+        showCCoreTaskDetailsMessage("Save the task before executing it.", "error");
+        return;
+    }
+    const providerId = Number(document.getElementById("ccoreExecutionProviderInput").value);
+    const implementerTypeId = Number(document.getElementById("ccoreExecutionImplementerTypeInput").value);
+    const targetId = Number(document.getElementById("ccoreExecutionTargetInput").value);
+    const configurationId = Number(document.getElementById("ccoreExecutionConfigurationInput").value);
+    if (!providerId || !implementerTypeId || !targetId || !configurationId) {
+        showCCoreTaskDetailsMessage(CCORE_EXECUTION_REQUIRED_MESSAGE, "error");
+        return;
+    }
+    const executeButton = document.getElementById("executeCCoreTaskButton");
+    executeButton.disabled = true;
+    executeButton.textContent = "Executing...";
+    try {
+        const responseData = await postJson(CCORE_API_ENDPOINTS.tasks.execute(currentCCoreTaskId), {
+            providerId,
+            implementerTypeId,
+            targetId,
+            configurationId,
+            requestedBy: "system",
+            inputPayload: {}
+        });
+        const returnedExecutionId = responseData?.execution?.executionDetails?.executionId || "";
+        selectedCCoreExecutionId = returnedExecutionId;
+        showCCoreTaskDetailsMessage(responseData.message || "Task execution request completed.", "success");
+        await loadCCoreExecutionHistory();
+        if (selectedCCoreExecutionId) {
+            selectCCoreExecution(selectedCCoreExecutionId);
+        }
+    } catch (error) {
+        showCCoreTaskDetailsMessage(error.message || CCORE_EXECUTION_ERROR_MESSAGE, "error");
+        await loadCCoreExecutionHistory();
+    } finally {
+        executeButton.disabled = false;
+        executeButton.textContent = "Execute Task";
+    }
+}
+
+function setupExecutionEventHandlers() {
+    document.getElementById("executeCCoreTaskButton").addEventListener("click", executeCCoreTask);
+    document.getElementById("refreshCCoreExecutionsButton").addEventListener("click", loadCCoreExecutionHistory);
+    document.getElementById("ccoreExecutionImplementerTypeInput").addEventListener("change", refreshExecutionTargetOptions);
+    document.getElementById("ccoreExecutionTargetInput").addEventListener("change", refreshExecutionConfigurationOptions);
+    document.getElementById("ccoreExecutionSearchInput").addEventListener("input", (event) => {
+        ccoreExecutionSearchTerm = event.target.value || "";
+        ccoreExecutionCurrentPage = 1;
+        renderCCoreExecutionHistory();
+    });
+    document.getElementById("ccoreExecutionPrevButton").addEventListener("click", () => {
+        ccoreExecutionCurrentPage = Math.max(1, ccoreExecutionCurrentPage - 1);
+        renderCCoreExecutionHistory();
+    });
+    document.getElementById("ccoreExecutionNextButton").addEventListener("click", () => {
+        ccoreExecutionCurrentPage += 1;
+        renderCCoreExecutionHistory();
+    });
+}
+
+async function setupCCoreTaskDetailsPage() {
+    document.getElementById("ccoreTaskDetailsForm").addEventListener("submit", handleSaveCCoreTaskSubmit);
+    document.getElementById("deleteCCoreTaskButton").addEventListener("click", deleteCCoreTask);
+    setupExecutionEventHandlers();
+    try {
+        await loadCCoreTaskStatuses();
+        await loadExecutionLookups();
+        const taskId = getCCoreTaskIdFromUrl();
+        if (taskId) {
+            await loadCCoreTaskDetails(taskId);
+            await loadCCoreExecutionHistory();
+        } else {
+            resetCCoreTaskDetailsForCreate();
+        }
+    } catch (error) {
+        console.error("Failed to initialize CCore task details page:", error);
+        showCCoreTaskDetailsMessage(error.message || CCORE_TASK_DETAILS_ERROR_MESSAGE || CCORE_EXECUTION_LOOKUPS_ERROR_MESSAGE, "error");
+    }
+}
+
+setupCCoreTaskDetailsPage();
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/js/tasks.js
+
+- source: `frontend/static/desktop/protected/ccore/js/tasks.js`
+- sha256: `3a04cee14536558995884be209e8f521bdd8e0e2c204f9e808a800252352325c`
+- lines: `489`
+
+```text
+/*
+ * CCore PostgreSQL tasks list page controller.
+ *
+ * Responsibilities:
+ * - Load persisted CCore tasks from PostgreSQL through the backend API.
+ * - Render a searchable, sortable, paginated task list.
+ * - Open the task details page when a task row is selected.
+ * - Keep frontend endpoint usage centralized through CCORE_API_ENDPOINTS.
+ */
+
+const CCORE_TASKS_LOADING_MESSAGE =
+    "Loading CCore tasks...";
+
+const CCORE_TASKS_EMPTY_MESSAGE =
+    "No PostgreSQL tasks found.";
+
+const CCORE_TASKS_ERROR_MESSAGE =
+    "CCore tasks could not be loaded.";
+
+const CCORE_TASKS_TABLE_COLUMN_COUNT = 3;
+const CCORE_TASKS_PAGE_SIZE = 5;
+
+let ccoreTasks = [];
+let ccoreTaskSearchTerm = "";
+let ccoreTasksCurrentPage = 1;
+let ccoreTasksSortKey = "taskName";
+let ccoreTasksSortDirection = "asc";
+
+
+function getCCoreTasksTableBody() {
+    return document.getElementById("ccoreTasksTableBody");
+}
+
+
+function getCCoreTasksMessage() {
+    return document.getElementById("ccoreTasksMessage");
+}
+
+
+function escapeCCoreTaskValue(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function showCCoreTasksMessage(message, type = "info") {
+    const messageElement = getCCoreTasksMessage();
+
+    if (!messageElement) {
+        return;
+    }
+
+    messageElement.className = `form-message ${type}`;
+    messageElement.textContent = message;
+}
+
+
+function hideCCoreTasksMessage() {
+    const messageElement = getCCoreTasksMessage();
+
+    if (!messageElement) {
+        return;
+    }
+
+    messageElement.className = "form-message info hidden";
+    messageElement.textContent = "";
+}
+
+
+function renderCCoreTasksPlaceholder(message) {
+    const tableBody = getCCoreTasksTableBody();
+
+    if (!tableBody) {
+        return;
+    }
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="${CCORE_TASKS_TABLE_COLUMN_COUNT}" class="shared-table-empty-state">
+                ${escapeCCoreTaskValue(message)}
+            </td>
+        </tr>
+    `;
+}
+
+
+function normalizeCCoreTaskStatus(status) {
+    return String(status || "")
+        .trim()
+        .toUpperCase();
+}
+
+
+function formatCCoreTaskDate(value) {
+    if (!value) {
+        return "—";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleString();
+}
+
+
+function getCCoreTaskSearchableText(task) {
+    return [
+        task.taskId,
+        task.taskName,
+        task.status,
+        task.statusLabel,
+        task.createdAt
+    ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+}
+
+
+function getFilteredCCoreTasks() {
+    const searchTerm = ccoreTaskSearchTerm.trim().toLowerCase();
+
+    if (!searchTerm) {
+        return ccoreTasks;
+    }
+
+    return ccoreTasks.filter((task) =>
+        getCCoreTaskSearchableText(task).includes(searchTerm)
+    );
+}
+
+
+function getCCoreTaskSortValue(task, sortKey) {
+    if (sortKey === "statusLabel") {
+        return String(task.statusLabel || task.status || "").toLowerCase();
+    }
+
+    if (sortKey === "createdAt") {
+        const date = new Date(task.createdAt || "");
+        return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+    }
+
+    return String(task[sortKey] || "").toLowerCase();
+}
+
+
+function getSortedCCoreTasks(tasks) {
+    return [...tasks].sort((firstTask, secondTask) => {
+        const firstValue = getCCoreTaskSortValue(firstTask, ccoreTasksSortKey);
+        const secondValue = getCCoreTaskSortValue(secondTask, ccoreTasksSortKey);
+
+        if (firstValue < secondValue) {
+            return ccoreTasksSortDirection === "asc" ? -1 : 1;
+        }
+
+        if (firstValue > secondValue) {
+            return ccoreTasksSortDirection === "asc" ? 1 : -1;
+        }
+
+        return 0;
+    });
+}
+
+
+function getCCoreTasksTotalPages(totalTasks) {
+    return Math.max(1, Math.ceil(totalTasks / CCORE_TASKS_PAGE_SIZE));
+}
+
+
+function clampCCoreTasksCurrentPage(totalTasks) {
+    const totalPages = getCCoreTasksTotalPages(totalTasks);
+
+    if (ccoreTasksCurrentPage > totalPages) {
+        ccoreTasksCurrentPage = totalPages;
+    }
+
+    if (ccoreTasksCurrentPage < 1) {
+        ccoreTasksCurrentPage = 1;
+    }
+}
+
+
+function getPaginatedCCoreTasks(tasks) {
+    clampCCoreTasksCurrentPage(tasks.length);
+
+    const startIndex = (ccoreTasksCurrentPage - 1) * CCORE_TASKS_PAGE_SIZE;
+    const endIndex = startIndex + CCORE_TASKS_PAGE_SIZE;
+
+    return tasks.slice(startIndex, endIndex);
+}
+
+
+function getVisibleCCoreTasks() {
+    const filteredTasks = getFilteredCCoreTasks();
+    const sortedTasks = getSortedCCoreTasks(filteredTasks);
+    const paginatedTasks = getPaginatedCCoreTasks(sortedTasks);
+
+    return {
+        filteredTasks,
+        paginatedTasks,
+        totalPages: getCCoreTasksTotalPages(filteredTasks.length)
+    };
+}
+
+
+function getCCoreTaskDetailsUrl(taskId) {
+    return `./task-details.html?taskId=${encodeURIComponent(taskId)}`;
+}
+
+
+function renderCCoreTaskRow(task) {
+    const taskId = task.taskId;
+    const taskName = task.taskName;
+    const status = normalizeCCoreTaskStatus(task.status);
+    const statusLabel = task.statusLabel || status;
+
+    return `
+        <tr data-task-id="${escapeCCoreTaskValue(taskId)}" tabindex="0" aria-label="Open task ${escapeCCoreTaskValue(taskName)}">
+            <td>
+                <div class="ccore-task-name-cell">
+                    <span class="ccore-task-name">${escapeCCoreTaskValue(taskName)}</span>
+                </div>
+            </td>
+            <td>
+                <span class="ccore-task-status" title="${escapeCCoreTaskValue(status)}">
+                    ${escapeCCoreTaskValue(statusLabel)}
+                </span>
+            </td>
+            <td>${escapeCCoreTaskValue(formatCCoreTaskDate(task.createdAt))}</td>
+        </tr>
+    `;
+}
+
+
+function updateCCoreTasksCount(filteredTasks) {
+    const countElement = document.getElementById("ccoreTasksCount");
+
+    if (!countElement) {
+        return;
+    }
+
+    const count = filteredTasks.length;
+    countElement.textContent = `${count} ${count === 1 ? "task" : "tasks"}`;
+}
+
+
+function updateCCoreTasksPagination(totalPages) {
+    const previousButton = document.getElementById("ccoreTasksPreviousPageButton");
+    const nextButton = document.getElementById("ccoreTasksNextPageButton");
+    const pageIndicator = document.getElementById("ccoreTasksPageIndicator");
+
+    if (pageIndicator) {
+        pageIndicator.textContent = `Page ${ccoreTasksCurrentPage} of ${totalPages}`;
+    }
+
+    if (previousButton) {
+        previousButton.disabled = ccoreTasksCurrentPage <= 1;
+    }
+
+    if (nextButton) {
+        nextButton.disabled = ccoreTasksCurrentPage >= totalPages;
+    }
+}
+
+
+function updateCCoreTaskSortIndicators() {
+    document
+        .querySelectorAll(".ccore-tasks-table .shared-table-sort-button")
+        .forEach((button) => {
+            const isActive = button.dataset.sortKey === ccoreTasksSortKey;
+
+            button.classList.toggle(
+                "sorted-asc",
+                isActive && ccoreTasksSortDirection === "asc"
+            );
+
+            button.classList.toggle(
+                "sorted-desc",
+                isActive && ccoreTasksSortDirection === "desc"
+            );
+
+            button.dataset.sortDirection = isActive
+                ? ccoreTasksSortDirection
+                : "";
+        });
+}
+
+
+function renderCCoreTasks() {
+    const visibleTasks = getVisibleCCoreTasks();
+
+    if (visibleTasks.filteredTasks.length === 0) {
+        renderCCoreTasksPlaceholder(CCORE_TASKS_EMPTY_MESSAGE);
+        updateCCoreTasksCount(visibleTasks.filteredTasks);
+        updateCCoreTasksPagination(visibleTasks.totalPages);
+        updateCCoreTaskSortIndicators();
+        return;
+    }
+
+    const tableBody = getCCoreTasksTableBody();
+
+    if (!tableBody) {
+        return;
+    }
+
+    tableBody.innerHTML = visibleTasks.paginatedTasks
+        .map(renderCCoreTaskRow)
+        .join("");
+
+    updateCCoreTasksCount(visibleTasks.filteredTasks);
+    updateCCoreTasksPagination(visibleTasks.totalPages);
+    updateCCoreTaskSortIndicators();
+}
+
+
+function parseCCoreTasksResponse(responseData) {
+    if (!responseData || !Array.isArray(responseData.tasks)) {
+        throw new Error("The backend did not return a CCore task list.");
+    }
+
+    return responseData.tasks;
+}
+
+
+async function loadCCoreTasks() {
+    hideCCoreTasksMessage();
+    renderCCoreTasksPlaceholder(CCORE_TASKS_LOADING_MESSAGE);
+
+    try {
+        const responseData = await getJson(CCORE_API_ENDPOINTS.tasks.list);
+        ccoreTasks = parseCCoreTasksResponse(responseData);
+        ccoreTasksCurrentPage = 1;
+
+        enableCCoreTaskSearch();
+        renderCCoreTasks();
+
+        if (ccoreTasks.length === 0) {
+            showCCoreTasksMessage(CCORE_TASKS_EMPTY_MESSAGE, "info");
+        }
+
+    } catch (error) {
+        console.error("Failed to load CCore tasks:", error);
+        ccoreTasks = [];
+        ccoreTasksCurrentPage = 1;
+        renderCCoreTasksPlaceholder(CCORE_TASKS_ERROR_MESSAGE);
+        updateCCoreTasksPagination(1);
+        showCCoreTasksMessage(error.message || CCORE_TASKS_ERROR_MESSAGE, "error");
+    }
+}
+
+
+function openCCoreTaskDetails(taskId) {
+    if (!taskId) {
+        return;
+    }
+
+    window.location.href = getCCoreTaskDetailsUrl(taskId);
+}
+
+
+function setupCCoreTaskRowNavigation() {
+    const tableBody = getCCoreTasksTableBody();
+
+    if (!tableBody) {
+        return;
+    }
+
+    tableBody.addEventListener("click", (event) => {
+        const taskRow = event.target.closest("tr[data-task-id]");
+
+        if (!taskRow) {
+            return;
+        }
+
+        openCCoreTaskDetails(taskRow.dataset.taskId);
+    });
+
+    tableBody.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        const taskRow = event.target.closest("tr[data-task-id]");
+
+        if (!taskRow) {
+            return;
+        }
+
+        event.preventDefault();
+        openCCoreTaskDetails(taskRow.dataset.taskId);
+    });
+}
+
+
+function enableCCoreTaskSearch() {
+    const searchInput = document.getElementById("ccoreTasksSearchInput");
+
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.disabled = false;
+}
+
+
+function setupCCoreTaskSorting() {
+    document
+        .querySelectorAll(".ccore-tasks-table .shared-table-sort-button")
+        .forEach((button) => {
+            button.addEventListener("click", () => {
+                const sortKey = button.dataset.sortKey;
+
+                if (!sortKey) {
+                    return;
+                }
+
+                if (ccoreTasksSortKey === sortKey) {
+                    ccoreTasksSortDirection = ccoreTasksSortDirection === "asc"
+                        ? "desc"
+                        : "asc";
+                } else {
+                    ccoreTasksSortKey = sortKey;
+                    ccoreTasksSortDirection = "asc";
+                }
+
+                ccoreTasksCurrentPage = 1;
+                renderCCoreTasks();
+            });
+        });
+
+    updateCCoreTaskSortIndicators();
+}
+
+
+function setupCCoreTaskSearch() {
+    const searchInput = document.getElementById("ccoreTasksSearchInput");
+
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.addEventListener("input", () => {
+        ccoreTaskSearchTerm = searchInput.value;
+        ccoreTasksCurrentPage = 1;
+        renderCCoreTasks();
+    });
+}
+
+
+function setupCCoreTaskPagination() {
+    const previousButton = document.getElementById("ccoreTasksPreviousPageButton");
+    const nextButton = document.getElementById("ccoreTasksNextPageButton");
+
+    if (previousButton) {
+        previousButton.addEventListener("click", () => {
+            ccoreTasksCurrentPage -= 1;
+            renderCCoreTasks();
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener("click", () => {
+            ccoreTasksCurrentPage += 1;
+            renderCCoreTasks();
+        });
+    }
+}
+
+
+async function setupCCoreTasksPage() {
+    document.getElementById("refreshCCoreTasksButton").addEventListener("click", loadCCoreTasks);
+
+    setupCCoreTaskRowNavigation();
+    setupCCoreTaskSearch();
+    setupCCoreTaskSorting();
+    setupCCoreTaskPagination();
+
+    await loadCCoreTasks();
+}
+
+
+setupCCoreTasksPage();
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/task-details.html
+
+- source: `frontend/static/desktop/protected/ccore/task-details.html`
+- sha256: `34c20378125e5e986af06cd147bc6beb359847ec9f0af6e9b76b5b1bc7c357b0`
+- lines: `211`
+
+```text
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Task Details | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/task-details.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-task-details-content">
+
+                    <header class="ccore-task-details-header">
+                        <h1 id="ccoreTaskDetailsTitle">CCore Task Details</h1>
+                        <p>
+                            Manage the task definition, configure runtime metadata, execute the task,
+                            inspect execution history, and view the selected execution report.
+                        </p>
+                    </header>
+
+                    <fieldset class="shared-panel ccore-task-details-card">
+                        <legend id="ccoreTaskDetailsLegend">Task Details</legend>
+
+                        <form id="ccoreTaskDetailsForm" class="ccore-task-details-form">
+                            <input id="ccoreTaskIdInput" type="hidden">
+
+                            <div class="ccore-task-details-grid">
+                                <label class="ccore-task-details-field" for="ccoreTaskNameInput">
+                                    <span>Task Name</span>
+                                    <input id="ccoreTaskNameInput" type="text" maxlength="255" required>
+                                </label>
+
+                                <label class="ccore-task-details-field" for="ccoreTaskStatusInput">
+                                    <span>Task Status</span>
+                                    <select id="ccoreTaskStatusInput" required disabled>
+                                        <option value="">Loading statuses...</option>
+                                    </select>
+                                </label>
+
+                                <label class="ccore-task-details-field readonly" for="ccoreTaskCreatedAtInput">
+                                    <span>Created</span>
+                                    <input id="ccoreTaskCreatedAtInput" type="text" readonly value="—">
+                                </label>
+
+                                <label class="ccore-task-details-field readonly ccore-task-details-id-field"
+                                    for="ccoreTaskDisplayIdInput">
+                                    <span>Task ID</span>
+                                    <input id="ccoreTaskDisplayIdInput" type="text" readonly value="New task">
+                                </label>
+                            </div>
+                        </form>
+                    </fieldset>
+
+                    <div id="ccoreTaskDetailsMessage" class="form-message info hidden ccore-task-details-message"></div>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-task-details-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action" href="./tasks.html">
+                                Back to Tasks
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <span id="ccoreTaskDetailsMode" class="ccore-task-details-mode">Create mode</span>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <button id="deleteCCoreTaskButton"
+                                class="shared-button secondary shared-table-toolbar-action hidden" type="button">
+                                Delete Task
+                            </button>
+
+                            <button id="saveCCoreTaskButton" class="shared-button primary shared-table-toolbar-action"
+                                type="submit" form="ccoreTaskDetailsForm">
+                                Create Task
+                            </button>
+                        </div>
+                    </section>
+
+                    <fieldset id="ccoreExecutionConfigurationPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution Configuration</legend>
+
+                        <div class="ccore-execution-configuration-grid">
+                            <label class="ccore-task-details-field" for="ccoreExecutionProviderInput">
+                                <span>Provider</span>
+                                <select id="ccoreExecutionProviderInput" disabled>
+                                    <option value="">Loading providers...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionImplementerTypeInput">
+                                <span>Implementer Type</span>
+                                <select id="ccoreExecutionImplementerTypeInput" disabled>
+                                    <option value="">Loading implementer types...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionTargetInput">
+                                <span>Target / Doer</span>
+                                <select id="ccoreExecutionTargetInput" disabled>
+                                    <option value="">Loading targets...</option>
+                                </select>
+                            </label>
+
+                            <label class="ccore-task-details-field" for="ccoreExecutionConfigurationInput">
+                                <span>Configuration</span>
+                                <select id="ccoreExecutionConfigurationInput" disabled>
+                                    <option value="">Loading configurations...</option>
+                                </select>
+                            </label>
+
+                            <div class="ccore-execution-action-cell">
+                                <button id="executeCCoreTaskButton" class="shared-button primary" type="button">
+                                    Execute Task
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset id="ccoreExecutionHistoryPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution History</legend>
+
+                        <section class="shared-table-toolbar ccore-execution-toolbar">
+                            <div class="shared-table-toolbar-left">
+                                <input id="ccoreExecutionSearchInput" class="ccore-execution-search" type="search"
+                                    placeholder="Search executions">
+                            </div>
+                            <div class="shared-table-toolbar-center">
+                                <button id="ccoreExecutionPrevButton" class="shared-button secondary" type="button">‹ Prev</button>
+                                <span id="ccoreExecutionPageIndicator">Page 1 of 1</span>
+                                <button id="ccoreExecutionNextButton" class="shared-button secondary" type="button">Next ›</button>
+                            </div>
+                            <div class="shared-table-toolbar-right">
+                                <span id="ccoreExecutionCountLabel">0 executions</span>
+                                <button id="refreshCCoreExecutionsButton" class="shared-button secondary" type="button">
+                                    Refresh
+                                </button>
+                            </div>
+                        </section>
+
+                        <div class="ccore-execution-table-shell">
+                            <table class="ccore-execution-table">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Started</th>
+                                        <th>Completed</th>
+                                        <th>Provider</th>
+                                        <th>Implementer Type</th>
+                                        <th>Target</th>
+                                        <th>Configuration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ccoreExecutionTableBody">
+                                    <tr>
+                                        <td colspan="7" class="shared-table-empty-state">No executions found for this task.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </fieldset>
+
+                    <fieldset id="ccoreExecutionReportPanel" class="shared-panel ccore-execution-panel hidden">
+                        <legend>Execution Report</legend>
+                        <div id="ccoreExecutionReportContent" class="ccore-execution-report-empty">
+                            No execution selected.
+                        </div>
+                    </fieldset>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/task-details.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>
+```
+
+#### frontend-task-crud-reference: frontend/static/desktop/protected/ccore/tasks.html
+
+- source: `frontend/static/desktop/protected/ccore/tasks.html`
+- sha256: `8a1c37e379e40a9e0eab261ded3ec62728c242a12898b148dd55f7fac33bb935`
+- lines: `154`
+
+```text
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Tasks | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/tasks.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-tasks-content">
+
+                    <header class="ccore-tasks-header">
+
+                        <h1>CCore Tasks</h1>
+
+                        <p>
+                            CRUD: Create/Read/Update/ and Delete persisted CCore tasks stored in PostgreSQL table
+                            <code>ccore_tasks</code>.
+                        </p>
+                    </header>
+
+                    <div id="ccoreTasksMessage" class="form-message info hidden"></div>
+
+                    <fieldset class="shared-panel ccore-tasks-card ccore-tasks-table-card">
+                        <legend>CCore Tasks</legend>
+
+                        <div class="shared-table-wrapper">
+                            <table class="shared-table ccore-tasks-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="0"
+                                                data-sort-key="taskName" type="button">
+                                                Name
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="1"
+                                                data-sort-key="statusLabel" type="button">
+                                                Status
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="2"
+                                                data-sort-key="createdAt" type="button">
+                                                Created
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="ccoreTasksTableBody">
+                                    <tr>
+                                        <td colspan="3" class="shared-table-empty-state">
+                                            Loading CCore tasks...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-tasks-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action"
+                                href="/desktop/protected/automation/automation.html">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="ccoreTasksSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="ccoreTasksSearchInput" class="shared-search-input" type="search"
+                                    placeholder="Search PostgreSQL tasks..." disabled>
+                            </label>
+
+                            <button id="ccoreTasksPreviousPageButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                ‹ Prev
+                            </button>
+
+                            <span id="ccoreTasksPageIndicator" class="ccore-tasks-page-indicator">
+                                Page 1 of 1
+                            </span>
+
+                            <button id="ccoreTasksNextPageButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                Next ›
+                            </button>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="ccoreTasksCount" class="ccore-tasks-count">0 tasks</span>
+
+                            <a class="shared-button primary shared-table-toolbar-action" href="./task-details.html">
+                                Create Task
+                            </a>
+
+                            <button id="refreshCCoreTasksButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-sorter.js");
+
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/tasks.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>
+```
+
+### Excluded Inputs
+
+- None
+
+### Findings
+
+- None
