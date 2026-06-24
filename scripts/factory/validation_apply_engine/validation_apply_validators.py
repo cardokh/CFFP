@@ -159,6 +159,79 @@ class ArtifactManifestValidator:
         return _result(self.validator_id, issues, {"artifactCount": len(context.artifacts)})
 
 
+class DirectoryTargetProtectionValidator:
+    """Prevents file/directory target collisions before apply can write to the repository."""
+
+    validator_id = "directory-target-protection-validator"
+
+    def validate(self, context: ValidationContext) -> ValidationResult:
+        issues: list[ValidationIssue] = []
+        normalized_targets = [_normalize_path(artifact.target_path) for artifact in context.artifacts]
+        target_set = set(normalized_targets)
+        collision_count = 0
+
+        for artifact in context.artifacts:
+            normalized_target = _normalize_path(artifact.target_path)
+            target_path = (context.project_root / normalized_target).resolve()
+
+            if artifact.target_path.replace("\\", "/").strip().endswith("/"):
+                issues.append(
+                    ValidationIssue(
+                        severity="ERROR",
+                        code="DIRECTORY_TARGET_PATH",
+                        message="Artifact targetPath must identify a file, not a directory-like path.",
+                        target_path=artifact.target_path,
+                    )
+                )
+
+            if target_path.exists() and target_path.is_dir():
+                issues.append(
+                    ValidationIssue(
+                        severity="ERROR",
+                        code="TARGET_IS_DIRECTORY",
+                        message="Artifact targetPath resolves to an existing directory and cannot be replaced by a file.",
+                        target_path=artifact.target_path,
+                    )
+                )
+
+            blocking_parent = _first_existing_file_parent(context.project_root, normalized_target)
+            if blocking_parent is not None:
+                issues.append(
+                    ValidationIssue(
+                        severity="ERROR",
+                        code="PARENT_PATH_NOT_DIRECTORY",
+                        message="Artifact targetPath has an existing parent path that is a file.",
+                        target_path=artifact.target_path,
+                        details={"blockingParent": _relative_to_root(context.project_root, blocking_parent)},
+                    )
+                )
+
+            parent = Path(normalized_target).parent
+            while parent.as_posix() not in {".", ""}:
+                parent_target = parent.as_posix()
+                if parent_target in target_set:
+                    collision_count += 1
+                    issues.append(
+                        ValidationIssue(
+                            severity="ERROR",
+                            code="DIRECTORY_FILE_COLLISION",
+                            message="Manifest contains target paths where one artifact would be a parent directory of another.",
+                            target_path=artifact.target_path,
+                            details={"collidingTarget": parent_target},
+                        )
+                    )
+                parent = parent.parent
+
+        return _result(
+            self.validator_id,
+            issues,
+            {
+                "artifactCount": len(context.artifacts),
+                "directoryFileCollisionCount": collision_count,
+            },
+        )
+
+
 class PythonCompileValidator:
     """Runs native Python compilation checks for staged Python files."""
 
@@ -176,6 +249,8 @@ class PythonCompileValidator:
         checked_count = 0
         for artifact in context.artifacts:
             if not artifact.target_path.endswith(".py"):
+                continue
+            if not artifact.staged_path.is_file():
                 continue
             checked_count += 1
             try:
@@ -222,6 +297,8 @@ class StyleSanityValidator:
         issues: list[ValidationIssue] = []
         checked_count = 0
         for artifact in context.artifacts:
+            if not artifact.staged_path.is_file():
+                continue
             if _is_probably_binary(artifact.staged_path):
                 continue
             checked_count += 1
@@ -348,11 +425,22 @@ def default_validation_pipeline() -> ValidationPipeline:
         validators=[
             ArtifactManifestValidator(),
             PathIntegrityValidator(),
+            DirectoryTargetProtectionValidator(),
             PythonCompileValidator(),
             StyleSanityValidator(),
             OverwritePolicyValidator(),
         ]
     )
+
+
+def _first_existing_file_parent(project_root: Path, normalized_target: str) -> Path | None:
+    current = project_root.resolve()
+    parts = Path(normalized_target).parts[:-1]
+    for part in parts:
+        current = current / part
+        if current.exists() and not current.is_dir():
+            return current
+    return None
 
 
 def _result(validator_id: str, issues: list[ValidationIssue], metadata: dict[str, Any]) -> ValidationResult:

@@ -119,23 +119,22 @@ class ValidationApplyEngine(BaseScript):
         )
         execution_id = inputs_config.get("executionId")
 
-        if execution_id:
-            execution_root = self._safe_child(staging_root, str(execution_id))
-            if not execution_root.exists():
-                raise FileNotFoundError(f"Configured staging execution does not exist: {execution_root}")
-            return execution_root
+        if not isinstance(execution_id, str) or not execution_id.strip():
+            raise ValueError(
+                "EXECUTION_ID_REQUIRED: inputs.executionId is required. "
+                "Implicit latest execution selection is disabled."
+            )
 
-        if not staging_root.exists():
-            raise FileNotFoundError(f"Staging root does not exist: {staging_root}")
-
-        candidates = sorted(
-            (path for path in staging_root.iterdir() if path.is_dir()),
-            key=lambda path: (path.stat().st_mtime_ns, path.name),
-            reverse=True,
-        )
-        if not candidates:
-            raise FileNotFoundError(f"No staging execution directories found under: {staging_root}")
-        return candidates[0].resolve()
+        execution_root = self._safe_child(staging_root, execution_id.strip())
+        if not execution_root.exists():
+            raise FileNotFoundError(
+                f"EXECUTION_NOT_FOUND: configured staging execution does not exist: {execution_root}"
+            )
+        if not execution_root.is_dir():
+            raise NotADirectoryError(
+                f"EXECUTION_ROOT_NOT_DIRECTORY: configured staging execution is not a directory: {execution_root}"
+            )
+        return execution_root
 
     def _read_manifest(self, manifest_path: Path) -> dict[str, Any]:
         if not manifest_path.exists():
@@ -188,6 +187,12 @@ class ValidationApplyEngine(BaseScript):
             target_path = self._safe_child(context.project_root, artifact.target_path)
             try:
                 backup_path = None
+                if target_path.exists() and target_path.is_dir():
+                    raise IsADirectoryError(f"TARGET_IS_DIRECTORY: target path is a directory: {target_path}")
+                if target_path.parent.exists() and not target_path.parent.is_dir():
+                    raise NotADirectoryError(
+                        f"PARENT_PATH_NOT_DIRECTORY: target parent is not a directory: {target_path.parent}"
+                    )
                 if target_path.exists():
                     if overwrite_policy == "FAIL":
                         raise FileExistsError(f"Target exists and overwritePolicy is FAIL: {target_path}")
@@ -312,6 +317,11 @@ class ValidationApplyEngine(BaseScript):
     def _normalize_target_path(self, value: Any, artifact_index: int) -> str:
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"Manifest artifact {artifact_index} must define a non-empty targetPath string.")
+        raw_target_path = value.replace("\\", "/").strip()
+        if raw_target_path.endswith("/"):
+            raise ValueError(
+                f"Manifest artifact {artifact_index} targetPath must identify a file, not a directory-like path."
+            )
         target_path = self._normalize_path_string(value)
         path = Path(target_path)
         if path.is_absolute():
