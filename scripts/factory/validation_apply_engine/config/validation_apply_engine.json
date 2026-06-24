@@ -1,0 +1,39 @@
+{
+    "engineName": "CFFP Validation & Apply Engine",
+    "engineVersion": "3.0",
+    "inputs": {
+        "stagingRoot": ".ccore_workspace/staging",
+        "executionId": null
+    },
+    "outputs": {
+        "reportFileName": "validation_apply_report.json"
+    },
+    "validation": {
+        "allowedTargetRoots": [
+            "backend/src",
+            "frontend/static"
+        ],
+        "deniedTargetRoots": [
+            "scripts/factory",
+            "scripts/shared",
+            ".git",
+            ".venv",
+            ".ccore_workspace"
+        ],
+        "requireManifestFile": true,
+        "failOnUnmanifestedStagedFiles": true,
+        "pythonCompileEnabled": true,
+        "styleValidationEnabled": true,
+        "styleRules": {
+            "requireFinalNewline": true,
+            "disallowTrailingWhitespace": true,
+            "disallowTabCharacters": false,
+            "maxLineLength": 160
+        }
+    },
+    "apply": {
+        "mode": "validate-only",
+        "overwritePolicy": "FAIL",
+        "backupDirectoryName": "apply_backups"
+    }
+}
