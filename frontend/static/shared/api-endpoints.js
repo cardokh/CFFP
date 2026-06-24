@@ -96,3 +96,4 @@ const CCORE_API_ENDPOINTS = {
         }
     }
 };
+const LLA_API_ENDPOINTS = CCORE_API_ENDPOINTS;
