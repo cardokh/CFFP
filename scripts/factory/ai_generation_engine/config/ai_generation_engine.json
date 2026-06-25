@@ -22,15 +22,13 @@
         "requiredOutput": "Return JSON with this shape: { \"manifestVersion\": \"1.0\", \"artifacts\": [ { \"artifactType\": \"...\", \"targetPath\": \"repository/relative/path\", \"content\": \"whole file content\", \"reason\": \"why this artifact exists\" } ] }."
     },
     "provider": {
-        "type": "static-manifest-provider",
-        "classPath": "scripts.factory.ai_generation_engine.ai_generation_providers.StaticManifestLlmProvider",
+        "type": "gemini-provider",
+        "classPath": "scripts.factory.ai_generation_engine.providers.gemini_provider.GeminiProvider",
         "options": {
-            "model": "static-manifest-v1",
+            "model": "gemini-2.5-flash",
             "temperature": 0,
-            "maxOutputTokens": 0,
-            "extra": {
-                "artifacts": []
-            }
+            "maxOutputTokens": 8192,
+            "extra": {}
         }
     }
 }
