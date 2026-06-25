@@ -186,44 +186,6 @@ const CCORE_API_ENDPOINTS = {
             return `/api/ccore/metrics/${encodeURIComponent(metricId)}`;
         }
     },
-
-    automation: {
-        tasks: {
-            list: "/api/automation/tasks",
-
-            byId(taskId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}`;
-            },
-
-            configuration(taskId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}/configuration`;
-            },
-
-            validate(taskId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}/validate`;
-            },
-
-            execute(taskId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}/execute`;
-            },
-
-            executions(taskId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}/executions`;
-            },
-
-            executionReport(taskId, executionId) {
-                return `/api/automation/tasks/${encodeURIComponent(taskId)}/executions/${encodeURIComponent(executionId)}`;
-            }
-        },
-
-        pipelines: {
-            list: "/api/automation/pipelines",
-
-            byId(pipelineId) {
-                return `/api/automation/pipelines/${encodeURIComponent(pipelineId)}`;
-            }
-        }
-    }
 };
 
 const LLA_API_ENDPOINTS = CCORE_API_ENDPOINTS;
