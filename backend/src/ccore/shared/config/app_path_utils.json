@@ -10,7 +10,6 @@
     "scriptsPath": "{projectRoot}/scripts",
     "databaseScriptsPath": "{scriptsPath}/db",
     "sharedScriptsPath": "{scriptsPath}/shared",
-    "automationTaskRegistry": "{backendSrcPath}/core/automation/config/automation_task_registry.json",
     "inspectionsPath": "{scriptsPath}/inspections",
     "inspectionSharedPath": "{inspectionsPath}/shared",
     "inspectionRulesPath": "{inspectionsPath}/blueprint_rules",
@@ -19,6 +18,5 @@
     "crudsPath": "{scriptsPath}/cruds",
     "testsPath": "{scriptsPath}/tests",
     "fixesPath": "{scriptsPath}/fixes",
-    "automationPipelineRegistry": "{backendSrcPath}/core/automation/config/automation_pipeline_registry.json",
     "automationExecutionReportOutputPath": "{scriptsPath}/tasks/output"
 }
