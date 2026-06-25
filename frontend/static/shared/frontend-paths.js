@@ -40,17 +40,18 @@ window.LLA_PATHS = {
          contact: "/desktop/protected/contact.html",
          settings: "/desktop/protected/settings.html",
          projectGuide: "/desktop/protected/project-guide/project-guide.html",
+
          automation: {
             home: "/desktop/protected/ccore/automation/automation.html",
-            tasks: "/desktop/protected/ccore/automation/tasks.html",
-            pipelines: "/desktop/protected/ccore/automation/pipelines.html",
+
+            tasks: "/desktop/protected/ccore/automation/tasks/tasks.html",
 
             taskDetails: (taskId) =>
-               `/desktop/protected/ccore/automation/task-details.html?taskId=${encodeURIComponent(taskId)}`,
+               `/desktop/protected/ccore/automation/tasks/task-details.html?taskId=${encodeURIComponent(taskId)}`,
 
-            pipelineDetails: (pipelineId) =>
-               `/desktop/protected/automation/pipeline-details.html?pipelineId=${encodeURIComponent(pipelineId)}`
+            metrics: "/desktop/protected/ccore/automation/metrics/metrics.html"
          },
+
          presentation: "/desktop/protected/presentation.html",
          about: "/desktop/protected/about.html",
 
