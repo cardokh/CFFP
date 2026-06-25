@@ -27,16 +27,6 @@ from backend.src.ccore.infrastructure.database import (
     DatabaseManager,
     PostgresDatabaseManager,
 )
-from src.core.automation.automation_pipeline_registry import AutomationPipelineRegistry
-from src.core.automation.automation_pipeline_service import AutomationPipelineService
-from src.core.automation.automation_task_registry import AutomationTaskRegistry
-from src.core.automation.automation_task_service import AutomationTaskService
-from src.core.automation.automation_task_execution_service import (
-    AutomationTaskExecutionService,
-)
-from src.core.automation.automation_task_validation import (
-    AutomationTaskValidationService,
-)
 
 from backend.src.ccore.metrics.metric_repository import (
     CCoreMetricRepository,
@@ -216,60 +206,6 @@ def build_ccore_metric_type_service():
 
     return CCoreMetricTypeService(
         type_repository=type_repository,
-    )
-
-
-def build_automation_task_registry():
-    return AutomationTaskRegistry(
-        registry_path=get_path("automationTaskRegistry"),
-        project_root=get_path("projectRoot"),
-    )
-
-
-def build_automation_pipeline_registry():
-    return AutomationPipelineRegistry(
-        registry_path=get_path("automationPipelineRegistry"),
-    )
-
-
-def build_automation_pipeline_service():
-    return AutomationPipelineService(
-        automation_pipeline_registry=build_automation_pipeline_registry(),
-    )
-
-
-def build_automation_task_validation_service():
-    return AutomationTaskValidationService(
-        project_root=get_path("projectRoot"),
-    )
-
-
-def build_automation_task_execution_service():
-    automation_task_validation_service = build_automation_task_validation_service()
-
-    return AutomationTaskExecutionService(
-        project_root=get_path("projectRoot"),
-        automation_task_validation_service=automation_task_validation_service,
-        execution_report_output_directory=get_path(
-            "automationExecutionReportOutputPath"
-        ),
-        task_artifact_output_directory_name=get_app_setting(
-            "automationTaskArtifactOutputDirectoryName"
-        ),
-        execution_report_schema_version=get_app_setting(
-            "automationTaskExecutionReportSchemaVersion"
-        ),
-        timeout_seconds=get_app_setting("automationTaskExecutionTimeoutSeconds"),
-    )
-
-
-def build_automation_task_service():
-    automation_task_validation_service = build_automation_task_validation_service()
-
-    return AutomationTaskService(
-        automation_task_registry=build_automation_task_registry(),
-        automation_task_validation_service=automation_task_validation_service,
-        automation_task_execution_service=build_automation_task_execution_service(),
     )
 
 

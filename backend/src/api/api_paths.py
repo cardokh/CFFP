@@ -23,12 +23,6 @@ API_PATH_ADMIN_USERS_PREFIX = "/api/admin/users/"
 
 API_PATH_AI_SPEECH_GENERATE = "/api/ai/speech/generate"
 
-API_PATH_AUTOMATION_TASKS = "/api/automation/tasks"
-API_PATH_AUTOMATION_TASKS_PREFIX = "/api/automation/tasks/"
-
-API_PATH_AUTOMATION_PIPELINES = "/api/automation/pipelines"
-API_PATH_AUTOMATION_PIPELINES_PREFIX = "/api/automation/pipelines/"
-
 API_PATH_CCORE_TASKS = "/api/ccore/tasks"
 API_PATH_CCORE_TASKS_PREFIX = "/api/ccore/tasks/"
 API_PATH_CCORE_TASK_STATUSES = "/api/ccore/task-statuses"

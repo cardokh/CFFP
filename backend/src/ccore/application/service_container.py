@@ -15,8 +15,6 @@ from types import SimpleNamespace
 from backend.src.ccore.application.service_factory import (
     build_ai_speech_service,
     build_ai_speech_validator,
-    build_automation_pipeline_service,
-    build_automation_task_service,
     build_ccore_metric_service,
     build_ccore_metric_type_service,
     build_ccore_task_service,
@@ -60,8 +58,6 @@ def build_service_container() -> SimpleNamespace:
         reference_data_service=build_reference_data_service(),
         ai_speech_service=build_ai_speech_service(),
         ai_speech_validator=build_ai_speech_validator(),
-        automation_task_service=build_automation_task_service(),
-        automation_pipeline_service=build_automation_pipeline_service(),
         ccore_task_service=ccore_task_service,
         task_execution_service=build_task_execution_service(
             ccore_task_service=ccore_task_service,

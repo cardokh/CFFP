@@ -7,41 +7,25 @@ Responsibilities:
 - Keep domain route-handler wiring outside the core server entry point.
 - Compose platform/core routes with module-owned route registries.
 - Prepare for future plugin/module route registration.
-
-Architecture:
-app.py -> route_registry -> module_route_registry -> module route registries -> route_dispatcher -> route handlers
-
-Current refactor stage:
-- app.py no longer needs one wrapper method per route handler.
-- LLA route registration lives in src.api.modules.lla.routes.lla_route_registry.
-- Module route registry builders are collected in src.api.module_route_registry.
-- Core/platform routes such as health, echo, authentication, users, and AI speech compose here.
-- Route registry composition uses a reusable merge utility.
-- HTTP method names are centralized in src.api.http_methods.
-- Dispatcher-compatible route registry typing is centralized in route_dispatcher.py.
 """
 
 from src.api.api_paths import (
     API_PATH_ADMIN_USERS,
     API_PATH_ADMIN_USERS_PREFIX,
     API_PATH_AI_SPEECH_GENERATE,
-    API_PATH_AUTOMATION_PIPELINES,
-    API_PATH_AUTOMATION_PIPELINES_PREFIX,
-    API_PATH_AUTOMATION_TASKS,
-    API_PATH_AUTOMATION_TASKS_PREFIX,
     API_PATH_AUTH_FORGOT_PASSWORD,
     API_PATH_AUTH_LOGIN,
     API_PATH_AUTH_REGISTER,
+    API_PATH_CCORE_EXECUTION_CONFIGURATIONS,
+    API_PATH_CCORE_EXECUTION_IMPLEMENTER_TYPES,
+    API_PATH_CCORE_EXECUTION_PROVIDERS,
+    API_PATH_CCORE_EXECUTION_TARGETS,
     API_PATH_CCORE_METRICS,
     API_PATH_CCORE_METRICS_PREFIX,
     API_PATH_CCORE_METRIC_TYPES,
     API_PATH_CCORE_TASKS,
     API_PATH_CCORE_TASKS_PREFIX,
     API_PATH_CCORE_TASK_STATUSES,
-    API_PATH_CCORE_EXECUTION_PROVIDERS,
-    API_PATH_CCORE_EXECUTION_IMPLEMENTER_TYPES,
-    API_PATH_CCORE_EXECUTION_TARGETS,
-    API_PATH_CCORE_EXECUTION_CONFIGURATIONS,
     API_PATH_ECHO_PREFIX,
     API_PATH_HEALTH,
 )
@@ -65,16 +49,6 @@ from src.api.route_registry_utils import (
 from src.core.ai.ai_speech.ai_speech_routes import (
     handle_generate_ai_speech,
 )
-from src.core.automation.automation_pipeline_routes import (
-    handle_get_automation_pipeline_by_id,
-    handle_get_automation_pipelines,
-)
-from src.core.automation.automation_task_routes import (
-    handle_execute_automation_task_path,
-    handle_get_automation_task_path,
-    handle_get_automation_tasks,
-    handle_validate_automation_task_path,
-)
 from backend.src.ccore.metrics.metric_routes import (
     handle_create_ccore_metric,
     handle_delete_ccore_metric,
@@ -86,12 +60,12 @@ from backend.src.ccore.metrics.metric_routes import (
 from backend.src.ccore.tasks.task_routes import (
     handle_create_ccore_task,
     handle_delete_ccore_task,
+    handle_get_ccore_execution_configurations,
+    handle_get_ccore_execution_implementer_types,
+    handle_get_ccore_execution_providers,
+    handle_get_ccore_execution_targets,
     handle_get_ccore_task_path,
     handle_get_ccore_task_statuses,
-    handle_get_ccore_execution_providers,
-    handle_get_ccore_execution_implementer_types,
-    handle_get_ccore_execution_targets,
-    handle_get_ccore_execution_configurations,
     handle_get_ccore_tasks,
     handle_post_ccore_task_path,
     handle_update_ccore_task,
@@ -105,26 +79,6 @@ from src.core.users.user_routes import (
     handle_register,
     handle_update_user,
 )
-
-
-def handle_execute_or_validate_automation_task_path(
-    handler,
-    automation_task_service,
-    path,
-) -> None:
-    if path.endswith("/execute"):
-        handle_execute_automation_task_path(
-            handler,
-            automation_task_service,
-            path,
-        )
-        return
-
-    handle_validate_automation_task_path(
-        handler,
-        automation_task_service,
-        path,
-    )
 
 
 def build_core_route_registry(
@@ -143,14 +97,6 @@ def build_core_route_registry(
                 API_PATH_ADMIN_USERS: lambda: handle_get_users(
                     handler,
                     services.users_service,
-                ),
-                API_PATH_AUTOMATION_TASKS: lambda: handle_get_automation_tasks(
-                    handler,
-                    services.automation_task_service,
-                ),
-                API_PATH_AUTOMATION_PIPELINES: lambda: handle_get_automation_pipelines(
-                    handler,
-                    services.automation_pipeline_service,
                 ),
                 API_PATH_CCORE_TASKS: lambda: handle_get_ccore_tasks(
                     handler,
@@ -197,16 +143,6 @@ def build_core_route_registry(
                     services.users_service,
                     path,
                 ),
-                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_get_automation_task_path(
-                    handler,
-                    services.automation_task_service,
-                    path,
-                ),
-                API_PATH_AUTOMATION_PIPELINES_PREFIX: lambda path: handle_get_automation_pipeline_by_id(
-                    handler,
-                    services.automation_pipeline_service,
-                    path,
-                ),
                 API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_get_ccore_task_path(
                     handler,
                     services.ccore_task_service,
@@ -248,11 +184,6 @@ def build_core_route_registry(
                 ),
             },
             "prefix": {
-                API_PATH_AUTOMATION_TASKS_PREFIX: lambda path: handle_execute_or_validate_automation_task_path(
-                    handler,
-                    services.automation_task_service,
-                    path,
-                ),
                 API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_post_ccore_task_path(
                     handler,
                     services.task_execution_service,
