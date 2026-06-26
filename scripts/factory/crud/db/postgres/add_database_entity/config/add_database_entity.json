@@ -12,6 +12,107 @@
     },
     "entities": [
         {
+            "name": "ccore_pipeline_statuses",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_status_id",
+                        "type": "INTEGER",
+                        "primaryKey": true
+                    },
+                    {
+                        "name": "status_label",
+                        "type": "VARCHAR(100)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "INTEGER",
+                        "nullable": false
+                    }
+                ]
+            },
+            "seed": {
+                "table": "ccore_pipeline_statuses",
+                "conflictColumn": "pipeline_status_id",
+                "rows": [
+                    {
+                        "pipeline_status_id": 1,
+                        "status_label": "Draft",
+                        "sort_order": 10
+                    },
+                    {
+                        "pipeline_status_id": 2,
+                        "status_label": "Active",
+                        "sort_order": 20
+                    },
+                    {
+                        "pipeline_status_id": 3,
+                        "status_label": "Disabled",
+                        "sort_order": 30
+                    },
+                    {
+                        "pipeline_status_id": 4,
+                        "status_label": "Archived",
+                        "sort_order": 40
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ccore_pipeline_execution_statuses",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_execution_status_id",
+                        "type": "INTEGER",
+                        "primaryKey": true
+                    },
+                    {
+                        "name": "status_label",
+                        "type": "VARCHAR(100)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "INTEGER",
+                        "nullable": false
+                    }
+                ]
+            },
+            "seed": {
+                "table": "ccore_pipeline_execution_statuses",
+                "conflictColumn": "pipeline_execution_status_id",
+                "rows": [
+                    {
+                        "pipeline_execution_status_id": 1,
+                        "status_label": "Pending",
+                        "sort_order": 10
+                    },
+                    {
+                        "pipeline_execution_status_id": 2,
+                        "status_label": "Running",
+                        "sort_order": 20
+                    },
+                    {
+                        "pipeline_execution_status_id": 3,
+                        "status_label": "Completed",
+                        "sort_order": 30
+                    },
+                    {
+                        "pipeline_execution_status_id": 4,
+                        "status_label": "Failed",
+                        "sort_order": 40
+                    },
+                    {
+                        "pipeline_execution_status_id": 5,
+                        "status_label": "Blocked",
+                        "sort_order": 50
+                    }
+                ]
+            }
+        },
+        {
             "name": "ccore_pipelines",
             "schema": {
                 "columns": [
@@ -32,7 +133,7 @@
                         "nullable": true
                     },
                     {
-                        "name": "status_id",
+                        "name": "pipeline_status_id",
                         "type": "INTEGER",
                         "nullable": false
                     },
@@ -53,12 +154,12 @@
                     {
                         "type": "foreignKey",
                         "columns": [
-                            "status_id"
+                            "pipeline_status_id"
                         ],
                         "references": {
-                            "table": "ccore_task_statuses",
+                            "table": "ccore_pipeline_statuses",
                             "columns": [
-                                "status_id"
+                                "pipeline_status_id"
                             ]
                         },
                         "onDelete": "RESTRICT"
@@ -166,7 +267,7 @@
                         "nullable": false
                     },
                     {
-                        "name": "execution_status_id",
+                        "name": "pipeline_execution_status_id",
                         "type": "INTEGER",
                         "nullable": false
                     },
@@ -231,12 +332,12 @@
                     {
                         "type": "foreignKey",
                         "columns": [
-                            "execution_status_id"
+                            "pipeline_execution_status_id"
                         ],
                         "references": {
-                            "table": "ccore_task_execution_statuses",
+                            "table": "ccore_pipeline_execution_statuses",
                             "columns": [
-                                "execution_status_id"
+                                "pipeline_execution_status_id"
                             ]
                         },
                         "onDelete": "RESTRICT"

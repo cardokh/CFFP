@@ -295,6 +295,78 @@
                     "metric_type_id": 3
                 }
             ]
+        },
+        {
+            "table": "ccore_pipeline_statuses",
+            "conflictColumn": "pipeline_status_id",
+            "rows": [
+                {
+                    "pipeline_status_id": 1,
+                    "status_label": "Draft",
+                    "sort_order": 10
+                },
+                {
+                    "pipeline_status_id": 2,
+                    "status_label": "Active",
+                    "sort_order": 20
+                },
+                {
+                    "pipeline_status_id": 3,
+                    "status_label": "Disabled",
+                    "sort_order": 30
+                },
+                {
+                    "pipeline_status_id": 4,
+                    "status_label": "Archived",
+                    "sort_order": 40
+                }
+            ]
+        },
+        {
+            "table": "ccore_pipeline_execution_statuses",
+            "conflictColumn": "pipeline_execution_status_id",
+            "rows": [
+                {
+                    "pipeline_execution_status_id": 1,
+                    "status_label": "Pending",
+                    "sort_order": 10
+                },
+                {
+                    "pipeline_execution_status_id": 2,
+                    "status_label": "Running",
+                    "sort_order": 20
+                },
+                {
+                    "pipeline_execution_status_id": 3,
+                    "status_label": "Completed",
+                    "sort_order": 30
+                },
+                {
+                    "pipeline_execution_status_id": 4,
+                    "status_label": "Failed",
+                    "sort_order": 40
+                },
+                {
+                    "pipeline_execution_status_id": 5,
+                    "status_label": "Blocked",
+                    "sort_order": 50
+                }
+            ]
+        },
+        {
+            "table": "ccore_pipelines",
+            "conflictColumn": "pipeline_id",
+            "rows": []
+        },
+        {
+            "table": "ccore_pipeline_tasks",
+            "conflictColumn": "pipeline_task_id",
+            "rows": []
+        },
+        {
+            "table": "ccore_pipeline_executions",
+            "conflictColumn": "pipeline_execution_id",
+            "rows": []
         }
     ]
 }

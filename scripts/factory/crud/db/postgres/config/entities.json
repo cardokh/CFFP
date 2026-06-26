@@ -10,6 +10,11 @@
         "ccore_execution_configuration_elements",
         "ccore_task_executions",
         "ccore_metric_types",
-        "ccore_metrics"
+        "ccore_metrics",
+        "ccore_pipeline_statuses",
+        "ccore_pipeline_execution_statuses",
+        "ccore_pipelines",
+        "ccore_pipeline_tasks",
+        "ccore_pipeline_executions"
     ]
 }
