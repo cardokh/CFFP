@@ -295,21 +295,6 @@
                     "metric_type_id": 3
                 }
             ]
-        },
-        {
-            "table": "ccore_pipelines",
-            "conflictColumn": "pipeline_id",
-            "rows": []
-        },
-        {
-            "table": "ccore_pipeline_tasks",
-            "conflictColumn": "pipeline_task_id",
-            "rows": []
-        },
-        {
-            "table": "ccore_pipeline_executions",
-            "conflictColumn": "pipeline_execution_id",
-            "rows": []
         }
     ]
 }
