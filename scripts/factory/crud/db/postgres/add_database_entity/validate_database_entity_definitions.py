@@ -51,6 +51,15 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
             seed_config=seed_config,
             seed_groups=seed_groups,
         )
+        self._validate_generated_schema_integrity(schema_config)
+        self._validate_seed_rows_against_schema(
+            seed_config=seed_config,
+            schema_config=schema_config,
+        )
+        self._validate_expected_generated_metadata(
+            entities_config=entities_config,
+            seed_config=seed_config,
+        )
 
         report = self._build_report()
         self.write_json_report(report)
@@ -214,6 +223,13 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
         if not isinstance(generated_entities, list):
             raise ValueError("entities.json must contain 'entities' list.")
 
+        for entity_name in generated_entities:
+            if not isinstance(entity_name, str) or not entity_name:
+                raise ValueError("Every entities.json entry must be a non-empty string.")
+
+        if len(generated_entities) != len(set(generated_entities)):
+            raise ValueError("entities.json must not contain duplicate entity names.")
+
         missing_entities = set(listed_entities) - set(generated_entities)
         if missing_entities:
             raise ValueError(
@@ -232,6 +248,13 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
 
         if not isinstance(generated_tables, dict):
             raise ValueError("postgres_create_schema.json must contain 'tables' object.")
+
+        for table_name, table_schema in generated_tables.items():
+            if not isinstance(table_name, str) or not table_name:
+                raise ValueError("Every postgres_create_schema.json table name must be a non-empty string.")
+
+            if not isinstance(table_schema, dict):
+                raise ValueError(f"Generated schema for '{table_name}' must be an object.")
 
         for entity_name, schema_definition in schema_definitions.items():
             generated_schema = generated_tables.get(entity_name)
@@ -260,10 +283,19 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
 
         generated_seed_by_table = {}
         for seed_group in generated_seed_groups:
-            if isinstance(seed_group, dict):
-                table_name = seed_group.get("table")
-                if isinstance(table_name, str) and table_name:
-                    generated_seed_by_table[table_name] = seed_group
+            if not isinstance(seed_group, dict):
+                raise ValueError("Every postgres_seed_data.json seed group must be an object.")
+
+            table_name = self._get_required_string(
+                seed_group,
+                "table",
+                "Every postgres_seed_data.json seed group must contain 'table'.",
+            )
+
+            if table_name in generated_seed_by_table:
+                raise ValueError(f"Duplicate generated seed group for table '{table_name}' found.")
+
+            generated_seed_by_table[table_name] = seed_group
 
         for table_name, seed_group in seed_groups.items():
             generated_seed_group = generated_seed_by_table.get(table_name)
@@ -279,6 +311,174 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
                 )
 
         self._add_check("postgres_seed_data.json matches seed definitions")
+
+
+    def _validate_generated_schema_integrity(self, schema_config: dict) -> None:
+        generated_tables = schema_config.get("tables")
+
+        if not isinstance(generated_tables, dict):
+            raise ValueError("postgres_create_schema.json must contain 'tables' object.")
+
+        table_columns_by_name = {}
+        for table_name, table_schema in generated_tables.items():
+            if not isinstance(table_schema, dict):
+                raise ValueError(f"Generated schema for '{table_name}' must be an object.")
+
+            self._validate_schema_definition(table_name, table_schema)
+            table_columns_by_name[table_name] = set(self._get_column_names(table_name, table_schema))
+
+        for table_name, table_schema in generated_tables.items():
+            constraints = table_schema.get("constraints", [])
+            for constraint in constraints:
+                if constraint.get("type") != "foreignKey":
+                    continue
+
+                references = constraint.get("references", {})
+                referenced_table = references.get("table")
+                referenced_columns = references.get("columns", [])
+
+                if referenced_table not in table_columns_by_name:
+                    raise ValueError(
+                        f"Foreign key for '{table_name}' references unknown table '{referenced_table}'."
+                    )
+
+                for referenced_column in referenced_columns:
+                    if referenced_column not in table_columns_by_name[referenced_table]:
+                        raise ValueError(
+                            f"Foreign key for '{table_name}' references unknown column "
+                            f"'{referenced_table}.{referenced_column}'."
+                        )
+
+        self._add_check("postgres_create_schema.json has valid table, column, and foreign key integrity")
+
+    def _validate_seed_rows_against_schema(
+        self,
+        seed_config: dict,
+        schema_config: dict,
+    ) -> None:
+        generated_tables = schema_config.get("tables")
+        generated_seed_groups = seed_config.get("seedGroups")
+
+        if not isinstance(generated_tables, dict):
+            raise ValueError("postgres_create_schema.json must contain 'tables' object.")
+
+        if not isinstance(generated_seed_groups, list):
+            raise ValueError("postgres_seed_data.json must contain 'seedGroups' list.")
+
+        for seed_group in generated_seed_groups:
+            if not isinstance(seed_group, dict):
+                raise ValueError("Every postgres_seed_data.json seed group must be an object.")
+
+            table_name = self._get_required_string(
+                seed_group,
+                "table",
+                "Every postgres_seed_data.json seed group must contain 'table'.",
+            )
+
+            table_schema = generated_tables.get(table_name)
+            if not isinstance(table_schema, dict):
+                raise ValueError(f"Seed group '{table_name}' does not have a generated schema table.")
+
+            column_names = set(self._get_column_names(table_name, table_schema))
+            conflict_column = self._get_required_string(
+                seed_group,
+                "conflictColumn",
+                f"Seed group for '{table_name}' must contain 'conflictColumn'.",
+            )
+
+            if conflict_column not in column_names:
+                raise ValueError(
+                    f"Seed group for '{table_name}' uses unknown conflict column '{conflict_column}'."
+                )
+
+            rows = seed_group.get("rows")
+            if not isinstance(rows, list):
+                raise ValueError(f"Seed group for '{table_name}' must contain 'rows' list.")
+
+            for row in rows:
+                if not isinstance(row, dict):
+                    raise ValueError(f"Every seed row for '{table_name}' must be an object.")
+
+                unknown_columns = set(row) - column_names
+                if unknown_columns:
+                    raise ValueError(
+                        f"Seed row for '{table_name}' contains unknown columns: "
+                        + ", ".join(sorted(unknown_columns))
+                    )
+
+        self._add_check("postgres_seed_data.json rows match generated schema columns")
+
+    def _validate_expected_generated_metadata(
+        self,
+        entities_config: dict,
+        seed_config: dict,
+    ) -> None:
+        generated_entity_count = self.expected.get("generatedEntityCount")
+        generated_seed_row_count = self.expected.get("generatedSeedRowCount")
+
+        if generated_entity_count is None and generated_seed_row_count is None:
+            return
+
+        if generated_entity_count is not None:
+            generated_entities = entities_config.get("entities")
+            if not isinstance(generated_entities, list):
+                raise ValueError("entities.json must contain 'entities' list.")
+
+            if len(generated_entities) != generated_entity_count:
+                raise ValueError(
+                    f"Expected {generated_entity_count} generated entities but found "
+                    f"{len(generated_entities)}."
+                )
+
+        if generated_seed_row_count is not None:
+            generated_seed_groups = seed_config.get("seedGroups")
+            if not isinstance(generated_seed_groups, list):
+                raise ValueError("postgres_seed_data.json must contain 'seedGroups' list.")
+
+            actual_seed_row_count = 0
+            for seed_group in generated_seed_groups:
+                if not isinstance(seed_group, dict):
+                    raise ValueError("Every postgres_seed_data.json seed group must be an object.")
+
+                rows = seed_group.get("rows")
+                if not isinstance(rows, list):
+                    table_name = seed_group.get("table", "<unknown>")
+                    raise ValueError(f"Seed group for '{table_name}' must contain 'rows' list.")
+
+                actual_seed_row_count += len(rows)
+
+            if actual_seed_row_count != generated_seed_row_count:
+                raise ValueError(
+                    f"Expected {generated_seed_row_count} generated seed rows but found "
+                    f"{actual_seed_row_count}."
+                )
+
+        self._add_check("generated metadata matches expected acceptance counts")
+
+    def _get_column_names(
+        self,
+        table_name: str,
+        table_schema: dict,
+    ) -> list[str]:
+        columns = table_schema.get("columns")
+
+        if not isinstance(columns, list) or not columns:
+            raise ValueError(f"Schema for '{table_name}' must contain non-empty 'columns' list.")
+
+        column_names = []
+        for column in columns:
+            if not isinstance(column, dict):
+                raise ValueError(f"Every column for '{table_name}' must be an object.")
+
+            column_names.append(
+                self._get_required_string(
+                    column,
+                    "name",
+                    f"Every column for '{table_name}' must contain 'name'.",
+                )
+            )
+
+        return column_names
 
     def _validate_schema_definition(
         self,
