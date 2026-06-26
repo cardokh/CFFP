@@ -1,0 +1,9 @@
+{
+    "entities": [
+        "ccore_pipeline_statuses",
+        "ccore_pipeline_execution_statuses",
+        "ccore_pipelines",
+        "ccore_pipeline_tasks",
+        "ccore_pipeline_executions"
+    ]
+}

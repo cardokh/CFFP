@@ -1,8 +1,8 @@
 """
-Updates PostgreSQL entity, schema, and seed metadata from CRUD entity configuration.
+Updates PostgreSQL entity and schema metadata from split CRUD schema configuration.
 
 This script does not connect to PostgreSQL and does not create database tables.
-It updates metadata consumed by the existing PostgreSQL schema and seed scripts.
+It updates metadata consumed by the existing PostgreSQL schema script.
 """
 
 from pathlib import Path
@@ -12,41 +12,39 @@ from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
 
 
-class AddDatabaseEntityScript(BaseScript):
-    """Adds configured database entities to existing PostgreSQL metadata files."""
+class AddDatabaseSchemaEntityScript(BaseScript):
+    """Adds configured database schema entities to existing PostgreSQL metadata files."""
 
     def __init__(self):
         super().__init__(__file__)
         self.metadata_paths = self._get_metadata_paths()
         self.options = self._get_options()
+        self.allowed_entities = self._get_allowed_entities()
         self.entities = self._get_entities()
         self.updated_entities = []
         self.updated_schema_tables = []
-        self.updated_seed_groups = []
 
     def run(self) -> None:
         entities_config = self._read_metadata_file("entitiesConfigPath")
         schema_config = self._read_metadata_file("schemaConfigPath")
-        seed_config = self._read_metadata_file("seedConfigPath")
 
         self._validate_metadata_files(
             entities_config=entities_config,
             schema_config=schema_config,
-            seed_config=seed_config,
         )
 
         for entity in self.entities:
             entity_name = self._get_required_string(
                 entity,
                 "name",
-                "Every entity must contain 'name'.",
+                "Every schema entity must contain 'name'.",
             )
+            self._validate_entity_is_listed(entity_name)
             entity_schema = self._get_required_object(
                 entity,
                 "schema",
-                f"Entity '{entity_name}' must contain 'schema'.",
+                f"Schema entity '{entity_name}' must contain 'schema'.",
             )
-            entity_seed = entity.get("seed")
 
             self._upsert_entity_name(
                 entities_config=entities_config,
@@ -58,19 +56,8 @@ class AddDatabaseEntityScript(BaseScript):
                 entity_schema=entity_schema,
             )
 
-            if entity_seed is not None:
-                if not isinstance(entity_seed, dict):
-                    raise ValueError(f"Entity '{entity_name}' seed must be an object when provided.")
-
-                self._upsert_seed_group(
-                    seed_config=seed_config,
-                    entity_name=entity_name,
-                    entity_seed=entity_seed,
-                )
-
         self._write_metadata_file("entitiesConfigPath", entities_config)
         self._write_metadata_file("schemaConfigPath", schema_config)
-        self._write_metadata_file("seedConfigPath", seed_config)
 
         report = self._build_report()
         self.write_json_report(report)
@@ -83,9 +70,9 @@ class AddDatabaseEntityScript(BaseScript):
             raise ValueError("Config must contain 'metadataPaths' object.")
 
         required_keys = [
+            "databaseEntitiesPath",
             "entitiesConfigPath",
             "schemaConfigPath",
-            "seedConfigPath",
         ]
 
         for key in required_keys:
@@ -104,6 +91,22 @@ class AddDatabaseEntityScript(BaseScript):
 
         return options
 
+    def _get_allowed_entities(self) -> list[str]:
+        database_entities = self._read_metadata_file("databaseEntitiesPath")
+        entities = database_entities.get("entities")
+
+        if not isinstance(entities, list) or not entities:
+            raise ValueError("database_entities.json must contain non-empty 'entities' list.")
+
+        for entity_name in entities:
+            if not isinstance(entity_name, str) or not entity_name:
+                raise ValueError("Every database_entities.json entry must be a non-empty string.")
+
+        if len(entities) != len(set(entities)):
+            raise ValueError("database_entities.json must not contain duplicate entity names.")
+
+        return entities
+
     def _get_entities(self) -> list[dict]:
         entities = self.config.get("entities")
 
@@ -112,7 +115,7 @@ class AddDatabaseEntityScript(BaseScript):
 
         for entity in entities:
             if not isinstance(entity, dict):
-                raise ValueError("Every entity definition must be an object.")
+                raise ValueError("Every schema entity definition must be an object.")
 
         return entities
 
@@ -132,7 +135,6 @@ class AddDatabaseEntityScript(BaseScript):
         self,
         entities_config: dict,
         schema_config: dict,
-        seed_config: dict,
     ) -> None:
         if not isinstance(entities_config.get("entities"), list):
             raise ValueError("entities.json must contain 'entities' list.")
@@ -140,8 +142,11 @@ class AddDatabaseEntityScript(BaseScript):
         if not isinstance(schema_config.get("tables"), dict):
             raise ValueError("postgres_create_schema.json must contain 'tables' object.")
 
-        if not isinstance(seed_config.get("seedGroups"), list):
-            raise ValueError("postgres_seed_data.json must contain 'seedGroups' list.")
+    def _validate_entity_is_listed(self, entity_name: str) -> None:
+        if entity_name not in self.allowed_entities:
+            raise ValueError(
+                f"Schema entity '{entity_name}' is not listed in database_entities.json."
+            )
 
     def _upsert_entity_name(
         self,
@@ -173,41 +178,6 @@ class AddDatabaseEntityScript(BaseScript):
 
         schema_config["tables"][entity_name] = entity_schema
         self.updated_schema_tables.append(entity_name)
-
-    def _upsert_seed_group(
-        self,
-        seed_config: dict,
-        entity_name: str,
-        entity_seed: dict,
-    ) -> None:
-        self._validate_seed_group(entity_name, entity_seed)
-
-        seed_groups = seed_config["seedGroups"]
-        existing_index = self._find_seed_group_index(seed_groups, entity_name)
-        replace_existing = self.options.get("replaceExistingSeedGroups", True)
-
-        if existing_index is not None:
-            if replace_existing is not True:
-                raise ValueError(
-                    f"Seed group '{entity_name}' already exists and replaceExistingSeedGroups is false."
-                )
-
-            seed_groups[existing_index] = entity_seed
-        else:
-            seed_groups.append(entity_seed)
-
-        self.updated_seed_groups.append(entity_name)
-
-    def _find_seed_group_index(
-        self,
-        seed_groups: list[dict],
-        table_name: str,
-    ) -> int | None:
-        for index, seed_group in enumerate(seed_groups):
-            if isinstance(seed_group, dict) and seed_group.get("table") == table_name:
-                return index
-
-        return None
 
     def _validate_schema_definition(
         self,
@@ -296,37 +266,6 @@ class AddDatabaseEntityScript(BaseScript):
                 f"Foreign key constraint for '{entity_name}' references must contain non-empty 'columns'.",
             )
 
-    def _validate_seed_group(
-        self,
-        entity_name: str,
-        seed_group: dict,
-    ) -> None:
-        table_name = self._get_required_string(
-            seed_group,
-            "table",
-            f"Seed group for '{entity_name}' must contain 'table'.",
-        )
-
-        if table_name != entity_name:
-            raise ValueError(
-                f"Seed group table '{table_name}' does not match entity name '{entity_name}'."
-            )
-
-        self._get_required_string(
-            seed_group,
-            "conflictColumn",
-            f"Seed group for '{entity_name}' must contain 'conflictColumn'.",
-        )
-
-        rows = seed_group.get("rows")
-
-        if not isinstance(rows, list):
-            raise ValueError(f"Seed group for '{entity_name}' must contain 'rows' list.")
-
-        for row in rows:
-            if not isinstance(row, dict):
-                raise ValueError(f"Every seed row for '{entity_name}' must be an object.")
-
     def _get_required_object(
         self,
         source: dict,
@@ -373,15 +312,14 @@ class AddDatabaseEntityScript(BaseScript):
     def _build_report(self) -> dict:
         return {
             "scriptName": self.script_name,
-            "mode": self.config.get("mode", "update_postgres_database_metadata"),
+            "mode": self.config.get("mode", "update_postgres_schema_metadata"),
             "summary": {
                 "status": "PASSED",
+                "listedEntityCount": len(self.allowed_entities),
                 "updatedEntityCount": len(self.updated_entities),
                 "updatedSchemaTableCount": len(self.updated_schema_tables),
-                "updatedSeedGroupCount": len(self.updated_seed_groups),
                 "updatedEntities": self.updated_entities,
                 "updatedSchemaTables": self.updated_schema_tables,
-                "updatedSeedGroups": self.updated_seed_groups,
             },
             "metadataPaths": self.metadata_paths,
         }
@@ -389,20 +327,19 @@ class AddDatabaseEntityScript(BaseScript):
     def _print_success(self, report: dict) -> None:
         summary = report["summary"]
         print_passed(
-            "add_database_entity: "
+            "add_database_schema_entity: "
             f"{summary['updatedEntityCount']} entities, "
-            f"{summary['updatedSchemaTableCount']} schema tables, "
-            f"{summary['updatedSeedGroupCount']} seed groups updated"
+            f"{summary['updatedSchemaTableCount']} schema tables updated"
         )
 
 
 def main() -> None:
-    script = AddDatabaseEntityScript()
+    script = AddDatabaseSchemaEntityScript()
 
     try:
         script.run()
     except Exception as exc:
-        print_failed(f"add_database_entity failed: {exc}")
+        print_failed(f"add_database_schema_entity failed: {exc}")
         raise
 
 
