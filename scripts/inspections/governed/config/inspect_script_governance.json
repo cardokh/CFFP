@@ -21,6 +21,7 @@
         "scripts/inspections/endpoints/compare_endpoint_contracts.py",
         "scripts/inspections/endpoints/inspect_frontend_endpoint_usage.py",
         "scripts/inspections/endpoints/analyze_backend_endpoint_usage.py",
-        "scripts/inspections/endpoints/run_endpoint_inspection.py"
+        "scripts/inspections/endpoints/run_endpoint_inspection.py",
+        "scripts/factory/crud/db/postgres/add_database_entity/add_database_entity.py"
     ]
 }
