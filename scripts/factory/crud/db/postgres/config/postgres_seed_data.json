@@ -1,7 +1,7 @@
 {
     "scriptName": "postgres_seed_data",
     "mode": "seed_data",
-    "databaseConfigPath": "scripts/db/postgres/config/database.json",
+    "databaseConfigPath": "scripts/factory/crud/db/postgres/config/database.json",
     "seedGroups": [
         {
             "table": "ccore_task_statuses",
@@ -295,6 +295,21 @@
                     "metric_type_id": 3
                 }
             ]
+        },
+        {
+            "table": "ccore_pipelines",
+            "conflictColumn": "pipeline_id",
+            "rows": []
+        },
+        {
+            "table": "ccore_pipeline_tasks",
+            "conflictColumn": "pipeline_task_id",
+            "rows": []
+        },
+        {
+            "table": "ccore_pipeline_executions",
+            "conflictColumn": "pipeline_execution_id",
+            "rows": []
         }
     ]
 }
