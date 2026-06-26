@@ -1,0 +1,26 @@
+{
+    "scriptName": "generate_backend",
+    "mode": "generate_pipeline_backend_crud",
+    "repoRoot": "../../../../..",
+    "entity": "pipelines",
+    "outputPackageDirectory": "backend/src/ccore/pipelines",
+    "reportPath": "scripts/factory/crud/backend/output/generate_backend_report.json",
+    "options": {
+        "overwriteExistingFiles": true,
+        "patchApplicationWiring": true,
+        "createMissingInitFiles": true
+    },
+    "generatedFiles": [
+        "__init__.py",
+        "pipeline.py",
+        "pipeline_constants.py",
+        "pipeline_messages.py",
+        "pipeline_contracts.py",
+        "pipeline_mapper.py",
+        "pipeline_validator.py",
+        "pipeline_repository_contract.py",
+        "pipeline_repository.py",
+        "pipeline_service.py",
+        "pipeline_routes.py"
+    ]
+}

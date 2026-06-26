@@ -37,6 +37,16 @@ from backend.src.ccore.metrics.metric_service import (
     CCoreMetricTypeService,
 )
 from backend.src.ccore.metrics.metric_validator import CCoreMetricValidator
+from backend.src.ccore.pipelines.pipeline_repository import (
+    CCorePipelineRepository,
+    CCorePipelineStatusRepository,
+)
+from backend.src.ccore.pipelines.pipeline_service import (
+    CCorePipelineService,
+    CCorePipelineStatusService,
+)
+from backend.src.ccore.pipelines.pipeline_validator import CCorePipelineValidator
+
 from backend.src.ccore.tasks.task_repository import (
     CCoreTaskRepository,
     CCoreTaskStatusRepository,
@@ -208,6 +218,32 @@ def build_ccore_metric_type_service():
         type_repository=type_repository,
     )
 
+
+def build_ccore_pipeline_repositories():
+    postgres_database_manager = build_postgres_database_manager()
+
+    return (
+        CCorePipelineRepository(postgres_database_manager),
+        CCorePipelineStatusRepository(postgres_database_manager),
+    )
+
+
+def build_ccore_pipeline_service():
+    pipeline_repository, status_repository = build_ccore_pipeline_repositories()
+    pipeline_validator = CCorePipelineValidator(status_repository=status_repository)
+
+    return CCorePipelineService(
+        pipeline_repository=pipeline_repository,
+        pipeline_validator=pipeline_validator,
+    )
+
+
+def build_ccore_pipeline_status_service():
+    _, status_repository = build_ccore_pipeline_repositories()
+
+    return CCorePipelineStatusService(
+        status_repository=status_repository,
+    )
 
 def build_ai_speech_provider_mapper():
     return AiSpeechProviderMapper()

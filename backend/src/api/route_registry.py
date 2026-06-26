@@ -81,6 +81,20 @@ from src.core.users.user_routes import (
 )
 
 
+from src.api.api_paths import (
+    API_PATH_CCORE_PIPELINES,
+    API_PATH_CCORE_PIPELINES_PREFIX,
+    API_PATH_CCORE_PIPELINE_STATUSES,
+)
+from backend.src.ccore.pipelines.pipeline_routes import (
+    handle_create_ccore_pipeline,
+    handle_delete_ccore_pipeline,
+    handle_get_ccore_pipeline_by_id,
+    handle_get_ccore_pipeline_statuses,
+    handle_get_ccore_pipelines,
+    handle_update_ccore_pipeline,
+)
+
 def build_core_route_registry(
     handler,
     services,
@@ -130,6 +144,14 @@ def build_core_route_registry(
                     handler,
                     services.ccore_metric_type_service,
                 ),
+                API_PATH_CCORE_PIPELINES: lambda: handle_get_ccore_pipelines(
+                    handler,
+                    services.ccore_pipeline_service,
+                ),
+                API_PATH_CCORE_PIPELINE_STATUSES: lambda: handle_get_ccore_pipeline_statuses(
+                    handler,
+                    services.ccore_pipeline_status_service,
+                ),
             },
             "prefix": {
                 API_PATH_ECHO_PREFIX: lambda path: handler._send_json(
@@ -151,6 +173,11 @@ def build_core_route_registry(
                 API_PATH_CCORE_METRICS_PREFIX: lambda path: handle_get_ccore_metric_by_id(
                     handler,
                     services.ccore_metric_service,
+                    path,
+                ),
+                API_PATH_CCORE_PIPELINES_PREFIX: lambda path: handle_get_ccore_pipeline_by_id(
+                    handler,
+                    services.ccore_pipeline_service,
                     path,
                 ),
             },
@@ -182,6 +209,10 @@ def build_core_route_registry(
                     handler,
                     services.ccore_metric_service,
                 ),
+                API_PATH_CCORE_PIPELINES: lambda: handle_create_ccore_pipeline(
+                    handler,
+                    services.ccore_pipeline_service,
+                ),
             },
             "prefix": {
                 API_PATH_CCORE_TASKS_PREFIX: lambda path: handle_post_ccore_task_path(
@@ -208,6 +239,11 @@ def build_core_route_registry(
                     services.ccore_metric_service,
                     path,
                 ),
+                API_PATH_CCORE_PIPELINES_PREFIX: lambda path: handle_update_ccore_pipeline(
+                    handler,
+                    services.ccore_pipeline_service,
+                    path,
+                ),
             },
         },
         HTTP_METHOD_DELETE: {
@@ -225,6 +261,11 @@ def build_core_route_registry(
                 API_PATH_CCORE_METRICS_PREFIX: lambda path: handle_delete_ccore_metric(
                     handler,
                     services.ccore_metric_service,
+                    path,
+                ),
+                API_PATH_CCORE_PIPELINES_PREFIX: lambda path: handle_delete_ccore_pipeline(
+                    handler,
+                    services.ccore_pipeline_service,
                     path,
                 ),
             },

@@ -34,3 +34,7 @@ API_PATH_CCORE_EXECUTION_CONFIGURATIONS = "/api/ccore/execution-configurations"
 API_PATH_CCORE_METRICS = "/api/ccore/metrics"
 API_PATH_CCORE_METRICS_PREFIX = "/api/ccore/metrics/"
 API_PATH_CCORE_METRIC_TYPES = "/api/ccore/metric-types"
+
+API_PATH_CCORE_PIPELINES = "/api/ccore/pipelines"
+API_PATH_CCORE_PIPELINES_PREFIX = "/api/ccore/pipelines/"
+API_PATH_CCORE_PIPELINE_STATUSES = "/api/ccore/pipeline-statuses"

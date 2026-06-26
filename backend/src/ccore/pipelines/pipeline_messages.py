@@ -1,0 +1,11 @@
+"""CCore pipeline API messages."""
+
+CCORE_PIPELINE_CREATED_SUCCESS_MESSAGE = "Pipeline created successfully."
+CCORE_PIPELINE_UPDATED_SUCCESS_MESSAGE = "Pipeline updated successfully."
+CCORE_PIPELINE_DELETED_SUCCESS_MESSAGE = "Pipeline deleted successfully."
+CCORE_PIPELINE_NOT_FOUND_MESSAGE = "Pipeline was not found."
+CCORE_PIPELINE_INVALID_ID_MESSAGE = "Pipeline id is required."
+CCORE_PIPELINE_INVALID_JSON_BODY_MESSAGE = "Invalid JSON request body."
+CCORE_PIPELINE_NAME_REQUIRED_MESSAGE = "Pipeline name is required."
+CCORE_PIPELINE_STATUS_REQUIRED_MESSAGE = "Pipeline status id is required."
+CCORE_PIPELINE_STATUS_NOT_FOUND_MESSAGE = "Pipeline status does not exist."
