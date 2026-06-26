@@ -3,7 +3,8 @@ Generic endpoint test runner.
 
 Responsibilities:
 - Read endpoint test definitions from JSON config.
-- Execute all configured endpoint tests.
+- Execute all configured endpoint test suites in order.
+- Support runtime values captured from earlier endpoint responses.
 - Write one summary output file.
 - Write one detailed output file per endpoint.
 - Keep summary output lightweight and navigational.
@@ -15,6 +16,7 @@ from datetime import datetime
 from endpoint_config import load_endpoint_test_config
 from endpoint_output_writer import (
     build_output_folder,
+    is_endpoint_result_successful,
     write_endpoint_output,
     write_summary_output,
 )
@@ -35,15 +37,24 @@ def calculate_failed_endpoint_count(
     return sum(
         1
         for result in results
-        if not result["infrastructure"]["success"]
-        or result["operation"]["success"] is False
+        if not is_endpoint_result_successful(result)
     )
 
 
 def determine_test_status(
     failed_count: int,
 ) -> str:
-    return "PASSED" if failed_count == 0 else "WARNING"
+    return "PASSED" if failed_count == 0 else "FAILED"
+
+
+def print_endpoint_result(
+    result: dict,
+) -> None:
+    status = "PASS" if is_endpoint_result_successful(result) else "FAIL"
+
+    print(
+        f"{status} {result['method']} {result['configuredPath']} {result['name']}"
+    )
 
 
 def print_test_summary(
@@ -56,11 +67,50 @@ def print_test_summary(
     )
 
     print(
-        f"{status} endpoint smoke tests: "
+        f"{status} endpoint tests: "
         f"total={len(results)} "
         f"failed={failed_count} "
         f"summary={summary_output_file}"
     )
+
+
+def build_suite_endpoints(
+    suite_config: dict,
+) -> list:
+    return [
+        {
+            **endpoint,
+            "suite": suite_config["name"],
+        }
+        for endpoint in suite_config["endpoints"]
+    ]
+
+
+def run_endpoint_suites(
+    config: dict,
+    runtime_values: dict,
+) -> list:
+    results = []
+
+    for suite_config in config["testSuites"]:
+        for endpoint in build_suite_endpoints(
+            suite_config,
+        ):
+            result = run_endpoint_test(
+                suite_config["baseUrl"],
+                endpoint,
+                runtime_values,
+            )
+
+            results.append(
+                result,
+            )
+
+            print_endpoint_result(
+                result,
+            )
+
+    return results
 
 
 def main():
@@ -76,14 +126,10 @@ def main():
         config,
     )
 
-    results = [
-        run_endpoint_test(
-            config["baseUrl"],
-            endpoint,
-            runtime_values,
-        )
-        for endpoint in config["endpoints"]
-    ]
+    results = run_endpoint_suites(
+        config,
+        runtime_values,
+    )
 
     for result in results:
         write_endpoint_output(

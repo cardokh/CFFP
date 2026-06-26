@@ -36,7 +36,9 @@ def write_endpoint_output(
     timestamp: str,
     result: dict,
 ) -> Path:
-    endpoint_file_name = to_safe_file_name(result["name"])
+    endpoint_file_name = to_safe_file_name(
+        f"{result.get('suite') or 'endpoint'} {result['name']}"
+    )
 
     output_file_path = output_folder / (
         f"{endpoint_file_name}_{timestamp}{JSON_FILE_EXTENSION}"
@@ -56,6 +58,13 @@ def write_endpoint_output(
     return output_file_path
 
 
+def is_endpoint_result_successful(result: dict) -> bool:
+    return (
+        result["infrastructure"]["success"]
+        and result["operation"]["success"] is not False
+    )
+
+
 def write_summary_output(
     output_folder: Path,
     timestamp: str,
@@ -66,18 +75,32 @@ def write_summary_output(
 
     failed_endpoints = []
 
+    suite_summaries = {}
+
     for result in results:
         endpoint_name = result["name"]
 
-        infrastructure_success = result["infrastructure"]["success"]
+        suite_name = result.get(
+            "suite",
+            "Default Endpoint Suite",
+        )
 
-        operation_success = result["operation"]["success"]
+        if suite_name not in suite_summaries:
+            suite_summaries[suite_name] = {
+                "totalEndpoints": 0,
+                "passedEndpoints": 0,
+                "failedEndpoints": 0,
+            }
 
-        if infrastructure_success and operation_success is not False:
+        suite_summaries[suite_name]["totalEndpoints"] += 1
+
+        if is_endpoint_result_successful(result):
             successful_endpoints.append(endpoint_name)
+            suite_summaries[suite_name]["passedEndpoints"] += 1
 
         else:
             failed_endpoints.append(endpoint_name)
+            suite_summaries[suite_name]["failedEndpoints"] += 1
 
     summary = {
         "timestamp": timestamp,
@@ -87,6 +110,7 @@ def write_summary_output(
         "failedEndpoints": len(failed_endpoints),
         "successfulEndpointNames": successful_endpoints,
         "failedEndpointNames": failed_endpoints,
+        "suiteSummaries": suite_summaries,
         "outputFolder": str(output_folder),
     }
 

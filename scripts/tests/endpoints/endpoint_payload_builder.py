@@ -1,10 +1,10 @@
-def replace_payload_placeholders(
+def replace_placeholders(
     value,
     runtime_values: dict,
 ):
     if isinstance(value, dict):
         return {
-            key: replace_payload_placeholders(
+            key: replace_placeholders(
                 item,
                 runtime_values,
             )
@@ -13,7 +13,7 @@ def replace_payload_placeholders(
 
     if isinstance(value, list):
         return [
-            replace_payload_placeholders(
+            replace_placeholders(
                 item,
                 runtime_values,
             )
@@ -26,7 +26,7 @@ def replace_payload_placeholders(
         for key, replacement in runtime_values.items():
             result = result.replace(
                 f"{{{{{key}}}}}",
-                replacement,
+                str(replacement),
             )
 
         return result
@@ -34,11 +34,21 @@ def replace_payload_placeholders(
     return value
 
 
+def build_endpoint_path(
+    endpoint: dict,
+    runtime_values: dict,
+) -> str:
+    return replace_placeholders(
+        endpoint["path"],
+        runtime_values,
+    )
+
+
 def build_endpoint_payload(
     endpoint: dict,
     runtime_values: dict,
 ) -> dict:
-    return replace_payload_placeholders(
+    return replace_placeholders(
         endpoint.get(
             "payload",
             {},

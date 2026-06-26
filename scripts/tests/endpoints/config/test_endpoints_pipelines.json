@@ -1,0 +1,73 @@
+{
+    "endpoints": [
+        {
+            "name": "Pipeline Statuses - Get All",
+            "method": "GET",
+            "path": "/api/ccore/pipeline-statuses",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true
+        },
+        {
+            "name": "Pipelines - Get All Before Create",
+            "method": "GET",
+            "path": "/api/ccore/pipelines",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true
+        },
+        {
+            "name": "Pipelines - Create",
+            "method": "POST",
+            "path": "/api/ccore/pipelines",
+            "expectedStatusCode": 201,
+            "expectedSuccess": true,
+            "payload": {
+                "pipelineName": "Endpoint Test Pipeline {{timestamp}}",
+                "pipelineDescription": "Created by automated endpoint CRUD test {{timestamp}}",
+                "pipelineStatusId": 1
+            },
+            "capture": {
+                "pipelineId": "pipeline.pipelineId"
+            }
+        },
+        {
+            "name": "Pipelines - Get By Id After Create",
+            "method": "GET",
+            "path": "/api/ccore/pipelines/{{pipelineId}}",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true
+        },
+        {
+            "name": "Pipelines - Update",
+            "method": "PUT",
+            "path": "/api/ccore/pipelines/{{pipelineId}}",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true,
+            "payload": {
+                "pipelineName": "Endpoint Test Pipeline Updated {{timestamp}}",
+                "pipelineDescription": "Updated by automated endpoint CRUD test {{timestamp}}",
+                "pipelineStatusId": 2
+            }
+        },
+        {
+            "name": "Pipelines - Get By Id After Update",
+            "method": "GET",
+            "path": "/api/ccore/pipelines/{{pipelineId}}",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true
+        },
+        {
+            "name": "Pipelines - Delete",
+            "method": "DELETE",
+            "path": "/api/ccore/pipelines/{{pipelineId}}",
+            "expectedStatusCode": 200,
+            "expectedSuccess": true
+        },
+        {
+            "name": "Pipelines - Get By Id After Delete",
+            "method": "GET",
+            "path": "/api/ccore/pipelines/{{pipelineId}}",
+            "expectedStatusCode": 404,
+            "expectedSuccess": false
+        }
+    ]
+}

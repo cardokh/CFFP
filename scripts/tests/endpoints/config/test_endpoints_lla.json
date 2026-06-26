@@ -1,0 +1,55 @@
+{
+    "baseUrl": "http://127.0.0.1:8000",
+    "outputFolder": "scripts/tests/endpoints/output",
+    "endpoints": [
+        {
+            "name": "Get Automation Tasks",
+            "method": "GET",
+            "path": "/api/automation/tasks",
+            "expectedStatusCode": 200
+        },
+        {
+            "name": "Get Lesson Categories",
+            "method": "GET",
+            "path": "/api/admin/lesson-categories",
+            "expectedStatusCode": 200
+        },
+        {
+            "name": "Get Learning Items",
+            "method": "GET",
+            "path": "/api/admin/learning-items",
+            "expectedStatusCode": 200
+        },
+        {
+            "name": "Get Quiz Questions",
+            "method": "GET",
+            "path": "/api/admin/quiz-questions",
+            "expectedStatusCode": 200
+        },
+        {
+            "name": "Get Reference Data",
+            "method": "GET",
+            "path": "/api/admin/reference-data/lesson-form-options",
+            "expectedStatusCode": 200
+        },
+        {
+            "name": "Create Lesson Category",
+            "method": "POST",
+            "path": "/api/admin/lesson-categories",
+            "expectedStatusCode": 201,
+            "payload": {
+                "name": "Smoke Test Category {{timestamp}}"
+            }
+        },
+        {
+            "name": "AI Speech Generate",
+            "method": "POST",
+            "path": "/api/ai/speech/generate",
+            "expectedStatusCode": 200,
+            "payload": {
+                "text": "Hola",
+                "voice": "alloy"
+            }
+        }
+    ]
+}
