@@ -7,7 +7,7 @@
     display: none;
 }
 
-.ccore-metrics-content {
+.ccore-pipelines-content {
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -26,12 +26,12 @@
     scrollbar-color: #35557a #0f1b2b;
 }
 
-.ccore-metrics-header {
+.ccore-pipelines-header {
     flex: 0 0 auto;
     max-width: 920px;
 }
 
-.ccore-metrics-kicker {
+.ccore-pipelines-kicker {
     margin: 0 0 0.3rem;
     color: #8fb7e4;
     font-size: 0.72rem;
@@ -40,91 +40,56 @@
     text-transform: uppercase;
 }
 
-.ccore-metrics-header h1 {
+.ccore-pipelines-header h1 {
     margin: 0 0 0.4rem;
     color: #ffffff;
     font-size: 1.75rem;
 }
 
-.ccore-metrics-header p {
+.ccore-pipelines-header p {
     margin: 0;
     color: #9bb0c8;
     font-size: 0.9rem;
     line-height: 1.4;
 }
 
-.ccore-metrics-header code {
+.ccore-pipelines-header code {
     color: #b9dafc;
 }
 
-.ccore-metrics-layout {
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 0.85rem;
-    min-height: 0;
-}
-
-.ccore-metrics-card {
+.ccore-pipelines-card {
     min-width: 0;
 }
 
-.ccore-metric-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.ccore-metric-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-
-    color: #d9e7f7;
-    font-size: 0.82rem;
-    font-weight: 700;
-}
-
-.ccore-metric-field input,
-.ccore-metric-field select {
-    border: 1px solid rgba(119, 183, 255, 0.28);
-    border-radius: 10px;
-    background: rgba(6, 18, 33, 0.88);
-    color: #ffffff;
-    padding: 0.55rem 0.65rem;
-    font-size: 0.9rem;
-}
-
-.ccore-metric-form-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.ccore-metrics-table-card {
+.ccore-pipelines-table-card {
     min-height: 0;
 }
 
-.ccore-metrics-table td:last-child {
-    white-space: nowrap;
+.ccore-pipelines-table tbody tr[data-pipeline-id] {
+    cursor: pointer;
 }
 
-.ccore-metric-name-cell {
+.ccore-pipelines-table tbody tr[data-pipeline-id]:hover {
+    background: rgba(119, 183, 255, 0.08);
+}
+
+.ccore-pipeline-name-cell {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
 }
 
-.ccore-metric-name {
+.ccore-pipeline-name {
     color: #ffffff;
     font-weight: 800;
 }
 
-.ccore-metric-id {
+.ccore-pipeline-id {
     color: #8194ac;
     font-size: 0.72rem;
 }
 
-.ccore-metric-type {
+.ccore-pipeline-status {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
@@ -136,29 +101,19 @@
     letter-spacing: 0.05em;
 }
 
-.ccore-metric-row-actions {
-    display: flex;
-    gap: 0.4rem;
-    justify-content: flex-end;
-}
-
-.ccore-metric-row-actions .shared-button {
-    padding: 0.35rem 0.55rem;
-    font-size: 0.75rem;
-}
-
-.ccore-metrics-toolbar {
+.ccore-pipelines-toolbar {
     flex: 0 0 auto;
 }
 
-.ccore-metrics-count {
+.ccore-pipelines-count {
     color: #9bb0c8;
     font-size: 0.82rem;
     font-weight: 700;
 }
 
-@media (max-width: 1000px) {
-    .ccore-metrics-layout {
-        grid-template-columns: 1fr;
-    }
+.ccore-pipelines-page-indicator {
+    color: #c7d9ee;
+    font-size: 0.82rem;
+    font-weight: 800;
+    white-space: nowrap;
 }

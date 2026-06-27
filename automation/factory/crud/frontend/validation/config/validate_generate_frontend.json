@@ -1,0 +1,17 @@
+{
+  "required_generator_files": [
+    "automation/factory/crud/frontend/generate_frontend.py",
+    "automation/factory/crud/frontend/config/generate_frontend.json",
+    "automation/factory/crud/frontend/generator_lib/frontend_generator.py",
+    "automation/factory/crud/frontend/generator_lib/golden_tasks_transformer.py",
+    "automation/factory/crud/frontend/generator_lib/frontend_wiring.py",
+    "automation/factory/crud/frontend/generator_lib/detail_templates.py"
+  ],
+  "required_golden_files": [
+    "frontend/static/desktop/protected/ccore/automation/tasks/tasks.html",
+    "frontend/static/desktop/protected/ccore/automation/tasks/css/tasks.css",
+    "frontend/static/desktop/protected/ccore/automation/tasks/js/tasks.js",
+    "frontend/static/desktop/protected/ccore/automation/tasks/task-details.html",
+    "frontend/static/desktop/protected/ccore/automation/tasks/css/task-details.css"
+  ]
+}

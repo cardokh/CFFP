@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Pipeline Details | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/pipeline-details.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-pipeline-details-content">
+
+                    <header class="ccore-pipeline-details-header">
+                        <h1 id="ccorePipelineDetailsTitle">CCore Pipeline Details</h1>
+                        <p>
+                            Manage the pipeline definition and its PostgreSQL-backed status metadata.
+                        </p>
+                    </header>
+
+                    <fieldset class="shared-panel ccore-pipeline-details-card">
+                        <legend id="ccorePipelineDetailsLegend">Pipeline Details</legend>
+
+                        <form id="ccorePipelineDetailsForm" class="ccore-pipeline-details-form">
+                            <input id="ccorePipelineIdInput" type="hidden">
+
+                            <div class="ccore-pipeline-details-grid">
+                                <label class="ccore-pipeline-details-field" for="ccorePipelineNameInput">
+                                    <span>Pipeline Name</span>
+                                    <input id="ccorePipelineNameInput" type="text" maxlength="255" required>
+                                </label>
+
+                                <label class="ccore-pipeline-details-field" for="ccorePipelineStatusInput">
+                                    <span>Status</span>
+                                    <select id="ccorePipelineStatusInput" required disabled>
+                                        <option value="">Loading statuses...</option>
+                                    </select>
+                                </label>
+
+                                <label class="ccore-pipeline-details-field readonly" for="ccorePipelineCreatedAtInput">
+                                    <span>Created</span>
+                                    <input id="ccorePipelineCreatedAtInput" type="text" readonly value="—">
+                                </label>
+
+                                <label class="ccore-pipeline-details-field readonly ccore-pipeline-details-id-field"
+                                    for="ccorePipelineDisplayIdInput">
+                                    <span>Pipeline ID</span>
+                                    <input id="ccorePipelineDisplayIdInput" type="text" readonly value="New pipeline">
+                                </label>
+                            </div>
+
+                            <label class="ccore-pipeline-details-field ccore-pipeline-description-field"
+                                for="ccorePipelineDescriptionInput">
+                                <span>Description</span>
+                                <textarea id="ccorePipelineDescriptionInput" rows="4" maxlength="2000"></textarea>
+                            </label>
+                        </form>
+                    </fieldset>
+
+                    <div id="ccorePipelineDetailsMessage" class="form-message info hidden ccore-pipeline-details-message"></div>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-pipeline-details-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action" href="./pipelines.html">
+                                Back to Pipelines
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <span id="ccorePipelineDetailsMode" class="ccore-pipeline-details-mode">Create mode</span>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <button id="deleteCCorePipelineButton"
+                                class="shared-button secondary shared-table-toolbar-action hidden" type="button">
+                                Delete Pipeline
+                            </button>
+
+                            <button id="saveCCorePipelineButton" class="shared-button primary shared-table-toolbar-action"
+                                type="submit" form="ccorePipelineDetailsForm">
+                                Create Pipeline
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/pipeline-details.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

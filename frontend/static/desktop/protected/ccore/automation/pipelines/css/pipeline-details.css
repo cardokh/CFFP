@@ -1,0 +1,234 @@
+:root {
+    --protected-content-height:
+        calc(var(--protected-workspace-height) - var(--protected-workspace-padding-top) - var(--protected-workspace-padding-bottom) - var(--protected-header-height) - var(--protected-panel-gap));
+}
+
+#footer-panel-container {
+    display: none;
+}
+
+.ccore-pipeline-details-content {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #35557a #0f1b2b;
+}
+
+.ccore-pipeline-details-header {
+    flex: 0 0 auto;
+    max-width: 980px;
+}
+
+.ccore-pipeline-details-header h1 {
+    margin: 0 0 0.4rem;
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+
+.ccore-pipeline-details-header p {
+    margin: 0;
+    color: #9bb0c8;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.ccore-pipeline-details-card,
+.ccore-pipeline-details-message,
+.ccore-pipeline-details-toolbar,
+.ccore-execution-panel {
+    max-width: 980px;
+    min-width: 0;
+}
+
+.ccore-pipeline-details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ccore-pipeline-details-grid,
+.ccore-execution-configuration-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.ccore-pipeline-details-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: #d9e7f7;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-pipeline-details-field input,
+.ccore-pipeline-details-field select,
+.ccore-execution-search {
+    border: 1px solid rgba(119, 183, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(6, 18, 33, 0.88);
+    color: #ffffff;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.9rem;
+}
+
+.ccore-pipeline-details-field.readonly input {
+    color: #9bb0c8;
+    background: rgba(12, 28, 47, 0.72);
+}
+
+.ccore-pipeline-details-mode,
+#ccoreExecutionPageIndicator,
+#ccoreExecutionCountLabel {
+    color: #9bb0c8;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ccore-execution-action-cell {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    grid-column: 1 / -1;
+}
+
+.ccore-execution-toolbar {
+    margin-bottom: 0.75rem;
+}
+
+.ccore-execution-search {
+    min-width: 210px;
+}
+
+.ccore-execution-table-shell {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid rgba(80, 145, 214, 0.28);
+    border-radius: 10px;
+}
+
+.ccore-execution-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.ccore-execution-table th,
+.ccore-execution-table td {
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid rgba(80, 145, 214, 0.18);
+    text-align: left;
+    color: #ffffff;
+}
+
+.ccore-execution-table th {
+    background: rgba(35, 72, 110, 0.82);
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.ccore-execution-table tbody tr[data-execution-id] {
+    cursor: pointer;
+}
+
+.ccore-execution-table tbody tr[data-execution-id]:hover,
+.ccore-execution-table tbody tr.selected {
+    background: rgba(58, 116, 176, 0.32);
+}
+
+.ccore-execution-status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+    background: rgba(96, 165, 250, 0.2);
+    color: #bfdbfe;
+    font-weight: 800;
+}
+
+.ccore-execution-report-empty {
+    color: #9bb0c8;
+    font-size: 0.9rem;
+}
+
+.ccore-execution-report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+}
+
+.ccore-execution-report-item {
+    border: 1px solid rgba(119, 183, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.55rem 0.65rem;
+    background: rgba(6, 18, 33, 0.55);
+}
+
+.ccore-execution-report-item span {
+    display: block;
+    color: #9bb0c8;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.ccore-execution-report-item strong {
+    display: block;
+    margin-top: 0.2rem;
+    color: #ffffff;
+    font-size: 0.85rem;
+}
+
+.ccore-execution-report-block {
+    margin-top: 0.75rem;
+}
+
+.ccore-execution-report-block h3 {
+    margin: 0 0 0.35rem;
+    color: #d9e7f7;
+    font-size: 0.9rem;
+}
+
+.ccore-execution-report-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border: 1px solid rgba(119, 183, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.65rem;
+    background: rgba(6, 18, 33, 0.72);
+    color: #d9e7f7;
+    font-size: 0.8rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 840px) {
+    .ccore-pipeline-details-grid,
+    .ccore-execution-configuration-grid,
+    .ccore-execution-report-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.ccore-pipeline-description-field {
+    margin-top: 1rem;
+}
+
+.ccore-pipeline-description-field textarea {
+    min-height: 7rem;
+    resize: vertical;
+}

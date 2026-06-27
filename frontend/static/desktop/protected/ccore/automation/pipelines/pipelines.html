@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCore Pipelines | CFFP</title>
+
+    <link rel="stylesheet" href="/desktop/shared/styles/protected-layout.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-panels.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-tables.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-table-toolbar.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-search.css">
+    <link rel="stylesheet" href="/desktop/shared/styles/shared-buttons.css">
+
+    <link rel="stylesheet" href="./css/pipelines.css">
+</head>
+
+<body>
+
+    <main class="dashboard-layout">
+
+        <div id="desktop-sidebar-container"></div>
+
+        <section class="main-content">
+
+            <div id="header-panel-container"></div>
+
+            <section class="protected-content-panel">
+
+                <div class="ccore-pipelines-content">
+
+                    <header class="ccore-pipelines-header">
+
+                        <h1>CCore Pipelines</h1>
+
+                        <p>
+                            CRUD: Create/Read/Update/Delete persisted CCore pipelines stored in PostgreSQL table
+                            <code>ccore_pipelines</code>.
+                        </p>
+                    </header>
+
+                    <div id="ccorePipelinesMessage" class="form-message info hidden"></div>
+
+                    <fieldset class="shared-panel ccore-pipelines-card ccore-pipelines-table-card">
+                        <legend>CCore Pipelines</legend>
+
+                        <div class="shared-table-wrapper">
+                            <table class="shared-table ccore-pipelines-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="0"
+                                                data-sort-key="pipelineName" type="button">
+                                                Pipeline Name
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="1"
+                                                data-sort-key="statusLabel" type="button">
+                                                Status
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="shared-table-sort-button" data-sort-column="2"
+                                                data-sort-key="createdAt" type="button">
+                                                Created
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="ccorePipelinesTableBody">
+                                    <tr>
+                                        <td colspan="3" class="shared-table-empty-state">
+                                            Loading CCore pipelines...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </fieldset>
+
+                    <section class="shared-toolbar-panel shared-table-toolbar ccore-pipelines-toolbar">
+                        <div class="shared-table-toolbar-left">
+                            <a class="shared-button secondary shared-table-toolbar-action"
+                                href="/desktop/protected/ccore/automation/automation.html">
+                                Back to Automation
+                            </a>
+                        </div>
+
+                        <div class="shared-table-toolbar-center">
+                            <label class="shared-search-box shared-table-toolbar-search" for="ccorePipelinesSearchInput">
+                                <span class="shared-search-icon">⌕</span>
+                                <input id="ccorePipelinesSearchInput" class="shared-search-input" type="search"
+                                    placeholder="Search pipelines..." disabled>
+                            </label>
+
+                            <button id="ccorePipelinesPreviousPageButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                ‹ Prev
+                            </button>
+
+                            <span id="ccorePipelinesPageIndicator" class="ccore-pipelines-page-indicator">
+                                Page 1 of 1
+                            </span>
+
+                            <button id="ccorePipelinesNextPageButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button" disabled>
+                                Next ›
+                            </button>
+                        </div>
+
+                        <div class="shared-table-toolbar-right">
+                            <span id="ccorePipelinesCount" class="ccore-pipelines-count">0 pipelines</span>
+
+                            <a class="shared-button primary shared-table-toolbar-action" href="./pipeline-details.html">
+                                Create Pipeline
+                            </a>
+
+                            <button id="refreshCCorePipelinesButton"
+                                class="shared-button secondary shared-table-toolbar-action" type="button">
+                                Refresh
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <div id="footer-panel-container"></div>
+
+        </section>
+
+    </main>
+
+    <script src="/desktop/protected/shared/components/protected-workspace/protected-workspace.js"></script>
+
+    <script>
+        loadProtectedWorkspace("automation")
+            .then(async () => {
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-search.js");
+                await loadProtectedWorkspaceScript("/desktop/shared/js/table-sorter.js");
+
+                const pageScript = document.createElement("script");
+                pageScript.src = "./js/pipelines.js";
+                document.body.appendChild(pageScript);
+            });
+    </script>
+
+</body>
+
+</html>

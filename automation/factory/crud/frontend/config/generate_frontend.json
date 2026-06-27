@@ -1,0 +1,26 @@
+{
+  "entity": {
+    "name": "Pipeline",
+    "plural_name": "Pipelines",
+    "api_key": "pipelines",
+    "api_list_property": "pipelines",
+    "api_detail_property": "pipeline",
+    "id_field": "pipelineId",
+    "name_field": "pipelineName",
+    "description_field": "pipelineDescription",
+    "status_id_field": "pipelineStatusId",
+    "status_label_field": "pipelineStatusLabel",
+    "created_at_field": "createdAt",
+    "api_base_path": "/api/ccore/pipelines",
+    "api_status_path": "/api/ccore/pipeline-statuses",
+    "status_response_property": "pipelineStatuses",
+    "table_name": "ccore_pipelines"
+  },
+  "paths": {
+    "tasks_module_dir": "frontend/static/desktop/protected/ccore/automation/tasks",
+    "automation_dashboard": "frontend/static/desktop/protected/ccore/automation/automation.html",
+    "api_endpoints": "frontend/static/shared/api-endpoints.js",
+    "output_module_dir": "frontend/static/desktop/protected/ccore/automation/pipelines",
+    "report": "runtime/factory/reports/frontend_crud_generation_report.json"
+  }
+}

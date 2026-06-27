@@ -186,6 +186,16 @@ const CCORE_API_ENDPOINTS = {
             return `/api/ccore/metrics/${encodeURIComponent(metricId)}`;
         }
     },
+
+    pipelines: {
+        list: "/api/ccore/pipelines",
+        create: "/api/ccore/pipelines",
+        statuses: "/api/ccore/pipeline-statuses",
+
+        byId(pipelineId) {
+            return `/api/ccore/pipelines/${encodeURIComponent(pipelineId)}`;
+        }
+    },
 };
 
 const LLA_API_ENDPOINTS = CCORE_API_ENDPOINTS;
