@@ -1,7 +1,8 @@
 {
     "scriptName": "validate_generate_backend",
-    "repoRoot": "../../../../../..",
+    "mode": "validate_pipeline_backend_crud_generation",
     "generationConfigPath": "scripts/factory/crud/backend/config/generate_backend.json",
+    "automationPackageDirectory": "scripts/factory/crud/backend",
     "expectedOutputPackageDirectory": "backend/src/ccore/pipelines",
     "expectedGeneratedFiles": [
         "__init__.py",
@@ -21,6 +22,5 @@
         "backend/src/api/route_registry.py",
         "backend/src/ccore/application/service_factory.py",
         "backend/src/ccore/application/service_container.py"
-    ],
-    "reportPath": "scripts/factory/crud/backend/output/validate_generate_backend_report.json"
+    ]
 }

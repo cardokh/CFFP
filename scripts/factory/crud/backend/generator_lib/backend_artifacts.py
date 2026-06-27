@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from scripts.factory.crud.backend.generator_lib.template_registry import BackendTemplateRegistry
+from .template_registry import BackendTemplateRegistry
 
 
 @dataclass(frozen=True)

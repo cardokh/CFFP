@@ -47,6 +47,27 @@ def _patch_file(repo_root: Path, relative_path: str, patcher) -> PatchResult:
     return PatchResult(relative_path, "unchanged")
 
 
+def patch_api_app_import_path(repo_root: Path) -> PatchResult:
+    block = """
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+"""
+
+    def patch(content: str) -> tuple[str, bool]:
+        if "PROJECT_ROOT = Path(__file__).resolve().parents[3]" in content:
+            return content, False
+        marker = "from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import urlparse\n"
+        if marker not in content:
+            return _append_once(content, block)
+        return content.replace(marker, marker + block + "\n", 1), True
+
+    return _patch_file(repo_root, "backend/src/api/app.py", patch)
+
+
 def patch_api_paths(repo_root: Path) -> PatchResult:
     block = '''
 API_PATH_CCORE_PIPELINES = "/api/ccore/pipelines"
@@ -251,6 +272,7 @@ from backend.src.ccore.pipelines.pipeline_routes import (
 
 def patch_application_wiring(repo_root: Path) -> list[PatchResult]:
     return [
+        patch_api_app_import_path(repo_root),
         patch_api_paths(repo_root),
         patch_service_factory(repo_root),
         patch_service_container(repo_root),

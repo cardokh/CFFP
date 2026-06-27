@@ -4,11 +4,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from scripts.factory.crud.backend.generator_lib.backend_artifacts import PipelineBackendArtifactBuilder
-from scripts.factory.crud.backend.generator_lib.backend_wiring import patch_application_wiring
-from scripts.factory.crud.backend.generator_lib.file_writer import write_text_file
-from scripts.factory.crud.backend.generator_lib.report_writer import utc_timestamp, write_report
-from scripts.factory.crud.backend.generator_lib.template_registry import BackendTemplateRegistry
+from .backend_artifacts import PipelineBackendArtifactBuilder
+from .backend_wiring import patch_application_wiring
+from .file_writer import write_text_file
+from .report_writer import utc_timestamp
+from .template_registry import BackendTemplateRegistry
 
 
 class BackendCrudGenerator:
@@ -49,5 +49,4 @@ class BackendCrudGenerator:
             "files": file_results,
             "patchedFiles": patch_results,
         }
-        write_report(repo_root, config.get("reportPath"), report)
         return report

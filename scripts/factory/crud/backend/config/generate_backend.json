@@ -1,10 +1,8 @@
 {
     "scriptName": "generate_backend",
     "mode": "generate_pipeline_backend_crud",
-    "repoRoot": "../../../../..",
     "entity": "pipelines",
     "outputPackageDirectory": "backend/src/ccore/pipelines",
-    "reportPath": "scripts/factory/crud/backend/output/generate_backend_report.json",
     "options": {
         "overwriteExistingFiles": true,
         "patchApplicationWiring": true,

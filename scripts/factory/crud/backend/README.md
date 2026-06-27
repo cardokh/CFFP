@@ -1,8 +1,22 @@
 # Backend CRUD Automation — CCore Pipelines
 
-This task generates the backend CRUD slice for `ccore_pipelines`.
+This task generates and validates the backend CRUD slice for `ccore_pipelines`.
 
-## What this automation creates
+## Scope
+
+This automation is intentionally limited to Backend CRUD Automation for CCore pipelines. It does not redesign the database task, frontend, navigation, orchestration, Gemini provider integration, or AI provider integration.
+
+## Script architecture
+
+The executable scripts follow the shared CFFP scripting blueprint:
+
+- script classes extend `scripts.shared.base_script.BaseScript`
+- each script reads from its own `config/` folder
+- each script writes reports to its own `output/` folder through `BaseScript.write_json_report`
+- repository root resolution comes from the shared scripting infrastructure
+- terminal output is intentionally concise
+
+## What generation creates
 
 Running `generate_backend.py` creates:
 
@@ -18,7 +32,7 @@ Running `generate_backend.py` creates:
 - `backend/src/ccore/pipelines/pipeline_service.py`
 - `backend/src/ccore/pipelines/pipeline_routes.py`
 
-It also patches the application wiring files so the new API routes are reachable:
+It also patches application wiring files so the pipeline API routes are reachable:
 
 - `backend/src/api/api_paths.py`
 - `backend/src/api/route_registry.py`
@@ -33,6 +47,12 @@ From the repository root:
 python scripts/factory/crud/backend/generate_backend.py
 ```
 
+The script writes its report to:
+
+```text
+scripts/factory/crud/backend/output/
+```
+
 ## Validate
 
 From the repository root:
@@ -41,8 +61,10 @@ From the repository root:
 python scripts/factory/crud/backend/validation/validate_generate_backend.py
 ```
 
-The validator runs generation in a temporary copied repository, verifies expected generated files, verifies patch targets, and compiles the generated Python files.
+The validator runs generation in a temporary copied repository, verifies expected generated files, verifies patch targets, and compiles the generated Python files. The temporary repository is deleted automatically when validation finishes.
 
-## Scope
+The script writes its report to:
 
-This task is intentionally limited to Backend CRUD Automation for CCore pipelines. It does not modify the database task, frontend, orchestration, Gemini provider integration, or navigation.
+```text
+scripts/factory/crud/backend/validation/output/
+```
