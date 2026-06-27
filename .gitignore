@@ -205,3 +205,4 @@ runtime/factory/reports/*
 !runtime/factory/reports/.gitkeep
 
 .ccore_workspace/
+.DS_Store
