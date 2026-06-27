@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .config_loader import FrontendConfig
-from .detail_templates import build_detail_html, build_detail_js
+from .detail_templates import build_detail_css, build_detail_html, build_detail_js
 from .file_writer import write_text
 from .frontend_artifacts import FrontendGenerationResult
 from .frontend_wiring import add_api_endpoints, add_dashboard_card
@@ -75,7 +75,7 @@ class FrontendCrudGenerator:
         self._write(f"{out_dir}/css/pipelines.css", build_list_css(tasks_css, entity))
         self._write(f"{out_dir}/js/pipelines.js", build_list_js(tasks_js, entity))
         self._write(f"{out_dir}/pipeline-details.html", build_detail_html(entity))
-        self._write(f"{out_dir}/css/pipeline-details.css", build_list_css(details_css, entity) + "\n\n.ccore-pipeline-description-field {\n    margin-top: 1rem;\n}\n\n.ccore-pipeline-description-field textarea {\n    min-height: 7rem;\n    resize: vertical;\n}\n")
+        self._write(f"{out_dir}/css/pipeline-details.css", build_detail_css(details_css, entity))
         self._write(f"{out_dir}/js/pipeline-details.js", build_detail_js(entity))
 
     def _update_dashboard(self) -> None:

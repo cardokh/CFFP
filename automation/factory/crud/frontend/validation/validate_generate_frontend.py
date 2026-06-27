@@ -11,10 +11,22 @@ def require_file(repo_root: Path, relative_path: str, errors: list[str]) -> None
         errors.append(f"Missing file: {relative_path}")
 
 
+def require_snippet(content: str, relative_path: str, snippet: str, errors: list[str]) -> None:
+    if snippet not in content:
+        errors.append(f"{relative_path} missing expected snippet: {snippet}")
+
+
+def reject_snippet(content: str, relative_path: str, snippet: str, errors: list[str]) -> None:
+    if snippet in content:
+        errors.append(f"{relative_path} contains rejected snippet: {snippet}")
+
+
 def validate_generated_output(repo_root: Path, errors: list[str]) -> None:
     expectations = {
         "frontend/static/desktop/protected/ccore/automation/pipelines/pipelines.html": [
             "shared-table ccore-pipelines-table",
+            "shared-table-wrapper",
+            "shared-table-toolbar ccore-pipelines-toolbar",
             "ccorePipelinesTableBody",
             "ccorePipelinesSearchInput",
             "Create Pipeline",
@@ -30,10 +42,19 @@ def validate_generated_output(repo_root: Path, errors: list[str]) -> None:
             "pipeline-details.html?pipelineId=",
         ],
         "frontend/static/desktop/protected/ccore/automation/pipelines/pipeline-details.html": [
+            "ccore-pipeline-details-grid",
             "ccorePipelineStatusInput",
             "ccorePipelineDescriptionInput",
+            "shared-toolbar-panel shared-table-toolbar ccore-pipeline-details-toolbar",
+            "Back to Pipelines",
             "Create Pipeline",
             "Delete Pipeline",
+        ],
+        "frontend/static/desktop/protected/ccore/automation/pipelines/css/pipeline-details.css": [
+            ".ccore-pipeline-details-grid",
+            "grid-template-columns: repeat(2, minmax(0, 1fr));",
+            ".ccore-pipeline-description-field",
+            "grid-column: 1 / -1;",
         ],
         "frontend/static/desktop/protected/ccore/automation/pipelines/js/pipeline-details.js": [
             "CCORE_API_ENDPOINTS.pipelines.statuses",
@@ -41,6 +62,7 @@ def validate_generated_output(repo_root: Path, errors: list[str]) -> None:
             "postJson(CCORE_API_ENDPOINTS.pipelines.create",
             "putJson(CCORE_API_ENDPOINTS.pipelines.byId",
             "deleteJson(CCORE_API_ENDPOINTS.pipelines.byId",
+            "handleSaveCCorePipelineSubmit",
         ],
         "frontend/static/shared/api-endpoints.js": [
             "pipelines: {",
@@ -53,6 +75,19 @@ def validate_generated_output(repo_root: Path, errors: list[str]) -> None:
         ],
     }
 
+    rejected = {
+        "frontend/static/desktop/protected/ccore/automation/pipelines/pipeline-details.html": [
+            "<label>Pipeline Name",
+            "<label>Status",
+            "<label>Description",
+        ],
+        "frontend/static/desktop/protected/ccore/automation/pipelines/js/pipeline-details.js": [
+            "function validateCCorePipelineForm(formData) {\n    if (!formData.pipelineName) {\n        throw new Error",
+        "deleteButton.disabled = true",
+        "handleCCorePipelineSave",
+    ],
+    }
+
     for relative_path, snippets in expectations.items():
         path = repo_root / relative_path
         if not path.is_file():
@@ -60,8 +95,9 @@ def validate_generated_output(repo_root: Path, errors: list[str]) -> None:
             continue
         content = path.read_text(encoding="utf-8")
         for snippet in snippets:
-            if snippet not in content:
-                errors.append(f"{relative_path} missing expected snippet: {snippet}")
+            require_snippet(content, relative_path, snippet, errors)
+        for snippet in rejected.get(relative_path, []):
+            reject_snippet(content, relative_path, snippet, errors)
 
 
 def main() -> int:

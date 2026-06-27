@@ -1,17 +1,27 @@
 {
   "required_generator_files": [
+    "automation/factory/crud/frontend/README.md",
     "automation/factory/crud/frontend/generate_frontend.py",
     "automation/factory/crud/frontend/config/generate_frontend.json",
+    "automation/factory/crud/frontend/generator_lib/__init__.py",
+    "automation/factory/crud/frontend/generator_lib/config_loader.py",
+    "automation/factory/crud/frontend/generator_lib/detail_templates.py",
+    "automation/factory/crud/frontend/generator_lib/file_writer.py",
+    "automation/factory/crud/frontend/generator_lib/frontend_artifacts.py",
     "automation/factory/crud/frontend/generator_lib/frontend_generator.py",
-    "automation/factory/crud/frontend/generator_lib/golden_tasks_transformer.py",
     "automation/factory/crud/frontend/generator_lib/frontend_wiring.py",
-    "automation/factory/crud/frontend/generator_lib/detail_templates.py"
+    "automation/factory/crud/frontend/generator_lib/golden_tasks_transformer.py",
+    "automation/factory/crud/frontend/generator_lib/report_writer.py",
+    "automation/factory/crud/frontend/generator_lib/template_loader.py",
+    "automation/factory/crud/frontend/validation/validate_generate_frontend.py",
+    "automation/factory/crud/frontend/validation/config/validate_generate_frontend.json"
   ],
   "required_golden_files": [
     "frontend/static/desktop/protected/ccore/automation/tasks/tasks.html",
     "frontend/static/desktop/protected/ccore/automation/tasks/css/tasks.css",
     "frontend/static/desktop/protected/ccore/automation/tasks/js/tasks.js",
     "frontend/static/desktop/protected/ccore/automation/tasks/task-details.html",
-    "frontend/static/desktop/protected/ccore/automation/tasks/css/task-details.css"
+    "frontend/static/desktop/protected/ccore/automation/tasks/css/task-details.css",
+    "frontend/static/desktop/protected/ccore/automation/tasks/js/task-details.js"
   ]
 }

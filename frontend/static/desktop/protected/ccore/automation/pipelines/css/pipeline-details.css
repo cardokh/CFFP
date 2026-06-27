@@ -224,11 +224,18 @@
 }
 
 
-.ccore-pipeline-description-field {
-    margin-top: 1rem;
+.ccore-pipeline-details-field textarea {
+    border: 1px solid rgba(119, 183, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(6, 18, 33, 0.88);
+    color: #ffffff;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 6.5rem;
 }
 
-.ccore-pipeline-description-field textarea {
-    min-height: 7rem;
-    resize: vertical;
+.ccore-pipeline-description-field {
+    grid-column: 1 / -1;
 }

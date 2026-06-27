@@ -31,7 +31,7 @@
                     <header class="ccore-pipeline-details-header">
                         <h1 id="ccorePipelineDetailsTitle">CCore Pipeline Details</h1>
                         <p>
-                            Manage the pipeline definition and its PostgreSQL-backed status metadata.
+                            Manage the pipeline definition, description, status, and persisted PostgreSQL CRUD lifecycle.
                         </p>
                     </header>
 
@@ -48,10 +48,16 @@
                                 </label>
 
                                 <label class="ccore-pipeline-details-field" for="ccorePipelineStatusInput">
-                                    <span>Status</span>
+                                    <span>Pipeline Status</span>
                                     <select id="ccorePipelineStatusInput" required disabled>
                                         <option value="">Loading statuses...</option>
                                     </select>
+                                </label>
+
+                                <label class="ccore-pipeline-details-field ccore-pipeline-description-field"
+                                    for="ccorePipelineDescriptionInput">
+                                    <span>Description</span>
+                                    <textarea id="ccorePipelineDescriptionInput" maxlength="2000" rows="4"></textarea>
                                 </label>
 
                                 <label class="ccore-pipeline-details-field readonly" for="ccorePipelineCreatedAtInput">
@@ -65,12 +71,6 @@
                                     <input id="ccorePipelineDisplayIdInput" type="text" readonly value="New pipeline">
                                 </label>
                             </div>
-
-                            <label class="ccore-pipeline-details-field ccore-pipeline-description-field"
-                                for="ccorePipelineDescriptionInput">
-                                <span>Description</span>
-                                <textarea id="ccorePipelineDescriptionInput" rows="4" maxlength="2000"></textarea>
-                            </label>
                         </form>
                     </fieldset>
 

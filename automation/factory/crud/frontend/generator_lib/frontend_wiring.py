@@ -18,21 +18,28 @@ PIPELINE_CARD = '''
 def add_dashboard_card(content: str) -> tuple[str, bool]:
     if "/desktop/protected/ccore/automation/pipelines/pipelines.html" in content:
         return content, False
-    marker = '''                            <a class="automation-dashboard-card"
-                                href="/desktop/protected/ccore/automation/metrics/metrics.html">'''
-    start = content.find(marker)
-    if start < 0:
-        raise ValueError("Could not find Metrics dashboard card insertion point.")
-    end = content.find("                            </a>", start)
-    if end < 0:
-        raise ValueError("Could not find Metrics dashboard card end.")
-    end += len("                            </a>")
-    return content[:end] + "\n" + PIPELINE_CARD + content[end:], True
+
+    tasks_marker = '''                            <a class="automation-dashboard-card"
+                                href="/desktop/protected/ccore/automation/tasks/tasks.html">'''
+    tasks_start = content.find(tasks_marker)
+
+    if tasks_start >= 0:
+        return content[:tasks_start] + PIPELINE_CARD + "\n" + content[tasks_start:], True
+
+    grid_marker = '<div class="automation-dashboard-grid" aria-label="CCore modules">'
+    grid_start = content.find(grid_marker)
+
+    if grid_start < 0:
+        raise ValueError("Could not find automation dashboard grid insertion point.")
+
+    insert_at = grid_start + len(grid_marker)
+    return content[:insert_at] + "\n" + PIPELINE_CARD + content[insert_at:], True
 
 
 def add_api_endpoints(content: str, entity: EntityConfig) -> tuple[str, bool]:
     if f"{entity.api_key}: {{" in content:
         return content, False
+
     block = f'''
 
     {entity.api_key}: {{
@@ -44,12 +51,19 @@ def add_api_endpoints(content: str, entity: EntityConfig) -> tuple[str, bool]:
             return `{entity.api_base_path}/${{encodeURIComponent({entity.id_field})}}`;
         }}
     }},'''
-    marker = "\n    metrics: {"
-    index = content.find(marker)
-    if index < 0:
-        raise ValueError("Could not find Metrics endpoint insertion point.")
-    metrics_end = content.find("\n    },", index)
-    if metrics_end < 0:
-        raise ValueError("Could not find Metrics endpoint block end.")
-    metrics_end += len("\n    },")
-    return content[:metrics_end] + block + content[metrics_end:], True
+
+    tasks_marker = "\n    tasks: {"
+    tasks_start = content.find(tasks_marker)
+
+    if tasks_start >= 0:
+        tasks_end = content.find("\n    },", tasks_start)
+        if tasks_end < 0:
+            raise ValueError("Could not find Tasks endpoint block end.")
+        tasks_end += len("\n    },")
+        return content[:tasks_end] + block + content[tasks_end:], True
+
+    object_end = content.rfind("\n};")
+    if object_end < 0:
+        raise ValueError("Could not find CCORE_API_ENDPOINTS object end.")
+
+    return content[:object_end] + block + content[object_end:], True
