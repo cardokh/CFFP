@@ -44,13 +44,13 @@ It also patches application wiring files so the pipeline API routes are reachabl
 From the repository root:
 
 ```bash
-python scripts/factory/crud/backend/generate_backend.py
+python automation/factory/crud/backend/generate_backend.py
 ```
 
 The script writes its report to:
 
 ```text
-scripts/factory/crud/backend/output/
+automation/factory/crud/backend/output/
 ```
 
 ## Validate
@@ -58,7 +58,7 @@ scripts/factory/crud/backend/output/
 From the repository root:
 
 ```bash
-python scripts/factory/crud/backend/validation/validate_generate_backend.py
+python automation/factory/crud/backend/validation/validate_generate_backend.py
 ```
 
 The validator runs generation in a temporary copied repository, verifies expected generated files, verifies patch targets, and compiles the generated Python files. The temporary repository is deleted automatically when validation finishes.
@@ -66,5 +66,5 @@ The validator runs generation in a temporary copied repository, verifies expecte
 The script writes its report to:
 
 ```text
-scripts/factory/crud/backend/validation/output/
+automation/factory/crud/backend/validation/output/
 ```

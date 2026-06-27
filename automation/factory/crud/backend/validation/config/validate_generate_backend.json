@@ -1,8 +1,8 @@
 {
     "scriptName": "validate_generate_backend",
     "mode": "validate_pipeline_backend_crud_generation",
-    "generationConfigPath": "scripts/factory/crud/backend/config/generate_backend.json",
-    "automationPackageDirectory": "scripts/factory/crud/backend",
+    "generationConfigPath": "automation/factory/crud/backend/config/generate_backend.json",
+    "automationPackageDirectory": "automation/factory/crud/backend",
     "expectedOutputPackageDirectory": "backend/src/ccore/pipelines",
     "expectedGeneratedFiles": [
         "__init__.py",
