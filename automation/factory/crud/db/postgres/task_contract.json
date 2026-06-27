@@ -26,33 +26,33 @@
         ]
     },
     "allowedInputFiles": [
-        "scripts/factory/crud/db/postgres/add_database_entity/config/database_entities.json",
-        "scripts/factory/crud/db/postgres/add_database_entity/config/add_database_schema_entity.json",
-        "scripts/factory/crud/db/postgres/add_database_entity/config/add_database_seed_entity.json",
-        "scripts/factory/crud/db/postgres/add_database_entity/config/validate_database_entity_definitions.json",
-        "scripts/factory/crud/db/postgres/config/entities.json",
-        "scripts/factory/crud/db/postgres/config/postgres_create_schema.json",
-        "scripts/factory/crud/db/postgres/config/postgres_seed_data.json",
-        "scripts/factory/crud/db/postgres/config/database.json"
+        "automation/factory/crud/db/postgres/add_database_entity/config/database_entities.json",
+        "automation/factory/crud/db/postgres/add_database_entity/config/add_database_schema_entity.json",
+        "automation/factory/crud/db/postgres/add_database_entity/config/add_database_seed_entity.json",
+        "automation/factory/crud/db/postgres/add_database_entity/config/validate_database_entity_definitions.json",
+        "automation/factory/crud/db/postgres/config/entities.json",
+        "automation/factory/crud/db/postgres/config/postgres_create_schema.json",
+        "automation/factory/crud/db/postgres/config/postgres_seed_data.json",
+        "automation/factory/crud/db/postgres/config/database.json"
     ],
     "allowedOutputFiles": [
-        "scripts/factory/crud/db/postgres/config/entities.json",
-        "scripts/factory/crud/db/postgres/config/postgres_create_schema.json",
-        "scripts/factory/crud/db/postgres/config/postgres_seed_data.json",
-        "scripts/factory/crud/db/postgres/add_database_entity/output/*.json",
-        "scripts/factory/crud/db/postgres/output/*.json"
+        "automation/factory/crud/db/postgres/config/entities.json",
+        "automation/factory/crud/db/postgres/config/postgres_create_schema.json",
+        "automation/factory/crud/db/postgres/config/postgres_seed_data.json",
+        "automation/factory/crud/db/postgres/add_database_entity/output/*.json",
+        "automation/factory/crud/db/postgres/output/*.json"
     ],
     "scripts": {
         "metadataGeneration": [
-            "scripts/factory/crud/db/postgres/add_database_entity/add_database_schema_entity.py",
-            "scripts/factory/crud/db/postgres/add_database_entity/add_database_seed_entity.py"
+            "automation/factory/crud/db/postgres/add_database_entity/add_database_schema_entity.py",
+            "automation/factory/crud/db/postgres/add_database_entity/add_database_seed_entity.py"
         ],
         "validation": [
-            "scripts/factory/crud/db/postgres/add_database_entity/validate_database_entity_definitions.py"
+            "automation/factory/crud/db/postgres/add_database_entity/validate_database_entity_definitions.py"
         ],
         "databaseExecution": [
-            "scripts/factory/crud/db/postgres/postgres_create_schema.py",
-            "scripts/factory/crud/db/postgres/postgres_seed_data.py"
+            "automation/factory/crud/db/postgres/postgres_create_schema.py",
+            "automation/factory/crud/db/postgres/postgres_seed_data.py"
         ]
     },
     "executionOrder": [

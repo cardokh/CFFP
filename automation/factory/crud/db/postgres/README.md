@@ -46,15 +46,15 @@ This task is the first stage of the CRUD Automation Pipeline and serves as the f
 Run the following commands from the repository root in the specified order:
 
 ```bash
-python scripts/factory/crud/db/postgres/add_database_entity/add_database_schema_entity.py
+python automation/factory/crud/db/postgres/add_database_entity/add_database_schema_entity.py
 
-python scripts/factory/crud/db/postgres/add_database_entity/add_database_seed_entity.py
+python automation/factory/crud/db/postgres/add_database_entity/add_database_seed_entity.py
 
-python scripts/factory/crud/db/postgres/add_database_entity/validate_database_entity_definitions.py
+python automation/factory/crud/db/postgres/add_database_entity/validate_database_entity_definitions.py
 
-python scripts/factory/crud/db/postgres/postgres_create_schema.py
+python automation/factory/crud/db/postgres/postgres_create_schema.py
 
-python scripts/factory/crud/db/postgres/postgres_seed_data.py
+python automation/factory/crud/db/postgres/postgres_seed_data.py
 ```
 
 ---

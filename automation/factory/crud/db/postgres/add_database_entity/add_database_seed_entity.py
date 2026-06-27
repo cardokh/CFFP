@@ -5,7 +5,28 @@ This script does not connect to PostgreSQL and does not insert database rows.
 It updates metadata consumed by the existing PostgreSQL seed script.
 """
 
+import sys
 from pathlib import Path
+
+
+def _configure_project_import_path() -> None:
+    project_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "scripts" / "shared").is_dir()
+        ),
+        None,
+    )
+
+    if project_root is None:
+        raise RuntimeError("Could not locate project root containing scripts/shared.")
+
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
+
+_configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed

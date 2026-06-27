@@ -1,7 +1,7 @@
 {
     "scriptName": "postgres_seed_data",
     "mode": "seed_data",
-    "databaseConfigPath": "scripts/factory/crud/db/postgres/config/database.json",
+    "databaseConfigPath": "automation/factory/crud/db/postgres/config/database.json",
     "seedGroups": [
         {
             "table": "ccore_task_statuses",

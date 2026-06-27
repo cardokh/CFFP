@@ -1,0 +1,16 @@
+{
+    "scriptName": "validate_database_entity_definitions",
+    "mode": "validate_postgres_database_entity_definitions",
+    "metadataPaths": {
+        "databaseEntitiesPath": "automation/factory/crud/db/postgres/add_database_entity/config/database_entities.json",
+        "schemaEntityConfigPath": "automation/factory/crud/db/postgres/add_database_entity/config/add_database_schema_entity.json",
+        "seedEntityConfigPath": "automation/factory/crud/db/postgres/add_database_entity/config/add_database_seed_entity.json",
+        "entitiesConfigPath": "automation/factory/crud/db/postgres/config/entities.json",
+        "schemaConfigPath": "automation/factory/crud/db/postgres/config/postgres_create_schema.json",
+        "seedConfigPath": "automation/factory/crud/db/postgres/config/postgres_seed_data.json"
+    },
+    "expected": {
+        "entityCount": 5,
+        "seedGroupCount": 5
+    }
+}

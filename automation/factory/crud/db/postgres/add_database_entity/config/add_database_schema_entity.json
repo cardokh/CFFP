@@ -2,9 +2,9 @@
     "scriptName": "add_database_schema_entity",
     "mode": "update_postgres_schema_metadata",
     "metadataPaths": {
-        "databaseEntitiesPath": "scripts/factory/crud/db/postgres/add_database_entity/config/database_entities.json",
-        "entitiesConfigPath": "scripts/factory/crud/db/postgres/config/entities.json",
-        "schemaConfigPath": "scripts/factory/crud/db/postgres/config/postgres_create_schema.json"
+        "databaseEntitiesPath": "automation/factory/crud/db/postgres/add_database_entity/config/database_entities.json",
+        "entitiesConfigPath": "automation/factory/crud/db/postgres/config/entities.json",
+        "schemaConfigPath": "automation/factory/crud/db/postgres/config/postgres_create_schema.json"
     },
     "options": {
         "replaceExistingTableDefinitions": true

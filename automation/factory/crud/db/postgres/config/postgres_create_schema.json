@@ -1,8 +1,8 @@
 {
     "scriptName": "postgres_create_schema",
     "mode": "create_schema",
-    "databaseConfigPath": "scripts/factory/crud/db/postgres/config/database.json",
-    "entitiesConfigPath": "scripts/factory/crud/db/postgres/config/entities.json",
+    "databaseConfigPath": "automation/factory/crud/db/postgres/config/database.json",
+    "entitiesConfigPath": "automation/factory/crud/db/postgres/config/entities.json",
     "tables": {
         "ccore_task_statuses": {
             "columns": [
