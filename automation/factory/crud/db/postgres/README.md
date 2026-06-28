@@ -16,12 +16,15 @@ python automation/factory/crud/db/db_task.py
 
 ## Components
 
-### Metadata generation
+### Add metadata task
 
-* `add/add_database_schema_entity.py`
-  * Updates per-table PostgreSQL schema metadata.
-* `add/add_database_seed_entity.py`
-  * Updates per-table PostgreSQL seed metadata.
+* `add/add_task.py`
+  * Reads `add/metadata/added_entities.json` as the selector for metadata to add.
+  * Reads per-table source metadata from `add/metadata/entities/<table>/schema.json` and `add/metadata/entities/<table>/seed_data.json`.
+  * Writes approved metadata into `metadata/entities/<table>/`.
+  * Updates `metadata/entities.json`.
+  * Runs validation and writes an add-task report.
+  * Remains a manual metadata-preparation task, not a normal provisioning component.
 
 ### Validation
 

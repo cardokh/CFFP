@@ -45,3 +45,10 @@ Each table context file contains database facts only: table name, columns, Postg
 ## Dependency validation
 
 Selected tables must include their selected foreign key dependencies. If a selected table references an unselected table, validation fails before PostgreSQL schema creation.
+
+
+## PostgreSQL Add Task
+
+`postgres/add/add_task.py` is the component-level task for preparing database entity metadata. It reads `postgres/add/metadata/added_entities.json` as a selector list and reads per-table source metadata from `postgres/add/metadata/entities/<table>/schema.json` and `postgres/add/metadata/entities/<table>/seed_data.json`. It then copies those files into `postgres/metadata/entities/<table>/`, updates `postgres/metadata/entities.json`, runs metadata validation, and writes an add-task report under `postgres/add/output/`. The add task is run manually when adding metadata and is not enabled as part of every normal `db_task.py` run.
+
+The add task remains database-focused only. It prepares PostgreSQL metadata and does not generate backend repositories, services, routes, DTOs, or frontend concepts.

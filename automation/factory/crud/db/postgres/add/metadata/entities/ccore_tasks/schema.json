@@ -1,0 +1,46 @@
+{
+    "columns": [
+        {
+            "name": "task_id",
+            "type": "UUID",
+            "primaryKey": true
+        },
+        {
+            "name": "task_name",
+            "type": "VARCHAR(255)",
+            "nullable": false
+        },
+        {
+            "name": "status_id",
+            "type": "INTEGER",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP WITH TIME ZONE",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+        },
+        {
+            "name": "updated_at",
+            "type": "TIMESTAMP WITH TIME ZONE",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+        }
+    ],
+    "constraints": [
+        {
+            "type": "foreignKey",
+            "columns": [
+                "status_id"
+            ],
+            "references": {
+                "table": "ccore_task_statuses",
+                "columns": [
+                    "status_id"
+                ]
+            },
+            "onDelete": "RESTRICT"
+        }
+    ]
+}

@@ -10,19 +10,9 @@
     },
     "components": [
         {
-            "name": "add_database_schema_entity",
+            "name": "add_task",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/add/add_database_schema_entity.py"
-        },
-        {
-            "name": "add_database_seed_entity",
-            "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/add/add_database_seed_entity.py"
-        },
-        {
-            "name": "validate_database_entity_definitions",
-            "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/add/validator/validate_database_entity_definitions.py"
+            "scriptPath": "automation/factory/crud/db/postgres/add/add_task.py"
         },
         {
             "name": "build_db_context",

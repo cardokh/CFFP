@@ -61,12 +61,12 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
 
     def _get_entity_names(self) -> list[str]:
         entities = self.entities_config.get("entities")
-        if not isinstance(entities, list) or not entities:
-            raise ValueError("entities.json must contain non-empty 'entities'.")
+        if not isinstance(entities, list):
+            raise ValueError("entities.json must contain 'entities' list.")
         for entity_name in entities:
             if not isinstance(entity_name, str) or not entity_name:
                 raise ValueError("Every entities.json entry must be a non-empty string.")
-        self.checks.append("entities.json contains non-empty entity list")
+        self.checks.append("entities.json contains entity list")
         return entities
 
     def _validate_unique_entities(self, entity_names: list[str]) -> None:

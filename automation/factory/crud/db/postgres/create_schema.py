@@ -270,6 +270,9 @@ class PostgreSQLCreateSchemaScript(BaseScript):
 
     def _verify_application_tables_exist(self) -> None:
         expected_tables = self._get_entity_names()
+        if not expected_tables:
+            self.verified_tables = []
+            return
         conn = self._get_application_connection()
         try:
             cursor = conn.cursor()
@@ -290,8 +293,8 @@ class PostgreSQLCreateSchemaScript(BaseScript):
 
     def _get_entity_names(self) -> list[str]:
         entities = self.entities_config.get("entities")
-        if not isinstance(entities, list) or not entities:
-            raise ValueError("entities.json must contain non-empty 'entities'.")
+        if not isinstance(entities, list):
+            raise ValueError("entities.json must contain 'entities' list.")
         for entity in entities:
             if not isinstance(entity, str) or not entity:
                 raise ValueError("Every entity entry must be a non-empty string.")

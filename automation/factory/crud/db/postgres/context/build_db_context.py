@@ -45,7 +45,7 @@ class PostgreSQLBuildDbContextScript(BaseScript):
         selected_entities = self._get_entity_names()
         table_contexts = []
 
-        self.table_context_root.mkdir(parents=True, exist_ok=True)
+        self._prepare_table_context_output_folder()
         for entity_name in selected_entities:
             table_context = self._build_table_context(entity_name)
             table_context_path = self.table_context_root / f"{entity_name}.json"
@@ -78,10 +78,15 @@ class PostgreSQLBuildDbContextScript(BaseScript):
         if self.database_config.get("databaseType") != "postgres":
             raise ValueError("build_db_context.py requires databaseType 'postgres'.")
 
+    def _prepare_table_context_output_folder(self) -> None:
+        self.table_context_root.mkdir(parents=True, exist_ok=True)
+        for context_file in self.table_context_root.glob("*.json"):
+            context_file.unlink()
+
     def _get_entity_names(self) -> list[str]:
         entities = self.entities_config.get("entities")
-        if not isinstance(entities, list) or not entities:
-            raise ValueError("entities.json must contain non-empty 'entities'.")
+        if not isinstance(entities, list):
+            raise ValueError("entities.json must contain 'entities' list.")
         for entity_name in entities:
             if not isinstance(entity_name, str) or not entity_name:
                 raise ValueError("Every entities.json entry must be a non-empty string.")

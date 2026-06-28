@@ -1,0 +1,18 @@
+{
+    "scriptName": "add_task",
+    "mode": "prepare_postgres_entity_metadata",
+    "metadataPaths": {
+        "addedEntitiesPath": "automation/factory/crud/db/postgres/add/metadata/added_entities.json",
+        "addedEntityMetadataRoot": "automation/factory/crud/db/postgres/add/metadata/entities",
+        "entitiesConfigPath": "automation/factory/crud/db/postgres/metadata/entities.json",
+        "entityMetadataRoot": "automation/factory/crud/db/postgres/metadata/entities"
+    },
+    "options": {
+        "replaceExistingEntityFiles": true,
+        "updateEntitySelector": true,
+        "runValidation": true
+    },
+    "validation": {
+        "scriptPath": "automation/factory/crud/db/postgres/add/validator/validate_database_entity_definitions.py"
+    }
+}

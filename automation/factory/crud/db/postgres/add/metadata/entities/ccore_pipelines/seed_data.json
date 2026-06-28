@@ -1,0 +1,5 @@
+{
+    "table": "ccore_pipelines",
+    "conflictColumn": "pipeline_id",
+    "rows": []
+}

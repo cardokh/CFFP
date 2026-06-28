@@ -1,0 +1,44 @@
+{
+    "columns": [
+        {
+            "name": "execution_configuration_element_id",
+            "type": "INTEGER",
+            "primaryKey": true
+        },
+        {
+            "name": "execution_configuration_id",
+            "type": "INTEGER",
+            "nullable": false
+        },
+        {
+            "name": "element_name",
+            "type": "VARCHAR(150)",
+            "nullable": false
+        },
+        {
+            "name": "element_value",
+            "type": "VARCHAR(1000)",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "INTEGER",
+            "nullable": false
+        }
+    ],
+    "constraints": [
+        {
+            "type": "foreignKey",
+            "columns": [
+                "execution_configuration_id"
+            ],
+            "references": {
+                "table": "ccore_execution_configurations",
+                "columns": [
+                    "execution_configuration_id"
+                ]
+            },
+            "onDelete": "CASCADE"
+        }
+    ]
+}

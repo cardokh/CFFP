@@ -1,0 +1,34 @@
+{
+    "table": "ccore_execution_targets",
+    "conflictColumn": "execution_target_id",
+    "rows": [
+        {
+            "execution_target_id": 1,
+            "execution_implementer_type_id": 1,
+            "target_label": "No-op Execution Target",
+            "target_reference": "noop",
+            "sort_order": 10
+        },
+        {
+            "execution_target_id": 2,
+            "execution_implementer_type_id": 3,
+            "target_label": "Bootstrap Project Windows Script",
+            "target_reference": "scripts/bootstrap/bootstrap_project_windows.ps1",
+            "sort_order": 20
+        },
+        {
+            "execution_target_id": 3,
+            "execution_implementer_type_id": 2,
+            "target_label": "Create Folder Python Script",
+            "target_reference": "scripts/workspace/create_folder.py",
+            "sort_order": 30
+        },
+        {
+            "execution_target_id": 4,
+            "execution_implementer_type_id": 2,
+            "target_label": "Validate Project Python Script",
+            "target_reference": "scripts/workspace/validate_project.py",
+            "sort_order": 40
+        }
+    ]
+}
