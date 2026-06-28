@@ -1,0 +1,39 @@
+{
+    "scriptName": "db_task",
+    "mode": "database_crud_task",
+    "databaseEngine": "postgres",
+    "execution": {
+        "stopOnFailure": true,
+        "recreateDatabase": false,
+        "recreateExistingTables": true,
+        "dropUnlistedTables": true,
+        "skipUnselectedForeignKeys": true
+    },
+    "components": [
+        {
+            "name": "add_database_schema_entity",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/add/add_database_schema_entity.py"
+        },
+        {
+            "name": "add_database_seed_entity",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/add/add_database_seed_entity.py"
+        },
+        {
+            "name": "validate_database_entity_definitions",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/add/validator/validate_database_entity_definitions.py"
+        },
+        {
+            "name": "create_schema",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/create_schema.py"
+        },
+        {
+            "name": "seed_data",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/seed_data.py"
+        }
+    ]
+}

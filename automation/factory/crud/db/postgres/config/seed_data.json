@@ -1,0 +1,7 @@
+{
+    "scriptName": "seed_data",
+    "mode": "seed_data",
+    "databaseConfigPath": "automation/factory/crud/db/postgres/metadata/database.json",
+    "entitiesConfigPath": "automation/factory/crud/db/postgres/metadata/entities.json",
+    "entityMetadataRoot": "automation/factory/crud/db/postgres/metadata/entities"
+}

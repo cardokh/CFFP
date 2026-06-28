@@ -1,0 +1,31 @@
+{
+    "blueprintName": "database_entity_blueprint",
+    "version": "1.0",
+    "description": "Generic database entity metadata shape used by the DB CRUD automation task.",
+    "requiredEntityFiles": [
+        "schema.json",
+        "seed_data.json"
+    ],
+    "schemaFile": {
+        "required": [
+            "columns"
+        ],
+        "optional": [
+            "constraints"
+        ],
+        "columnRequired": [
+            "name",
+            "type"
+        ]
+    },
+    "seedDataFile": {
+        "required": [
+            "table",
+            "rows"
+        ],
+        "optional": [
+            "conflictColumn"
+        ],
+        "note": "conflictColumn is required when rows are present."
+    }
+}

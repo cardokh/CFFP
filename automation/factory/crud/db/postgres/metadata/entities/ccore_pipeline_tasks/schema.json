@@ -1,0 +1,71 @@
+{
+    "columns": [
+        {
+            "name": "pipeline_task_id",
+            "type": "UUID",
+            "primaryKey": true,
+            "default": "gen_random_uuid()"
+        },
+        {
+            "name": "pipeline_id",
+            "type": "UUID",
+            "nullable": false
+        },
+        {
+            "name": "task_id",
+            "type": "UUID",
+            "nullable": false
+        },
+        {
+            "name": "task_order",
+            "type": "INTEGER",
+            "nullable": false
+        },
+        {
+            "name": "is_required",
+            "type": "BOOLEAN",
+            "nullable": false,
+            "default": "true"
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP WITH TIME ZONE",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+        },
+        {
+            "name": "updated_at",
+            "type": "TIMESTAMP WITH TIME ZONE",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+        }
+    ],
+    "constraints": [
+        {
+            "type": "foreignKey",
+            "columns": [
+                "pipeline_id"
+            ],
+            "references": {
+                "table": "ccore_pipelines",
+                "columns": [
+                    "pipeline_id"
+                ]
+            },
+            "onDelete": "CASCADE"
+        },
+        {
+            "type": "foreignKey",
+            "columns": [
+                "task_id"
+            ],
+            "references": {
+                "table": "ccore_tasks",
+                "columns": [
+                    "task_id"
+                ]
+            },
+            "onDelete": "RESTRICT"
+        }
+    ]
+}

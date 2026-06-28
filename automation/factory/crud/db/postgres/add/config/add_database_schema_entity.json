@@ -1,0 +1,280 @@
+{
+    "scriptName": "add_database_schema_entity",
+    "mode": "write_postgres_entity_schema_metadata",
+    "metadataPaths": {
+        "entitiesConfigPath": "automation/factory/crud/db/postgres/metadata/entities.json",
+        "entityMetadataRoot": "automation/factory/crud/db/postgres/metadata/entities"
+    },
+    "options": {
+        "replaceExistingEntityFiles": true
+    },
+    "entities": [
+        {
+            "name": "ccore_pipeline_statuses",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_status_id",
+                        "type": "INTEGER",
+                        "primaryKey": true
+                    },
+                    {
+                        "name": "status_label",
+                        "type": "VARCHAR(100)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "INTEGER",
+                        "nullable": false
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ccore_pipeline_execution_statuses",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_execution_status_id",
+                        "type": "INTEGER",
+                        "primaryKey": true
+                    },
+                    {
+                        "name": "status_label",
+                        "type": "VARCHAR(100)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "INTEGER",
+                        "nullable": false
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ccore_pipelines",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_id",
+                        "type": "UUID",
+                        "primaryKey": true,
+                        "default": "gen_random_uuid()"
+                    },
+                    {
+                        "name": "pipeline_name",
+                        "type": "VARCHAR(255)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "pipeline_description",
+                        "type": "TEXT",
+                        "nullable": true
+                    },
+                    {
+                        "name": "pipeline_status_id",
+                        "type": "INTEGER",
+                        "nullable": false
+                    },
+                    {
+                        "name": "created_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    },
+                    {
+                        "name": "updated_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    }
+                ],
+                "constraints": [
+                    {
+                        "type": "foreignKey",
+                        "columns": [
+                            "pipeline_status_id"
+                        ],
+                        "references": {
+                            "table": "ccore_pipeline_statuses",
+                            "columns": [
+                                "pipeline_status_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ccore_pipeline_tasks",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_task_id",
+                        "type": "UUID",
+                        "primaryKey": true,
+                        "default": "gen_random_uuid()"
+                    },
+                    {
+                        "name": "pipeline_id",
+                        "type": "UUID",
+                        "nullable": false
+                    },
+                    {
+                        "name": "task_id",
+                        "type": "UUID",
+                        "nullable": false
+                    },
+                    {
+                        "name": "task_order",
+                        "type": "INTEGER",
+                        "nullable": false
+                    },
+                    {
+                        "name": "is_required",
+                        "type": "BOOLEAN",
+                        "nullable": false,
+                        "default": "true"
+                    },
+                    {
+                        "name": "created_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    },
+                    {
+                        "name": "updated_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    }
+                ],
+                "constraints": [
+                    {
+                        "type": "foreignKey",
+                        "columns": [
+                            "pipeline_id"
+                        ],
+                        "references": {
+                            "table": "ccore_pipelines",
+                            "columns": [
+                                "pipeline_id"
+                            ]
+                        },
+                        "onDelete": "CASCADE"
+                    },
+                    {
+                        "type": "foreignKey",
+                        "columns": [
+                            "task_id"
+                        ],
+                        "references": {
+                            "table": "ccore_tasks",
+                            "columns": [
+                                "task_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ccore_pipeline_executions",
+            "schema": {
+                "columns": [
+                    {
+                        "name": "pipeline_execution_id",
+                        "type": "UUID",
+                        "primaryKey": true,
+                        "default": "gen_random_uuid()"
+                    },
+                    {
+                        "name": "pipeline_id",
+                        "type": "UUID",
+                        "nullable": false
+                    },
+                    {
+                        "name": "pipeline_execution_status_id",
+                        "type": "INTEGER",
+                        "nullable": false
+                    },
+                    {
+                        "name": "requested_by",
+                        "type": "VARCHAR(255)",
+                        "nullable": false
+                    },
+                    {
+                        "name": "execution_report",
+                        "type": "JSONB",
+                        "nullable": false,
+                        "default": "'{}'::jsonb"
+                    },
+                    {
+                        "name": "error_details",
+                        "type": "JSONB",
+                        "nullable": true
+                    },
+                    {
+                        "name": "started_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": true
+                    },
+                    {
+                        "name": "completed_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": true
+                    },
+                    {
+                        "name": "failed_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": true
+                    },
+                    {
+                        "name": "created_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    },
+                    {
+                        "name": "updated_at",
+                        "type": "TIMESTAMP WITH TIME ZONE",
+                        "nullable": false,
+                        "default": "CURRENT_TIMESTAMP"
+                    }
+                ],
+                "constraints": [
+                    {
+                        "type": "foreignKey",
+                        "columns": [
+                            "pipeline_id"
+                        ],
+                        "references": {
+                            "table": "ccore_pipelines",
+                            "columns": [
+                                "pipeline_id"
+                            ]
+                        },
+                        "onDelete": "CASCADE"
+                    },
+                    {
+                        "type": "foreignKey",
+                        "columns": [
+                            "pipeline_execution_status_id"
+                        ],
+                        "references": {
+                            "table": "ccore_pipeline_execution_statuses",
+                            "columns": [
+                                "pipeline_execution_status_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    }
+                ]
+            }
+        }
+    ]
+}

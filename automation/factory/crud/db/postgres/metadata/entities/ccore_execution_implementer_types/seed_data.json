@@ -1,0 +1,26 @@
+{
+    "table": "ccore_execution_implementer_types",
+    "conflictColumn": "execution_implementer_type_id",
+    "rows": [
+        {
+            "execution_implementer_type_id": 1,
+            "implementer_type_label": "No-op Implementer Type",
+            "sort_order": 10
+        },
+        {
+            "execution_implementer_type_id": 2,
+            "implementer_type_label": "Python Script Implementer Type",
+            "sort_order": 20
+        },
+        {
+            "execution_implementer_type_id": 3,
+            "implementer_type_label": "Shell Command Implementer Type",
+            "sort_order": 30
+        },
+        {
+            "execution_implementer_type_id": 4,
+            "implementer_type_label": "AI Implementer Type",
+            "sort_order": 40
+        }
+    ]
+}
