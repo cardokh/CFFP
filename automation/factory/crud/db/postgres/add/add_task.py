@@ -54,14 +54,12 @@ class AddPostgresEntityMetadataTask(BaseScript):
             self._validate_schema_definition(entity_name, schema_definition)
             self._validate_seed_definition(entity_name, seed_definition)
 
-            if self.options.get("updateEntitySelector", True) is True:
-                self._upsert_entity_name(entities_config, entity_name)
+            self._upsert_entity_name(entities_config, entity_name)
 
             self._write_schema_file(entity_name, schema_definition)
             self._write_seed_file(entity_name, seed_definition)
 
-        if self.options.get("updateEntitySelector", True) is True:
-            self._write_entities_config(entities_config)
+        self._write_entities_config(entities_config)
 
         if self.options.get("runValidation", True) is True:
             self.validation_result = self._run_validation()

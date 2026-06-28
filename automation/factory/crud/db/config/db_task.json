@@ -10,6 +10,11 @@
     },
     "components": [
         {
+            "name": "create_table_task",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/create_table/create_table_task.py"
+        },
+        {
             "name": "add_task",
             "enabled": true,
             "scriptPath": "automation/factory/crud/db/postgres/add/add_task.py"

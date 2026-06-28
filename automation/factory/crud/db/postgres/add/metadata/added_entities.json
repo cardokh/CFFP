@@ -15,6 +15,7 @@
         "ccore_metrics",
         "ccore_pipeline_tasks",
         "ccore_pipeline_executions",
-        "ccore_task_executions"
+        "ccore_task_executions",
+        "example_table"
     ]
 }

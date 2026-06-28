@@ -9,7 +9,6 @@
     },
     "options": {
         "replaceExistingEntityFiles": true,
-        "updateEntitySelector": false,
         "runValidation": true
     },
     "validation": {
