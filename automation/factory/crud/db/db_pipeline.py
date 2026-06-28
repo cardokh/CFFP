@@ -1,4 +1,4 @@
-"""Runs the database CRUD automation task by delegating to configured components."""
+"""Runs the database CRUD automation pipeline by delegating to configured tasks."""
 
 import json
 import subprocess
@@ -30,8 +30,8 @@ from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 
 
-class DatabaseCrudTaskScript(BaseScript):
-    """Task-level entry point for database CRUD automation."""
+class DatabaseCrudPipelineScript(BaseScript):
+    """Pipeline-level entry point for database CRUD automation."""
 
     def __init__(self):
         super().__init__(__file__)
@@ -68,33 +68,33 @@ class DatabaseCrudTaskScript(BaseScript):
 
             if status == "PASSED":
                 print_passed(
-                    f"db_task: {report['summary']['executedComponentCount']} components executed successfully"
+                    f"db_pipeline: {report['summary']['executedComponentCount']} components executed successfully"
                 )
             else:
-                print_failed("db_task failed. See db/output for the task report.")
+                print_failed("db_pipeline failed. See db/output for the task report.")
                 raise SystemExit(1)
         except Exception as exc:
             report = self._build_report("FAILED", started, str(exc))
             self.write_json_report(report)
-            print_failed(f"db_task failed: {exc}")
+            print_failed(f"db_pipeline failed: {exc}")
             raise
 
     def _get_execution_config(self) -> dict:
         execution = self.config.get("execution", {})
         if not isinstance(execution, dict):
-            raise ValueError("db_task.json execution must be an object when provided.")
+            raise ValueError("db_pipeline.json execution must be an object when provided.")
         return execution
 
     def _get_database_engine(self) -> str:
         database_engine = self.config.get("databaseEngine")
         if not isinstance(database_engine, str) or not database_engine:
-            raise ValueError("db_task.json must contain non-empty 'databaseEngine'.")
+            raise ValueError("db_pipeline.json must contain non-empty 'databaseEngine'.")
         return database_engine
 
     def _get_components(self) -> list[dict]:
         components = self.config.get("components")
         if not isinstance(components, list) or not components:
-            raise ValueError("db_task.json must contain non-empty 'components'.")
+            raise ValueError("db_pipeline.json must contain non-empty 'components'.")
         return components
 
     def _validate_database_engine(self) -> None:
@@ -103,7 +103,7 @@ class DatabaseCrudTaskScript(BaseScript):
             raise ValueError(f"Database engine folder not found: {engine_folder}")
 
     def _sync_engine_execution_config(self) -> None:
-        create_db_schema_config_path = self.script_directory / self.database_engine / "config" / "create_db_schema.json"
+        create_db_schema_config_path = self.script_directory / self.database_engine / "create_db_schema" / "config" / "create_db_schema.json"
         if not create_db_schema_config_path.exists():
             return
 
@@ -171,7 +171,7 @@ class DatabaseCrudTaskScript(BaseScript):
 
         report = {
             "scriptName": self.script_name,
-            "mode": self.config.get("mode", "database_crud_task"),
+            "mode": self.config.get("mode", "database_crud_pipeline"),
             "databaseEngine": self.database_engine,
             "summary": {
                 "status": status,
@@ -198,4 +198,4 @@ class DatabaseCrudTaskScript(BaseScript):
 
 
 if __name__ == "__main__":
-    DatabaseCrudTaskScript().run()
+    DatabaseCrudPipelineScript().run()

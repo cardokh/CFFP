@@ -1,4 +1,4 @@
-"""Seeds PostgreSQL from per-entity metadata files selected by postgres/metadata/entities.json."""
+"""Seeds PostgreSQL from per-entity metadata files selected by metadata/postgres/entities.json."""
 
 import sys
 from pathlib import Path
@@ -34,7 +34,7 @@ from scripts.shared.script_path_utils import get_path
 
 
 class PostgreSQLSeedDbDataScript(BaseScript):
-    """Inserts seed data for only the entities listed in postgres/metadata/entities.json."""
+    """Inserts seed data for only the entities listed in metadata/postgres/entities.json."""
 
     CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
 

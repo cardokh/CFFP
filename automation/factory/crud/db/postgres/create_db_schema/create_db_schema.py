@@ -33,7 +33,7 @@ from scripts.shared.script_path_utils import get_path
 
 
 class PostgreSQLCreateDbSchemaScript(BaseScript):
-    """Provisions PostgreSQL and creates only tables listed in postgres/metadata/entities.json."""
+    """Provisions PostgreSQL and creates only tables listed in metadata/postgres/entities.json."""
 
     CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
 
@@ -352,7 +352,7 @@ class PostgreSQLCreateDbSchemaScript(BaseScript):
             if reference_table not in selected:
                 raise ValueError(
                     f"Selected entity '{entity_name}' has a foreign key to unselected entity "
-                    f"'{reference_table}'. Add '{reference_table}' to postgres/metadata/entities.json "
+                    f"'{reference_table}'. Add '{reference_table}' to metadata/postgres/entities.json "
                     "before running schema creation."
                 )
 

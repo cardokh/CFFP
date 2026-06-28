@@ -1,6 +1,6 @@
 {
-    "scriptName": "db_task",
-    "mode": "database_crud_task",
+    "scriptName": "db_pipeline",
+    "mode": "database_crud_pipeline",
     "databaseEngine": "postgres",
     "execution": {
         "stopOnFailure": true,
@@ -22,17 +22,17 @@
         {
             "name": "create_db_schema",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/create_db_schema.py"
+            "scriptPath": "automation/factory/crud/db/postgres/create_db_schema/create_db_schema.py"
         },
         {
             "name": "seed_db_data",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/seed_db_data.py"
+            "scriptPath": "automation/factory/crud/db/postgres/seed_db_data/seed_db_data.py"
         },
         {
             "name": "build_db_context",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/context/build_db_context.py"
+            "scriptPath": "automation/factory/crud/db/postgres/build_db_context/build_db_context.py"
         }
     ]
 }

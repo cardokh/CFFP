@@ -27,7 +27,7 @@ from scripts.shared.script_json_utils import read_json_file
 
 
 class ValidateDatabaseEntityDefinitionsScript(BaseScript):
-    """Validates selected entity metadata under postgres/metadata/entities."""
+    """Validates selected entity metadata under metadata/postgres/entities."""
 
     def __init__(self):
         super().__init__(__file__)
@@ -147,7 +147,7 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
             )
             raise ValueError(
                 "Selected table foreign key dependency validation failed. "
-                "Every referenced table must also be listed in postgres/metadata/entities.json. "
+                "Every referenced table must also be listed in metadata/postgres/entities.json. "
                 f"Missing dependencies: {details}"
             )
 

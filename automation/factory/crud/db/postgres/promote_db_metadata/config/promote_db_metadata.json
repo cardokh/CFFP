@@ -4,8 +4,8 @@
     "metadataPaths": {
         "addedEntitiesPath": "automation/factory/crud/db/postgres/promote_db_metadata/metadata/added_entities.json",
         "addedEntityMetadataRoot": "automation/factory/crud/db/postgres/promote_db_metadata/metadata/entities",
-        "entitiesConfigPath": "automation/factory/crud/db/postgres/metadata/entities.json",
-        "entityMetadataRoot": "automation/factory/crud/db/postgres/metadata/entities"
+        "entitiesConfigPath": "automation/factory/crud/db/metadata/postgres/entities.json",
+        "entityMetadataRoot": "automation/factory/crud/db/metadata/postgres/entities"
     },
     "options": {
         "replaceExistingEntityFiles": true,

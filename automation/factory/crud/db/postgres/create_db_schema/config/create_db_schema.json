@@ -1,0 +1,12 @@
+{
+    "scriptName": "create_db_schema",
+    "mode": "create_db_schema",
+    "databaseConfigPath": "automation/factory/crud/db/metadata/postgres/database.json",
+    "entitiesConfigPath": "automation/factory/crud/db/metadata/postgres/entities.json",
+    "entityMetadataRoot": "automation/factory/crud/db/metadata/postgres/entities",
+    "execution": {
+        "recreateDatabase": false,
+        "dropUnlistedTables": true,
+        "recreateExistingTables": true
+    }
+}
