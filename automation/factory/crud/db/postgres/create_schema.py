@@ -55,7 +55,6 @@ class PostgreSQLCreateSchemaScript(BaseScript):
         self.dropped_unlisted_tables = []
         self.created_tables = []
         self.skipped_existing_tables = []
-        self.skipped_foreign_keys = []
         self.verified_database = False
         self.verified_tables = []
 
@@ -347,26 +346,14 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "Foreign key references must contain 'table'.",
             )
 
-            if reference_table in selected:
-                constraints.append(constraint)
-                continue
-
-            if self.execution.get("skipUnselectedForeignKeys", True) is True:
-                self.skipped_foreign_keys.append(
-                    {
-                        "table": entity_name,
-                        "columns": constraint.get("columns", []),
-                        "referenceTable": reference_table,
-                        "reason": "Reference table is not selected in entities.json.",
-                    }
+            if reference_table not in selected:
+                raise ValueError(
+                    f"Selected entity '{entity_name}' has a foreign key to unselected entity "
+                    f"'{reference_table}'. Add '{reference_table}' to postgres/metadata/entities.json "
+                    "before running schema creation."
                 )
-                continue
 
-            raise ValueError(
-                f"Selected entity '{entity_name}' has a foreign key to unselected entity "
-                f"'{reference_table}'. Add '{reference_table}' to entities.json or enable "
-                f"skipUnselectedForeignKeys."
-            )
+            constraints.append(constraint)
 
         return constraints
 
@@ -457,7 +444,6 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "droppedUnlistedTableCount": len(self.dropped_unlisted_tables),
                 "createdTableCount": len(self.created_tables),
                 "skippedExistingTableCount": len(self.skipped_existing_tables),
-                "skippedForeignKeyCount": len(self.skipped_foreign_keys),
                 "verifiedTableCount": len(self.verified_tables),
             },
             "tables": {
@@ -466,7 +452,6 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                 "droppedUnlisted": self.dropped_unlisted_tables,
                 "created": self.created_tables,
                 "skippedExisting": self.skipped_existing_tables,
-                "skippedForeignKeys": self.skipped_foreign_keys,
                 "verified": self.verified_tables,
             },
         }

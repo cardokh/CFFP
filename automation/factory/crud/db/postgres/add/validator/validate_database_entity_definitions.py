@@ -40,8 +40,11 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
         entity_names = self._get_entity_names()
         self._validate_unique_entities(entity_names)
 
+        schemas_by_entity = {}
         for entity_name in entity_names:
-            self._validate_entity_folder(entity_name)
+            schemas_by_entity[entity_name] = self._validate_entity_folder(entity_name)
+
+        self._validate_selected_foreign_key_dependencies(entity_names, schemas_by_entity)
 
         report = self._build_report(entity_names)
         self.write_json_report(report)
@@ -71,7 +74,7 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
             raise ValueError("entities.json must not contain duplicate entity names.")
         self.checks.append("entities.json contains unique entity names")
 
-    def _validate_entity_folder(self, entity_name: str) -> None:
+    def _validate_entity_folder(self, entity_name: str) -> dict:
         entity_folder = self.entity_metadata_root / entity_name
         schema_path = entity_folder / "schema.json"
         seed_path = entity_folder / "seed_data.json"
@@ -88,6 +91,7 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
         self._validate_schema(entity_name, schema)
         self._validate_seed(entity_name, seed)
         self.checks.append(f"{entity_name} contains schema.json and seed_data.json")
+        return schema
 
     def _validate_schema(self, entity_name: str, schema: dict) -> None:
         if not isinstance(schema, dict):
@@ -110,6 +114,44 @@ class ValidateDatabaseEntityDefinitionsScript(BaseScript):
         constraints = schema.get("constraints", [])
         if not isinstance(constraints, list):
             raise ValueError(f"Schema constraints for '{entity_name}' must be a list when provided.")
+
+
+    def _validate_selected_foreign_key_dependencies(self, entity_names: list[str], schemas_by_entity: dict[str, dict]) -> None:
+        selected_entities = set(entity_names)
+        missing_dependencies = []
+
+        for entity_name in entity_names:
+            constraints = schemas_by_entity[entity_name].get("constraints", [])
+            for constraint in constraints:
+                if not isinstance(constraint, dict) or constraint.get("type") != "foreignKey":
+                    continue
+                references = constraint.get("references")
+                if not isinstance(references, dict):
+                    raise ValueError(f"Foreign key constraint for '{entity_name}' must contain references object.")
+                reference_table = references.get("table")
+                if not isinstance(reference_table, str) or not reference_table:
+                    raise ValueError(f"Foreign key constraint for '{entity_name}' must contain references.table.")
+                if reference_table not in selected_entities:
+                    missing_dependencies.append(
+                        {
+                            "table": entity_name,
+                            "columns": constraint.get("columns", []),
+                            "referenceTable": reference_table,
+                        }
+                    )
+
+        if missing_dependencies:
+            details = "; ".join(
+                f"{dependency['table']} -> {dependency['referenceTable']}"
+                for dependency in missing_dependencies
+            )
+            raise ValueError(
+                "Selected table foreign key dependency validation failed. "
+                "Every referenced table must also be listed in postgres/metadata/entities.json. "
+                f"Missing dependencies: {details}"
+            )
+
+        self.checks.append("selected foreign key dependencies are complete")
 
     def _validate_seed(self, entity_name: str, seed: dict) -> None:
         if not isinstance(seed, dict):

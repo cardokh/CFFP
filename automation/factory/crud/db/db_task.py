@@ -114,7 +114,6 @@ class DatabaseCrudTaskScript(BaseScript):
             "recreateDatabase": self.execution.get("recreateDatabase", False),
             "dropUnlistedTables": self.execution.get("dropUnlistedTables", False),
             "recreateExistingTables": self.execution.get("recreateExistingTables", True),
-            "skipUnselectedForeignKeys": self.execution.get("skipUnselectedForeignKeys", True),
         }
 
         with open(create_schema_config_path, "w", encoding="utf-8") as file:

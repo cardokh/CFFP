@@ -1,96 +1,59 @@
-# Database Automation Task
-
-**Status:** FROZEN
+# PostgreSQL Database Automation
 
 ## Purpose
 
-The Database Automation task is responsible for generating, validating, and provisioning the PostgreSQL database from approved metadata.
+The PostgreSQL database automation component validates database metadata, provisions the PostgreSQL schema, seeds data, and exports DB-only handoff context for downstream automation tasks.
 
-This task is the first stage of the CRUD Automation Pipeline and serves as the foundation for all subsequent CRUD generation tasks.
+This component is database-focused only. Backend and frontend naming decisions belong to their own blueprints.
 
----
+## Main task entry point
+
+Run the full DB task from the repository root:
+
+```bash
+python automation/factory/crud/db/db_task.py
+```
 
 ## Components
 
-### Metadata Generation
+### Metadata generation
 
-* `add_database_schema_entity.py`
-
-  * Updates the PostgreSQL schema metadata.
-
-* `add_database_seed_entity.py`
-
-  * Updates the PostgreSQL seed metadata.
+* `add/add_database_schema_entity.py`
+  * Updates per-table PostgreSQL schema metadata.
+* `add/add_database_seed_entity.py`
+  * Updates per-table PostgreSQL seed metadata.
 
 ### Validation
 
-* `validate_database_entity_definitions.py`
+* `add/validator/validate_database_entity_definitions.py`
+  * Verifies selected table metadata before provisioning.
+  * Fails early if a selected table has a foreign key to an unselected table.
 
-  * Verifies that all database entity definitions are valid before database provisioning.
-  * Acts as the acceptance gate for the Database Automation task.
+### DB handoff context
 
-### PostgreSQL Provisioning
+* `context/build_db_context.py`
+  * Writes `output/master_context.json`.
+  * Writes `output/tables/<table_name>.json` for each selected table.
+  * Exports database facts only.
 
-* `postgres_create_schema.py`
+### PostgreSQL provisioning
 
-  * Creates or updates the PostgreSQL schema from the approved metadata.
+* `create_schema.py`
+  * Creates or updates the PostgreSQL schema from selected metadata.
+* `seed_data.py`
+  * Inserts and verifies seed data for selected metadata.
 
-* `postgres_seed_data.py`
+## Table selection
 
-  * Inserts and verifies the seed data.
+`metadata/entities.json` is the table selector. Only listed tables are validated, exported, created, and seeded.
 
----
+## Recreation behavior
 
-## Execution
+* `recreateDatabase: true` drops/recreates the application database and then creates only selected tables.
+* `dropUnlistedTables: true` keeps the application database but removes public tables not listed in `metadata/entities.json`.
+* `recreateExistingTables: true` drops/recreates selected tables.
+* `recreateExistingTables: false` skips selected tables that already exist.
 
-Run the following commands from the repository root in the specified order:
+## Acceptance rule
 
-```bash
-python automation/factory/crud/db/postgres/add_database_entity/add_database_schema_entity.py
-
-python automation/factory/crud/db/postgres/add_database_entity/add_database_seed_entity.py
-
-python automation/factory/crud/db/postgres/add_database_entity/validate_database_entity_definitions.py
-
-python automation/factory/crud/db/postgres/postgres_create_schema.py
-
-python automation/factory/crud/db/postgres/postgres_seed_data.py
-```
-
----
-
-## Expected Result
-
-Successful execution should produce the following results:
-
-* Database schema metadata updated successfully.
-* Database seed metadata updated successfully.
-* Database entity definitions validated successfully.
-* Validation reports **8 checks passed**.
-* PostgreSQL schema created successfully.
-* PostgreSQL contains **16 managed tables**.
-* PostgreSQL contains **49 seed rows**.
-
----
-
-## Acceptance Test
-
-The Database Automation task is considered complete when the following workflow succeeds:
-
-1. Delete the five pipeline tables from PostgreSQL.
-2. Execute all scripts in the order specified above.
-3. Verify that:
-
-   * The five pipeline tables are recreated.
-   * `validate_database_entity_definitions.py` reports **8 checks passed**.
-   * `postgres_create_schema.py` reports **16 managed tables**.
-   * `postgres_seed_data.py` reports **49 seed rows**.
-   * No errors occur during execution.
-
----
-
-## Notes
-
-* Always execute the validation step before provisioning the PostgreSQL database.
-* The validation script is the acceptance gate for the Database Automation task.
-* Once accepted, this task should remain **frozen** unless a genuine defect is identified.
+The component passes when the configured task completes without errors and all component reports show `PASSED`. Expected table counts and seed row counts are derived from metadata, not hard-coded in this README.

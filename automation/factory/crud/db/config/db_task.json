@@ -6,8 +6,7 @@
         "stopOnFailure": true,
         "recreateDatabase": false,
         "recreateExistingTables": true,
-        "dropUnlistedTables": true,
-        "skipUnselectedForeignKeys": true
+        "dropUnlistedTables": true
     },
     "components": [
         {
@@ -24,6 +23,11 @@
             "name": "validate_database_entity_definitions",
             "enabled": true,
             "scriptPath": "automation/factory/crud/db/postgres/add/validator/validate_database_entity_definitions.py"
+        },
+        {
+            "name": "build_db_context",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/context/build_db_context.py"
         },
         {
             "name": "create_schema",
