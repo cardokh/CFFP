@@ -9,7 +9,7 @@
     },
     "options": {
         "replaceExistingEntityFiles": true,
-        "updateEntitySelector": true,
+        "updateEntitySelector": false,
         "runValidation": true
     },
     "validation": {
