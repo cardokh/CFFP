@@ -1,0 +1,7 @@
+{
+    "scriptName": "run_db_tests",
+    "mode": "db_pipeline_test_runner",
+    "buildContextScriptPath": "automation/factory/crud/db/postgres/build_db_context/build_db_context.py",
+    "testPath": "automation/factory/crud/db/tests",
+    "pytestArguments": []
+}

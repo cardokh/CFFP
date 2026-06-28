@@ -60,7 +60,7 @@ python -m pytest automation/factory/crud/db/tests
 Or use the DB-local runner:
 
 ```bash
-python automation/factory/crud/db/run_db_tests.py
+python automation/factory/crud/db/tests/run_db_tests.py
 ```
 
 ## Expected result
