@@ -32,7 +32,7 @@ from scripts.shared.script_json_utils import read_json_file
 from scripts.shared.script_path_utils import get_path
 
 
-class PostgreSQLCreateSchemaScript(BaseScript):
+class PostgreSQLCreateDbSchemaScript(BaseScript):
     """Provisions PostgreSQL and creates only tables listed in postgres/metadata/entities.json."""
 
     CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
@@ -86,7 +86,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
     def _get_execution_config(self) -> dict:
         execution = self.config.get("execution", {})
         if not isinstance(execution, dict):
-            raise ValueError("create_schema.json execution must be an object when provided.")
+            raise ValueError("create_db_schema.json execution must be an object when provided.")
         return execution
 
     def _configure_backend_import_path(self) -> None:
@@ -99,7 +99,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
 
     def _validate_database_type(self) -> None:
         if self.database_config.get("databaseType") != "postgres":
-            raise ValueError("create_schema.py requires databaseType 'postgres'.")
+            raise ValueError("create_db_schema.py requires databaseType 'postgres'.")
 
     def _resolve_connection_config(self, config_key: str, environment_group_key: str) -> dict:
         environment_variables = self.database_config.get("environmentVariables", {})
@@ -222,7 +222,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
                     self.skipped_existing_tables.append(entity_name)
                     continue
                 table_definition = self._get_table_definition(entity_name)
-                cursor.execute(self._build_create_table_sql(entity_name, table_definition, entity_names))
+                cursor.execute(self._build_generate_table_metadata_sql(entity_name, table_definition, entity_names))
                 self.created_tables.append(entity_name)
             conn.commit()
         finally:
@@ -311,7 +311,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
             raise ValueError(f"Schema metadata for '{entity_name}' must be an object.")
         return table_definition
 
-    def _build_create_table_sql(self, entity_name: str, table_definition: dict, selected_entity_names: list[str]) -> Any:
+    def _build_generate_table_metadata_sql(self, entity_name: str, table_definition: dict, selected_entity_names: list[str]) -> Any:
         definitions = [self._build_column_sql(column) for column in self._get_columns(table_definition)]
         definitions.extend(
             self._build_table_constraint_sql(constraint)
@@ -431,7 +431,7 @@ class PostgreSQLCreateSchemaScript(BaseScript):
     def _build_report(self) -> dict:
         return {
             "scriptName": self.script_name,
-            "mode": self.config.get("mode", "create_schema"),
+            "mode": self.config.get("mode", "create_db_schema"),
             "configurationResolution": self.config_resolver.to_report(),
             "execution": self.execution,
             "summary": {
@@ -461,4 +461,4 @@ class PostgreSQLCreateSchemaScript(BaseScript):
 
 
 if __name__ == "__main__":
-    PostgreSQLCreateSchemaScript().run()
+    PostgreSQLCreateDbSchemaScript().run()

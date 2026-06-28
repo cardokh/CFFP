@@ -10,29 +10,29 @@
     },
     "components": [
         {
-            "name": "create_table_task",
-            "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/create_table/create_table_task.py"
+            "name": "generate_table_metadata",
+            "enabled": false,
+            "scriptPath": "automation/factory/crud/db/postgres/generate_table_metadata/generate_table_metadata.py"
         },
         {
-            "name": "add_task",
+            "name": "promote_db_metadata",
+            "enabled": false,
+            "scriptPath": "automation/factory/crud/db/postgres/promote_db_metadata/promote_db_metadata.py"
+        },
+        {
+            "name": "create_db_schema",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/add/add_task.py"
+            "scriptPath": "automation/factory/crud/db/postgres/create_db_schema.py"
+        },
+        {
+            "name": "seed_db_data",
+            "enabled": true,
+            "scriptPath": "automation/factory/crud/db/postgres/seed_db_data.py"
         },
         {
             "name": "build_db_context",
             "enabled": true,
             "scriptPath": "automation/factory/crud/db/postgres/context/build_db_context.py"
-        },
-        {
-            "name": "create_schema",
-            "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/create_schema.py"
-        },
-        {
-            "name": "seed_data",
-            "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/seed_data.py"
         }
     ]
 }

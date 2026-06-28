@@ -206,3 +206,15 @@ runtime/factory/reports/*
 
 .ccore_workspace/
 .DS_Store
+
+
+# -----------------------------------------------------------------------------
+# Automation Factory - Generated task outputs
+# -----------------------------------------------------------------------------
+
+automation/factory/crud/db/**/output/
+automation/factory/crud/db/**/output/**
+
+# Python
+automation/factory/crud/db/**/__pycache__/
+automation/factory/crud/db/**/*.py[cod]

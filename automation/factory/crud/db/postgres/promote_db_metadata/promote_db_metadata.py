@@ -28,8 +28,8 @@ from scripts.shared.script_console_utils import print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
 
 
-class AddPostgresEntityMetadataTask(BaseScript):
-    """Task-level entry point for adding PostgreSQL entity metadata files."""
+class PromotePostgresEntityMetadataTask(BaseScript):
+    """Task-level entry point for promoting PostgreSQL entity metadata files."""
 
     def __init__(self):
         super().__init__(__file__)
@@ -65,12 +65,12 @@ class AddPostgresEntityMetadataTask(BaseScript):
             self.validation_result = self._run_validation()
             if self.validation_result["status"] != "PASSED":
                 self.write_json_report(self._build_report("FAILED", started))
-                raise RuntimeError("add_task validation failed. See postgres/add/validator/output for details.")
+                raise RuntimeError("promote_db_metadata validation failed. See postgres/promote_db_metadata/validator/output for details.")
 
         report = self._build_report("PASSED", started)
         self.write_json_report(report)
         print_passed(
-            "add_task: "
+            "promote_db_metadata: "
             f"{len(self.updated_entities)} entities, "
             f"{len(self.updated_schema_files)} schema files, "
             f"{len(self.updated_seed_files)} seed files updated"
@@ -250,4 +250,4 @@ class AddPostgresEntityMetadataTask(BaseScript):
 
 
 if __name__ == "__main__":
-    AddPostgresEntityMetadataTask().run()
+    PromotePostgresEntityMetadataTask().run()

@@ -18,9 +18,9 @@ python automation/factory/crud/db/db_task.py
 
 ### Add metadata task
 
-* `add/add_task.py`
+* `add/promote_db_metadata.py`
   * Reads `add/metadata/added_entities.json` as the selector for metadata to add.
-  * Reads per-table source metadata from `add/metadata/entities/<table>/schema.json` and `add/metadata/entities/<table>/seed_data.json`.
+  * Reads per-table source metadata from `add/metadata/entities/<table>/schema.json` and `add/metadata/entities/<table>/seed_db_data.json`.
   * Writes approved metadata into `metadata/entities/<table>/`.
   * Updates `metadata/entities.json`.
   * Runs validation and writes an add-task report.
@@ -41,9 +41,9 @@ python automation/factory/crud/db/db_task.py
 
 ### PostgreSQL provisioning
 
-* `create_schema.py`
+* `create_db_schema.py`
   * Creates or updates the PostgreSQL schema from selected metadata.
-* `seed_data.py`
+* `seed_db_data.py`
   * Inserts and verifies seed data for selected metadata.
 
 ## Table selection

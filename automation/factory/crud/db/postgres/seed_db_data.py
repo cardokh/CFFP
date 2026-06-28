@@ -33,7 +33,7 @@ from scripts.shared.script_json_utils import read_json_file
 from scripts.shared.script_path_utils import get_path
 
 
-class PostgreSQLSeedDataScript(BaseScript):
+class PostgreSQLSeedDbDataScript(BaseScript):
     """Inserts seed data for only the entities listed in postgres/metadata/entities.json."""
 
     CONNECTION_KEYS = ["host", "port", "databaseName", "username", "password"]
@@ -82,7 +82,7 @@ class PostgreSQLSeedDataScript(BaseScript):
 
     def _validate_database_type(self) -> None:
         if self.database_config.get("databaseType") != "postgres":
-            raise ValueError("seed_data.py requires databaseType 'postgres'.")
+            raise ValueError("seed_db_data.py requires databaseType 'postgres'.")
 
     def _resolve_application_connection_config(self) -> dict:
         environment_variables = self.database_config.get("environmentVariables", {})
@@ -227,4 +227,4 @@ class PostgreSQLSeedDataScript(BaseScript):
 
 
 if __name__ == "__main__":
-    PostgreSQLSeedDataScript().run()
+    PostgreSQLSeedDbDataScript().run()

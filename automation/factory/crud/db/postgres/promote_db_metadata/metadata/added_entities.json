@@ -1,0 +1,21 @@
+{
+    "entities": [
+        "ccore_task_statuses",
+        "ccore_task_execution_statuses",
+        "ccore_execution_implementer_types",
+        "ccore_execution_providers",
+        "ccore_metric_types",
+        "ccore_pipeline_statuses",
+        "ccore_pipeline_execution_statuses",
+        "ccore_tasks",
+        "ccore_pipelines",
+        "ccore_execution_targets",
+        "ccore_execution_configurations",
+        "ccore_execution_configuration_elements",
+        "ccore_metrics",
+        "ccore_pipeline_tasks",
+        "ccore_pipeline_executions",
+        "ccore_task_executions",
+        "example_table"
+    ]
+}
