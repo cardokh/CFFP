@@ -1,0 +1,24 @@
+{
+    "name": "ccore_task_execution_statuses",
+    "columns": [
+        {
+            "name": "execution_status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "status_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "execution_status_id"
+    ],
+    "foreignKeys": []
+}

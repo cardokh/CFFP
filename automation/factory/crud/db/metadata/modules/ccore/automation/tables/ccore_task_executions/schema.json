@@ -1,0 +1,185 @@
+{
+    "name": "ccore_task_executions",
+    "columns": [
+        {
+            "name": "execution_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": {
+                "type": "generatedUuid"
+            }
+        },
+        {
+            "name": "task_id",
+            "type": "uuid",
+            "nullable": false
+        },
+        {
+            "name": "execution_status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_provider_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_implementer_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_target_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_configuration_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "requested_by",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "input_payload",
+            "type": "json",
+            "nullable": false,
+            "default": {}
+        },
+        {
+            "name": "configuration_snapshot",
+            "type": "json",
+            "nullable": false,
+            "default": {}
+        },
+        {
+            "name": "validation_snapshot",
+            "type": "json",
+            "nullable": false,
+            "default": {}
+        },
+        {
+            "name": "execution_report",
+            "type": "json",
+            "nullable": false,
+            "default": {}
+        },
+        {
+            "name": "error_details",
+            "type": "json",
+            "nullable": true
+        },
+        {
+            "name": "started_at",
+            "type": "timestamp",
+            "nullable": true
+        },
+        {
+            "name": "completed_at",
+            "type": "timestamp",
+            "nullable": true
+        },
+        {
+            "name": "failed_at",
+            "type": "timestamp",
+            "nullable": true
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "execution_id"
+    ],
+    "foreignKeys": [
+        {
+            "columns": [
+                "task_id"
+            ],
+            "references": {
+                "table": "ccore_tasks",
+                "columns": [
+                    "task_id"
+                ]
+            },
+            "onDelete": "cascade"
+        },
+        {
+            "columns": [
+                "execution_status_id"
+            ],
+            "references": {
+                "table": "ccore_task_execution_statuses",
+                "columns": [
+                    "execution_status_id"
+                ]
+            },
+            "onDelete": "restrict"
+        },
+        {
+            "columns": [
+                "execution_provider_id"
+            ],
+            "references": {
+                "table": "ccore_execution_providers",
+                "columns": [
+                    "execution_provider_id"
+                ]
+            },
+            "onDelete": "restrict"
+        },
+        {
+            "columns": [
+                "execution_implementer_type_id"
+            ],
+            "references": {
+                "table": "ccore_execution_implementer_types",
+                "columns": [
+                    "execution_implementer_type_id"
+                ]
+            },
+            "onDelete": "restrict"
+        },
+        {
+            "columns": [
+                "execution_target_id"
+            ],
+            "references": {
+                "table": "ccore_execution_targets",
+                "columns": [
+                    "execution_target_id"
+                ]
+            },
+            "onDelete": "restrict"
+        },
+        {
+            "columns": [
+                "execution_configuration_id"
+            ],
+            "references": {
+                "table": "ccore_execution_configurations",
+                "columns": [
+                    "execution_configuration_id"
+                ]
+            },
+            "onDelete": "restrict"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "scriptName": "update_metadata",
+    "mode": "generate_generic_database_metadata",
+    "databaseName": "ccore_automation",
+    "metadataVersion": "1.0",
+    "sourceMetadataRoot": "automation/factory/crud/db/postgres/metadata",
+    "targetMetadataRoot": "automation/factory/crud/db/metadata",
+    "moduleRules": {
+        "defaultModule": "ccore/automation",
+        "placeholderModules": [
+            "ccore/organization"
+        ]
+    }
+}

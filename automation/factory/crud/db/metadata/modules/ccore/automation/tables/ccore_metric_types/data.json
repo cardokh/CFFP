@@ -1,0 +1,20 @@
+{
+    "table": "ccore_metric_types",
+    "rows": [
+        {
+            "metric_type_id": 1,
+            "metric_type_label": "Counter",
+            "sort_order": 10
+        },
+        {
+            "metric_type_id": 2,
+            "metric_type_label": "Gauge",
+            "sort_order": 20
+        },
+        {
+            "metric_type_id": 3,
+            "metric_type_label": "Timer",
+            "sort_order": 30
+        }
+    ]
+}

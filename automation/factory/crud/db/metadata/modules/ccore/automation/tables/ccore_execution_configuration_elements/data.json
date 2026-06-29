@@ -1,0 +1,54 @@
+{
+    "table": "ccore_execution_configuration_elements",
+    "rows": [
+        {
+            "execution_configuration_element_id": 1,
+            "execution_configuration_id": 1,
+            "element_name": "resultMessage",
+            "element_value": "No-op execution completed successfully.",
+            "sort_order": 10
+        },
+        {
+            "execution_configuration_element_id": 2,
+            "execution_configuration_id": 2,
+            "element_name": "scriptName",
+            "element_value": "bootstrap_project_windows.ps1",
+            "sort_order": 10
+        },
+        {
+            "execution_configuration_element_id": 3,
+            "execution_configuration_id": 2,
+            "element_name": "installDependencies",
+            "element_value": "false",
+            "sort_order": 20
+        },
+        {
+            "execution_configuration_element_id": 4,
+            "execution_configuration_id": 2,
+            "element_name": "cleanWorkspace",
+            "element_value": "false",
+            "sort_order": 30
+        },
+        {
+            "execution_configuration_element_id": 5,
+            "execution_configuration_id": 3,
+            "element_name": "folderPath",
+            "element_value": "generated/sample-folder",
+            "sort_order": 10
+        },
+        {
+            "execution_configuration_element_id": 6,
+            "execution_configuration_id": 3,
+            "element_name": "createParents",
+            "element_value": "true",
+            "sort_order": 20
+        },
+        {
+            "execution_configuration_element_id": 7,
+            "execution_configuration_id": 4,
+            "element_name": "validationMode",
+            "element_value": "standard",
+            "sort_order": 10
+        }
+    ]
+}

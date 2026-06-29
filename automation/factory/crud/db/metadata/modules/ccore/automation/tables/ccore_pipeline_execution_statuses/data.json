@@ -1,0 +1,30 @@
+{
+    "table": "ccore_pipeline_execution_statuses",
+    "rows": [
+        {
+            "pipeline_execution_status_id": 1,
+            "status_label": "Pending",
+            "sort_order": 10
+        },
+        {
+            "pipeline_execution_status_id": 2,
+            "status_label": "Running",
+            "sort_order": 20
+        },
+        {
+            "pipeline_execution_status_id": 3,
+            "status_label": "Completed",
+            "sort_order": 30
+        },
+        {
+            "pipeline_execution_status_id": 4,
+            "status_label": "Failed",
+            "sort_order": 40
+        },
+        {
+            "pipeline_execution_status_id": 5,
+            "status_label": "Blocked",
+            "sort_order": 50
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "name": "example_table",
+    "columns": [
+        {
+            "name": "example_id",
+            "type": "uuid",
+            "nullable": false
+        },
+        {
+            "name": "example_name",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "example_id"
+    ],
+    "foreignKeys": []
+}

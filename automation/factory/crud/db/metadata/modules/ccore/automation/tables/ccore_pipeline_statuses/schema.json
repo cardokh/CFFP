@@ -1,0 +1,24 @@
+{
+    "name": "ccore_pipeline_statuses",
+    "columns": [
+        {
+            "name": "pipeline_status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "status_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "pipeline_status_id"
+    ],
+    "foreignKeys": []
+}

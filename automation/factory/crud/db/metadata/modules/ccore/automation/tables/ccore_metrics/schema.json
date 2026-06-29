@@ -1,0 +1,59 @@
+{
+    "name": "ccore_metrics",
+    "columns": [
+        {
+            "name": "metric_id",
+            "type": "uuid",
+            "nullable": false
+        },
+        {
+            "name": "metric_name",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "metric_key",
+            "type": "string",
+            "nullable": false,
+            "unique": true
+        },
+        {
+            "name": "metric_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "metric_id"
+    ],
+    "foreignKeys": [
+        {
+            "columns": [
+                "metric_type_id"
+            ],
+            "references": {
+                "table": "ccore_metric_types",
+                "columns": [
+                    "metric_type_id"
+                ]
+            },
+            "onDelete": "restrict"
+        }
+    ]
+}

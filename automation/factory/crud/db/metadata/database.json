@@ -1,0 +1,18 @@
+{
+    "name": "ccore_automation",
+    "description": "Generic database metadata source for CFFP Automation Factory database generation.",
+    "metadataVersion": "1.0",
+    "modules": [
+        "ccore/automation",
+        "ccore/organization"
+    ],
+    "capabilities": [
+        "database",
+        "tables",
+        "columns",
+        "primaryKeys",
+        "foreignKeys",
+        "defaults",
+        "seedData"
+    ]
+}

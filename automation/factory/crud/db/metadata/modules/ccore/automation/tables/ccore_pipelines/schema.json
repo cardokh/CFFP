@@ -1,0 +1,61 @@
+{
+    "name": "ccore_pipelines",
+    "columns": [
+        {
+            "name": "pipeline_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": {
+                "type": "generatedUuid"
+            }
+        },
+        {
+            "name": "pipeline_name",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "pipeline_description",
+            "type": "text",
+            "nullable": true
+        },
+        {
+            "name": "pipeline_status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "pipeline_id"
+    ],
+    "foreignKeys": [
+        {
+            "columns": [
+                "pipeline_status_id"
+            ],
+            "references": {
+                "table": "ccore_pipeline_statuses",
+                "columns": [
+                    "pipeline_status_id"
+                ]
+            },
+            "onDelete": "restrict"
+        }
+    ]
+}

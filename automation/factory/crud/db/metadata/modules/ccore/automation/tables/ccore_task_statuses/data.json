@@ -1,0 +1,25 @@
+{
+    "table": "ccore_task_statuses",
+    "rows": [
+        {
+            "status_id": 1,
+            "status_label": "Draft",
+            "sort_order": 10
+        },
+        {
+            "status_id": 2,
+            "status_label": "Active",
+            "sort_order": 20
+        },
+        {
+            "status_id": 3,
+            "status_label": "Disabled",
+            "sort_order": 30
+        },
+        {
+            "status_id": 4,
+            "status_label": "Archived",
+            "sort_order": 40
+        }
+    ]
+}

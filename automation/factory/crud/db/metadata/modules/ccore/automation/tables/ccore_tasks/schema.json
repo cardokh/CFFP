@@ -1,0 +1,53 @@
+{
+    "name": "ccore_tasks",
+    "columns": [
+        {
+            "name": "task_id",
+            "type": "uuid",
+            "nullable": false
+        },
+        {
+            "name": "task_name",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "task_id"
+    ],
+    "foreignKeys": [
+        {
+            "columns": [
+                "status_id"
+            ],
+            "references": {
+                "table": "ccore_task_statuses",
+                "columns": [
+                    "status_id"
+                ]
+            },
+            "onDelete": "restrict"
+        }
+    ]
+}

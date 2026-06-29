@@ -1,0 +1,24 @@
+{
+    "name": "ccore_metric_types",
+    "columns": [
+        {
+            "name": "metric_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "metric_type_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "metric_type_id"
+    ],
+    "foreignKeys": []
+}

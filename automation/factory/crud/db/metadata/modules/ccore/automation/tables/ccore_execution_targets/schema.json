@@ -1,0 +1,47 @@
+{
+    "name": "ccore_execution_targets",
+    "columns": [
+        {
+            "name": "execution_target_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_implementer_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "target_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "target_reference",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "execution_target_id"
+    ],
+    "foreignKeys": [
+        {
+            "columns": [
+                "execution_implementer_type_id"
+            ],
+            "references": {
+                "table": "ccore_execution_implementer_types",
+                "columns": [
+                    "execution_implementer_type_id"
+                ]
+            },
+            "onDelete": "restrict"
+        }
+    ]
+}
