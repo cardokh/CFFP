@@ -43,8 +43,10 @@ class BuildDatabaseScript(BaseScript):
         self.implementation_metadata = read_json_file(self.implementation_root / "database.json")
         self.admin_connection_config = self._resolve_connection_config("adminConnection", "admin")
         self.application_connection_config = self._resolve_connection_config("applicationConnection", "application")
+        self.execution_config = self._resolve_execution_config()
         self.schemas: list[dict[str, Any]] = []
         self.ordered_schemas: list[dict[str, Any]] = []
+        self.existing_application_tables: list[str] = []
         self.created_database = False
         self.created_role = False
         self.updated_role_password = False
@@ -57,13 +59,18 @@ class BuildDatabaseScript(BaseScript):
         self._validate_database_type()
         self.schemas = self._load_schemas()
         self.ordered_schemas = sort_schemas_by_dependency(self.schemas)
+
+        if self.config.get("executeSql", True) is True:
+            self._execute_database_provisioning()
+            self.existing_application_tables = self._load_existing_application_tables()
+
         sql_text = self._render_database_sql()
 
         output_file = self.output_directory / self.config.get("outputFileName", "database.sql")
         output_file.write_text(sql_text, encoding="utf-8")
 
         if self.config.get("executeSql", True) is True:
-            self._execute_database_build(sql_text)
+            self._execute_sql(sql_text)
 
         self.write_json_report({
             "scriptName": self.script_name,
@@ -86,6 +93,8 @@ class BuildDatabaseScript(BaseScript):
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
             },
             "orderedTables": [schema["name"] for schema in self.ordered_schemas],
+            "existingApplicationTables": self.existing_application_tables,
+            "effectiveExecution": self.execution_config,
             "droppedTables": self.dropped_tables,
             "createdTables": self.created_tables,
             "addedForeignKeys": self.added_foreign_keys,
@@ -101,6 +110,28 @@ class BuildDatabaseScript(BaseScript):
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
         return self.project_root / configured_path
+
+    def _resolve_execution_config(self) -> dict[str, Any]:
+        execution_config: dict[str, Any] = {}
+
+        pipeline_config_path = self.project_root / "automation" / "factory" / "crud" / "db" / "config" / "db_pipeline.json"
+        if pipeline_config_path.is_file():
+            pipeline_config = read_json_file(pipeline_config_path)
+            pipeline_execution = pipeline_config.get("execution", {})
+            if isinstance(pipeline_execution, dict):
+                execution_config.update(pipeline_execution)
+
+        local_execution = self.config.get("execution", {})
+        if isinstance(local_execution, dict):
+            for key, value in local_execution.items():
+                if key not in execution_config:
+                    execution_config[key] = value
+
+        return {
+            "recreateDatabase": execution_config.get("recreateDatabase") is True,
+            "recreateExistingTables": execution_config.get("recreateExistingTables", True) is True,
+            "dropUnlistedTables": execution_config.get("dropUnlistedTables") is True,
+        }
 
     def _validate_database_type(self) -> None:
         if self.implementation_metadata.get("databaseType") != "postgres":
@@ -126,8 +157,7 @@ class BuildDatabaseScript(BaseScript):
                 schemas.append(read_json_file(module_root / "tables" / str(table_name) / "schema.json"))
         return schemas
 
-    def _execute_database_build(self, sql_text: str) -> None:
-        self._execute_database_provisioning()
+    def _execute_sql(self, sql_text: str) -> None:
         conn = self._get_application_connection()
         try:
             with conn.cursor() as cursor:
@@ -144,7 +174,7 @@ class BuildDatabaseScript(BaseScript):
         if not isinstance(bootstrap_config, dict):
             raise ValueError("database.json bootstrap must be an object when provided.")
 
-        if self.config.get("execution", {}).get("recreateDatabase") is True:
+        if self.execution_config.get("recreateDatabase") is True:
             self._drop_application_database_if_exists()
         if bootstrap_config.get("createApplicationRole", True) is True:
             self._create_or_update_application_role()
@@ -237,6 +267,23 @@ class BuildDatabaseScript(BaseScript):
         finally:
             conn.close()
 
+    def _load_existing_application_tables(self) -> list[str]:
+        conn = self._get_application_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT table_name
+                    FROM information_schema.tables
+                    WHERE table_schema = 'public'
+                      AND table_type = 'BASE TABLE'
+                    ORDER BY table_name
+                    """
+                )
+                return [str(row[0]) for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
     def _render_database_sql(self) -> str:
         lines: list[str] = [
             "-- Generated from automation/factory/crud/db/metadata.",
@@ -246,10 +293,26 @@ class BuildDatabaseScript(BaseScript):
             "",
         ]
 
-        if self.config.get("execution", {}).get("recreateExistingTables", True) is True:
+        desired_table_names = [str(schema["name"]) for schema in self.ordered_schemas]
+        desired_table_name_set = set(desired_table_names)
+        rendered_drop_table_names: set[str] = set()
+
+        if self.execution_config.get("dropUnlistedTables") is True:
+            for table_name in self.existing_application_tables:
+                if table_name not in desired_table_name_set:
+                    lines.append(f"DROP TABLE IF EXISTS {self._identifier(table_name)} CASCADE;")
+                    self.dropped_tables.append(table_name)
+                    rendered_drop_table_names.add(table_name)
+            if rendered_drop_table_names:
+                lines.append("")
+
+        if self.execution_config.get("recreateExistingTables") is True:
             for schema in reversed(self.ordered_schemas):
-                lines.append(f"DROP TABLE IF EXISTS {self._identifier(schema['name'])} CASCADE;")
-                self.dropped_tables.append(str(schema['name']))
+                table_name = str(schema["name"])
+                if table_name not in rendered_drop_table_names:
+                    lines.append(f"DROP TABLE IF EXISTS {self._identifier(table_name)} CASCADE;")
+                    self.dropped_tables.append(table_name)
+                    rendered_drop_table_names.add(table_name)
             lines.append("")
 
         for schema in self.ordered_schemas:
