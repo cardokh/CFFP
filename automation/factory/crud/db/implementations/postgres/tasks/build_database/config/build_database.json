@@ -1,9 +1,9 @@
 {
-    "scriptName": "generate_schema",
-    "mode": "generate_postgres_schema_from_generic_metadata",
+    "scriptName": "build_database",
+    "mode": "build_postgres_database_from_generic_metadata",
     "metadataRoot": "automation/factory/crud/db/metadata",
     "implementationRoot": "automation/factory/crud/db/implementations/postgres",
-    "outputFileName": "schema.sql",
+    "outputFileName": "database.sql",
     "moduleRoots": [
         "ccore/automation",
         "ccore/organization"

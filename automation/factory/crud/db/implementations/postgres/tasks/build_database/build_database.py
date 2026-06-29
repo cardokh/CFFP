@@ -1,4 +1,4 @@
-"""Generates PostgreSQL schema SQL from the generic database metadata model."""
+"""Builds PostgreSQL database SQL from the generic database metadata model."""
 
 import sys
 import time
@@ -24,8 +24,8 @@ from scripts.shared.script_console_utils import print_passed
 from scripts.shared.script_json_utils import read_json_file
 
 
-class GenerateSchemaScript(BaseScript):
-    """Builds a PostgreSQL schema artifact without touching the live database."""
+class BuildDatabaseScript(BaseScript):
+    """Builds a PostgreSQL database artifact without touching the live database."""
 
     def __init__(self) -> None:
         super().__init__(__file__)
@@ -37,9 +37,9 @@ class GenerateSchemaScript(BaseScript):
         started = time.perf_counter()
         implementation_metadata = read_json_file(self.implementation_root / "database.json")
         self.schemas = self._load_schemas()
-        sql = self._render_schema_sql(implementation_metadata)
+        sql = self._render_database_sql(implementation_metadata)
 
-        output_file = self.output_directory / self.config.get("outputFileName", "schema.sql")
+        output_file = self.output_directory / self.config.get("outputFileName", "database.sql")
         output_file.write_text(sql, encoding="utf-8")
         self.write_json_report({
             "scriptName": self.script_name,
@@ -52,7 +52,7 @@ class GenerateSchemaScript(BaseScript):
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
             },
         })
-        print_passed(f"generate_schema: generated {self.to_project_relative_path(output_file)}")
+        print_passed(f"build_database: generated {self.to_project_relative_path(output_file)}")
 
     def _resolve_project_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
@@ -70,7 +70,7 @@ class GenerateSchemaScript(BaseScript):
                 schemas.append(schema)
         return schemas
 
-    def _render_schema_sql(self, implementation_metadata: dict[str, Any]) -> str:
+    def _render_database_sql(self, implementation_metadata: dict[str, Any]) -> str:
         application_connection = implementation_metadata.get("applicationConnection", {})
         database_name = application_connection.get("databaseName", "")
         username = application_connection.get("username", "")
@@ -174,4 +174,4 @@ class GenerateSchemaScript(BaseScript):
 
 
 if __name__ == "__main__":
-    GenerateSchemaScript().run()
+    BuildDatabaseScript().run()
