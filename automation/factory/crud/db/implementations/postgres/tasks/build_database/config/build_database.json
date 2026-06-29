@@ -21,5 +21,10 @@
         "currentTimestamp": "CURRENT_TIMESTAMP",
         "generatedUuid": "gen_random_uuid()",
         "emptyJson": "'{}'::jsonb"
+    },
+    "executeSql": true,
+    "execution": {
+        "recreateDatabase": false,
+        "recreateExistingTables": true
     }
 }
