@@ -1,8 +1,8 @@
-"""Generates generic database metadata from the current PostgreSQL metadata source."""
+"""Adds generic metadata table definitions from the current PostgreSQL metadata source."""
 
 import json
-import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -29,43 +29,43 @@ from scripts.shared.script_console_utils import print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
 
 
-class UpdateMetadataScript(BaseScript):
-    """Builds the database-neutral metadata model used by future database generators."""
+class AddMetadataTablesScript(BaseScript):
+    """Adds table metadata to the generic database-neutral metadata model."""
 
     def __init__(self) -> None:
         super().__init__(__file__)
         self.source_metadata_root = self._resolve_project_path("sourceMetadataRoot")
         self.target_metadata_root = self._resolve_project_path("targetMetadataRoot")
-        self.module_rules = self.config.get("moduleRules", {})
+        self.target_module = self.config.get("targetModule", "ccore/automation")
 
     def run(self) -> None:
-        entities = self._read_entities()
-        self._prepare_target_metadata()
-        module_tables: dict[str, list[str]] = {"ccore/automation": [], "ccore/organization": []}
+        started = time.perf_counter()
+        requested_tables = self._read_requested_tables()
+        added_tables: list[str] = []
 
-        for entity_name in entities:
-            module_name = self._resolve_module_name(entity_name)
-            module_tables.setdefault(module_name, []).append(entity_name)
-            table_metadata = self._build_table_metadata(entity_name)
-            seed_metadata = self._build_seed_metadata(entity_name)
+        for table_name in requested_tables:
+            table_root = self.target_metadata_root / "modules" / self.target_module / "tables" / table_name
+            table_root.mkdir(parents=True, exist_ok=True)
+            write_json_file(table_root / "schema.json", self._build_table_schema(table_name))
+            write_json_file(table_root / "data.json", self._build_table_data(table_name))
+            added_tables.append(table_name)
 
-            table_root = self.target_metadata_root / "modules" / module_name / "tables" / entity_name
-            write_json_file(table_root / "schema.json", table_metadata)
-            write_json_file(table_root / "data.json", seed_metadata)
+        self._write_table_registry(added_tables)
+        self._write_database_metadata()
 
-        self._write_database_metadata(module_tables)
-        self._write_module_metadata(module_tables)
-
-        report = {
-            "scriptName": self.script_name,
-            "summary": {
-                "status": "PASSED",
-                "entityCount": len(entities),
-                "targetMetadataRoot": self.to_project_relative_path(self.target_metadata_root),
-            },
-        }
-        self.write_json_report(report)
-        print_passed(f"update_metadata: generated generic metadata for {len(entities)} tables")
+        self.write_json_report(
+            {
+                "scriptName": self.script_name,
+                "summary": {
+                    "status": "PASSED",
+                    "tableCount": len(added_tables),
+                    "targetModule": self.target_module,
+                    "elapsedSeconds": round(time.perf_counter() - started, 3),
+                },
+                "tables": added_tables,
+            }
+        )
+        print_passed(f"add_metadata_tables: added {len(added_tables)} metadata tables")
 
     def _resolve_project_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
@@ -73,25 +73,17 @@ class UpdateMetadataScript(BaseScript):
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
         return self.project_root / configured_path
 
-    def _read_entities(self) -> list[str]:
-        entities_file = self.source_metadata_root / "entities.json"
-        entities = read_json_file(entities_file).get("entities")
-        if not isinstance(entities, list):
-            raise ValueError("Source entities.json must contain an entities list.")
-        return entities
+    def _read_requested_tables(self) -> list[str]:
+        requested_tables = self.config.get("tables", [])
+        if requested_tables == ["*"]:
+            entities = read_json_file(self.source_metadata_root / "entities.json").get("entities", [])
+            return list(entities)
+        if not isinstance(requested_tables, list):
+            raise ValueError("Config value 'tables' must be a list.")
+        return [str(table_name) for table_name in requested_tables]
 
-    def _prepare_target_metadata(self) -> None:
-        modules_root = self.target_metadata_root / "modules"
-        if modules_root.exists():
-            shutil.rmtree(modules_root)
-        for module_name in ["ccore/automation", "ccore/organization"]:
-            (modules_root / module_name / "tables").mkdir(parents=True, exist_ok=True)
-
-    def _resolve_module_name(self, entity_name: str) -> str:
-        return "ccore/automation"
-
-    def _build_table_metadata(self, entity_name: str) -> dict[str, Any]:
-        schema = read_json_file(self.source_metadata_root / "entities" / entity_name / "schema.json")
+    def _build_table_schema(self, table_name: str) -> dict[str, Any]:
+        schema = read_json_file(self.source_metadata_root / "entities" / table_name / "schema.json")
         columns = []
         primary_key = []
         foreign_keys = []
@@ -133,7 +125,7 @@ class UpdateMetadataScript(BaseScript):
                 constraints.append(source_constraint)
 
         metadata = {
-            "name": entity_name,
+            "name": table_name,
             "columns": columns,
             "primaryKey": primary_key,
             "foreignKeys": foreign_keys,
@@ -142,19 +134,27 @@ class UpdateMetadataScript(BaseScript):
             metadata["constraints"] = constraints
         return metadata
 
-    def _build_seed_metadata(self, entity_name: str) -> dict[str, Any]:
-        seed = read_json_file(self.source_metadata_root / "entities" / entity_name / "seed_data.json")
-        return {
-            "table": entity_name,
-            "rows": seed.get("rows", []),
-        }
+    def _build_table_data(self, table_name: str) -> dict[str, Any]:
+        seed = read_json_file(self.source_metadata_root / "entities" / table_name / "seed_data.json")
+        return {"table": table_name, "rows": seed.get("rows", [])}
 
-    def _write_database_metadata(self, module_tables: dict[str, list[str]]) -> None:
+    def _write_table_registry(self, added_tables: list[str]) -> None:
+        module_root = self.target_metadata_root / "modules" / self.target_module
+        module_root.mkdir(parents=True, exist_ok=True)
+        registry_path = module_root / "tables.json"
+        existing_tables = []
+        if registry_path.exists():
+            existing_tables = read_json_file(registry_path).get("tables", [])
+        merged_tables = sorted(set(existing_tables) | set(added_tables))
+        write_json_file(registry_path, {"tables": merged_tables})
+
+    def _write_database_metadata(self) -> None:
         database_metadata = {
-            "name": self.config.get("databaseName", "ccore_automation"),
-            "description": "Generic database metadata source for CFFP Automation Factory database generation.",
+            "name": self.config.get("databaseName", "CFFP"),
+            "description": "Generic database metadata source for CFFP database generation.",
             "metadataVersion": self.config.get("metadataVersion", "1.0"),
-            "modules": [module for module, tables in module_tables.items() if tables or module == "ccore/organization"],
+            "modules": self.config.get("modules", ["ccore/automation", "ccore/organization"]),
+            "currentImplementation": self.config.get("currentImplementation", {}),
             "capabilities": [
                 "database",
                 "tables",
@@ -166,12 +166,6 @@ class UpdateMetadataScript(BaseScript):
             ],
         }
         write_json_file(self.target_metadata_root / "database.json", database_metadata)
-
-    def _write_module_metadata(self, module_tables: dict[str, list[str]]) -> None:
-        for module_name in ["ccore/automation", "ccore/organization"]:
-            module_root = self.target_metadata_root / "modules" / module_name
-            module_root.mkdir(parents=True, exist_ok=True)
-            write_json_file(module_root / "tables.json", {"tables": module_tables.get(module_name, [])})
 
     def _to_generic_type(self, source_type: str) -> str:
         normalized = source_type.upper()
@@ -214,4 +208,4 @@ class UpdateMetadataScript(BaseScript):
 
 
 if __name__ == "__main__":
-    UpdateMetadataScript().run()
+    AddMetadataTablesScript().run()
