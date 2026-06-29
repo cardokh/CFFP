@@ -1,14 +1,7 @@
 {
     "scriptName": "add_metadata_tables",
-    "mode": "add_generic_metadata_tables",
-    "databaseName": "CFFP",
-    "metadataVersion": "1.0",
-    "sourceMetadataRoot": "automation/factory/crud/db/postgres/metadata",
+    "mode": "manual_generated_tables_import",
+    "generatedTablesPath": "input/generated_tables.json",
     "targetMetadataRoot": "automation/factory/crud/db/metadata",
-    "targetModule": "ccore/automation",
-    "tables": [
-        "*"
-    ],
-    "currentImplementation": "postgres",
-    "implementationConfigSource": "automation/factory/crud/db/postgres/metadata/database.json"
+    "targetModule": "ccore/automation"
 }
