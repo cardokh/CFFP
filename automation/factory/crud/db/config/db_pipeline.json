@@ -10,29 +10,19 @@
     },
     "components": [
         {
-            "name": "generate_table_metadata",
-            "enabled": false,
-            "scriptPath": "automation/factory/crud/db/postgres/generate_table_metadata/generate_table_metadata.py"
-        },
-        {
-            "name": "promote_db_metadata",
-            "enabled": false,
-            "scriptPath": "automation/factory/crud/db/postgres/promote_db_metadata/promote_db_metadata.py"
-        },
-        {
-            "name": "create_db_schema",
+            "name": "validate_postgres_metadata",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/create_db_schema/create_db_schema.py"
+            "scriptPath": "automation/factory/crud/db/implementations/postgres/tasks/validate_postgres_metadata/validate_postgres_metadata.py"
         },
         {
-            "name": "seed_db_data",
+            "name": "build_database",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/seed_db_data/seed_db_data.py"
+            "scriptPath": "automation/factory/crud/db/implementations/postgres/tasks/build_database/build_database.py"
         },
         {
-            "name": "build_db_context",
+            "name": "insert_data",
             "enabled": true,
-            "scriptPath": "automation/factory/crud/db/postgres/build_db_context/build_db_context.py"
+            "scriptPath": "automation/factory/crud/db/implementations/postgres/tasks/insert_data/insert_data.py"
         }
     ]
 }

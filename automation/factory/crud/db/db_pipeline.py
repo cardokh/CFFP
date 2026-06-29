@@ -98,26 +98,35 @@ class DatabaseCrudPipelineScript(BaseScript):
         return components
 
     def _validate_database_engine(self) -> None:
-        engine_folder = self.script_directory / self.database_engine
+        engine_folder = self._get_engine_folder()
         if not engine_folder.is_dir():
             raise ValueError(f"Database engine folder not found: {engine_folder}")
 
+    def _get_engine_folder(self) -> Path:
+        return self.script_directory / "implementations" / self.database_engine
+
     def _sync_engine_execution_config(self) -> None:
-        create_db_schema_config_path = self.script_directory / self.database_engine / "create_db_schema" / "config" / "create_db_schema.json"
-        if not create_db_schema_config_path.exists():
+        build_database_config_path = (
+            self._get_engine_folder()
+            / "tasks"
+            / "build_database"
+            / "config"
+            / "build_database.json"
+        )
+        if not build_database_config_path.exists():
             return
 
-        with open(create_db_schema_config_path, "r", encoding="utf-8") as file:
-            create_db_schema_config = json.load(file)
+        with open(build_database_config_path, "r", encoding="utf-8") as file:
+            build_database_config = json.load(file)
 
-        create_db_schema_config["execution"] = {
+        build_database_config["execution"] = {
             "recreateDatabase": self.execution.get("recreateDatabase", False),
             "dropUnlistedTables": self.execution.get("dropUnlistedTables", False),
             "recreateExistingTables": self.execution.get("recreateExistingTables", True),
         }
 
-        with open(create_db_schema_config_path, "w", encoding="utf-8") as file:
-            json.dump(create_db_schema_config, file, indent=4)
+        with open(build_database_config_path, "w", encoding="utf-8") as file:
+            json.dump(build_database_config, file, indent=4)
 
     def _run_component(self, component: dict) -> dict:
         name = self._get_required_string(component, "name")
