@@ -1,8 +1,0 @@
-{
-    "scriptName": "validate_database_entity_definitions",
-    "mode": "validate_postgres_entity_metadata_files",
-    "metadataPaths": {
-        "entitiesConfigPath": "automation/factory/crud/db/postgres/metadata/entities.json",
-        "entityMetadataRoot": "automation/factory/crud/db/postgres/metadata/entities"
-    }
-}

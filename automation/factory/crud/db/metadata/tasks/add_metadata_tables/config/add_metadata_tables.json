@@ -1,6 +1,7 @@
 {
     "scriptName": "add_metadata_tables",
-    "mode": "manual_generated_tables_import",
+    "mode": "architecture_specification_generated_tables_import",
+    "architectureSpecificationPath": "input/architecture_specification.json",
     "generatedTablesPath": "input/generated_tables.json",
     "targetMetadataRoot": "automation/factory/crud/db/metadata",
     "targetModule": "ccore/automation"

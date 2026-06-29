@@ -1,5 +1,0 @@
-{
-    "table": "ccore_pipeline_executions",
-    "conflictColumn": "pipeline_execution_id",
-    "rows": []
-}

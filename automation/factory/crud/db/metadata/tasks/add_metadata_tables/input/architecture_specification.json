@@ -1,14 +1,13 @@
 {
-    "source": {
-        "type": "architectureSpecification",
-        "name": "ccore_automation_pipeline_foundation",
-        "version": "1.0",
-        "path": "input/architecture_specification.json"
-    },
+    "name": "ccore_automation_pipeline_foundation",
+    "version": "1.0",
+    "description": "Architecture specification for the first CCore automation pipeline metadata foundation.",
     "targetModule": "ccore/automation",
     "tables": [
         {
+            "kind": "reference",
             "name": "pipeline_statuses",
+            "description": "Reference data for lifecycle status values assigned to pipeline definitions.",
             "schema": {
                 "name": "pipeline_statuses",
                 "columns": [
@@ -68,7 +67,9 @@
             }
         },
         {
+            "kind": "reference",
             "name": "pipeline_execution_modes",
+            "description": "Reference data for how a pipeline should be executed.",
             "schema": {
                 "name": "pipeline_execution_modes",
                 "columns": [
@@ -116,7 +117,9 @@
             }
         },
         {
+            "kind": "reference",
             "name": "pipeline_trigger_types",
+            "description": "Reference data for how a pipeline run is triggered.",
             "schema": {
                 "name": "pipeline_trigger_types",
                 "columns": [
@@ -170,7 +173,9 @@
             }
         },
         {
+            "kind": "entity",
             "name": "pipelines",
+            "description": "Pipeline definitions. A pipeline is an ordered collection of executable tasks. Task membership is intentionally excluded from this iteration.",
             "schema": {
                 "name": "pipelines",
                 "columns": [

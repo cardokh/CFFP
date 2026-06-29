@@ -1,0 +1,17 @@
+{
+    "table": "pipeline_execution_modes",
+    "rows": [
+        {
+            "pipeline_execution_mode_id": 1,
+            "execution_mode_key": "validate_only",
+            "execution_mode_label": "Validate Only",
+            "sort_order": 10
+        },
+        {
+            "pipeline_execution_mode_id": 2,
+            "execution_mode_key": "apply_changes",
+            "execution_mode_label": "Apply Changes",
+            "sort_order": 20
+        }
+    ]
+}

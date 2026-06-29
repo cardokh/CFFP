@@ -1,0 +1,98 @@
+{
+    "name": "pipelines",
+    "columns": [
+        {
+            "name": "pipeline_id",
+            "type": "uuid",
+            "nullable": false,
+            "default": {
+                "type": "generatedUuid"
+            }
+        },
+        {
+            "name": "pipeline_name",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "pipeline_description",
+            "type": "text",
+            "nullable": true
+        },
+        {
+            "name": "pipeline_status_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "pipeline_execution_mode_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "pipeline_trigger_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "created_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        },
+        {
+            "name": "updated_at",
+            "type": "timestamp",
+            "nullable": false,
+            "default": {
+                "type": "currentTimestamp"
+            }
+        }
+    ],
+    "primaryKey": [
+        "pipeline_id"
+    ],
+    "foreignKeys": [
+        {
+            "name": "pipelines_pipeline_status_id_fk",
+            "columns": [
+                "pipeline_status_id"
+            ],
+            "references": {
+                "table": "pipeline_statuses",
+                "columns": [
+                    "pipeline_status_id"
+                ]
+            },
+            "onDelete": "RESTRICT"
+        },
+        {
+            "name": "pipelines_pipeline_execution_mode_id_fk",
+            "columns": [
+                "pipeline_execution_mode_id"
+            ],
+            "references": {
+                "table": "pipeline_execution_modes",
+                "columns": [
+                    "pipeline_execution_mode_id"
+                ]
+            },
+            "onDelete": "RESTRICT"
+        },
+        {
+            "name": "pipelines_pipeline_trigger_type_id_fk",
+            "columns": [
+                "pipeline_trigger_type_id"
+            ],
+            "references": {
+                "table": "pipeline_trigger_types",
+                "columns": [
+                    "pipeline_trigger_type_id"
+                ]
+            },
+            "onDelete": "RESTRICT"
+        }
+    ]
+}

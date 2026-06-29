@@ -1,0 +1,28 @@
+{
+    "name": "pipeline_trigger_types",
+    "columns": [
+        {
+            "name": "pipeline_trigger_type_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "trigger_type_key",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "trigger_type_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "pipeline_trigger_type_id"
+    ]
+}

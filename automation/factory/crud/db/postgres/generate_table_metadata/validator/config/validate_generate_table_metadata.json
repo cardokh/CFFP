@@ -1,9 +1,0 @@
-{
-    "scriptName": "validate_generate_table_metadata",
-    "mode": "validate_generated_postgres_table_metadata",
-    "metadataPaths": {
-        "newTablesPath": "automation/factory/crud/db/postgres/generate_table_metadata/metadata/new_tables.json",
-        "addedEntitiesPath": "automation/factory/crud/db/postgres/promote_db_metadata/metadata/added_entities.json",
-        "addedEntityMetadataRoot": "automation/factory/crud/db/postgres/promote_db_metadata/metadata/entities"
-    }
-}
