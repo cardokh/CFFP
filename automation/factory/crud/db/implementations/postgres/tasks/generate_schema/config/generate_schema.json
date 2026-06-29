@@ -1,0 +1,25 @@
+{
+    "scriptName": "generate_schema",
+    "mode": "generate_postgres_schema_from_generic_metadata",
+    "metadataRoot": "automation/factory/crud/db/metadata",
+    "implementationRoot": "automation/factory/crud/db/implementations/postgres",
+    "outputFileName": "schema.sql",
+    "moduleRoots": [
+        "ccore/automation",
+        "ccore/organization"
+    ],
+    "typeMappings": {
+        "integer": "INTEGER",
+        "uuid": "UUID",
+        "string": "VARCHAR(255)",
+        "text": "TEXT",
+        "boolean": "BOOLEAN",
+        "timestamp": "TIMESTAMP WITH TIME ZONE",
+        "json": "JSONB"
+    },
+    "defaultMappings": {
+        "currentTimestamp": "CURRENT_TIMESTAMP",
+        "generatedUuid": "gen_random_uuid()",
+        "emptyJson": "'{}'::jsonb"
+    }
+}

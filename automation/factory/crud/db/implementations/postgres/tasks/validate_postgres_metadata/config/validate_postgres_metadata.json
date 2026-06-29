@@ -1,0 +1,35 @@
+{
+    "scriptName": "validate_postgres_metadata",
+    "mode": "validate_postgres_implementation_metadata",
+    "metadataRoot": "automation/factory/crud/db/metadata",
+    "implementationRoot": "automation/factory/crud/db/implementations/postgres",
+    "requiredConnectionGroups": [
+        "adminConnection",
+        "applicationConnection"
+    ],
+    "requiredConnectionFields": [
+        "databaseName",
+        "host",
+        "port",
+        "username",
+        "password"
+    ],
+    "supportedGenericTypes": {
+        "integer": "INTEGER",
+        "uuid": "UUID",
+        "string": "VARCHAR(255)",
+        "text": "TEXT",
+        "boolean": "BOOLEAN",
+        "timestamp": "TIMESTAMP WITH TIME ZONE",
+        "json": "JSONB"
+    },
+    "supportedDefaultTypes": {
+        "currentTimestamp": "CURRENT_TIMESTAMP",
+        "generatedUuid": "gen_random_uuid",
+        "emptyJson": "'{}'::jsonb"
+    },
+    "moduleRoots": [
+        "ccore/automation",
+        "ccore/organization"
+    ]
+}

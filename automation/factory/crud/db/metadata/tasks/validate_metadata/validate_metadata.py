@@ -91,7 +91,7 @@ class ValidateMetadataScript(BaseScript):
             return database_metadata
 
         if self.config.get("validateImplementationConfig", True):
-            implementation_path = self.metadata_root / "implementations" / implementation_name / "database.json"
+            implementation_path = self.metadata_root.parent / "implementations" / implementation_name / "database.json"
             implementation_metadata = self._read_required_json(implementation_path)
             if isinstance(implementation_metadata, dict):
                 implementation_type = implementation_metadata.get("databaseType")
