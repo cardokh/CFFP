@@ -1,0 +1,17 @@
+{
+    "scriptName": "validate_metadata",
+    "mode": "validate_generic_metadata",
+    "metadataRoot": "automation/factory/crud/db/metadata",
+    "requiredDatabaseFields": [
+        "name",
+        "version",
+        "description",
+        "currentImplementation"
+    ],
+    "moduleRoots": [
+        "ccore/automation",
+        "ccore/organization"
+    ],
+    "validateImplementationConfig": true,
+    "validateDataRows": true
+}

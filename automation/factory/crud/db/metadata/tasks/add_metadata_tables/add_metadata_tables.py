@@ -151,21 +151,20 @@ class AddMetadataTablesScript(BaseScript):
     def _write_database_metadata(self) -> None:
         database_metadata = {
             "name": self.config.get("databaseName", "CFFP"),
+            "version": self.config.get("metadataVersion", "1.0"),
             "description": "Generic database metadata source for CFFP database generation.",
-            "metadataVersion": self.config.get("metadataVersion", "1.0"),
-            "modules": self.config.get("modules", ["ccore/automation", "ccore/organization"]),
-            "currentImplementation": self.config.get("currentImplementation", {}),
-            "capabilities": [
-                "database",
-                "tables",
-                "columns",
-                "primaryKeys",
-                "foreignKeys",
-                "defaults",
-                "seedData",
-            ],
+            "currentImplementation": self.config.get("currentImplementation", "postgres"),
         }
         write_json_file(self.target_metadata_root / "database.json", database_metadata)
+
+        implementation_config_path = self.config.get("implementationConfigSource")
+        if implementation_config_path:
+            source_path = self.project_root / implementation_config_path
+            implementation_name = database_metadata["currentImplementation"]
+            write_json_file(
+                self.target_metadata_root / "implementations" / implementation_name / "database.json",
+                read_json_file(source_path),
+            )
 
     def _to_generic_type(self, source_type: str) -> str:
         normalized = source_type.upper()

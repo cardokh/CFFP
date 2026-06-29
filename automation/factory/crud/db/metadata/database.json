@@ -1,22 +1,6 @@
 {
     "name": "CFFP",
+    "version": "1.0",
     "description": "Generic database metadata source for CFFP database generation.",
-    "metadataVersion": "1.0",
-    "modules": [
-        "ccore/automation",
-        "ccore/organization"
-    ],
-    "currentImplementation": {
-        "provider": "postgres",
-        "connectionString": "postgresql://ccore_admin:ccore_admin_dev_password@localhost:5432/ccore_automation"
-    },
-    "capabilities": [
-        "database",
-        "tables",
-        "columns",
-        "primaryKeys",
-        "foreignKeys",
-        "defaults",
-        "seedData"
-    ]
+    "currentImplementation": "postgres"
 }
