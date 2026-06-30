@@ -1,7 +1,0 @@
-{
-    "scriptName": "update_metadata_table",
-    "mode": "update_generic_metadata_table",
-    "targetMetadataRoot": "automation/factory/crud/db/metadata",
-    "targetModule": "ccore/automation",
-    "tables": []
-}
