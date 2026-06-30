@@ -1,4 +1,4 @@
-"""Validates the generic database metadata model."""
+"""Validates the generic database metadata model and metadata task wiring."""
 
 import sys
 import time
@@ -34,16 +34,21 @@ class ValidateMetadataScript(BaseScript):
     def __init__(self) -> None:
         super().__init__(__file__)
         self.metadata_root = self._resolve_project_path("metadataRoot")
+        self.tasks_root = self.script_directory.parent
         self.errors: list[str] = []
         self.warnings: list[str] = []
         self.table_schemas: dict[str, dict[str, Any]] = {}
+        self.table_modules: dict[str, str] = {}
 
     def run(self) -> None:
         started = time.perf_counter()
 
         database_metadata = self._validate_database_metadata()
+        self._validate_task_model()
         self._validate_modules()
         self._validate_foreign_keys()
+        self._validate_generate_task_contract()
+        self._validate_remove_task_contract()
 
         status = "PASSED" if not self.errors else "FAILED"
         report = {
@@ -51,12 +56,14 @@ class ValidateMetadataScript(BaseScript):
             "summary": {
                 "status": status,
                 "metadataRoot": self.to_project_relative_path(self.metadata_root),
+                "taskRoot": self.to_project_relative_path(self.tasks_root),
                 "tableCount": len(self.table_schemas),
                 "errorCount": len(self.errors),
                 "warningCount": len(self.warnings),
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
             },
             "database": database_metadata,
+            "validatedTables": sorted(self.table_schemas.keys()),
             "errors": self.errors,
             "warnings": self.warnings,
         }
@@ -66,7 +73,8 @@ class ValidateMetadataScript(BaseScript):
             print_failed(f"validate_metadata: {len(self.errors)} error(s)")
             raise SystemExit(1)
 
-        print_passed(f"validate_metadata: validated {len(self.table_schemas)} table(s)")
+        warning_suffix = f", {len(self.warnings)} warning(s)" if self.warnings else ""
+        print_passed(f"validate_metadata: validated {len(self.table_schemas)} table(s){warning_suffix}")
 
     def _resolve_project_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
@@ -102,6 +110,37 @@ class ValidateMetadataScript(BaseScript):
                     )
         return database_metadata
 
+    def _validate_task_model(self) -> None:
+        if not self.config.get("validateTaskModel", True):
+            return
+
+        expected_task_folders = self.config.get("expectedTaskFolders", [])
+        if not isinstance(expected_task_folders, list):
+            self.errors.append("Config value 'expectedTaskFolders' must be a list.")
+            expected_task_folders = []
+
+        for task_folder in expected_task_folders:
+            task_name = str(task_folder)
+            task_root = self.tasks_root / task_name
+            if not task_root.is_dir():
+                self.errors.append(f"Expected metadata task folder does not exist: {task_name}")
+                continue
+            task_script = task_root / f"{task_name}.py"
+            task_config = task_root / "config" / f"{task_name}.json"
+            if not task_script.is_file():
+                self.errors.append(f"Expected metadata task script does not exist: {self.to_project_relative_path(task_script)}")
+            if not task_config.is_file():
+                self.errors.append(f"Expected metadata task config does not exist: {self.to_project_relative_path(task_config)}")
+
+        forbidden_task_folders = self.config.get("forbiddenTaskFolders", [])
+        if not isinstance(forbidden_task_folders, list):
+            self.errors.append("Config value 'forbiddenTaskFolders' must be a list.")
+            return
+        for task_folder in forbidden_task_folders:
+            task_root = self.tasks_root / str(task_folder)
+            if task_root.exists():
+                self.errors.append(f"Forbidden legacy metadata task folder exists: {self.to_project_relative_path(task_root)}")
+
     def _validate_modules(self) -> None:
         module_roots = self.config.get("moduleRoots", [])
         if not isinstance(module_roots, list):
@@ -109,41 +148,65 @@ class ValidateMetadataScript(BaseScript):
             return
 
         for module_root_value in module_roots:
-            module_root = self.metadata_root / "modules" / str(module_root_value)
-            self._validate_module(module_root)
+            module_name = str(module_root_value)
+            module_root = self.metadata_root / "modules" / module_name
+            self._validate_module(module_root, module_name)
 
-    def _validate_module(self, module_root: Path) -> None:
+    def _validate_module(self, module_root: Path, module_name: str) -> None:
         if not module_root.exists():
             self.errors.append(f"Module folder does not exist: {self.to_project_relative_path(module_root)}")
             return
 
-        tables_json = self._read_required_json(module_root / "tables.json")
+        tables_root = module_root / "tables"
+        tables_json_path = module_root / "tables.json"
+        tables_json = self._read_required_json(tables_json_path)
         tables = tables_json.get("tables", []) if isinstance(tables_json, dict) else []
         if not isinstance(tables, list):
-            self.errors.append(f"tables.json must contain a list field named 'tables': {module_root}")
+            self.errors.append(f"tables.json must contain a list field named 'tables': {self.to_project_relative_path(tables_json_path)}")
+            return
+        if not tables_root.is_dir():
+            if tables:
+                self.errors.append(f"Module tables folder does not exist: {self.to_project_relative_path(tables_root)}")
             return
 
         table_names = [str(table_name) for table_name in tables]
         if len(table_names) != len(set(table_names)):
-            self.errors.append(f"Duplicate table names found in {self.to_project_relative_path(module_root / 'tables.json')}")
+            self.errors.append(f"Duplicate table names found in {self.to_project_relative_path(tables_json_path)}")
 
         for table_name in table_names:
-            self._validate_table(module_root, table_name)
+            if not table_name or table_name.strip() != table_name:
+                self.errors.append(f"Invalid table name in {self.to_project_relative_path(tables_json_path)}: '{table_name}'")
+            self._validate_table(module_root, module_name, table_name)
 
-    def _validate_table(self, module_root: Path, table_name: str) -> None:
+        listed_table_names = set(table_names)
+        actual_table_folder_names = {path.name for path in tables_root.iterdir() if path.is_dir()}
+        unlisted_folders = sorted(actual_table_folder_names - listed_table_names)
+        missing_folders = sorted(listed_table_names - actual_table_folder_names)
+
+        for table_name in missing_folders:
+            self.errors.append(
+                f"Table '{table_name}' is listed in {self.to_project_relative_path(tables_json_path)} "
+                "but the table folder does not exist."
+            )
+        for table_name in unlisted_folders:
+            self.errors.append(
+                f"Table folder exists but is not listed in {self.to_project_relative_path(tables_json_path)}: "
+                f"{table_name}"
+            )
+
+    def _validate_table(self, module_root: Path, module_name: str, table_name: str) -> None:
         table_root = module_root / "tables" / table_name
         if not table_root.exists():
-            self.errors.append(f"Table folder does not exist: {self.to_project_relative_path(table_root)}")
             return
 
         schema = self._read_required_json(table_root / "schema.json")
         data = self._read_required_json(table_root / "data.json")
         if isinstance(schema, dict):
-            self._validate_schema(table_name, schema, table_root)
+            self._validate_schema(module_name, table_name, schema, table_root)
         if isinstance(data, dict):
-            self._validate_data(table_name, schema if isinstance(schema, dict) else {}, data, table_root)
+            self._validate_data(table_name, schema if isinstance(schema, dict) else {}, data)
 
-    def _validate_schema(self, table_name: str, schema: dict[str, Any], table_root: Path) -> None:
+    def _validate_schema(self, module_name: str, table_name: str, schema: dict[str, Any], table_root: Path) -> None:
         schema_name = schema.get("name")
         if schema_name != table_name:
             self.errors.append(f"schema.json name must match table folder name '{table_name}'.")
@@ -175,6 +238,8 @@ class ValidateMetadataScript(BaseScript):
         if not isinstance(primary_key, list):
             self.errors.append(f"Table '{table_name}' primaryKey must be a list.")
             primary_key = []
+        if not primary_key:
+            self.warnings.append(f"Table '{table_name}' does not define a primary key.")
         for primary_key_column in primary_key:
             if primary_key_column not in column_names:
                 self.errors.append(f"Table '{table_name}' primary key column '{primary_key_column}' does not exist.")
@@ -187,6 +252,7 @@ class ValidateMetadataScript(BaseScript):
             self._validate_foreign_key_shape(table_name, column_names, foreign_key)
 
         self.table_schemas[table_name] = schema
+        self.table_modules[table_name] = module_name
 
     def _validate_foreign_key_shape(self, table_name: str, column_names: list[str], foreign_key: Any) -> None:
         if not isinstance(foreign_key, dict):
@@ -197,6 +263,8 @@ class ValidateMetadataScript(BaseScript):
         referenced_table = references.get("table") if isinstance(references, dict) else None
         referenced_columns = references.get("columns", []) if isinstance(references, dict) else []
 
+        if "name" in foreign_key and (not isinstance(foreign_key.get("name"), str) or not foreign_key.get("name")):
+            self.errors.append(f"Table '{table_name}' foreign key name must be a non-empty string when present.")
         if not isinstance(columns, list) or not columns:
             self.errors.append(f"Table '{table_name}' foreign key must define one or more columns.")
         for column_name in columns:
@@ -228,7 +296,7 @@ class ValidateMetadataScript(BaseScript):
                             f"'{referenced_table}.{referenced_column}'."
                         )
 
-    def _validate_data(self, table_name: str, schema: dict[str, Any], data: dict[str, Any], table_root: Path) -> None:
+    def _validate_data(self, table_name: str, schema: dict[str, Any], data: dict[str, Any]) -> None:
         data_table = data.get("table")
         if data_table != table_name:
             self.errors.append(f"data.json table must match table folder name '{table_name}'.")
@@ -243,6 +311,9 @@ class ValidateMetadataScript(BaseScript):
 
         columns = schema.get("columns", [])
         column_map = {column.get("name"): column for column in columns if isinstance(column, dict)}
+        primary_key = schema.get("primaryKey", [])
+        primary_key_tuples: set[tuple[Any, ...]] = set()
+
         for row_index, row in enumerate(rows):
             if not isinstance(row, dict):
                 self.errors.append(f"Table '{table_name}' row {row_index} must be an object.")
@@ -255,6 +326,115 @@ class ValidateMetadataScript(BaseScript):
                     self.errors.append(
                         f"Table '{table_name}' row {row_index} is missing required column '{column_name}'."
                     )
+            if isinstance(primary_key, list) and primary_key and all(key in row for key in primary_key):
+                key_tuple = tuple(row[key] for key in primary_key)
+                if key_tuple in primary_key_tuples:
+                    self.errors.append(f"Table '{table_name}' row {row_index} duplicates primary key value {key_tuple}.")
+                primary_key_tuples.add(key_tuple)
+
+    def _validate_generate_task_contract(self) -> None:
+        if not self.config.get("validateGenerateTask", True):
+            return
+
+        task_root = self.tasks_root / "generate_table_metadata"
+        task_config = self._read_optional_json(task_root / "config" / "generate_table_metadata.json")
+        if not isinstance(task_config, dict):
+            self.errors.append("generate_table_metadata config must contain a JSON object.")
+            return
+
+        if task_config.get("scriptName") != "generate_table_metadata":
+            self.errors.append("generate_table_metadata config scriptName must be 'generate_table_metadata'.")
+
+        specifications = task_config.get("architectureSpecifications")
+        if not isinstance(specifications, list) or not specifications:
+            self.errors.append("generate_table_metadata config must contain a non-empty architectureSpecifications list.")
+            return
+
+        seen_names: set[str] = set()
+        for index, specification in enumerate(specifications):
+            if not isinstance(specification, dict):
+                self.errors.append(f"architectureSpecifications[{index}] must be an object.")
+                continue
+            name = specification.get("name")
+            path_value = specification.get("path")
+            generated_path_value = specification.get("generatedTablesPath")
+            if not isinstance(name, str) or not name:
+                self.errors.append(f"architectureSpecifications[{index}] must define a non-empty name.")
+            elif name in seen_names:
+                self.errors.append(f"Duplicate architecture specification name: {name}")
+            else:
+                seen_names.add(name)
+            self._validate_task_relative_json_file(task_root, path_value, f"architectureSpecifications[{index}].path")
+            self._validate_task_relative_json_file(
+                task_root,
+                generated_path_value,
+                f"architectureSpecifications[{index}].generatedTablesPath",
+            )
+
+            generated_payload = self._read_optional_json(task_root / str(generated_path_value)) if isinstance(generated_path_value, str) else None
+            if isinstance(generated_payload, dict):
+                self._validate_generated_tables_payload(generated_payload, generated_path_value)
+
+    def _validate_generated_tables_payload(self, payload: dict[str, Any], generated_path_value: str) -> None:
+        tables = payload.get("tables")
+        if not isinstance(tables, list):
+            self.errors.append(f"Generated table batch must contain a list field named 'tables': {generated_path_value}")
+            return
+        generated_table_names: list[str] = []
+        for index, table in enumerate(tables):
+            if not isinstance(table, dict):
+                self.errors.append(f"Generated table batch entry {index} must be an object: {generated_path_value}")
+                continue
+            table_name = table.get("name")
+            if not isinstance(table_name, str) or not table_name:
+                self.errors.append(f"Generated table batch entry {index} must define a non-empty name: {generated_path_value}")
+                continue
+            generated_table_names.append(table_name)
+            if "schema" not in table or not isinstance(table.get("schema"), dict):
+                self.errors.append(f"Generated table '{table_name}' must contain a schema object.")
+            if "data" not in table or not isinstance(table.get("data"), dict):
+                self.errors.append(f"Generated table '{table_name}' must contain a data object.")
+
+        if len(generated_table_names) != len(set(generated_table_names)):
+            self.errors.append(f"Generated table batch contains duplicate table names: {generated_path_value}")
+
+    def _validate_remove_task_contract(self) -> None:
+        if not self.config.get("validateRemoveTask", True):
+            return
+
+        task_root = self.tasks_root / "remove_metadata_tables"
+        task_config = self._read_optional_json(task_root / "config" / "remove_metadata_tables.json")
+        if not isinstance(task_config, dict):
+            self.errors.append("remove_metadata_tables config must contain a JSON object.")
+            return
+
+        if task_config.get("scriptName") != "remove_metadata_tables":
+            self.errors.append("remove_metadata_tables config scriptName must be 'remove_metadata_tables'.")
+        if not isinstance(task_config.get("targetMetadataRoot"), str) or not task_config.get("targetMetadataRoot"):
+            self.errors.append("remove_metadata_tables config must define targetMetadataRoot.")
+        if not isinstance(task_config.get("targetModule"), str) or not task_config.get("targetModule"):
+            self.errors.append("remove_metadata_tables config must define targetModule.")
+
+        tables = task_config.get("tables")
+        if not isinstance(tables, list):
+            self.errors.append("remove_metadata_tables config tables must be a list.")
+            return
+        for index, table_name in enumerate(tables):
+            if not isinstance(table_name, str) or not table_name:
+                self.errors.append(f"remove_metadata_tables config tables[{index}] must be a non-empty string.")
+
+    def _validate_task_relative_json_file(self, task_root: Path, path_value: Any, field_name: str) -> None:
+        if not isinstance(path_value, str) or not path_value:
+            self.errors.append(f"{field_name} must be a non-empty path string.")
+            return
+        if Path(path_value).is_absolute() or ".." in Path(path_value).parts:
+            self.errors.append(f"{field_name} must be a task-relative path without '..': {path_value}")
+            return
+        if not path_value.endswith(".json"):
+            self.errors.append(f"{field_name} must point to a JSON file: {path_value}")
+        resolved_path = task_root / path_value
+        if not resolved_path.is_file():
+            self.errors.append(f"{field_name} does not exist: {self.to_project_relative_path(resolved_path)}")
 
     def _read_required_json(self, file_path: Path) -> Any:
         if not file_path.exists():
@@ -265,6 +445,13 @@ class ValidateMetadataScript(BaseScript):
         except Exception as exc:  # noqa: BLE001 - report validation failure with the path.
             self.errors.append(f"Could not read JSON file {self.to_project_relative_path(file_path)}: {exc}")
             return {}
+
+    def _read_optional_json(self, file_path: Path) -> Any:
+        try:
+            return read_json_file(file_path)
+        except Exception as exc:  # noqa: BLE001 - report validation failure with the path.
+            self.errors.append(f"Could not read JSON file {self.to_project_relative_path(file_path)}: {exc}")
+            return None
 
 
 if __name__ == "__main__":

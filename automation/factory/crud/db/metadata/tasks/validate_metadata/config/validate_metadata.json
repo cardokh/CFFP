@@ -13,5 +13,17 @@
         "ccore/organization"
     ],
     "validateImplementationConfig": true,
-    "validateDataRows": true
+    "validateDataRows": true,
+    "validateTaskModel": true,
+    "expectedTaskFolders": [
+        "generate_table_metadata",
+        "remove_metadata_tables",
+        "validate_metadata"
+    ],
+    "forbiddenTaskFolders": [
+        "add_metadata_tables",
+        "update_metadata_table"
+    ],
+    "validateGenerateTask": true,
+    "validateRemoveTask": true
 }
