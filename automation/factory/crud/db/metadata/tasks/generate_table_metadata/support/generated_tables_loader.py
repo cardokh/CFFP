@@ -11,9 +11,9 @@ def load_generated_tables(generated_tables_path: Path) -> dict[str, Any]:
 
     batch = read_json_file(generated_tables_path)
     if not isinstance(batch, dict):
-        raise ValueError("generated_tables.json must contain a JSON object.")
+        raise ValueError("Generated tables batch must contain a JSON object.")
     if "tables" not in batch:
-        raise ValueError("generated_tables.json must contain a 'tables' array.")
+        raise ValueError("Generated tables batch must contain a 'tables' array.")
     if not isinstance(batch["tables"], list):
-        raise ValueError("generated_tables.json field 'tables' must be a list.")
+        raise ValueError("Generated tables batch field 'tables' must be a list.")
     return batch

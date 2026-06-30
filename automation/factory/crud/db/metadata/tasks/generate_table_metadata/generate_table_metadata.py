@@ -1,4 +1,4 @@
-"""Orchestrates the add-metadata-tables task."""
+"""Orchestrates the generate-table-metadata task."""
 
 import sys
 import time
@@ -33,7 +33,7 @@ except ImportError:  # Allows direct script execution from the task folder.
     from support.import_generated_tables import import_generated_tables
 
 
-class AddMetadataTablesScript(BaseScript):
+class GenerateTableMetadataScript(BaseScript):
     """Runs table-batch generation followed by deterministic metadata import."""
 
     def __init__(self) -> None:
@@ -42,10 +42,10 @@ class AddMetadataTablesScript(BaseScript):
     def run(self) -> None:
         started = time.perf_counter()
 
-        print("Generating table batch...")
+        print("Generating table metadata batches...")
         generation_result = generate_generated_tables(self.script_directory, self.config)
 
-        print("Importing generated table batch...")
+        print("Importing generated table metadata batches...")
         import_result = import_generated_tables(self.project_root, self.script_directory, self.config)
 
         report: dict[str, Any] = {
@@ -53,6 +53,7 @@ class AddMetadataTablesScript(BaseScript):
             "summary": {
                 "status": "PASSED",
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
+                "processedSpecificationCount": generation_result["processedSpecificationCount"],
                 "generatedTableCount": generation_result["tableCount"],
                 "importedTableCount": import_result["importedTableCount"],
             },
@@ -60,8 +61,8 @@ class AddMetadataTablesScript(BaseScript):
             "import": import_result,
         }
         self.write_json_report(report)
-        print_passed("add_metadata_tables")
+        print_passed("generate_table_metadata")
 
 
 if __name__ == "__main__":
-    AddMetadataTablesScript().run()
+    GenerateTableMetadataScript().run()
