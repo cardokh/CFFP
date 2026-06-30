@@ -1,0 +1,27 @@
+{
+    "scriptName": "run_metadata_workflows",
+    "mode": "metadata_lifecycle_workflows",
+    "stopOnFailure": true,
+    "targetMetadataRoot": "automation/factory/crud/db/metadata",
+    "targetModule": "ccore/automation",
+    "generatedTableNames": [
+        "pipeline_statuses",
+        "pipeline_execution_modes",
+        "pipeline_trigger_types",
+        "pipelines"
+    ],
+    "scripts": {
+        "generateTableMetadata": "automation/factory/crud/db/metadata/tasks/generate_table_metadata/generate_table_metadata.py",
+        "removeMetadataTables": "automation/factory/crud/db/metadata/tasks/remove_metadata_tables/remove_metadata_tables.py",
+        "validateMetadata": "automation/factory/crud/db/metadata/tasks/validate_metadata/validate_metadata.py",
+        "dbPipeline": "automation/factory/crud/db/db_pipeline.py"
+    },
+    "configs": {
+        "generateTableMetadata": "automation/factory/crud/db/metadata/tasks/generate_table_metadata/config/generate_table_metadata.json",
+        "removeMetadataTables": "automation/factory/crud/db/metadata/tasks/remove_metadata_tables/config/remove_metadata_tables.json"
+    },
+    "negativeTests": {
+        "missingTableName": "workflow_missing_table",
+        "malformedSpecificationPath": "automation/factory/crud/db/tests/workflows/tmp/malformed_specification.json"
+    }
+}
