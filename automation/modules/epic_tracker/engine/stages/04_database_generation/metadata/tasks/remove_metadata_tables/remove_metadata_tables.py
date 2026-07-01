@@ -31,8 +31,12 @@ def _configure_project_import_path() -> None:
         ),
         None,
     )
-    if stage_root is not None and str(stage_root) not in sys.path:
-        sys.path.append(str(stage_root))
+    if stage_root is not None:
+        stage_support = stage_root / "support"
+        if str(stage_support) not in sys.path:
+            sys.path.insert(0, str(stage_support))
+        if str(stage_root) not in sys.path:
+            sys.path.append(str(stage_root))
 
 
 _configure_project_import_path()
@@ -40,7 +44,7 @@ _configure_project_import_path()
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
-from support.db_path_utils import get_db_root, resolve_application_stage_config_path, to_application_stage_relative_path
+from db_path_utils import get_db_root, resolve_application_stage_config_path, to_application_stage_relative_path
 
 
 class RemoveMetadataTablesScript(BaseScript):

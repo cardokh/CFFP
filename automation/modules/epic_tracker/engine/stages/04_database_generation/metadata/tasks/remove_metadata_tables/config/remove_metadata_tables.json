@@ -8,6 +8,5 @@
         "pipeline_execution_modes",
         "pipeline_trigger_types",
         "pipelines"
-    ],
-    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
+    ]
 }

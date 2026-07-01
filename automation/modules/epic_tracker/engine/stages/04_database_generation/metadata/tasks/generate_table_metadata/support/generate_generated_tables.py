@@ -5,27 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.shared.script_json_utils import read_json_file, write_json_file
-
-
-def _get_epic_tracker_root(db_root: Path) -> Path:
-    for candidate in (db_root, *db_root.parents):
-        if (
-            candidate.name == "epic_tracker"
-            and (candidate / "applications").is_dir()
-            and (candidate / "engine").is_dir()
-        ):
-            return candidate
-    raise RuntimeError(f"Could not locate epic_tracker root from: {db_root}")
-
-
-def _get_application_stage_root(db_root: Path, config: dict[str, Any]) -> Path:
-    configured_path = config.get("applicationStageRoot")
-    if not isinstance(configured_path, str) or not configured_path:
-        raise ValueError("Config must contain non-empty 'applicationStageRoot'.")
-    path = Path(configured_path)
-    if path.is_absolute():
-        return path
-    return _get_epic_tracker_root(db_root) / path
+from db_path_utils import get_application_stage_root
 
 
 _ARCHITECTURE_SPECIFICATIONS_CONFIG_KEY = "architectureSpecifications"
@@ -143,7 +123,7 @@ def _resolve_application_stage_path(db_root: Path, config: dict[str, Any], confi
     path = Path(configured_path)
     if path.is_absolute():
         return path
-    return _get_application_stage_root(db_root, config) / path
+    return get_application_stage_root(db_root, config) / path
 
 
 def _read_architecture_specification(path: Path) -> dict[str, Any]:
@@ -207,6 +187,6 @@ def _to_script_relative_path(script_directory: Path, path: Path) -> str:
 
 def _to_application_stage_relative_path(db_root: Path, config: dict[str, Any], path: Path) -> str:
     try:
-        return path.resolve().relative_to(_get_application_stage_root(db_root, config).resolve()).as_posix()
+        return path.resolve().relative_to(get_application_stage_root(db_root, config).resolve()).as_posix()
     except ValueError:
         return str(path)

@@ -34,8 +34,12 @@ def _configure_project_import_path() -> None:
         ),
         None,
     )
-    if stage_root is not None and str(stage_root) not in sys.path:
-        sys.path.append(str(stage_root))
+    if stage_root is not None:
+        stage_support = stage_root / "support"
+        if str(stage_support) not in sys.path:
+            sys.path.insert(0, str(stage_support))
+        if str(stage_root) not in sys.path:
+            sys.path.append(str(stage_root))
 
 
 _configure_project_import_path()

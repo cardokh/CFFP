@@ -3,30 +3,11 @@
 from pathlib import Path
 from typing import Any
 
+from db_path_utils import get_application_stage_root
+
 from .generated_tables_loader import load_generated_tables
 from .metadata_validator import validate_generated_tables_batch
 from .metadata_writer import read_existing_table_names, write_generated_tables
-
-
-def _get_epic_tracker_root(db_root: Path) -> Path:
-    for candidate in (db_root, *db_root.parents):
-        if (
-            candidate.name == "epic_tracker"
-            and (candidate / "applications").is_dir()
-            and (candidate / "engine").is_dir()
-        ):
-            return candidate
-    raise RuntimeError(f"Could not locate epic_tracker root from: {db_root}")
-
-
-def _get_application_stage_root(db_root: Path, config: dict[str, Any]) -> Path:
-    configured_path = config.get("applicationStageRoot")
-    if not isinstance(configured_path, str) or not configured_path:
-        raise ValueError("Config must contain non-empty 'applicationStageRoot'.")
-    path = Path(configured_path)
-    if path.is_absolute():
-        return path
-    return _get_epic_tracker_root(db_root) / path
 
 
 def import_generated_tables(db_root: Path, script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
@@ -132,7 +113,7 @@ def _resolve_application_stage_path(db_root: Path, config: dict[str, Any], confi
     path = Path(configured_path)
     if path.is_absolute():
         return path
-    return _get_application_stage_root(db_root, config) / path
+    return get_application_stage_root(db_root, config) / path
 
 
 def _resolve_script_path(script_directory: Path, configured_path: str) -> Path:
@@ -158,6 +139,6 @@ def _to_script_relative_path(script_directory: Path, path: Path) -> str:
 
 def _to_application_stage_relative_path(db_root: Path, config: dict[str, Any], path: Path) -> str:
     try:
-        return path.resolve().relative_to(_get_application_stage_root(db_root, config).resolve()).as_posix()
+        return path.resolve().relative_to(get_application_stage_root(db_root, config).resolve()).as_posix()
     except ValueError:
         return str(path)

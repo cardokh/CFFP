@@ -9,6 +9,5 @@
         }
     ],
     "targetMetadataRoot": "metadata",
-    "targetModule": "ccore/automation",
-    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
+    "targetModule": "ccore/automation"
 }

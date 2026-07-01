@@ -24,6 +24,5 @@
         "update_metadata_table"
     ],
     "validateGenerateTask": true,
-    "validateRemoveTask": true,
-    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
+    "validateRemoveTask": true
 }

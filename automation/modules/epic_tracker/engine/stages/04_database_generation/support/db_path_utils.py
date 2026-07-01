@@ -47,19 +47,53 @@ def get_epic_tracker_root(start_path: str | Path) -> Path:
 
 
 def get_application_stage_root(db_root: Path, config: dict[str, Any]) -> Path:
-    """Resolve the configured application stage root.
+    """Resolve the application stage root for the current engine stage.
 
-    Relative values are resolved from the Epic Tracker module root, not from the
-    task folder. This keeps task configuration independent of folder depth.
+    Preferred resolution is convention-based: when there is exactly one
+    application containing a matching stage folder, that application stage is
+    selected automatically. This keeps task configuration free from hard-coded
+    application paths.
+
+    Optional config keys are still supported for explicit runs:
+    - applicationName: resolves applications/<name>/stages/<stage-name>
+    - applicationStageRoot: resolves an explicit path from epic_tracker root
     """
-    configured_path = config.get(_APPLICATION_STAGE_ROOT_KEY)
-    if not isinstance(configured_path, str) or not configured_path:
-        raise ValueError(f"Config must contain non-empty '{_APPLICATION_STAGE_ROOT_KEY}'.")
+    epic_tracker_root = get_epic_tracker_root(db_root)
+    stage_name = db_root.name
 
-    path = Path(configured_path)
-    if path.is_absolute():
-        return path
-    return get_epic_tracker_root(db_root) / path
+    application_name = config.get("applicationName")
+    if isinstance(application_name, str) and application_name.strip():
+        return epic_tracker_root / "applications" / application_name.strip() / "stages" / stage_name
+
+    configured_path = config.get(_APPLICATION_STAGE_ROOT_KEY)
+    if isinstance(configured_path, str) and configured_path.strip():
+        path = Path(configured_path.strip())
+        return path if path.is_absolute() else epic_tracker_root / path
+
+    return _discover_single_application_stage_root(epic_tracker_root, stage_name)
+
+
+def _discover_single_application_stage_root(epic_tracker_root: Path, stage_name: str) -> Path:
+    applications_root = epic_tracker_root / "applications"
+    candidates = sorted(
+        candidate / "stages" / stage_name
+        for candidate in applications_root.iterdir()
+        if candidate.is_dir() and (candidate / "stages" / stage_name).is_dir()
+    )
+
+    if len(candidates) == 1:
+        return candidates[0]
+
+    if not candidates:
+        raise RuntimeError(
+            f"Could not find an application stage folder for engine stage '{stage_name}'."
+        )
+
+    candidate_names = [candidate.as_posix() for candidate in candidates]
+    raise RuntimeError(
+        "Multiple application stage folders found for engine stage "
+        f"'{stage_name}': {candidate_names}. Configure applicationName explicitly."
+    )
 
 
 def resolve_db_path(db_root: Path, configured_path: str) -> Path:
