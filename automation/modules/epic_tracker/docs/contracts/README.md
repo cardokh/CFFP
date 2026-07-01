@@ -1,26 +1,9 @@
-# Epic Tracker Contracts
+# Contracts
 
-## Purpose
+Contracts are documentation-only in this iteration.
 
-This folder will define shared input and output contracts used by epics.
+The central contract rule is:
 
-## Responsibilities
+> Every epic must produce a complete, validated output package that is sufficient for the next epic to execute without asking additional questions.
 
-- Establish architecture-level conventions.
-- Keep future implementation work consistent across epics.
-- Remain independent from business logic and code generation.
-
-## Inputs
-
-- Epic Tracker root architecture.
-- Epic-specific README documents.
-- Existing Factory module boundaries.
-
-## Outputs
-
-- Documentation-only architectural guidance.
-- Future-ready structure for implementation artifacts.
-
-## Future Implementation Notes
-
-This folder is intentionally documentation-only in the current iteration. Future iterations may add schemas, templates, validators, generated reports, or examples when the implementation phase begins.
+Future iterations may turn these documented contracts into JSON schemas, Python models, validation rules, or orchestration metadata.

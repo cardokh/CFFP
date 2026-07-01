@@ -1,13 +1,7 @@
-# Epic Tracker Reports
+# Reports
 
-## Purpose
+This folder contains module-level reporting concepts.
 
-This folder defines module-level reporting conventions for the Epic Tracker.
+Each numbered epic also has its own `reports/` folder.
 
-## Scope
-
-Reports here are shared conventions for the module as a whole. Application-specific reports should later live under the relevant application folder, for example `applications/pipeline_management_system/reports/`.
-
-## Current Status
-
-Documentation-only. No report generation is implemented in this iteration.
+Reports should make the pipeline transparent by recording inputs, outputs, assumptions, validation results, decisions, generated artifacts, and blockers.

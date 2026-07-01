@@ -1,26 +1,46 @@
-# Epic Catalog
+# Epics
 
-## Purpose
+This folder defines the ordered end-to-end software delivery lifecycle.
 
-This folder contains one subfolder per epic following the standard CFFP epic blueprint.
+The current architecture uses eight high-level epics:
 
-## Responsibilities
+```text
+01 Requirements & Constraints Analysis
+        ↓
+02 Solution Design
+        ↓
+03 Project Planning / Epic Tracker
+        ↓
+04 Database Generation
+        ↓
+05 Backend Generation
+        ↓
+06 Frontend Generation
+        ↓
+07 Testing
+        ↓
+08 Deployment
+```
 
-- Establish architecture-level conventions.
-- Keep future implementation work consistent across epics.
-- Remain independent from business logic and code generation.
+## Core principle
 
-## Inputs
+Every epic must produce a complete, validated output contract that is sufficient for the next epic to execute without asking additional questions.
 
-- Epic Tracker root architecture.
-- Epic-specific README documents.
-- Existing Factory module boundaries.
+This means each epic has:
 
-## Outputs
+- an input contract,
+- an output contract,
+- validation rules,
+- reports,
+- user stories,
+- implementation tasks,
+- test suites,
+- test cases.
 
-- Documentation-only architectural guidance.
-- Future-ready structure for implementation artifacts.
+## Automation principle
 
-## Future Implementation Notes
+Epic 1 is the main clarification gate. Human/client clarification is expected there.
 
-This folder is intentionally documentation-only in the current iteration. Future iterations may add schemas, templates, validators, generated reports, or examples when the implementation phase begins.
+After Epic 1, the pipeline should increasingly rely on structured metadata and validated contracts to automate the remaining epics.
+
+If an epic cannot produce a complete output contract, the pipeline must stop rather than continue with hidden assumptions.

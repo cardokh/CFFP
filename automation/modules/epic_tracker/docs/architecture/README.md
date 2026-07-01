@@ -1,17 +1,25 @@
-# Architecture Documentation
+# Architecture
 
-## Purpose
+The module architecture is based on an ordered chain of lifecycle epics.
 
-This folder contains architecture-level documentation for the Epic Tracker module.
+Each epic has a clear input contract, output contract, validation gate, and report boundary.
 
-## Current Scope
+```text
+Requirements & Constraints Package
+        ↓
+Solution Design Package
+        ↓
+Project Plan Package
+        ↓
+Database Package
+        ↓
+Backend Package
+        ↓
+Frontend Package
+        ↓
+Testing Package
+        ↓
+Deployment Package
+```
 
-The current iteration only defines structure and documentation. It does not introduce runtime orchestration, code generation, schemas, or validation logic.
-
-## Key Decisions
-
-- `automation/modules/epic_tracker/` is a reusable automation module.
-- `automation/factory/` remains the implementation area for existing and future factory pipelines.
-- Application-specific work belongs under `applications/`.
-- Documentation-only contracts currently live under `docs/contracts/`.
-- Module-level validation and reports define shared conventions for the Epic Tracker as a whole.
+The sequence is intentional. Downstream automation depends on upstream metadata being complete and validated.

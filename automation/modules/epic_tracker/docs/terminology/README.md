@@ -1,25 +1,21 @@
-# Agile Terminology
+# Terminology
 
-## Epic
+The architecture uses standard Agile and software delivery terminology.
 
-A major reusable capability in the CFFP automation architecture. Each epic owns a clear purpose, input contract, output contract, validation rules, reports, user stories, and implementation tasks.
+## Terms
 
-## User Story
+- Epic
+- User Story
+- Implementation Task
+- Test Suite
+- Test Case
+- Input Contract
+- Output Contract
+- Validation Gate
+- Report
 
-A user-facing or system-facing capability delivered by an epic. A user story describes value and expected behavior without prescribing the implementation.
+## Epic Tracker naming note
 
-## Implementation Task
+In this architecture, Epic Tracker is treated as the project planning capability within the broader lifecycle. It appears most naturally as Epic 3: Project Planning / Epic Tracker.
 
-A concrete technical work item required to deliver one or more user stories. Implementation tasks may later map to files, scripts, tests, validators, reports, or documentation updates.
-
-## Test Suite
-
-A grouped set of test cases that validates a meaningful part of an epic. Test suites may cover contracts, workflows, regression scenarios, validation behavior, or reporting behavior.
-
-## Test Case
-
-A specific scenario with inputs, expected outputs, and pass/fail criteria.
-
-## Pipeline Capability
-
-A reusable automation capability that can consume structured inputs, perform validated work, and produce structured outputs for later pipeline stages.
+The folder name `epic_tracker` remains for now because this iteration is intentionally small and does not rename the product/module root.
