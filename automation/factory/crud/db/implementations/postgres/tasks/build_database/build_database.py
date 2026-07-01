@@ -114,12 +114,12 @@ class BuildDatabaseScript(BaseScript):
     def _resolve_execution_config(self) -> dict[str, Any]:
         execution_config: dict[str, Any] = {}
 
-        pipeline_config_path = self.project_root / "automation" / "factory" / "crud" / "db" / "config" / "db_pipeline.json"
-        if pipeline_config_path.is_file():
-            pipeline_config = read_json_file(pipeline_config_path)
-            pipeline_execution = pipeline_config.get("execution", {})
-            if isinstance(pipeline_execution, dict):
-                execution_config.update(pipeline_execution)
+        run_db_tasks_config_path = self.project_root / "automation" / "factory" / "crud" / "db" / "config" / "run_db_tasks.json"
+        if run_db_tasks_config_path.is_file():
+            run_db_tasks_config = read_json_file(run_db_tasks_config_path)
+            run_db_tasks_execution = run_db_tasks_config.get("execution", {})
+            if isinstance(run_db_tasks_execution, dict):
+                execution_config.update(run_db_tasks_execution)
 
         local_execution = self.config.get("execution", {})
         if isinstance(local_execution, dict):

@@ -10,8 +10,8 @@ They are **pytest contract tests**. They are not PostgreSQL integration tests an
 
 Contract tests for DB Pipeline configuration, PostgreSQL task folder structure, and metadata files.
 
-- `test_db_pipeline_config_contract.py`
-  - verifies `config/db_pipeline.json`
+- `test_run_db_tasks_config_contract.py`
+  - verifies `config/run_db_tasks.json`
   - verifies the DB task execution order
   - verifies component names
   - verifies configured script paths exist

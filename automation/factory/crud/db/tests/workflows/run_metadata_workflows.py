@@ -1,6 +1,6 @@
 """Workflow regression suite for the DB metadata lifecycle.
 
-The suite executes the real metadata task scripts and the DB pipeline through
+The suite executes the real metadata task scripts and the DB task runner through
 subprocesses. It temporarily changes task configuration files and metadata
 content, but restores the original repository state before exiting.
 """
@@ -141,7 +141,7 @@ class RunMetadataWorkflowsScript(BaseScript):
         steps.append(self._generate())
         self._assert_tables_present(self.generated_table_names)
         steps.append(self._validate())
-        steps.append(self._db_pipeline())
+        steps.append(self._run_db_tasks())
         return steps
 
     def _scenario_2(self) -> list[dict[str, Any]]:
@@ -164,7 +164,7 @@ class RunMetadataWorkflowsScript(BaseScript):
         steps.append(self._generate())
         self._assert_tables_present(self.generated_table_names)
         steps.append(self._validate())
-        steps.append(self._db_pipeline())
+        steps.append(self._run_db_tasks())
         return steps
 
     def _scenario_4(self) -> list[dict[str, Any]]:
@@ -175,7 +175,7 @@ class RunMetadataWorkflowsScript(BaseScript):
             steps.append(self._generate(f"cycle_{cycle}_generate"))
             self._assert_tables_present(self.generated_table_names)
         steps.append(self._validate())
-        steps.append(self._db_pipeline())
+        steps.append(self._run_db_tasks())
         return steps
 
     def _scenario_5(self) -> list[dict[str, Any]]:
@@ -256,8 +256,8 @@ class RunMetadataWorkflowsScript(BaseScript):
     def _validate(self, step_name: str = "validate_metadata") -> dict[str, Any]:
         return self._run_script_step(step_name, self.scripts["validateMetadata"], expect_success=True)
 
-    def _db_pipeline(self, step_name: str = "run_db_pipeline") -> dict[str, Any]:
-        return self._run_script_step(step_name, self.scripts["dbPipeline"], expect_success=True)
+    def _run_db_tasks(self, step_name: str = "run_db_tasks") -> dict[str, Any]:
+        return self._run_script_step(step_name, self.scripts["runDbTasks"], expect_success=True)
 
     def _run_script_step(self, step_name: str, script_path: Path, expect_success: bool) -> dict[str, Any]:
         before_reports = self._collect_output_reports(script_path)
@@ -409,7 +409,7 @@ class RunMetadataWorkflowsScript(BaseScript):
                 "passedWorkflowCount": len(self.workflow_results) - len(failed),
                 "failedWorkflowCount": len(failed),
                 "durationSeconds": round(time.perf_counter() - started, 4),
-                "details": "Workflow steps execute the real metadata task scripts and DB pipeline.",
+                "details": "Workflow steps execute the real metadata task scripts and DB task runner.",
             },
             "targetMetadataRoot": self.to_project_relative_path(self.target_metadata_root),
             "targetModule": self.target_module,

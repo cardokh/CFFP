@@ -14,7 +14,7 @@
         "generateTableMetadata": "automation/factory/crud/db/metadata/tasks/generate_table_metadata/generate_table_metadata.py",
         "removeMetadataTables": "automation/factory/crud/db/metadata/tasks/remove_metadata_tables/remove_metadata_tables.py",
         "validateMetadata": "automation/factory/crud/db/metadata/tasks/validate_metadata/validate_metadata.py",
-        "dbPipeline": "automation/factory/crud/db/db_pipeline.py"
+        "runDbTasks": "automation/factory/crud/db/run_db_tasks.py"
     },
     "configs": {
         "generateTableMetadata": "automation/factory/crud/db/metadata/tasks/generate_table_metadata/config/generate_table_metadata.json",

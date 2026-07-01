@@ -5,10 +5,10 @@ This task is the database stage of the CRUD automation flow.
 Run from repository root:
 
 ```bash
-python automation/factory/crud/db/db_pipeline.py
+python automation/factory/crud/db/run_db_tasks.py
 ```
 
-The task delegates to the selected database engine from `config/db_pipeline.json`.
+The task delegates to the selected database engine from `config/run_db_tasks.json`.
 For PostgreSQL, metadata lives under `metadata/postgres`.
 
 `metadata/postgres/entities.json` is the selector. Only entities listed there are validated, created, seeded, and exported into DB handoff context files.
@@ -49,6 +49,6 @@ Selected tables must include their selected foreign key dependencies. If a selec
 
 ## PostgreSQL Add Task
 
-`postgres/promote_db_metadata/promote_db_metadata.py` is the component-level task for preparing database entity metadata. It reads `postgres/promote_db_metadata/metadata/added_entities.json` as a selector list and reads per-table source metadata from `postgres/promote_db_metadata/metadata/entities/<table>/schema.json` and `postgres/promote_db_metadata/metadata/entities/<table>/seed_db_data.json`. It then copies those files into `metadata/postgres/entities/<table>/`, updates `metadata/postgres/entities.json`, runs metadata validation, and writes an add-task report under `postgres/promote_db_metadata/output/`. The add task is run manually when adding metadata and is not enabled as part of every normal `db_pipeline.py` run.
+`postgres/promote_db_metadata/promote_db_metadata.py` is the component-level task for preparing database entity metadata. It reads `postgres/promote_db_metadata/metadata/added_entities.json` as a selector list and reads per-table source metadata from `postgres/promote_db_metadata/metadata/entities/<table>/schema.json` and `postgres/promote_db_metadata/metadata/entities/<table>/seed_db_data.json`. It then copies those files into `metadata/postgres/entities/<table>/`, updates `metadata/postgres/entities.json`, runs metadata validation, and writes an add-task report under `postgres/promote_db_metadata/output/`. The add task is run manually when adding metadata and is not enabled as part of every normal `run_db_tasks.py` run.
 
 The add task remains database-focused only. It prepares PostgreSQL metadata and does not generate backend repositories, services, routes, DTOs, or frontend concepts.

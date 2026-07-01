@@ -24,8 +24,8 @@
     },
     "executeSql": true,
     "execution": {
-        "recreateDatabase": false,
+        "recreateDatabase": true,
         "dropUnlistedTables": true,
-        "recreateExistingTables": true
+        "recreateExistingTables": false
     }
 }

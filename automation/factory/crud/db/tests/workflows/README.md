@@ -7,7 +7,7 @@ The suite intentionally executes the real task scripts:
 - `generate_table_metadata`
 - `remove_metadata_tables`
 - `validate_metadata`
-- `db_pipeline`
+- `run_db_tasks`
 
 It does not mock the metadata tasks and does not modify production code. During execution, the runner temporarily rewrites task config files and metadata folders, then restores the original repository state before exiting.
 
@@ -27,10 +27,10 @@ automation/factory/crud/db/tests/workflows/output/
 
 ## Covered workflows
 
-1. Empty metadata → generate → validate → DB pipeline.
+1. Empty metadata → generate → validate → DB task runner.
 2. Generate → remove selected tables → validate → verify removal.
-3. Generate → remove all → generate again → validate → DB pipeline.
-4. Repeated generate/remove cycles followed by DB pipeline.
+3. Generate → remove all → generate again → validate → DB task runner.
+4. Repeated generate/remove cycles followed by DB task runner.
 5. Negative cases:
    - removing a missing table
    - duplicate removal table names

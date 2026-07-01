@@ -1,6 +1,6 @@
 {
-    "scriptName": "db_pipeline",
-    "mode": "database_crud_pipeline",
+    "scriptName": "run_db_tasks",
+    "mode": "database_crud_tasks",
     "databaseEngine": "postgres",
     "execution": {
         "stopOnFailure": true,
