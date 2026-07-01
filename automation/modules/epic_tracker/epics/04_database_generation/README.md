@@ -1,77 +1,93 @@
-# Database Generation
+# 04 Database Generation
 
 ## Purpose
 
-Generate database artifacts from the project plan and solution design, including schemas, migrations, seed data, validation rules, and database documentation.
+`04_database_generation` is the generic database generation stage.
 
-## Position in the lifecycle
+It is the future replacement/evolution target for the existing `automation/factory/crud/db/` module, but the existing DB module remains untouched.
 
-This epic is part of the ordered end-to-end software delivery pipeline. The numeric folder prefix defines the canonical execution order.
+The purpose of this folder is to hold reusable database-generation tasks. It does not own application-specific requirements, metadata, generated SQL, reports, or validation results.
 
-## Responsibilities
+## Core principle
 
-- Consume the validated output contract from the previous epic.
-- Produce a complete and validated output contract for the next epic.
-- Record assumptions, decisions, validation results, and reports.
-- Stop the pipeline if critical required information is missing.
+Application-specific data belongs under `applications/<application_name>/`.
 
-## Inputs
+Generic database-generation logic belongs here.
 
-Inputs live under `inputs/` when implementation begins. For now, this folder is architectural only.
+```text
+applications/pipeline_management_system/
+  requirements/
+  metadata/
+  database/
+  reports/
 
-## Outputs
+epics/04_database_generation/
+  metadata/tasks/
+  implementations/postgres/tasks/
+```
 
-Primary output contract: **Database Package**.
+The database generation stage reads application-specific input from the active application folder, performs generic tasks, and writes application-specific output back to the active application folder.
 
-Outputs live under `outputs/` when implementation begins. The output must be complete enough for the next epic to execute without asking additional questions.
-
-## User Stories
-
-User stories will be documented under `user_stories/`.
-
-## Implementation Tasks
-
-Implementation tasks will be documented under `implementation_tasks/`.
-
-## Test Suites
-
-Test suites will be documented under `test_suites/`.
-
-## Test Cases
-
-Test cases will be documented under `test_cases/`.
-
-## Validation
-
-Validation rules and validation outcomes will be documented under `validation/`.
-
-The validation gate must pass before the next numbered epic may begin.
-
-## Reports
-
-Epic-specific reports will be documented under `reports/`.
-
-## Dependencies
-
-This epic depends on the validated output from the previous numbered epic, except Epic 1, which depends on user/client/project input.
-
-## Example folder structure
+## Current task structure
 
 ```text
 04_database_generation/
-  inputs/
-  outputs/
-  user_stories/
-  implementation_tasks/
-  test_suites/
-  test_cases/
-  validation/
-  reports/
-  README.md
+  metadata/
+    tasks/
+      generate_table_metadata/
+      remove_metadata_tables/
+      validate_metadata/
+
+  implementations/
+    postgres/
+      tasks/
+        build_database/
+        insert_database/
+        validate_database/
 ```
 
-## Future implementation notes
+## Metadata tasks
 
-The existing factory CRUD DB implementation remains unchanged and acts as a future reference implementation.
+### `generate_table_metadata`
 
-This iteration is architectural only. No business logic, generation logic, migration logic, or executable pipeline code is introduced here.
+Reads database requirements for the active application and generates table metadata for that application.
+
+### `remove_metadata_tables`
+
+Removes generated table metadata for the active application when regeneration or cleanup is required.
+
+### `validate_metadata`
+
+Validates the generated table metadata before implementation-specific database tasks are allowed to run.
+
+## PostgreSQL implementation tasks
+
+### `build_database`
+
+Builds PostgreSQL database artifacts from validated application metadata.
+
+### `insert_database`
+
+Generates or executes PostgreSQL insert/seed-data artifacts for the active application.
+
+### `validate_database`
+
+Validates the generated PostgreSQL database artifacts before the pipeline continues.
+
+## Relationship to the existing DB module
+
+The existing module remains the practical reference:
+
+```text
+automation/factory/crud/db/
+```
+
+This folder should evolve toward the same practical style: focused tasks, implementation-specific folders, support code, tests, and clear validation.
+
+## Scope of this iteration
+
+This iteration only introduces the database-generation task structure.
+
+No business logic is added.
+No existing DB files are modified.
+No code is copied from the existing DB module yet.
