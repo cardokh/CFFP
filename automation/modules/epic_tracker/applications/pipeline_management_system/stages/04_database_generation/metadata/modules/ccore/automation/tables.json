@@ -1,0 +1,8 @@
+{
+    "tables": [
+        "pipeline_execution_modes",
+        "pipeline_statuses",
+        "pipeline_trigger_types",
+        "pipelines"
+    ]
+}

@@ -1,0 +1,278 @@
+{
+    "source": {
+        "type": "architectureSpecification",
+        "name": "ccore_automation_pipeline_foundation",
+        "version": "1.0",
+        "path": "D:\\Dev\\Projects\\CFFP\\automation\\modules\\epic_tracker\\engine\\stages\\04_database_generation\\..\\..\\..\\applications\\pipeline_management_system\\stages\\04_database_generation\\specifications\\architecture_specification_pipelines.json"
+    },
+    "targetModule": "ccore/automation",
+    "tables": [
+        {
+            "name": "pipeline_statuses",
+            "schema": {
+                "name": "pipeline_statuses",
+                "columns": [
+                    {
+                        "name": "pipeline_status_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "status_key",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "status_label",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "integer",
+                        "nullable": false
+                    }
+                ],
+                "primaryKey": [
+                    "pipeline_status_id"
+                ]
+            },
+            "data": {
+                "table": "pipeline_statuses",
+                "rows": [
+                    {
+                        "pipeline_status_id": 1,
+                        "status_key": "draft",
+                        "status_label": "Draft",
+                        "sort_order": 10
+                    },
+                    {
+                        "pipeline_status_id": 2,
+                        "status_key": "active",
+                        "status_label": "Active",
+                        "sort_order": 20
+                    },
+                    {
+                        "pipeline_status_id": 3,
+                        "status_key": "disabled",
+                        "status_label": "Disabled",
+                        "sort_order": 30
+                    },
+                    {
+                        "pipeline_status_id": 4,
+                        "status_key": "archived",
+                        "status_label": "Archived",
+                        "sort_order": 40
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pipeline_execution_modes",
+            "schema": {
+                "name": "pipeline_execution_modes",
+                "columns": [
+                    {
+                        "name": "pipeline_execution_mode_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "execution_mode_key",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "execution_mode_label",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "integer",
+                        "nullable": false
+                    }
+                ],
+                "primaryKey": [
+                    "pipeline_execution_mode_id"
+                ]
+            },
+            "data": {
+                "table": "pipeline_execution_modes",
+                "rows": [
+                    {
+                        "pipeline_execution_mode_id": 1,
+                        "execution_mode_key": "validate_only",
+                        "execution_mode_label": "Validate Only",
+                        "sort_order": 10
+                    },
+                    {
+                        "pipeline_execution_mode_id": 2,
+                        "execution_mode_key": "apply_changes",
+                        "execution_mode_label": "Apply Changes",
+                        "sort_order": 20
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pipeline_trigger_types",
+            "schema": {
+                "name": "pipeline_trigger_types",
+                "columns": [
+                    {
+                        "name": "pipeline_trigger_type_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "trigger_type_key",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "trigger_type_label",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "sort_order",
+                        "type": "integer",
+                        "nullable": false
+                    }
+                ],
+                "primaryKey": [
+                    "pipeline_trigger_type_id"
+                ]
+            },
+            "data": {
+                "table": "pipeline_trigger_types",
+                "rows": [
+                    {
+                        "pipeline_trigger_type_id": 1,
+                        "trigger_type_key": "manual",
+                        "trigger_type_label": "Manual",
+                        "sort_order": 10
+                    },
+                    {
+                        "pipeline_trigger_type_id": 2,
+                        "trigger_type_key": "scheduled",
+                        "trigger_type_label": "Scheduled",
+                        "sort_order": 20
+                    },
+                    {
+                        "pipeline_trigger_type_id": 3,
+                        "trigger_type_key": "api",
+                        "trigger_type_label": "API",
+                        "sort_order": 30
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pipelines",
+            "schema": {
+                "name": "pipelines",
+                "columns": [
+                    {
+                        "name": "pipeline_id",
+                        "type": "uuid",
+                        "nullable": false,
+                        "default": {
+                            "type": "generatedUuid"
+                        }
+                    },
+                    {
+                        "name": "pipeline_name",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    {
+                        "name": "pipeline_description",
+                        "type": "text",
+                        "nullable": true
+                    },
+                    {
+                        "name": "pipeline_status_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "pipeline_execution_mode_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "pipeline_trigger_type_id",
+                        "type": "integer",
+                        "nullable": false
+                    },
+                    {
+                        "name": "created_at",
+                        "type": "timestamp",
+                        "nullable": false,
+                        "default": {
+                            "type": "currentTimestamp"
+                        }
+                    },
+                    {
+                        "name": "updated_at",
+                        "type": "timestamp",
+                        "nullable": false,
+                        "default": {
+                            "type": "currentTimestamp"
+                        }
+                    }
+                ],
+                "primaryKey": [
+                    "pipeline_id"
+                ],
+                "foreignKeys": [
+                    {
+                        "name": "pipelines_pipeline_status_id_fk",
+                        "columns": [
+                            "pipeline_status_id"
+                        ],
+                        "references": {
+                            "table": "pipeline_statuses",
+                            "columns": [
+                                "pipeline_status_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    },
+                    {
+                        "name": "pipelines_pipeline_execution_mode_id_fk",
+                        "columns": [
+                            "pipeline_execution_mode_id"
+                        ],
+                        "references": {
+                            "table": "pipeline_execution_modes",
+                            "columns": [
+                                "pipeline_execution_mode_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    },
+                    {
+                        "name": "pipelines_pipeline_trigger_type_id_fk",
+                        "columns": [
+                            "pipeline_trigger_type_id"
+                        ],
+                        "references": {
+                            "table": "pipeline_trigger_types",
+                            "columns": [
+                                "pipeline_trigger_type_id"
+                            ]
+                        },
+                        "onDelete": "RESTRICT"
+                    }
+                ]
+            },
+            "data": {
+                "table": "pipelines",
+                "rows": []
+            }
+        }
+    ]
+}

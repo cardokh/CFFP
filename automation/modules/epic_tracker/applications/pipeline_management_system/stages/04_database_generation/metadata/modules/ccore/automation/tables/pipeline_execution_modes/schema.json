@@ -1,0 +1,28 @@
+{
+    "name": "pipeline_execution_modes",
+    "columns": [
+        {
+            "name": "pipeline_execution_mode_id",
+            "type": "integer",
+            "nullable": false
+        },
+        {
+            "name": "execution_mode_key",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "execution_mode_label",
+            "type": "string",
+            "nullable": false
+        },
+        {
+            "name": "sort_order",
+            "type": "integer",
+            "nullable": false
+        }
+    ],
+    "primaryKey": [
+        "pipeline_execution_mode_id"
+    ]
+}
