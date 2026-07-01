@@ -4,7 +4,7 @@
     "architectureSpecifications": [
         {
             "name": "pipelines",
-            "path": "input/specifications/ccore/automation/architecture_specification_pipelines.json",
+            "path": "../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json",
             "generatedTablesPath": "input/generated/ccore/automation/generated_tables_pipelines.json"
         }
     ],

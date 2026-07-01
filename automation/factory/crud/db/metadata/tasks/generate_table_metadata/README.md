@@ -48,7 +48,7 @@ The task config contains the list of architecture specifications to process:
     "architectureSpecifications": [
         {
             "name": "pipelines",
-            "path": "input/specifications/ccore/automation/architecture_specification_pipelines.json",
+            "path": "../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json",
             "generatedTablesPath": "input/generated/ccore/automation/generated_tables_pipelines.json"
         }
     ]
@@ -83,7 +83,7 @@ Expected result:
 
 ```text
 Generating table metadata batches...
-Generated 4 table(s) from input/specifications/ccore/automation/architecture_specification_pipelines.json.
+Generated 4 table(s) from ../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json.
 Importing generated table metadata batches...
 4 tables found in input/generated/ccore/automation/generated_tables_pipelines.json.
 Imported 4 tables.
