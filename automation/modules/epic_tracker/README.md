@@ -1,29 +1,67 @@
-# Epic Tracker Module
+# Epic Tracker
 
-Epic Tracker is the experimental automation module for managing an application through a reusable software-generation pipeline.
+Epic Tracker is the automation module that moves an application through a structured software generation lifecycle.
 
-This module separates two concerns:
+This module separates application-specific data from reusable automation logic.
 
-- `applications/` contains application-specific input, metadata, outputs, validation results, and reports.
-- `stages/` contains generic reusable pipeline stages and tasks.
+## Root structure
 
-The stage folders are not Agile epics. Agile epics, user stories, and implementation tasks are application artifacts produced by the Project Planning stage.
+```text
+epic_tracker/
+  applications/
+  engine/
+    stages/
+  docs/
+  README.md
+```
 
-## Pipeline stages
+## Applications
 
-1. Requirements & Constraints Analysis
-2. Solution Design
-3. Project Planning
-4. Database Generation
-5. Backend Generation
-6. Frontend Generation
-7. Testing
-8. Deployment
+`applications/` contains the projects being processed by Epic Tracker.
 
-Each application mirrors these stages so generated artifacts remain application-specific while the stage logic remains reusable.
+Each application owns its own inputs, metadata, outputs, validation results, and reports.
 
-## Current iteration
+Example:
 
-This iteration renames the generic processing area from `epics/` to `stages/` and creates a mirrored stage structure under the first application, `pipeline_management_system`.
+```text
+applications/
+  pipeline_management_system/
+    stages/
+      01_requirements_constraints_analysis/
+      02_solution_design/
+      03_project_planning/
+      04_database_generation/
+      05_backend_generation/
+      06_frontend_generation/
+      07_testing/
+      08_deployment/
+```
 
-No business logic is implemented in this iteration.
+## Engine
+
+`engine/stages/` contains the reusable automation logic.
+
+The engine reads from an application stage, executes the matching generic stage logic, and writes results back to the application stage.
+
+Example:
+
+```text
+engine/
+  stages/
+    01_requirements_constraints_analysis/
+    02_solution_design/
+    03_project_planning/
+    04_database_generation/
+    05_backend_generation/
+    06_frontend_generation/
+    07_testing/
+    08_deployment/
+```
+
+## Current architectural rule
+
+The application folder contains data.
+
+The engine folder contains reusable behaviour.
+
+Module-level `reports/` and `validation/` folders are intentionally not used for now. Reports and validation results belong to the application stage that produced them.
