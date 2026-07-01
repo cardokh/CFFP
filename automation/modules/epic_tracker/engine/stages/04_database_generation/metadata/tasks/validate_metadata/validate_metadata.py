@@ -39,7 +39,7 @@ _configure_project_import_path()
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file
-from support.db_path_utils import get_db_root, resolve_db_path
+from support.db_path_utils import get_db_root, resolve_application_stage_config_path
 
 
 class ValidateMetadataScript(BaseScript):
@@ -95,7 +95,7 @@ class ValidateMetadataScript(BaseScript):
         configured_path = self.config.get(config_key)
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
-        return resolve_db_path(self.db_root, configured_path)
+        return resolve_application_stage_config_path(self.db_root, self.config, config_key)
 
     def _validate_database_metadata(self) -> dict[str, Any]:
         database_path = self.metadata_root / "database.json"
@@ -386,7 +386,7 @@ class ValidateMetadataScript(BaseScript):
             )
 
             generated_payload = (
-                self._read_optional_json(resolve_db_path(self.db_root, generated_path_value))
+                self._read_optional_json(resolve_application_stage_config_path(self.db_root, {**self.config, "__path": generated_path_value}, "__path"))
                 if isinstance(generated_path_value, str)
                 else None
             )
@@ -451,7 +451,7 @@ class ValidateMetadataScript(BaseScript):
             return
         if not path_value.endswith(".json"):
             self.errors.append(f"{field_name} must point to a JSON file: {path_value}")
-        resolved_path = resolve_db_path(self.db_root, path_value)
+        resolved_path = resolve_application_stage_config_path(self.db_root, {**self.config, "__path": path_value}, "__path")
         if not resolved_path.is_file():
             self.errors.append(f"{field_name} does not exist: {self.to_project_relative_path(resolved_path)}")
 

@@ -40,7 +40,7 @@ _configure_project_import_path()
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
-from support.db_path_utils import get_db_root, resolve_db_path, to_db_relative_path
+from support.db_path_utils import get_db_root, resolve_application_stage_config_path, to_application_stage_relative_path
 
 
 class RemoveMetadataTablesScript(BaseScript):
@@ -87,7 +87,7 @@ class RemoveMetadataTablesScript(BaseScript):
 def remove_metadata_tables(db_root: Path, config: dict[str, Any]) -> dict[str, Any]:
     """Remove configured table metadata folders and registry entries."""
 
-    target_metadata_root = _resolve_db_path(db_root, config, "targetMetadataRoot")
+    target_metadata_root = resolve_application_stage_config_path(db_root, config, "targetMetadataRoot")
     target_module = _get_required_string(config, "targetModule")
     requested_tables = _get_requested_tables(config)
 
@@ -133,18 +133,18 @@ def remove_metadata_tables(db_root: Path, config: dict[str, Any]) -> dict[str, A
             if not table_folder.is_dir():
                 raise ValueError(f"Table metadata path is not a folder: {table_folder}")
             shutil.rmtree(table_folder)
-            removed_folders.append(_to_db_relative_path(db_root, table_folder))
+            removed_folders.append(to_application_stage_relative_path(db_root, config, table_folder))
         else:
-            missing_folders.append(_to_db_relative_path(db_root, table_folder))
+            missing_folders.append(to_application_stage_relative_path(db_root, config, table_folder))
 
     if updated_table_names != existing_table_names:
         write_json_file(tables_registry_path, {"tables": updated_table_names})
 
     return {
         "status": "PASSED",
-        "targetMetadataRoot": _to_db_relative_path(db_root, target_metadata_root),
+        "targetMetadataRoot": to_application_stage_relative_path(db_root, config, target_metadata_root),
         "targetModule": target_module,
-        "tablesRegistryPath": _to_db_relative_path(db_root, tables_registry_path),
+        "tablesRegistryPath": to_application_stage_relative_path(db_root, config, tables_registry_path),
         "requestedTables": requested_tables,
         "removedTables": removed_tables,
         "missingTables": missing_tables,
@@ -184,28 +184,12 @@ def _validate_table_name(table_name: str) -> None:
         raise ValueError(f"Invalid table name configured for removal: {table_name}")
 
 
-def _resolve_db_path(db_root: Path, config: dict[str, Any], config_key: str) -> Path:
-    configured_path = config.get(config_key)
-    if not isinstance(configured_path, str) or not configured_path:
-        raise ValueError(f"Config must contain non-empty '{config_key}'.")
-    path = Path(configured_path)
-    if path.is_absolute():
-        return path
-    return db_root / path
-
-
 def _get_required_string(config: dict[str, Any], config_key: str) -> str:
     value = config.get(config_key)
     if not isinstance(value, str) or not value:
         raise ValueError(f"Config must contain non-empty '{config_key}'.")
     return value
 
-
-def _to_db_relative_path(db_root: Path, path: Path) -> str:
-    try:
-        return path.relative_to(db_root).as_posix()
-    except ValueError:
-        return str(path)
 
 
 if __name__ == "__main__":

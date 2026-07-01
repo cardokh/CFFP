@@ -4,10 +4,11 @@
     "architectureSpecifications": [
         {
             "name": "pipelines",
-            "path": "../../../applications/pipeline_management_system/stages/04_database_generation/specifications/architecture_specification_pipelines.json",
-            "generatedTablesPath": "../../../applications/pipeline_management_system/stages/04_database_generation/generated/generated_tables_pipelines.json"
+            "path": "specifications/architecture_specification_pipelines.json",
+            "generatedTablesPath": "generated/generated_tables_pipelines.json"
         }
     ],
-    "targetMetadataRoot": "../../../applications/pipeline_management_system/stages/04_database_generation/metadata",
-    "targetModule": "ccore/automation"
+    "targetMetadataRoot": "metadata",
+    "targetModule": "ccore/automation",
+    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
 }

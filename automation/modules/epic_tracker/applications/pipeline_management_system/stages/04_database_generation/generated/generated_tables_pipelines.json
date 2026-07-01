@@ -3,7 +3,7 @@
         "type": "architectureSpecification",
         "name": "ccore_automation_pipeline_foundation",
         "version": "1.0",
-        "path": "D:\\Dev\\Projects\\CFFP\\automation\\modules\\epic_tracker\\engine\\stages\\04_database_generation\\..\\..\\..\\applications\\pipeline_management_system\\stages\\04_database_generation\\specifications\\architecture_specification_pipelines.json"
+        "path": "specifications/architecture_specification_pipelines.json"
     },
     "targetModule": "ccore/automation",
     "tables": [

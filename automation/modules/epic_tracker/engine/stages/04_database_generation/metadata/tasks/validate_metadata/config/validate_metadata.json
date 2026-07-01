@@ -1,7 +1,7 @@
 {
     "scriptName": "validate_metadata",
     "mode": "validate_generic_metadata",
-    "metadataRoot": "../../../applications/pipeline_management_system/stages/04_database_generation/metadata",
+    "metadataRoot": "metadata",
     "requiredDatabaseFields": [
         "name",
         "version",
@@ -24,5 +24,6 @@
         "update_metadata_table"
     ],
     "validateGenerateTask": true,
-    "validateRemoveTask": true
+    "validateRemoveTask": true,
+    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
 }

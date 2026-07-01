@@ -1,12 +1,13 @@
 # Generate Table Metadata
 
-This task generates generic database table metadata from explicit Architecture Specification documents.
+This task generates generic database table metadata from Architecture Specification documents for the configured application stage.
 
 The task has two stages:
 
 1. **Generate Table Batches**
    - Reads the Architecture Specification documents listed in `config/generate_table_metadata.json`.
-   - Writes generated table batches under `input/generated/...`.
+   - Resolves application artifacts from the configured `applicationStageRoot`.
+   - Writes generated table batches under the application stage `generated/` folder.
    - Generates only the metadata explicitly described by each specification.
 
 2. **Import Table Batches**
@@ -14,7 +15,7 @@ The task has two stages:
    - Validates the batch structure.
    - Rejects duplicate tables.
    - Validates foreign-key references.
-   - Updates `metadata/modules/.../tables.json`.
+   - Updates the application stage `metadata/modules/.../tables.json`.
    - Creates `schema.json` and `data.json` for every imported table.
 
 The main script remains only an orchestrator:
@@ -25,33 +26,30 @@ generate_generated_tables()
 import_generated_tables()
 ```
 
-## Input Structure
-
-Current input structure:
+## Application Stage Input Structure
 
 ```text
-input/
+applications/pipeline_management_system/stages/04_database_generation/
 ├── specifications/
-│   └── ccore/
-│       └── automation/
-│           └── architecture_specification_pipelines.json
-└── generated/
-    └── ccore/
-        └── automation/
-            └── generated_tables_pipelines.json
+│   └── architecture_specification_pipelines.json
+├── generated/
+│   └── generated_tables_pipelines.json
+└── metadata/
 ```
 
-The task config contains the list of architecture specifications to process:
+The task config points to the application stage once, and all artifact paths are relative to that stage:
 
 ```json
 {
+    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation",
     "architectureSpecifications": [
         {
             "name": "pipelines",
-            "path": "../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json",
-            "generatedTablesPath": "input/generated/ccore/automation/generated_tables_pipelines.json"
+            "path": "specifications/architecture_specification_pipelines.json",
+            "generatedTablesPath": "generated/generated_tables_pipelines.json"
         }
-    ]
+    ],
+    "targetMetadataRoot": "metadata"
 }
 ```
 
@@ -76,16 +74,16 @@ Tasks, relationship tables, nested pipelines, pipeline types, and runtime execut
 From the repository root:
 
 ```bash
-python metadata/tasks/generate_table_metadata/generate_table_metadata.py
+python automation/modules/epic_tracker/engine/stages/04_database_generation/metadata/tasks/generate_table_metadata/generate_table_metadata.py
 ```
 
 Expected result:
 
 ```text
 Generating table metadata batches...
-Generated 4 table(s) from ../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json.
+Generated 4 table(s) from specifications/architecture_specification_pipelines.json.
 Importing generated table metadata batches...
-4 tables found in input/generated/ccore/automation/generated_tables_pipelines.json.
+4 tables found in generated/generated_tables_pipelines.json.
 Imported 4 tables.
 PASSED generate_table_metadata
 ```

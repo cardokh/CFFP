@@ -8,11 +8,32 @@ from .metadata_validator import validate_generated_tables_batch
 from .metadata_writer import read_existing_table_names, write_generated_tables
 
 
+def _get_epic_tracker_root(db_root: Path) -> Path:
+    for candidate in (db_root, *db_root.parents):
+        if (
+            candidate.name == "epic_tracker"
+            and (candidate / "applications").is_dir()
+            and (candidate / "engine").is_dir()
+        ):
+            return candidate
+    raise RuntimeError(f"Could not locate epic_tracker root from: {db_root}")
+
+
+def _get_application_stage_root(db_root: Path, config: dict[str, Any]) -> Path:
+    configured_path = config.get("applicationStageRoot")
+    if not isinstance(configured_path, str) or not configured_path:
+        raise ValueError("Config must contain non-empty 'applicationStageRoot'.")
+    path = Path(configured_path)
+    if path.is_absolute():
+        return path
+    return _get_epic_tracker_root(db_root) / path
+
+
 def import_generated_tables(db_root: Path, script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
     """Read, validate, and import generated metadata table batches."""
 
     generated_tables_paths = _read_generated_tables_paths(db_root, config)
-    target_metadata_root = _resolve_db_path(db_root, config, "targetMetadataRoot")
+    target_metadata_root = _resolve_application_stage_config_path(db_root, config, "targetMetadataRoot")
     target_module = config.get("targetModule", "ccore/automation")
     if not isinstance(target_module, str) or not target_module:
         raise ValueError("Config must contain non-empty 'targetModule'.")
@@ -26,14 +47,14 @@ def import_generated_tables(db_root: Path, script_directory: Path, config: dict[
         batch = load_generated_tables(generated_tables_path)
         tables = batch["tables"]
 
-        print(f"{len(tables)} tables found in {_to_script_relative_path(script_directory, generated_tables_path)}.")
+        print(f"{len(tables)} tables found in {_to_application_stage_relative_path(db_root, config, generated_tables_path)}.")
         validate_generated_tables_batch(batch, existing_tables + imported_tables)
 
         if not tables:
             imported_batches.append(
                 {
                     "status": "PASSED",
-                    "generatedTablesPath": _to_script_relative_path(script_directory, generated_tables_path),
+                    "generatedTablesPath": _to_application_stage_relative_path(db_root, config, generated_tables_path),
                     "foundTableCount": 0,
                     "importedTableCount": 0,
                     "importedTables": [],
@@ -46,7 +67,7 @@ def import_generated_tables(db_root: Path, script_directory: Path, config: dict[
         imported_batches.append(
             {
                 "status": "PASSED",
-                "generatedTablesPath": _to_script_relative_path(script_directory, generated_tables_path),
+                "generatedTablesPath": _to_application_stage_relative_path(db_root, config, generated_tables_path),
                 "foundTableCount": len(tables),
                 "importedTableCount": len(batch_imported_tables),
                 "importedTables": batch_imported_tables,
@@ -84,12 +105,12 @@ def _read_generated_tables_paths(db_root: Path, config: dict[str, Any]) -> list[
                     )
             else:
                 raise ValueError(f"Architecture specification entry at index {index} must be an object or string.")
-            paths.append(_resolve_db_path_from_value(db_root, generated_tables_path))
+            paths.append(_resolve_application_stage_path(db_root, config, generated_tables_path))
         return paths
 
     legacy_generated_tables_path = config.get("generatedTablesPath")
     if isinstance(legacy_generated_tables_path, str) and legacy_generated_tables_path:
-        return [_resolve_db_path_from_value(db_root, legacy_generated_tables_path)]
+        return [_resolve_application_stage_path(db_root, config, legacy_generated_tables_path)]
 
     raise ValueError("Config must contain architectureSpecifications or generatedTablesPath.")
 
@@ -107,11 +128,11 @@ def _default_generated_tables_path(specification_path: str) -> str:
     return (Path("input") / "generated" / generated_name).as_posix()
 
 
-def _resolve_db_path_from_value(db_root: Path, configured_path: str) -> Path:
+def _resolve_application_stage_path(db_root: Path, config: dict[str, Any], configured_path: str) -> Path:
     path = Path(configured_path)
     if path.is_absolute():
         return path
-    return db_root / path
+    return _get_application_stage_root(db_root, config) / path
 
 
 def _resolve_script_path(script_directory: Path, configured_path: str) -> Path:
@@ -121,18 +142,22 @@ def _resolve_script_path(script_directory: Path, configured_path: str) -> Path:
     return script_directory / path
 
 
-def _resolve_db_path(db_root: Path, config: dict[str, Any], config_key: str) -> Path:
+def _resolve_application_stage_config_path(db_root: Path, config: dict[str, Any], config_key: str) -> Path:
     configured_path = config.get(config_key)
     if not isinstance(configured_path, str) or not configured_path:
         raise ValueError(f"Config must contain non-empty '{config_key}'.")
-    path = Path(configured_path)
-    if path.is_absolute():
-        return path
-    return db_root / path
+    return _resolve_application_stage_path(db_root, config, configured_path)
 
 
 def _to_script_relative_path(script_directory: Path, path: Path) -> str:
     try:
         return path.relative_to(script_directory).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _to_application_stage_relative_path(db_root: Path, config: dict[str, Any], path: Path) -> str:
+    try:
+        return path.resolve().relative_to(_get_application_stage_root(db_root, config).resolve()).as_posix()
     except ValueError:
         return str(path)

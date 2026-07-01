@@ -1,12 +1,13 @@
 {
     "scriptName": "remove_metadata_tables",
     "mode": "remove_generic_metadata_tables",
-    "targetMetadataRoot": "../../../applications/pipeline_management_system/stages/04_database_generation/metadata",
+    "targetMetadataRoot": "metadata",
     "targetModule": "ccore/automation",
     "tables": [
         "pipeline_statuses",
         "pipeline_execution_modes",
         "pipeline_trigger_types",
         "pipelines"
-    ]
+    ],
+    "applicationStageRoot": "applications/pipeline_management_system/stages/04_database_generation"
 }
