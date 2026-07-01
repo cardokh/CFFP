@@ -1,25 +1,26 @@
 # Architecture
 
-The module architecture is based on an ordered chain of lifecycle epics.
-
-Each epic has a clear input contract, output contract, validation gate, and report boundary.
+Epic Tracker is organized around a separation between application state and reusable pipeline stages.
 
 ```text
-Requirements & Constraints Package
-        ↓
-Solution Design Package
-        ↓
-Project Plan Package
-        ↓
-Database Package
-        ↓
-Backend Package
-        ↓
-Frontend Package
-        ↓
-Testing Package
-        ↓
-Deployment Package
+epic_tracker/
+  applications/
+    pipeline_management_system/
+      stages/
+        04_database_generation/
+          requirements/
+          metadata/
+          output/
+          validation/
+          reports/
+
+  stages/
+    04_database_generation/
+      metadata/
+        tasks/
+      implementations/
+        postgres/
+          tasks/
 ```
 
-The sequence is intentional. Downstream automation depends on upstream metadata being complete and validated.
+The application folder owns data. The stage folder owns reusable processing logic.

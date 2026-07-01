@@ -1,21 +1,21 @@
 # Terminology
 
-The architecture uses standard Agile and software delivery terminology.
+## Application
 
-## Terms
+The software product or project being processed by Epic Tracker.
 
-- Epic
-- User Story
-- Implementation Task
-- Test Suite
-- Test Case
-- Input Contract
-- Output Contract
-- Validation Gate
-- Report
+## Pipeline
 
-## Epic Tracker naming note
+The complete end-to-end workflow that moves an application from requirements to deployment.
 
-In this architecture, Epic Tracker is treated as the project planning capability within the broader lifecycle. It appears most naturally as Epic 3: Project Planning / Epic Tracker.
+## Stage
 
-The folder name `epic_tracker` remains for now because this iteration is intentionally small and does not rename the product/module root.
+A reusable processing module within the pipeline, such as Database Generation.
+
+## Task
+
+A concrete reusable unit of work inside a stage.
+
+## Agile artifacts
+
+Epics, user stories, implementation tasks, test suites, and test cases are application-specific planning artifacts. They are produced by the Project Planning stage and should not be confused with pipeline stages.

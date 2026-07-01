@@ -1,7 +1,5 @@
 # Reports
 
-This folder contains module-level reporting concepts.
+Module-level reporting rules and report templates belong here.
 
-Each numbered epic also has its own `reports/` folder.
-
-Reports should make the pipeline transparent by recording inputs, outputs, assumptions, validation results, decisions, generated artifacts, and blockers.
+Application-specific reports belong under `applications/<application_name>/stages/<stage_name>/reports/`.

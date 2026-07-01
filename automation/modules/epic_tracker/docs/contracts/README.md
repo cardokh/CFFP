@@ -1,9 +1,5 @@
 # Contracts
 
-Contracts are documentation-only in this iteration.
+Contracts define what each stage expects as input and what it must produce as output.
 
-The central contract rule is:
-
-> Every epic must produce a complete, validated output package that is sufficient for the next epic to execute without asking additional questions.
-
-Future iterations may turn these documented contracts into JSON schemas, Python models, validation rules, or orchestration metadata.
+For now, contracts are documented in README files. Later they may become schemas or executable validators.
