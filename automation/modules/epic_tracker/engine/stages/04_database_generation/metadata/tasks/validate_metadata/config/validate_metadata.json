@@ -1,0 +1,28 @@
+{
+    "scriptName": "validate_metadata",
+    "mode": "validate_generic_metadata",
+    "metadataRoot": "../../../applications/pipeline_management_system/stages/04_database_generation/metadata",
+    "requiredDatabaseFields": [
+        "name",
+        "version",
+        "description",
+        "currentImplementation"
+    ],
+    "moduleRoots": [
+        "ccore/automation"
+    ],
+    "validateImplementationConfig": false,
+    "validateDataRows": true,
+    "validateTaskModel": true,
+    "expectedTaskFolders": [
+        "generate_table_metadata",
+        "remove_metadata_tables",
+        "validate_metadata"
+    ],
+    "forbiddenTaskFolders": [
+        "add_metadata_tables",
+        "update_metadata_table"
+    ],
+    "validateGenerateTask": true,
+    "validateRemoveTask": true
+}

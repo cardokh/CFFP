@@ -1,0 +1,6 @@
+{
+    "name": "CFFP",
+    "version": "1.0",
+    "description": "Generic database metadata source for CFFP database generation.",
+    "currentImplementation": "postgres"
+}
