@@ -21,12 +21,26 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
+from support.db_path_utils import get_db_root, resolve_db_path, to_db_relative_path
 
 
 class RemoveMetadataTablesScript(BaseScript):
@@ -34,11 +48,12 @@ class RemoveMetadataTablesScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
+        self.db_root = get_db_root(__file__)
 
     def run(self) -> None:
         started = time.perf_counter()
         try:
-            result = remove_metadata_tables(self.project_root, self.config)
+            result = remove_metadata_tables(self.db_root, self.config)
             report = {
                 "scriptName": self.script_name,
                 "summary": {
@@ -69,10 +84,10 @@ class RemoveMetadataTablesScript(BaseScript):
             raise
 
 
-def remove_metadata_tables(project_root: Path, config: dict[str, Any]) -> dict[str, Any]:
+def remove_metadata_tables(db_root: Path, config: dict[str, Any]) -> dict[str, Any]:
     """Remove configured table metadata folders and registry entries."""
 
-    target_metadata_root = _resolve_project_path(project_root, config, "targetMetadataRoot")
+    target_metadata_root = _resolve_db_path(db_root, config, "targetMetadataRoot")
     target_module = _get_required_string(config, "targetModule")
     requested_tables = _get_requested_tables(config)
 
@@ -118,18 +133,18 @@ def remove_metadata_tables(project_root: Path, config: dict[str, Any]) -> dict[s
             if not table_folder.is_dir():
                 raise ValueError(f"Table metadata path is not a folder: {table_folder}")
             shutil.rmtree(table_folder)
-            removed_folders.append(_to_project_relative_path(project_root, table_folder))
+            removed_folders.append(_to_db_relative_path(db_root, table_folder))
         else:
-            missing_folders.append(_to_project_relative_path(project_root, table_folder))
+            missing_folders.append(_to_db_relative_path(db_root, table_folder))
 
     if updated_table_names != existing_table_names:
         write_json_file(tables_registry_path, {"tables": updated_table_names})
 
     return {
         "status": "PASSED",
-        "targetMetadataRoot": _to_project_relative_path(project_root, target_metadata_root),
+        "targetMetadataRoot": _to_db_relative_path(db_root, target_metadata_root),
         "targetModule": target_module,
-        "tablesRegistryPath": _to_project_relative_path(project_root, tables_registry_path),
+        "tablesRegistryPath": _to_db_relative_path(db_root, tables_registry_path),
         "requestedTables": requested_tables,
         "removedTables": removed_tables,
         "missingTables": missing_tables,
@@ -169,14 +184,14 @@ def _validate_table_name(table_name: str) -> None:
         raise ValueError(f"Invalid table name configured for removal: {table_name}")
 
 
-def _resolve_project_path(project_root: Path, config: dict[str, Any], config_key: str) -> Path:
+def _resolve_db_path(db_root: Path, config: dict[str, Any], config_key: str) -> Path:
     configured_path = config.get(config_key)
     if not isinstance(configured_path, str) or not configured_path:
         raise ValueError(f"Config must contain non-empty '{config_key}'.")
     path = Path(configured_path)
     if path.is_absolute():
         return path
-    return project_root / path
+    return db_root / path
 
 
 def _get_required_string(config: dict[str, Any], config_key: str) -> str:
@@ -186,9 +201,9 @@ def _get_required_string(config: dict[str, Any], config_key: str) -> str:
     return value
 
 
-def _to_project_relative_path(project_root: Path, path: Path) -> str:
+def _to_db_relative_path(db_root: Path, path: Path) -> str:
     try:
-        return path.relative_to(project_root).as_posix()
+        return path.relative_to(db_root).as_posix()
     except ValueError:
         return str(path)
 

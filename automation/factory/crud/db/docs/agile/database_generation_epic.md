@@ -9,7 +9,7 @@ As the CFFP Automation Factory, we need a deterministic database generation capa
 This epic represents the current `db` module under:
 
 ```text
-automation/factory/crud/db/
+db/
 ```
 
 The physical folder remains named `db` to keep imports, configuration paths, scripts, and tests stable. Conceptually, this module is the implementation of the **Database Generation Epic**.

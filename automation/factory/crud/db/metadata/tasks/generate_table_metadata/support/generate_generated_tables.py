@@ -10,7 +10,7 @@ from scripts.shared.script_json_utils import read_json_file, write_json_file
 _ARCHITECTURE_SPECIFICATIONS_CONFIG_KEY = "architectureSpecifications"
 
 
-def generate_generated_tables(script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
+def generate_generated_tables(db_root: Path, script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
     """Read architecture specifications and write generated table batch files."""
 
     specification_entries = _read_specification_entries(config)
@@ -19,7 +19,7 @@ def generate_generated_tables(script_directory: Path, config: dict[str, Any]) ->
     all_table_names: list[str] = []
 
     for entry in specification_entries:
-        architecture_specification_path = _resolve_script_path(script_directory, entry["path"])
+        architecture_specification_path = _resolve_db_path(db_root, entry["path"])
         generated_tables_path = _resolve_script_path(script_directory, entry["generatedTablesPath"])
 
         specification = _read_architecture_specification(architecture_specification_path)
@@ -116,6 +116,11 @@ def _default_generated_tables_path(specification_path: str) -> str:
         parts[-1] = generated_name
         return Path(*parts).as_posix()
     return (Path("input") / "generated" / generated_name).as_posix()
+
+
+def _resolve_db_path(db_root: Path, configured_path: str) -> Path:
+    path = Path(configured_path)
+    return path if path.is_absolute() else db_root / path
 
 
 def _read_architecture_specification(path: Path) -> dict[str, Any]:

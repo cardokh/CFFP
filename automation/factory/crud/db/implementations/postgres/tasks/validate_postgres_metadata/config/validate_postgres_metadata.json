@@ -1,8 +1,8 @@
 {
     "scriptName": "validate_postgres_metadata",
     "mode": "validate_postgres_implementation_metadata",
-    "metadataRoot": "automation/factory/crud/db/metadata",
-    "implementationRoot": "automation/factory/crud/db/implementations/postgres",
+    "metadataRoot": "metadata",
+    "implementationRoot": "implementations/postgres",
     "requiredConnectionGroups": [
         "adminConnection",
         "applicationConnection"

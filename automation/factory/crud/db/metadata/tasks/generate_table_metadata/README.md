@@ -76,7 +76,7 @@ Tasks, relationship tables, nested pipelines, pipeline types, and runtime execut
 From the repository root:
 
 ```bash
-python automation/factory/crud/db/metadata/tasks/generate_table_metadata/generate_table_metadata.py
+python metadata/tasks/generate_table_metadata/generate_table_metadata.py
 ```
 
 Expected result:

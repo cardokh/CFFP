@@ -5,7 +5,7 @@ This task is the database stage of the CRUD automation flow.
 Run from repository root:
 
 ```bash
-python automation/factory/crud/db/run_db_tasks.py
+python run_db_tasks.py
 ```
 
 The task delegates to the selected database engine from `config/run_db_tasks.json`.

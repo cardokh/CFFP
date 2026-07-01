@@ -20,11 +20,25 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_passed
+from support.db_path_utils import get_db_root
 try:
     from .support.generate_generated_tables import generate_generated_tables
     from .support.import_generated_tables import import_generated_tables
@@ -38,15 +52,16 @@ class GenerateTableMetadataScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
+        self.db_root = get_db_root(__file__)
 
     def run(self) -> None:
         started = time.perf_counter()
 
         print("Generating table metadata batches...")
-        generation_result = generate_generated_tables(self.script_directory, self.config)
+        generation_result = generate_generated_tables(self.db_root, self.script_directory, self.config)
 
         print("Importing generated table metadata batches...")
-        import_result = import_generated_tables(self.project_root, self.script_directory, self.config)
+        import_result = import_generated_tables(self.db_root, self.script_directory, self.config)
 
         report: dict[str, Any] = {
             "scriptName": self.script_name,

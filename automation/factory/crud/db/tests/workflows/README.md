@@ -16,13 +16,13 @@ It does not mock the metadata tasks and does not modify production code. During 
 From the repository root:
 
 ```bash
-python automation/factory/crud/db/tests/workflows/run_metadata_workflows.py
+python tests/workflows/run_metadata_workflows.py
 ```
 
 A JSON workflow report is written to:
 
 ```text
-automation/factory/crud/db/tests/workflows/output/
+tests/workflows/output/
 ```
 
 ## Covered workflows

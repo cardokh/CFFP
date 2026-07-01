@@ -1,7 +1,7 @@
 {
     "scriptName": "validate_metadata",
     "mode": "validate_generic_metadata",
-    "metadataRoot": "automation/factory/crud/db/metadata",
+    "metadataRoot": "metadata",
     "requiredDatabaseFields": [
         "name",
         "version",

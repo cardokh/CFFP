@@ -28,6 +28,7 @@ _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
+from support.db_path_utils import get_db_root, resolve_db_path, to_db_relative_path
 
 
 class RunDbTasksScript(BaseScript):
@@ -35,6 +36,7 @@ class RunDbTasksScript(BaseScript):
 
     def __init__(self):
         super().__init__(__file__)
+        self.db_root = get_db_root(__file__)
         self.execution = self._get_execution_config()
         self.database_engine = self._get_database_engine()
         self.components = self._get_components()
@@ -130,13 +132,13 @@ class RunDbTasksScript(BaseScript):
 
     def _run_component(self, component: dict) -> dict:
         name = self._get_required_string(component, "name")
-        script_path = self.project_root / self._get_required_string(component, "scriptPath")
+        script_path = resolve_db_path(self.db_root, self._get_required_string(component, "scriptPath"))
 
         if not script_path.exists():
             return {
                 "name": name,
                 "status": "FAILED",
-                "scriptPath": self.to_project_relative_path(script_path),
+                "scriptPath": to_db_relative_path(self.db_root, script_path),
                 "durationSeconds": 0,
                 "returnCode": None,
                 "stdout": "",
@@ -155,7 +157,7 @@ class RunDbTasksScript(BaseScript):
         return {
             "name": name,
             "status": "PASSED" if completed.returncode == 0 else "FAILED",
-            "scriptPath": self.to_project_relative_path(script_path),
+            "scriptPath": to_db_relative_path(self.db_root, script_path),
             "durationSeconds": round(time.perf_counter() - started, 4),
             "returnCode": completed.returncode,
             "stdout": completed.stdout,

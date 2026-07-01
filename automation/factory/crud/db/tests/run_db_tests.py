@@ -29,6 +29,7 @@ _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
+from support.db_path_utils import get_db_root, resolve_db_path
 
 
 class RunDbTestsScript(BaseScript):
@@ -36,12 +37,14 @@ class RunDbTestsScript(BaseScript):
 
     def __init__(self):
         super().__init__(__file__)
-        self.test_path = self._resolve_project_path("testPath")
-        self.build_context_script_path = self._resolve_project_path("buildContextScriptPath")
+        self.db_root = get_db_root(__file__)
+        self.test_path = self._resolve_db_path("testPath")
+        self.build_context_script_path = self._resolve_optional_db_path("buildContextScriptPath")
         self.pytest_arguments = self._get_pytest_arguments()
 
     def run(self) -> None:
-        self._run_build_context_script()
+        if self.build_context_script_path is not None:
+            self._run_build_context_script()
         self._run_pytest()
 
     def _run_build_context_script(self) -> None:
@@ -82,11 +85,20 @@ class RunDbTestsScript(BaseScript):
         print_failed("run_db_tests: DB Pipeline tests failed")
         raise SystemExit(completed.returncode)
 
-    def _resolve_project_path(self, config_key: str) -> Path:
+
+    def _resolve_optional_db_path(self, config_key: str) -> Path | None:
+        configured_path = self.config.get(config_key)
+        if configured_path in (None, ""):
+            return None
+        if not isinstance(configured_path, str):
+            raise ValueError(f"Config '{config_key}' must be a string when provided.")
+        return resolve_db_path(self.db_root, configured_path)
+
+    def _resolve_db_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
-        return self.project_root / configured_path
+        return resolve_db_path(self.db_root, configured_path)
 
     def _get_pytest_arguments(self) -> list[str]:
         pytest_arguments: Any = self.config.get("pytestArguments", [])

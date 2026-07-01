@@ -4,10 +4,10 @@
     "architectureSpecifications": [
         {
             "name": "pipelines",
-            "path": "../../../docs/specifications/ccore/automation/architecture_specification_pipelines.json",
+            "path": "docs/specifications/ccore/automation/architecture_specification_pipelines.json",
             "generatedTablesPath": "input/generated/ccore/automation/generated_tables_pipelines.json"
         }
     ],
-    "targetMetadataRoot": "automation/factory/crud/db/metadata",
+    "targetMetadataRoot": "metadata",
     "targetModule": "ccore/automation"
 }

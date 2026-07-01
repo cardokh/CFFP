@@ -32,12 +32,26 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file, write_json_file
+from support.db_path_utils import get_db_root, resolve_db_path, to_db_relative_path
 
 
 @dataclass(frozen=True)
@@ -62,8 +76,9 @@ class RunMetadataWorkflowsScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
+        self.db_root = get_db_root(__file__)
         self.stop_on_failure = bool(self.config.get("stopOnFailure", True))
-        self.target_metadata_root = self._resolve_project_path("targetMetadataRoot")
+        self.target_metadata_root = self._resolve_db_path("targetMetadataRoot")
         self.target_module = self._get_required_string("targetModule")
         self.target_module_root = self.target_metadata_root / "modules" / self.target_module
         self.generated_table_names = self._get_string_list("generatedTableNames")
@@ -272,7 +287,7 @@ class RunMetadataWorkflowsScript(BaseScript):
         command_result = CommandResult(
             name=step_name,
             status="PASSED" if completed.returncode == 0 else "FAILED",
-            command=[sys.executable, self.to_project_relative_path(script_path)],
+            command=[sys.executable, to_db_relative_path(self.db_root, script_path)],
             return_code=completed.returncode,
             duration_seconds=round(time.perf_counter() - started, 4),
             stdout=completed.stdout,
@@ -285,7 +300,7 @@ class RunMetadataWorkflowsScript(BaseScript):
         command_result = CommandResult(
             **{
                 **command_result.__dict__,
-                "latest_report_path": self.to_project_relative_path(latest_report_path) if latest_report_path else None,
+                "latest_report_path": to_db_relative_path(self.db_root, latest_report_path) if latest_report_path else None,
                 "latest_report": latest_report,
             }
         )
@@ -365,7 +380,7 @@ class RunMetadataWorkflowsScript(BaseScript):
             raise AssertionError(f"Metadata registry changed unexpectedly. expected={expected_tables}, actual={actual_tables}")
 
     def _write_malformed_specification(self) -> Path:
-        malformed_path = self.project_root / self._get_negative_string("malformedSpecificationPath")
+        malformed_path = resolve_db_path(self.db_root, self._get_negative_string("malformedSpecificationPath"))
         malformed_path.parent.mkdir(parents=True, exist_ok=True)
         write_json_file(
             malformed_path,
@@ -411,7 +426,7 @@ class RunMetadataWorkflowsScript(BaseScript):
                 "durationSeconds": round(time.perf_counter() - started, 4),
                 "details": "Workflow steps execute the real metadata task scripts and DB task runner.",
             },
-            "targetMetadataRoot": self.to_project_relative_path(self.target_metadata_root),
+            "targetMetadataRoot": to_db_relative_path(self.db_root, self.target_metadata_root),
             "targetModule": self.target_module,
             "generatedTableNames": self.generated_table_names,
             "workflows": self.workflow_results,
@@ -420,10 +435,9 @@ class RunMetadataWorkflowsScript(BaseScript):
             report["error"] = error_message
         return report
 
-    def _resolve_project_path(self, config_key: str) -> Path:
+    def _resolve_db_path(self, config_key: str) -> Path:
         value = self._get_required_string(config_key)
-        path = Path(value)
-        return path if path.is_absolute() else self.project_root / path
+        return resolve_db_path(self.db_root, value)
 
     def _get_required_string(self, config_key: str) -> str:
         value = self.config.get(config_key)
@@ -458,8 +472,7 @@ class RunMetadataWorkflowsScript(BaseScript):
         for key, raw_path in value.items():
             if not isinstance(raw_path, str) or not raw_path:
                 raise ValueError(f"Every '{config_key}' path must be a non-empty string.")
-            path = Path(raw_path)
-            paths[str(key)] = path if path.is_absolute() else self.project_root / path
+            paths[str(key)] = resolve_db_path(self.db_root, raw_path)
         return paths
 
 

@@ -1,8 +1,8 @@
 {
     "scriptName": "insert_data",
     "mode": "insert_postgres_seed_data_from_generic_metadata",
-    "metadataRoot": "automation/factory/crud/db/metadata",
-    "implementationRoot": "automation/factory/crud/db/implementations/postgres",
+    "metadataRoot": "metadata",
+    "implementationRoot": "implementations/postgres",
     "outputFileName": "data.sql",
     "moduleRoots": [
         "ccore/automation",

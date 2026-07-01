@@ -16,12 +16,26 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file
+from support.db_path_utils import get_db_root, resolve_db_path
 
 
 class ValidatePostgresMetadataScript(BaseScript):
@@ -29,8 +43,9 @@ class ValidatePostgresMetadataScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
-        self.metadata_root = self._resolve_project_path("metadataRoot")
-        self.implementation_root = self._resolve_project_path("implementationRoot")
+        self.db_root = get_db_root(__file__)
+        self.metadata_root = self._resolve_db_path("metadataRoot")
+        self.implementation_root = self._resolve_db_path("implementationRoot")
         self.errors: list[str] = []
         self.warnings: list[str] = []
         self.table_count = 0
@@ -65,11 +80,11 @@ class ValidatePostgresMetadataScript(BaseScript):
             raise SystemExit(1)
         print_passed(f"validate_postgres_metadata: validated {self.table_count} table(s)")
 
-    def _resolve_project_path(self, config_key: str) -> Path:
+    def _resolve_db_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
-        return self.project_root / configured_path
+        return resolve_db_path(self.db_root, configured_path)
 
     def _validate_database_pointer(self, database_metadata: Any) -> None:
         if not isinstance(database_metadata, dict):

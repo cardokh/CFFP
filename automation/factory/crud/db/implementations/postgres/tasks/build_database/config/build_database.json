@@ -1,8 +1,8 @@
 {
     "scriptName": "build_database",
     "mode": "build_postgres_database_from_generic_metadata",
-    "metadataRoot": "automation/factory/crud/db/metadata",
-    "implementationRoot": "automation/factory/crud/db/implementations/postgres",
+    "metadataRoot": "metadata",
+    "implementationRoot": "implementations/postgres",
     "outputFileName": "database.sql",
     "moduleRoots": [
         "ccore/automation",
@@ -24,8 +24,8 @@
     },
     "executeSql": true,
     "execution": {
-        "recreateDatabase": true,
+        "recreateDatabase": false,
         "dropUnlistedTables": true,
-        "recreateExistingTables": false
+        "recreateExistingTables": true
     }
 }

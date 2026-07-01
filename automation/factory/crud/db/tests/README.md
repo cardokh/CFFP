@@ -54,13 +54,13 @@ Shared helper code used by the tests. These files are not tests.
 From the repository root:
 
 ```bash
-python -m pytest automation/factory/crud/db/tests
+python -m pytest tests
 ```
 
 Or use the DB-local runner:
 
 ```bash
-python automation/factory/crud/db/tests/run_db_tests.py
+python tests/run_db_tests.py
 ```
 
 ## Expected result

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import py_compile
 
-from automation.factory.crud.db.tests.support.db_json_validation import read_json
-from automation.factory.crud.db.tests.support.db_test_paths import get_db_root, get_project_root, to_project_relative
+from tests.support.db_json_validation import read_json
+from tests.support.db_test_paths import get_db_root, to_db_relative
 
 EXPECTED_COMPONENTS = [
     "validate_postgres_metadata",
@@ -15,7 +15,6 @@ EXPECTED_COMPONENTS = [
 
 
 def test_run_db_tasks_json_declares_expected_task_order_and_scripts() -> None:
-    project_root = get_project_root()
     db_root = get_db_root()
     config = read_json(db_root / "config" / "run_db_tasks.json")
 
@@ -33,8 +32,8 @@ def test_run_db_tasks_json_declares_expected_task_order_and_scripts() -> None:
         assert isinstance(component.get("enabled"), bool), f"{name}.enabled must be explicit boolean."
         script_path_value = component.get("scriptPath")
         assert isinstance(script_path_value, str) and script_path_value
-        assert script_path_value.startswith("automation/factory/crud/db/implementations/postgres/tasks/")
-        script_path = project_root / script_path_value
+        assert script_path_value.startswith("implementations/postgres/tasks/")
+        script_path = db_root / script_path_value
         assert script_path.is_file(), f"Configured script path does not exist: {script_path_value}"
         assert script_path.parent.name == name
         assert script_path.stem == name
@@ -66,5 +65,5 @@ def test_run_db_tasks_report_output_folder_is_db_local() -> None:
         assert report.get("scriptName") == "run_db_tasks"
         for component in report.get("components", []):
             component_script_path = component.get("scriptPath", "")
-            assert component_script_path.startswith("automation/factory/crud/db/implementations/postgres/tasks/"), component_script_path
-        assert to_project_relative(report_path).startswith("automation/factory/crud/db/output/")
+            assert component_script_path.startswith("implementations/postgres/tasks/"), component_script_path
+        assert to_db_relative(report_path).startswith("output/")

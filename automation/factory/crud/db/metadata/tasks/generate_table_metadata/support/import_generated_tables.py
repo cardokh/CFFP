@@ -8,11 +8,11 @@ from .metadata_validator import validate_generated_tables_batch
 from .metadata_writer import read_existing_table_names, write_generated_tables
 
 
-def import_generated_tables(project_root: Path, script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
+def import_generated_tables(db_root: Path, script_directory: Path, config: dict[str, Any]) -> dict[str, Any]:
     """Read, validate, and import generated metadata table batches."""
 
     generated_tables_paths = _read_generated_tables_paths(script_directory, config)
-    target_metadata_root = _resolve_project_path(project_root, config, "targetMetadataRoot")
+    target_metadata_root = _resolve_db_path(db_root, config, "targetMetadataRoot")
     target_module = config.get("targetModule", "ccore/automation")
     if not isinstance(target_module, str) or not target_module:
         raise ValueError("Config must contain non-empty 'targetModule'.")
@@ -114,14 +114,14 @@ def _resolve_script_path(script_directory: Path, configured_path: str) -> Path:
     return script_directory / path
 
 
-def _resolve_project_path(project_root: Path, config: dict[str, Any], config_key: str) -> Path:
+def _resolve_db_path(db_root: Path, config: dict[str, Any], config_key: str) -> Path:
     configured_path = config.get(config_key)
     if not isinstance(configured_path, str) or not configured_path:
         raise ValueError(f"Config must contain non-empty '{config_key}'.")
     path = Path(configured_path)
     if path.is_absolute():
         return path
-    return project_root / path
+    return db_root / path
 
 
 def _to_script_relative_path(script_directory: Path, path: Path) -> str:

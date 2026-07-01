@@ -19,6 +19,19 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
@@ -26,8 +39,9 @@ from scripts.shared.base_script import BaseScript
 from scripts.shared.config_resolution import ConfigurationResolver
 from scripts.shared.script_console_utils import print_passed
 from scripts.shared.script_json_utils import read_json_file
+from support.db_path_utils import get_db_root, resolve_db_path
 
-from automation.factory.crud.db.implementations.postgres.support.dependency_resolver import sort_schemas_by_dependency
+from implementations.postgres.support.dependency_resolver import sort_schemas_by_dependency
 
 
 class BuildDatabaseScript(BaseScript):
@@ -37,8 +51,9 @@ class BuildDatabaseScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
-        self.metadata_root = self._resolve_project_path("metadataRoot")
-        self.implementation_root = self._resolve_project_path("implementationRoot")
+        self.db_root = get_db_root(__file__)
+        self.metadata_root = self._resolve_db_path("metadataRoot")
+        self.implementation_root = self._resolve_db_path("implementationRoot")
         self.config_resolver = ConfigurationResolver(default_source_name="database.json")
         self.implementation_metadata = read_json_file(self.implementation_root / "database.json")
         self.admin_connection_config = self._resolve_connection_config("adminConnection", "admin")
@@ -105,16 +120,16 @@ class BuildDatabaseScript(BaseScript):
             f"{len(self.ordered_schemas)} table(s); SQL {self.to_project_relative_path(output_file)}"
         )
 
-    def _resolve_project_path(self, config_key: str) -> Path:
+    def _resolve_db_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
-        return self.project_root / configured_path
+        return resolve_db_path(self.db_root, configured_path)
 
     def _resolve_execution_config(self) -> dict[str, Any]:
         execution_config: dict[str, Any] = {}
 
-        run_db_tasks_config_path = self.project_root / "automation" / "factory" / "crud" / "db" / "config" / "run_db_tasks.json"
+        run_db_tasks_config_path = self.db_root / "config" / "run_db_tasks.json"
         if run_db_tasks_config_path.is_file():
             run_db_tasks_config = read_json_file(run_db_tasks_config_path)
             run_db_tasks_execution = run_db_tasks_config.get("execution", {})
@@ -286,7 +301,7 @@ class BuildDatabaseScript(BaseScript):
 
     def _render_database_sql(self) -> str:
         lines: list[str] = [
-            "-- Generated from automation/factory/crud/db/metadata.",
+            "-- Generated from db/metadata.",
             "-- Parallel PostgreSQL implementation artifact.",
             "",
             "CREATE EXTENSION IF NOT EXISTS pgcrypto;",

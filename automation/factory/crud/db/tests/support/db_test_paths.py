@@ -1,26 +1,40 @@
-"""Shared path helpers for DB pipeline contract tests."""
+"""Shared path helpers for DB contract tests."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 
-def get_project_root() -> Path:
-    """Return the repository root containing automation/factory/crud/db."""
+def get_db_root() -> Path:
     current = Path(__file__).resolve()
     for parent in current.parents:
-        if (parent / "automation" / "factory" / "crud" / "db").is_dir():
+        if (
+            (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ):
             return parent
-    raise RuntimeError("Could not locate repository root containing automation/factory/crud/db.")
+    raise RuntimeError("Could not locate DB module root.")
 
 
-def get_db_root() -> Path:
-    return get_project_root() / "automation" / "factory" / "crud" / "db"
+def get_project_root() -> Path:
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if (parent / "scripts" / "shared").is_dir():
+            return parent
+    raise RuntimeError("Could not locate repository root containing scripts/shared.")
 
 
 def get_postgres_root() -> Path:
-    return get_db_root() / "postgres"
+    return get_db_root() / "implementations" / "postgres"
+
+
+def to_db_relative(path: Path) -> str:
+    return path.resolve().relative_to(get_db_root().resolve()).as_posix()
 
 
 def to_project_relative(path: Path) -> str:
-    return path.resolve().relative_to(get_project_root().resolve()).as_posix()
+    try:
+        return path.resolve().relative_to(get_project_root().resolve()).as_posix()
+    except ValueError:
+        return str(path)

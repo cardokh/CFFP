@@ -20,12 +20,26 @@ def _configure_project_import_path() -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+    db_root = next(
+        (
+            parent
+            for parent in Path(__file__).resolve().parents
+            if (parent / "run_db_tasks.py").is_file()
+            and (parent / "metadata").is_dir()
+            and (parent / "implementations").is_dir()
+        ),
+        None,
+    )
+    if db_root is not None and str(db_root) not in sys.path:
+        sys.path.insert(0, str(db_root))
+
 
 _configure_project_import_path()
 
 from scripts.shared.base_script import BaseScript
 from scripts.shared.script_console_utils import print_failed, print_passed
 from scripts.shared.script_json_utils import read_json_file
+from support.db_path_utils import get_db_root, resolve_db_path
 
 
 class ValidateMetadataScript(BaseScript):
@@ -33,7 +47,8 @@ class ValidateMetadataScript(BaseScript):
 
     def __init__(self) -> None:
         super().__init__(__file__)
-        self.metadata_root = self._resolve_project_path("metadataRoot")
+        self.db_root = get_db_root(__file__)
+        self.metadata_root = self._resolve_db_path("metadataRoot")
         self.tasks_root = self.script_directory.parent
         self.errors: list[str] = []
         self.warnings: list[str] = []
@@ -76,11 +91,11 @@ class ValidateMetadataScript(BaseScript):
         warning_suffix = f", {len(self.warnings)} warning(s)" if self.warnings else ""
         print_passed(f"validate_metadata: validated {len(self.table_schemas)} table(s){warning_suffix}")
 
-    def _resolve_project_path(self, config_key: str) -> Path:
+    def _resolve_db_path(self, config_key: str) -> Path:
         configured_path = self.config.get(config_key)
         if not isinstance(configured_path, str) or not configured_path:
             raise ValueError(f"Config must contain non-empty '{config_key}'.")
-        return self.project_root / configured_path
+        return resolve_db_path(self.db_root, configured_path)
 
     def _validate_database_metadata(self) -> dict[str, Any]:
         database_path = self.metadata_root / "database.json"
@@ -364,7 +379,7 @@ class ValidateMetadataScript(BaseScript):
                 self.errors.append(f"Duplicate architecture specification name: {name}")
             else:
                 seen_names.add(name)
-            self._validate_task_relative_json_file(task_root, path_value, f"architectureSpecifications[{index}].path")
+            self._validate_db_relative_json_file(path_value, f"architectureSpecifications[{index}].path")
             self._validate_task_relative_json_file(
                 task_root,
                 generated_path_value,
@@ -422,6 +437,20 @@ class ValidateMetadataScript(BaseScript):
         for index, table_name in enumerate(tables):
             if not isinstance(table_name, str) or not table_name:
                 self.errors.append(f"remove_metadata_tables config tables[{index}] must be a non-empty string.")
+
+
+    def _validate_db_relative_json_file(self, path_value: Any, field_name: str) -> None:
+        if not isinstance(path_value, str) or not path_value:
+            self.errors.append(f"{field_name} must be a non-empty path string.")
+            return
+        if Path(path_value).is_absolute() or ".." in Path(path_value).parts:
+            self.errors.append(f"{field_name} must be a DB-root-relative path without '..': {path_value}")
+            return
+        if not path_value.endswith(".json"):
+            self.errors.append(f"{field_name} must point to a JSON file: {path_value}")
+        resolved_path = self.db_root / path_value
+        if not resolved_path.is_file():
+            self.errors.append(f"{field_name} does not exist: {self.to_project_relative_path(resolved_path)}")
 
     def _validate_task_relative_json_file(self, task_root: Path, path_value: Any, field_name: str) -> None:
         if not isinstance(path_value, str) or not path_value:

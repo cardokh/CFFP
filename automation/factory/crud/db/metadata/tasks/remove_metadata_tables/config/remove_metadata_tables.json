@@ -1,7 +1,7 @@
 {
     "scriptName": "remove_metadata_tables",
     "mode": "remove_generic_metadata_tables",
-    "targetMetadataRoot": "automation/factory/crud/db/metadata",
+    "targetMetadataRoot": "metadata",
     "targetModule": "ccore/automation",
     "tables": [
         "pipeline_statuses",
