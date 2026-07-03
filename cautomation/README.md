@@ -5,28 +5,43 @@ CAutomation is the reusable automation workspace for the AI-assisted software de
 The long-term purpose is to support a repeatable flow where one or more human-authored project documents are transformed into a complete, validated, deliverable web application.
 
 ```text
-Project Input Documents
+Human-authored Project Input
         ↓
 Context Engineering
         ↓
-Context Validation
+Planning
         ↓
-AI Generation
+Generation
+        ├── Database
+        ├── Backend
+        ├── Frontend
+        ├── Testing
+        └── Deployment
         ↓
-Artifact Validation
+Validation
         ↓
 Apply
+        ↓
+Verification
 ```
 
-CFFP is the reference project used to design, test, and evolve this platform. The automation should remain generic enough to support future projects.
+CFFP is the reference project used to design, test, and evolve this platform. The automation must remain generic enough to support future projects.
 
 ## Top-Level Areas
 
-- `ai_engine/` contains reusable pipelines and shared automation capabilities.
+- `ai_engine/` contains reusable platform pipelines.
 - `projects/` contains project-specific input and configuration.
 
-## Current Iteration
+## Human Responsibility
 
-The current focus is the first reusable platform capability: the Context Engineering Pipeline.
+The human team provides project knowledge under `projects/<project>/input/`.
 
-This pipeline does not generate application code. Its responsibility is to turn project input documents and approved upstream artifacts into validated, AI-ready context.
+This includes client documents, engineering constraints, module definitions, workflows, acceptance criteria, architecture decisions, and other approved project knowledge.
+
+The human team does not manually assemble prompts for downstream generators.
+
+## Platform Responsibility
+
+The platform turns the human-authored input into validated, traceable context packages and then uses those packages to plan, generate, validate, apply, and verify software artifacts.
+
+The first automated stage is `01_context_engineering`. It replaces the earlier idea of a narrow requirements pipeline.

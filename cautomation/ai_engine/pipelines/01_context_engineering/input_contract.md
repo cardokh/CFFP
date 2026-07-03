@@ -1,91 +1,77 @@
-# Context Engineering Pipeline Input Contract
+# Input Contract
 
-## Purpose
+The Context Engineering pipeline consumes human-authored and approved project knowledge.
 
-This document defines the inputs that the Context Engineering Pipeline may consume.
-
-The pipeline must only use explicit, approved project inputs and approved upstream pipeline outputs. It must not depend on conversation history or implicit assumptions.
-
-## Allowed Inputs
-
-For a project with id `<projectId>`, the pipeline may read:
+## Required Project Input Root
 
 ```text
-cautomation/projects/<projectId>/README.md
-cautomation/projects/<projectId>/project.json
-cautomation/projects/<projectId>/input/client/**
-cautomation/projects/<projectId>/input/engineering/**
-cautomation/projects/<projectId>/input/modules/**
+projects/<project>/input/
+├── client/
+├── engineering/
+└── modules/
 ```
 
-Later iterations may allow approved outputs from earlier pipeline runs, but those outputs must be explicitly declared in the pipeline configuration before use.
+## Human-Authored Input
 
-## Client Input
+The human team is responsible for supplying enough project knowledge for the platform to understand what should be generated.
 
-`input/client/` may contain documents such as:
+The platform may report missing, weak, ambiguous, or conflicting input, but it must not silently invent missing business intent.
 
-- product vision,
-- problem statement,
-- goals and success criteria,
-- users and personas,
-- workflows,
-- acceptance expectations,
-- domain terminology,
-- externally supplied requirements.
+## Expected Input Categories
 
-Client input describes what should be built and why.
+### client/
 
-## Engineering Input
+Client-facing documents explain what the product is and why it exists.
 
-`input/engineering/` may contain documents such as:
+Examples:
 
-- architecture principles,
-- technology constraints,
-- security and access-control constraints,
-- data and integration constraints,
-- deployment expectations,
-- definition of done,
-- quality and testing expectations.
+- vision
+- problem statement
+- goals
+- success criteria
+- user groups
+- personas
+- workflows
 
-Engineering input describes how the project must be constrained and validated.
+### engineering/
 
-## Module Input
+Engineering documents define technical boundaries.
 
-`input/modules/` may contain one folder per module.
+Examples:
 
-Each module may contain documents such as:
+- architecture principles
+- technology constraints
+- security constraints
+- coding standards
+- data constraints
+- integration constraints
+- definition of done
 
-- module overview,
-- domain model,
-- user stories,
-- acceptance criteria,
-- workflow descriptions,
-- module-specific constraints.
+### modules/
 
-Module input describes bounded areas of functionality.
+Module documents define functional areas.
+
+Examples:
+
+- module overview
+- domain model
+- user stories
+- acceptance criteria
+- workflow descriptions
+- permission requirements
 
 ## Forbidden Inputs
 
-The pipeline must not read:
+The pipeline must not depend on:
 
-- arbitrary source code,
-- arbitrary files from `backend/`, `frontend/`, `generated/`, `runtime/`, or old `docs/`,
-- local IDE state,
-- previous chat history,
-- unapproved temporary files,
-- provider-specific memory files,
-- or internet content.
+- conversation history
+- unapproved assumptions
+- arbitrary source code inspection
+- unrelated repository files
+- model memory
 
-Any additional input source must be added to this contract before the pipeline is allowed to consume it.
+## Missing Input Handling
 
-## Input Failure Conditions
+Missing input must be reported explicitly.
 
-The pipeline must fail if:
-
-- `project.json` is missing,
-- the project input directory is missing,
-- required project metadata is missing,
-- no project input documents exist,
-- an input file cannot be read,
-- an input file type is unsupported,
-- or a required input category is empty when the downstream task requires it.
+The pipeline may continue only when the missing input is non-blocking and the report clearly states the limitation.

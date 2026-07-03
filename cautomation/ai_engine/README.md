@@ -2,36 +2,50 @@
 
 The AI Engine contains reusable pipelines that transform project knowledge into generated software artifacts.
 
-The engine is based on context engineering rather than free-form prompting. Each pipeline must explicitly define the context it consumes, the context it produces, the boundaries it must not cross, and the validation rules that apply to its output.
+The engine is based on context engineering rather than free-form prompting. The AI model is not the center of the architecture; the context pipeline is.
 
-## Conceptual Flow
+## Lifecycle
 
 ```text
-01 Input Documents
+01_context_engineering
         ↓
-02 Context Engineering
+02_planning
         ↓
-03 Context Validation
+03_generation
+        ├── db
+        ├── backend
+        ├── frontend
+        ├── testing
+        └── deployment
         ↓
-04 AI Generation
+04_validation
         ↓
-05 Artifact Validation
+05_apply
         ↓
-06 Apply
+06_verification
 ```
+
+## Important Distinction
+
+The lifecycle stages are not the same thing as database/backend/frontend generation.
+
+Database, backend, frontend, testing, and deployment are generation targets inside `03_generation/`.
+
+The overall lifecycle runs once for a project, module, feature, or story generation run. Within the generation stage, specialized generators may run sequentially or independently depending on the plan.
 
 ## Pipeline Principles
 
 - Every pipeline has one clear responsibility.
 - Every pipeline owns its outputs.
 - Every pipeline has an explicit context contract.
-- Every pipeline should consume the smallest sufficient context.
+- Every pipeline consumes the smallest sufficient context.
 - Pipeline outputs are engineering artifacts, not temporary logs.
 - Generated artifacts are untrusted until validated and approved.
 - Human-authored and approved generated documents remain the source of truth.
+- Downstream stages consume validated context packages rather than arbitrary repository files.
 
-## Directory Structure
+## Current Implementation Status
 
-- `pipelines/00_shared/` contains shared tasks and scripts.
-- `pipelines/01_context_engineering/` creates and validates AI-ready context.
-- Later pipelines will use validated context to generate database, backend, frontend, testing, and deployment artifacts.
+This iteration defines the architecture and contracts. It does not yet implement executable generation logic.
+
+The immediate priority is to stabilize `01_context_engineering` because all downstream stages depend on its output.

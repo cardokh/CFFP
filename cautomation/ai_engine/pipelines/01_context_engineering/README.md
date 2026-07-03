@@ -1,57 +1,66 @@
-# Context Engineering Pipeline
+# 01 Context Engineering
 
-The Context Engineering Pipeline transforms project input documents and approved upstream artifacts into validated, AI-ready context.
+Context Engineering is the first real platform pipeline.
 
-This is the first reusable platform capability. It exists before database, backend, frontend, testing, or deployment generation.
+It replaces the earlier idea of a narrow `requirements` pipeline.
 
-## Purpose
+The human team provides project knowledge under `projects/<project>/input/`. This pipeline validates, organizes, compresses, orders, and packages that knowledge into AI-ready context packages for downstream stages.
 
-The pipeline exists to prevent free-form, uncontrolled AI generation.
+## Responsibility
 
-It ensures that downstream AI generation receives:
+This pipeline prepares context. It does not generate application code.
 
-- the right documents,
-- the right constraints,
-- the right architectural decisions,
-- the right scope,
-- and no unnecessary repository noise.
+## Input
+
+Typical input sources include:
+
+- client vision
+- problem statement
+- goals and success criteria
+- users and personas
+- workflows
+- acceptance criteria
+- engineering constraints
+- architecture principles
+- technology constraints
+- ADRs
+- module definitions
+- security constraints
+- testing expectations
+
+## Output
+
+The primary output is a validated context package.
+
+Example:
+
+```text
+context-package/
+├── manifest.json
+├── global-context.md
+├── project-context.md
+├── module-context.md
+├── architecture-context.md
+├── constraints-context.md
+├── generation-context.md
+└── provenance.json
+```
 
 ## Non-Goals
 
-This pipeline does not:
+This pipeline must not:
 
-- generate application source code,
-- inspect arbitrary source files,
-- modify project input documents,
-- decide product scope,
-- override human-approved architecture,
-- or apply generated artifacts to the live project.
+- generate source code
+- invent missing requirements
+- silently resolve conflicts
+- read arbitrary repository files
+- depend on conversation history
+- bypass validation
 
-## Conceptual Flow
+## Core Concepts
 
-```text
-Project Input Documents
-        ↓
-Select Relevant Context
-        ↓
-Normalize Context
-        ↓
-Validate Context
-        ↓
-Produce AI-Ready Context Package
-```
-
-## Pipeline Contracts
-
-This folder defines the initial contracts for the pipeline:
-
-- `input_contract.md` defines what this pipeline is allowed to consume.
-- `context_contract.md` defines the context model and scoping rules.
-- `output_contract.md` defines what the pipeline must produce.
-- `validation_rules.md` defines the minimum validation rules before downstream generation.
-
-## Design Principle
-
-Context is a first-class artifact.
-
-The purpose of this pipeline is not to make prompts longer. The purpose is to make AI context smaller, clearer, traceable, auditable, and reusable.
+- **Selection**: include only relevant artifacts.
+- **Compression**: distill large inputs into reusable context.
+- **Ordering**: place foundational rules before task-specific instructions.
+- **Isolation**: produce scoped context for downstream stages.
+- **Provenance**: record which inputs produced each context package.

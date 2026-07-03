@@ -45,8 +45,8 @@ Examples:
 ```text
 scope: project_overview
 scope: module:epic_tracker
-scope: pipeline:02_db
-scope: pipeline:03_backend
+scope: generation:db
+scope: generation:backend
 scope: feature:project_creation
 ```
 
@@ -77,7 +77,7 @@ The generated context should present information in this order:
 1. Platform-level rules and principles.
 2. Project-level vision and constraints.
 3. Module-level requirements and domain knowledge.
-4. Downstream pipeline-specific requirements.
+4. Planning or generation-target-specific requirements.
 5. Open questions, conflicts, and risks.
 
 This ordering keeps stable constraints visible before task-specific details.
