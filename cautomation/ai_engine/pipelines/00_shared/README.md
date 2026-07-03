@@ -1,2 +1,3 @@
 # Shared
-Reusable tasks and scripts.
+
+Reusable tasks and scripts used by pipelines.
