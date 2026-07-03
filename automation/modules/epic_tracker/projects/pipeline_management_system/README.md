@@ -1,3 +1,3 @@
 # Pipeline Management System
 
-Architecture iteration.
+Project requirements and deliverable structure.
