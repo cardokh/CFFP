@@ -1,3 +1,3 @@
 # Pipeline Management System
 
-Project requirements and deliverable structure.
+Project-level requirements and deliverable structure.
