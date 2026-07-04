@@ -46,6 +46,8 @@ The overall lifecycle runs once for a project, module, feature, or story generat
 
 ## Current Implementation Status
 
-This iteration defines the architecture and contracts. It does not yet implement executable generation logic.
+This iteration introduces the first executable pipeline: `01_context_engineering`.
 
-The immediate priority is to stabilize `01_context_engineering` because all downstream stages depend on its output.
+The executable MVP reads the approved Pipeline Management module SRS and ATS, validates the module input contract, extracts the DOCX content, and creates a deterministic context package for downstream planning and generation.
+
+The immediate priority remains to harden `01_context_engineering` because all downstream stages depend on its output.

@@ -64,3 +64,33 @@ This pipeline must not:
 - **Ordering**: place foundational rules before task-specific instructions.
 - **Isolation**: produce scoped context for downstream stages.
 - **Provenance**: record which inputs produced each context package.
+
+
+## Executable MVP
+
+The first runnable implementation is located at:
+
+```text
+scripts/run_context_engineering.py
+```
+
+Run it from the repository root with:
+
+```bash
+python cautomation/ai_engine/pipelines/01_context_engineering/scripts/run_context_engineering.py --cautomation-root cautomation --project cffp --module pipeline_management --clean
+```
+
+The default output is:
+
+```text
+cautomation/projects/cffp/output/context_packages/cffp_pipeline_management_context_package/
+```
+
+The MVP consumes only:
+
+- CAutomation platform contracts,
+- `projects/cffp/project.json`,
+- the approved Pipeline Management SRS,
+- the approved Pipeline Management ATS.
+
+It does not inspect arbitrary backend, frontend, database, or test source files.
