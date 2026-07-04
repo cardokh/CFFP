@@ -1,96 +1,55 @@
 # 01 Context Engineering
 
-Context Engineering is the first real platform pipeline.
+Context Engineering is the first executable pipeline in the CAutomation package.
 
-It replaces the earlier idea of a narrow `requirements` pipeline.
+Its first runnable task is:
 
-The human team provides project knowledge under `projects/<project>/input/`. This pipeline validates, organizes, compresses, orders, and packages that knowledge into AI-ready context packages for downstream stages.
+```text
+01_context_engineering/
+└── tasks/
+    └── context_engineering/
+        ├── context_engineering.py
+        ├── config/
+        │   └── context_engineering.json
+        └── output/
+```
 
 ## Responsibility
 
-This pipeline prepares context. It does not generate application code.
+The `context_engineering` task reads the approved Pipeline Management module SRS and ATS and produces a deterministic context package for downstream planning and generation.
 
-## Input
+It does not generate application code and it does not apply changes to the repository.
 
-Typical input sources include:
+## Run
 
-- client vision
-- problem statement
-- goals and success criteria
-- users and personas
-- workflows
-- acceptance criteria
-- engineering constraints
-- architecture principles
-- technology constraints
-- ADRs
-- module definitions
-- security constraints
-- testing expectations
-
-## Output
-
-The primary output is a validated context package.
-
-Example:
-
-```text
-context-package/
-├── manifest.json
-├── global-context.md
-├── project-context.md
-├── module-context.md
-├── architecture-context.md
-├── constraints-context.md
-├── generation-context.md
-└── provenance.json
-```
-
-## Non-Goals
-
-This pipeline must not:
-
-- generate source code
-- invent missing requirements
-- silently resolve conflicts
-- read arbitrary repository files
-- depend on conversation history
-- bypass validation
-
-## Core Concepts
-
-- **Selection**: include only relevant artifacts.
-- **Compression**: distill large inputs into reusable context.
-- **Ordering**: place foundational rules before task-specific instructions.
-- **Isolation**: produce scoped context for downstream stages.
-- **Provenance**: record which inputs produced each context package.
-
-
-## Executable MVP
-
-The first runnable implementation is located at:
-
-```text
-scripts/run_context_engineering.py
-```
-
-Run it from the repository root with:
+Run from the repository root:
 
 ```bash
-python cautomation/ai_engine/pipelines/01_context_engineering/scripts/run_context_engineering.py --cautomation-root cautomation --project cffp --module pipeline_management --clean
+python cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/context_engineering.py
 ```
 
-The default output is:
+## Configuration
+
+All project/module/path settings are loaded from:
 
 ```text
-cautomation/projects/cffp/output/context_packages/cffp_pipeline_management_context_package/
+cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/config/context_engineering.json
 ```
 
-The MVP consumes only:
+The task must not hard-code project IDs, module IDs, input paths, output paths, or file names.
 
-- CAutomation platform contracts,
-- `projects/cffp/project.json`,
-- the approved Pipeline Management SRS,
-- the approved Pipeline Management ATS.
+## Outputs
 
-It does not inspect arbitrary backend, frontend, database, or test source files.
+The task writes two kinds of output:
+
+```text
+cautomation/projects/cffp/output/context_packages/<context-package-id>/
+```
+
+and an execution report under the task output folder:
+
+```text
+cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/output/
+```
+
+The execution report follows the repository scripting infrastructure provided by `scripts/shared/base_script.py`.
