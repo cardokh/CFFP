@@ -1,0 +1,48 @@
+{
+  "taskRegistryId": "context_engineering_task_registry",
+  "taskRegistryVersion": "mvp-006",
+  "taskDefinitions": [
+    {
+      "taskDefinitionId": "load_configuration",
+      "taskName": "Load Configuration",
+      "script": "tasks/load_configuration/load_configuration.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    },
+    {
+      "taskDefinitionId": "validate_inputs",
+      "taskName": "Validate Inputs",
+      "script": "tasks/validate_inputs/validate_inputs.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    },
+    {
+      "taskDefinitionId": "extract_contracts",
+      "taskName": "Extract Contracts",
+      "script": "tasks/extract_contracts/extract_contracts.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    },
+    {
+      "taskDefinitionId": "build_context_package",
+      "taskName": "Build Context Package",
+      "script": "tasks/build_context_package/build_context_package.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    },
+    {
+      "taskDefinitionId": "validate_context_package",
+      "taskName": "Validate Context Package",
+      "script": "tasks/validate_context_package/validate_context_package.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    },
+    {
+      "taskDefinitionId": "write_execution_report",
+      "taskName": "Write Execution Report",
+      "script": "tasks/write_execution_report/write_execution_report.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-006"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
   "pipelineConfigPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json",
-  "taskVersion": "mvp-005",
+  "taskVersion": "mvp-006",
   "taskDefinitionId": "validate_context_package"
 }

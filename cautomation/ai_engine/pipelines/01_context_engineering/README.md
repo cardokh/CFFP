@@ -40,9 +40,15 @@ The pipeline-level configuration is stored in:
 cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json
 ```
 
+The reusable task definition registry is stored separately in:
+
+```text
+cautomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json
+```
+
 Each task has its own small task config under its task folder. The task config points to the pipeline config and declares the task identity/version.
 
-Task folders are reusable task definitions. The pipeline configuration separates `taskDefinitions` from `taskInstances`: definitions point to reusable task implementations, while instances define pipeline-specific ordering, state files, blocking behaviour, and per-run configuration.
+Task folders are reusable task definitions. The pipeline configuration now contains only the pipeline-specific task instances and a reference to the task registry. The registry defines reusable implementations; the pipeline instances define ordering, state files, blocking behaviour, and per-run configuration.
 
 ## Output
 

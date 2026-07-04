@@ -49,6 +49,22 @@ class ContextEngineeringSupportMixin:
         self.pipeline_task_instance = self._load_pipeline_task_instance()
         return pipeline_config
 
+
+    def load_task_registry(self) -> dict[str, Any]:
+        from scripts.shared.script_json_utils import read_json_file
+
+        configured_path = self.pipeline_config.get("taskRegistryPath")
+        if not isinstance(configured_path, str) or not configured_path.strip():
+            raise ValueError("Pipeline config must contain non-empty string: taskRegistryPath")
+        path = Path(self.resolve_placeholders(configured_path))
+        if not path.is_absolute():
+            path = self.project_root / path
+        registry = read_json_file(path)
+        if not isinstance(registry, dict):
+            raise ValueError(f"Task registry must contain a JSON object: {path}")
+        self.task_registry_path = path.resolve()
+        return registry
+
     def _load_pipeline_task_instance(self) -> dict[str, Any] | None:
         raw_value = os.environ.get("CAUTOMATION_PIPELINE_TASK_INSTANCE")
         if raw_value in (None, ""):

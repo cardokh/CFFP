@@ -52,6 +52,8 @@ class ContextEngineeringPipeline(BaseScript):
         self.project_id = self._required_config_string("projectId")
         self.module_id = self._required_config_string("moduleId")
         self.output_config = self._required_config_group("output")
+        self.task_registry_path = self._required_task_registry_path()
+        self.task_registry = self._required_task_registry()
         self.task_definitions = self._required_task_definitions()
         self.task_instances = self._required_task_instances()
         self.state_root = self._resolve_project_path(self.output_config["pipelineStateRoot"])
@@ -161,6 +163,7 @@ class ContextEngineeringPipeline(BaseScript):
             "elapsedSeconds": elapsed_seconds,
             "projectId": self.project_id,
             "moduleId": self.module_id,
+            "taskRegistryPath": self.to_project_relative_path(self.task_registry_path),
             "taskResults": task_results,
             "stateRoot": self.to_project_relative_path(self.state_root),
         }
@@ -186,10 +189,24 @@ class ContextEngineeringPipeline(BaseScript):
             raise ValueError(f"Config must contain object: {key}")
         return value
 
+    def _required_task_registry_path(self) -> Path:
+        value = self.config.get("taskRegistryPath")
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("Config must contain non-empty string: taskRegistryPath")
+        return self._resolve_project_path(value)
+
+    def _required_task_registry(self) -> dict[str, Any]:
+        if not self.task_registry_path.exists():
+            raise FileNotFoundError(f"Task registry file does not exist: {self.task_registry_path}")
+        registry = read_json_file(self.task_registry_path)
+        if not isinstance(registry, dict):
+            raise ValueError("Task registry must contain a JSON object.")
+        return registry
+
     def _required_task_definitions(self) -> dict[str, dict[str, Any]]:
-        value = self.config.get("taskDefinitions")
+        value = self.task_registry.get("taskDefinitions")
         if not isinstance(value, list) or not value:
-            raise ValueError("Config must contain a non-empty taskDefinitions array.")
+            raise ValueError("Task registry must contain a non-empty taskDefinitions array.")
         definitions: dict[str, dict[str, Any]] = {}
         for item in value:
             if not isinstance(item, dict):

@@ -26,6 +26,7 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
     def __init__(self) -> None:
         super().__init__(__file__)
         self.pipeline_config: dict[str, Any] = self.load_pipeline_config()
+        self.task_registry: dict[str, Any] = self.load_task_registry()
 
     def run(self) -> None:
         started = time.perf_counter()
@@ -59,6 +60,7 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
             warnings = self._unique_messages(warnings)
             errors = self._unique_messages(errors)
             status = self.status_from(warnings, errors)
+            task_definitions = self.task_registry.get("taskDefinitions", [])
             final_report = {
                 "pipelineId": self.pipeline_id(),
                 "pipelineName": self.pipeline_config.get("pipelineName"),
@@ -69,11 +71,12 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
                 "projectId": self.project_id(),
                 "moduleId": self.module_id(),
-                "taskDefinitions": self.pipeline_config.get("taskDefinitions", []),
+                "taskRegistryPath": self.to_project_relative_path(self.task_registry_path),
+                "taskDefinitions": task_definitions,
                 "taskInstances": self.pipeline_config.get("taskInstances", []),
                 "contextPackageDirectory": package_dir,
                 "summary": {
-                    "configuredTaskDefinitionCount": len(self.pipeline_config.get("taskDefinitions", [])) if isinstance(self.pipeline_config.get("taskDefinitions"), list) else 0,
+                    "configuredTaskDefinitionCount": len(task_definitions) if isinstance(task_definitions, list) else 0,
                     "configuredTaskInstanceCount": len(self.pipeline_config.get("taskInstances", [])) if isinstance(self.pipeline_config.get("taskInstances"), list) else 0,
                     "aggregatedTaskStateCount": len(task_states),
                     "generatedFileCount": len(build_state.get("generatedFiles", [])) if isinstance(build_state, dict) else 0,

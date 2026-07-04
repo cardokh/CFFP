@@ -18,4 +18,4 @@ Each task definition:
 - can be executed independently for focused debugging.
 
 
-The pipeline config creates task instances from these definitions. A task instance is the configured use of a reusable task inside Pipeline 01, including sequence, state file, blocking behaviour, and optional instance configuration.
+The task registry defines reusable task definitions. The pipeline config creates task instances from those registry definitions. A task instance is the configured use of a reusable task inside Pipeline 01, including sequence, state file, blocking behaviour, and optional instance configuration.

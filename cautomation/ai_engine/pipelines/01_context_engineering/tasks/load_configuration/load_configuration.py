@@ -29,6 +29,7 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
     def __init__(self) -> None:
         super().__init__(__file__)
         self.pipeline_config: dict[str, Any] = self.load_pipeline_config()
+        self.task_registry: dict[str, Any] = self.load_task_registry()
 
     def run(self) -> None:
         started = time.perf_counter()
@@ -40,17 +41,18 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
             for group_name in required_groups:
                 if not isinstance(self.pipeline_config.get(group_name), dict):
                     errors.append({"code": "missing_config_group", "message": f"Missing config group: {group_name}"})
-            required_strings = ["pipelineId", "projectId", "moduleId", "pipelineVersion"]
+            required_strings = ["pipelineId", "projectId", "moduleId", "pipelineVersion", "taskRegistryPath"]
             for key in required_strings:
                 if not isinstance(self.pipeline_config.get(key), str) or not self.pipeline_config[key].strip():
                     errors.append({"code": "missing_config_value", "message": f"Missing config value: {key}"})
-            if not isinstance(self.pipeline_config.get("taskDefinitions"), list) or not self.pipeline_config["taskDefinitions"]:
-                errors.append({"code": "missing_task_definitions", "message": "Pipeline config must define a non-empty taskDefinitions array."})
+            task_definitions = self.task_registry.get("taskDefinitions")
+            if not isinstance(task_definitions, list) or not task_definitions:
+                errors.append({"code": "missing_task_definitions", "message": "Task registry must define a non-empty taskDefinitions array."})
             if not isinstance(self.pipeline_config.get("taskInstances"), list) or not self.pipeline_config["taskInstances"]:
                 errors.append({"code": "missing_task_instances", "message": "Pipeline config must define a non-empty taskInstances array."})
             definition_ids = {
                 item.get("taskDefinitionId")
-                for item in self.pipeline_config.get("taskDefinitions", [])
+                for item in task_definitions or []
                 if isinstance(item, dict)
             }
             for task_instance in self.pipeline_config.get("taskInstances", []):
@@ -64,10 +66,11 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
             state_payload = {
                 "status": status,
                 "pipelineConfigPath": self.to_project_relative_path(self.pipeline_config_path),
+                "taskRegistryPath": self.to_project_relative_path(self.task_registry_path),
                 "pipelineId": self.pipeline_config.get("pipelineId"),
                 "projectId": self.pipeline_config.get("projectId"),
                 "moduleId": self.pipeline_config.get("moduleId"),
-                "taskDefinitionCount": len(self.pipeline_config.get("taskDefinitions", [])) if isinstance(self.pipeline_config.get("taskDefinitions"), list) else 0,
+                "taskDefinitionCount": len(task_definitions) if isinstance(task_definitions, list) else 0,
                 "taskInstanceCount": len(self.pipeline_config.get("taskInstances", [])) if isinstance(self.pipeline_config.get("taskInstances"), list) else 0,
                 "warnings": warnings,
                 "errors": errors,
