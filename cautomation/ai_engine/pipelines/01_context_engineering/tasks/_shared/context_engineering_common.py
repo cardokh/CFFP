@@ -16,7 +16,7 @@ _PROJECT_ROOT = next(
 if _PROJECT_ROOT is not None and str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from cautomation.ai_engine.runtime.task_runtime import (  # noqa: E402
+from CAutomation.ai_engine.runtime.task_runtime import (  # noqa: E402
     RuntimeTaskSupportMixin,
     clean_directory,
     configure_project_import_path,
@@ -38,7 +38,7 @@ class ContextEngineeringSupportMixin(RuntimeTaskSupportMixin):
 
     def context_package_dir(self) -> Path:
         output_config = self.group("output")
-        package_root = self.cautomation_root() / self.resolve_placeholders(output_config["contextPackageRoot"])
+        package_root = self.CAutomation_root() / self.resolve_placeholders(output_config["contextPackageRoot"])
         package_id = self.resolve_placeholders(output_config["contextPackageId"])
         return (package_root / package_id).resolve()
 

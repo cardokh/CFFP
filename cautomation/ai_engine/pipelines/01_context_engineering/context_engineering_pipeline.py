@@ -6,7 +6,7 @@ individual task folders under tasks/.
 
 Run from the repository root:
 
-    python cautomation/ai_engine/pipelines/01_context_engineering/context_engineering_pipeline.py
+    python CAutomation/ai_engine/pipelines/01_context_engineering/context_engineering_pipeline.py
 """
 
 from __future__ import annotations

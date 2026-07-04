@@ -1,6 +1,6 @@
 """Shared CAutomation AI Engine runtime support."""
 
-from cautomation.ai_engine.runtime.task_runtime import (
+from CAutomation.ai_engine.runtime.task_runtime import (
     RuntimeTaskSupportMixin,
     clean_directory,
     configure_project_import_path,

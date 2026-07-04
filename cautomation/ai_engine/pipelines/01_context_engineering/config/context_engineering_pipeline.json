@@ -4,9 +4,9 @@
   "pipelineVersion": "mvp-007",
   "projectId": "cffp",
   "moduleId": "pipeline_management",
-  "taskRegistryPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
+  "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
   "input": {
-    "cautomationRoot": "cautomation",
+    "CAutomationRoot": "CAutomation",
     "projectConfigPath": "projects/{projectId}/project.json",
     "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}",
     "srsFileName": "Software_Requirements_Specification.docx",
@@ -16,10 +16,10 @@
     "contextPackageRoot": "projects/{projectId}/output/context_packages",
     "contextPackageId": "{projectId}_{moduleId}_context_package",
     "cleanPackageBeforeWrite": true,
-    "pipelineStateRoot": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run",
-    "taskReportsDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run/task_reports",
-    "finalReportDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output",
-    "executionHistoryRoot": "cautomation/ai_engine/pipelines/01_context_engineering/output/executions",
+    "pipelineStateRoot": "CAutomation/ai_engine/pipelines/01_context_engineering/output/current_run",
+    "taskReportsDirectory": "CAutomation/ai_engine/pipelines/01_context_engineering/output/current_run/task_reports",
+    "finalReportDirectory": "CAutomation/ai_engine/pipelines/01_context_engineering/output",
+    "executionHistoryRoot": "CAutomation/ai_engine/pipelines/01_context_engineering/output/executions",
     "archiveCurrentRun": true
   },
   "contextFiles": {

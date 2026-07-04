@@ -200,14 +200,14 @@ class RuntimeTaskSupportMixin:
             return None
         return root / self.pipeline_execution_id()
 
-    def cautomation_root(self) -> Path:
-        return self.resolve_project_path(self.group("input")["cautomationRoot"])
+    def CAutomation_root(self) -> Path:
+        return self.resolve_project_path(self.group("input")["CAutomationRoot"])
 
     def project_config_path(self) -> Path:
-        return self.cautomation_root() / self.resolve_placeholders(self.group("input")["projectConfigPath"])
+        return self.CAutomation_root() / self.resolve_placeholders(self.group("input")["projectConfigPath"])
 
     def module_input_root(self) -> Path:
-        return self.cautomation_root() / self.resolve_placeholders(self.group("input")["moduleInputPath"])
+        return self.CAutomation_root() / self.resolve_placeholders(self.group("input")["moduleInputPath"])
 
 
     def ensure_state_root(self) -> Path:

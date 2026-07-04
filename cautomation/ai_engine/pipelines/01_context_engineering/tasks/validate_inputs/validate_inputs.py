@@ -35,7 +35,7 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
         try:
             srs_path, ats_path = self.contract_paths()
             required_paths = {
-                "cautomation_root_exists": self.cautomation_root(),
+                "CAutomation_root_exists": self.CAutomation_root(),
                 "project_config_exists": self.project_config_path(),
                 "module_input_root_exists": self.module_input_root(),
                 "module_srs_exists": srs_path,
@@ -52,7 +52,7 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
                 if not passed:
                     errors.append({"code": name, "message": f"Required path missing: {path}"})
 
-            project_input = self.cautomation_root() / "projects" / self.project_id() / "input"
+            project_input = self.CAutomation_root() / "projects" / self.project_id() / "input"
             validation_config = self.group("validation")
             if validation_config.get("warnWhenProjectClientContractsMissing", True) is True:
                 self._warn_when_no_contract_files(
