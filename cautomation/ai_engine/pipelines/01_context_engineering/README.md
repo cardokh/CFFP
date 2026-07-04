@@ -42,7 +42,7 @@ cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineerin
 
 Each task has its own small task config under its task folder. The task config points to the pipeline config and declares the task identity/version.
 
-Task folders are reusable component names. Execution order is defined only by the `tasks` array in the pipeline configuration.
+Task folders are reusable task definitions. The pipeline configuration separates `taskDefinitions` from `taskInstances`: definitions point to reusable task implementations, while instances define pipeline-specific ordering, state files, blocking behaviour, and per-run configuration.
 
 ## Output
 

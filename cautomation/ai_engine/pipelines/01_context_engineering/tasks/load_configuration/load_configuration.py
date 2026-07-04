@@ -44,8 +44,21 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
             for key in required_strings:
                 if not isinstance(self.pipeline_config.get(key), str) or not self.pipeline_config[key].strip():
                     errors.append({"code": "missing_config_value", "message": f"Missing config value: {key}"})
-            if not isinstance(self.pipeline_config.get("tasks"), list) or not self.pipeline_config["tasks"]:
-                errors.append({"code": "missing_task_sequence", "message": "Pipeline config must define a non-empty tasks array."})
+            if not isinstance(self.pipeline_config.get("taskDefinitions"), list) or not self.pipeline_config["taskDefinitions"]:
+                errors.append({"code": "missing_task_definitions", "message": "Pipeline config must define a non-empty taskDefinitions array."})
+            if not isinstance(self.pipeline_config.get("taskInstances"), list) or not self.pipeline_config["taskInstances"]:
+                errors.append({"code": "missing_task_instances", "message": "Pipeline config must define a non-empty taskInstances array."})
+            definition_ids = {
+                item.get("taskDefinitionId")
+                for item in self.pipeline_config.get("taskDefinitions", [])
+                if isinstance(item, dict)
+            }
+            for task_instance in self.pipeline_config.get("taskInstances", []):
+                if not isinstance(task_instance, dict):
+                    errors.append({"code": "invalid_task_instance", "message": "Each task instance must be an object."})
+                    continue
+                if task_instance.get("taskDefinitionId") not in definition_ids:
+                    errors.append({"code": "unknown_task_definition", "message": f"Task instance references unknown task definition: {task_instance.get('taskDefinitionId')}"})
 
             status = self.status_from(warnings, errors)
             state_payload = {
@@ -54,7 +67,8 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
                 "pipelineId": self.pipeline_config.get("pipelineId"),
                 "projectId": self.pipeline_config.get("projectId"),
                 "moduleId": self.pipeline_config.get("moduleId"),
-                "taskCount": len(self.pipeline_config.get("tasks", [])) if isinstance(self.pipeline_config.get("tasks"), list) else 0,
+                "taskDefinitionCount": len(self.pipeline_config.get("taskDefinitions", [])) if isinstance(self.pipeline_config.get("taskDefinitions"), list) else 0,
+                "taskInstanceCount": len(self.pipeline_config.get("taskInstances", [])) if isinstance(self.pipeline_config.get("taskInstances"), list) else 0,
                 "warnings": warnings,
                 "errors": errors,
             }

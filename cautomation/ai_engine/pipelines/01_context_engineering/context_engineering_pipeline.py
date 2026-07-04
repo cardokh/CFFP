@@ -11,6 +11,8 @@ Run from the repository root:
 
 from __future__ import annotations
 
+import json
+import os
 import shutil
 import subprocess
 import sys
@@ -50,7 +52,8 @@ class ContextEngineeringPipeline(BaseScript):
         self.project_id = self._required_config_string("projectId")
         self.module_id = self._required_config_string("moduleId")
         self.output_config = self._required_config_group("output")
-        self.tasks = self._required_task_sequence()
+        self.task_definitions = self._required_task_definitions()
+        self.task_instances = self._required_task_instances()
         self.state_root = self._resolve_project_path(self.output_config["pipelineStateRoot"])
 
     def run(self) -> None:
@@ -59,10 +62,10 @@ class ContextEngineeringPipeline(BaseScript):
         final_status = "PASSED"
         self._prepare_state_root()
         try:
-            for task in self.tasks:
-                task_result = self._run_task(task)
+            for task_instance in self.task_instances:
+                task_result = self._run_task(task_instance)
                 task_results.append(task_result)
-                if task_result["status"] == "FAILED" and task.get("blocking", True) is True:
+                if task_result["status"] == "FAILED" and task_instance.get("blocking", True) is True:
                     final_status = "FAILED"
                     break
                 if task_result["status"] == "PASSED_WITH_WARNINGS" and final_status == "PASSED":
@@ -71,8 +74,8 @@ class ContextEngineeringPipeline(BaseScript):
             # The final report task is responsible for the authoritative execution report.
             # If a blocking task failed before the final report task, try to run it anyway so
             # the current_run folder still contains an aggregate report.
-            if final_status == "FAILED" and not any(result["taskId"] == "write_execution_report" for result in task_results):
-                final_task = next((task for task in self.tasks if task.get("taskId") == "write_execution_report"), None)
+            if final_status == "FAILED" and not any(result["taskDefinitionId"] == "write_execution_report" for result in task_results):
+                final_task = next((task for task in self.task_instances if task.get("taskDefinitionId") == "write_execution_report"), None)
                 if final_task is not None:
                     final_result = self._run_task(final_task)
                     task_results.append(final_result)
@@ -91,29 +94,36 @@ class ContextEngineeringPipeline(BaseScript):
             print_failed(f"{self.pipeline_id} FAILED; report {self.to_project_relative_path(report_path)}")
             raise
 
-    def _run_task(self, task: dict[str, Any]) -> dict[str, Any]:
-        task_id = task["taskId"]
-        script_path = self.script_directory / task["script"]
+    def _run_task(self, task_instance: dict[str, Any]) -> dict[str, Any]:
+        task_definition = self._task_definition_for_instance(task_instance)
+        task_definition_id = task_definition["taskDefinitionId"]
+        pipeline_task_id = task_instance["pipelineTaskId"]
+        script_path = self.script_directory / task_definition["script"]
         started = time.perf_counter()
+        environment = os.environ.copy()
+        environment["CAUTOMATION_PIPELINE_TASK_INSTANCE"] = json.dumps(task_instance)
         completed = subprocess.run(
             [sys.executable, str(script_path)],
             cwd=self.project_root,
             text=True,
             capture_output=True,
             check=False,
+            env=environment,
         )
         status = "PASSED" if completed.returncode == 0 else "FAILED"
         if completed.returncode == 0:
-            print_passed(f"{task_id} completed")
+            print_passed(f"{task_definition_id} completed")
         else:
-            print_failed(f"{task_id} failed")
+            print_failed(f"{task_definition_id} failed")
             if completed.stdout:
                 print(completed.stdout.strip())
             if completed.stderr:
                 print(completed.stderr.strip())
         return {
-            "taskId": task_id,
-            "script": task["script"],
+            "pipelineTaskId": pipeline_task_id,
+            "taskDefinitionId": task_definition_id,
+            "taskInstanceName": task_instance.get("taskInstanceName"),
+            "script": task_definition["script"],
             "status": status,
             "returnCode": completed.returncode,
             "elapsedSeconds": round(time.perf_counter() - started, 3),
@@ -176,11 +186,41 @@ class ContextEngineeringPipeline(BaseScript):
             raise ValueError(f"Config must contain object: {key}")
         return value
 
-    def _required_task_sequence(self) -> list[dict[str, Any]]:
-        value = self.config.get("tasks")
+    def _required_task_definitions(self) -> dict[str, dict[str, Any]]:
+        value = self.config.get("taskDefinitions")
         if not isinstance(value, list) or not value:
-            raise ValueError("Config must contain a non-empty tasks array.")
-        return value
+            raise ValueError("Config must contain a non-empty taskDefinitions array.")
+        definitions: dict[str, dict[str, Any]] = {}
+        for item in value:
+            if not isinstance(item, dict):
+                raise ValueError("Each task definition must be an object.")
+            task_definition_id = item.get("taskDefinitionId")
+            script = item.get("script")
+            if not isinstance(task_definition_id, str) or not task_definition_id.strip():
+                raise ValueError("Each task definition must contain taskDefinitionId.")
+            if not isinstance(script, str) or not script.strip():
+                raise ValueError(f"Task definition must contain script: {task_definition_id}")
+            definitions[task_definition_id] = item
+        return definitions
+
+    def _required_task_instances(self) -> list[dict[str, Any]]:
+        value = self.config.get("taskInstances")
+        if not isinstance(value, list) or not value:
+            raise ValueError("Config must contain a non-empty taskInstances array.")
+        instances = sorted(value, key=lambda item: item.get("sequence", 0) if isinstance(item, dict) else 0)
+        for item in instances:
+            if not isinstance(item, dict):
+                raise ValueError("Each task instance must be an object.")
+            if not isinstance(item.get("pipelineTaskId"), str) or not item["pipelineTaskId"].strip():
+                raise ValueError("Each task instance must contain pipelineTaskId.")
+            if not isinstance(item.get("taskDefinitionId"), str) or not item["taskDefinitionId"].strip():
+                raise ValueError("Each task instance must contain taskDefinitionId.")
+            if item["taskDefinitionId"] not in self.task_definitions:
+                raise ValueError(f"Task instance references unknown task definition: {item['taskDefinitionId']}")
+        return instances
+
+    def _task_definition_for_instance(self, task_instance: dict[str, Any]) -> dict[str, Any]:
+        return self.task_definitions[task_instance["taskDefinitionId"]]
 
     def _resolve_placeholders(self, value: str) -> str:
         replacements = {

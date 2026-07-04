@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-004",
+  "pipelineVersion": "mvp-005",
   "projectId": "cffp",
   "moduleId": "pipeline_management",
   "input": {
@@ -49,54 +49,104 @@
   ],
   "scopeBoundary": "Only the Pipeline Management reference module is in scope for this context package.",
   "firstDeliverable": "The first deliverable is the executable CAutomation package, validated through the Pipeline Management reference module.",
-  "tasks": [
+  "taskDefinitions": [
     {
-      "sequence": 1,
-      "taskId": "load_configuration",
+      "taskDefinitionId": "load_configuration",
       "taskName": "Load Configuration",
       "script": "tasks/load_configuration/load_configuration.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    },
+    {
+      "taskDefinitionId": "validate_inputs",
+      "taskName": "Validate Inputs",
+      "script": "tasks/validate_inputs/validate_inputs.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    },
+    {
+      "taskDefinitionId": "extract_contracts",
+      "taskName": "Extract Contracts",
+      "script": "tasks/extract_contracts/extract_contracts.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    },
+    {
+      "taskDefinitionId": "build_context_package",
+      "taskName": "Build Context Package",
+      "script": "tasks/build_context_package/build_context_package.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    },
+    {
+      "taskDefinitionId": "validate_context_package",
+      "taskName": "Validate Context Package",
+      "script": "tasks/validate_context_package/validate_context_package.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    },
+    {
+      "taskDefinitionId": "write_execution_report",
+      "taskName": "Write Execution Report",
+      "script": "tasks/write_execution_report/write_execution_report.py",
+      "defaultBlocking": true,
+      "taskVersion": "mvp-005"
+    }
+  ],
+  "taskInstances": [
+    {
+      "sequence": 1,
+      "pipelineTaskId": "context_engineering.load_configuration",
+      "taskDefinitionId": "load_configuration",
+      "taskInstanceName": "Load Configuration",
       "stateFile": "load_configuration.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     },
     {
       "sequence": 2,
-      "taskId": "validate_inputs",
-      "taskName": "Validate Inputs",
-      "script": "tasks/validate_inputs/validate_inputs.py",
+      "pipelineTaskId": "context_engineering.validate_inputs",
+      "taskDefinitionId": "validate_inputs",
+      "taskInstanceName": "Validate Inputs",
       "stateFile": "validate_inputs.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     },
     {
       "sequence": 3,
-      "taskId": "extract_contracts",
-      "taskName": "Extract Contracts",
-      "script": "tasks/extract_contracts/extract_contracts.py",
+      "pipelineTaskId": "context_engineering.extract_contracts",
+      "taskDefinitionId": "extract_contracts",
+      "taskInstanceName": "Extract Contracts",
       "stateFile": "extract_contracts.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     },
     {
       "sequence": 4,
-      "taskId": "build_context_package",
-      "taskName": "Build Context Package",
-      "script": "tasks/build_context_package/build_context_package.py",
+      "pipelineTaskId": "context_engineering.build_context_package",
+      "taskDefinitionId": "build_context_package",
+      "taskInstanceName": "Build Context Package",
       "stateFile": "build_context_package.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     },
     {
       "sequence": 5,
-      "taskId": "validate_context_package",
-      "taskName": "Validate Context Package",
-      "script": "tasks/validate_context_package/validate_context_package.py",
+      "pipelineTaskId": "context_engineering.validate_context_package",
+      "taskDefinitionId": "validate_context_package",
+      "taskInstanceName": "Validate Context Package",
       "stateFile": "validate_context_package.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     },
     {
       "sequence": 6,
-      "taskId": "write_execution_report",
-      "taskName": "Write Execution Report",
-      "script": "tasks/write_execution_report/write_execution_report.py",
+      "pipelineTaskId": "context_engineering.write_execution_report",
+      "taskDefinitionId": "write_execution_report",
+      "taskInstanceName": "Write Execution Report",
       "stateFile": "write_execution_report.json",
-      "blocking": true
+      "blocking": true,
+      "configuration": {}
     }
   ]
 }

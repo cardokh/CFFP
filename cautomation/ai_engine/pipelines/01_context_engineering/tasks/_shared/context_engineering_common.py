@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -45,16 +46,44 @@ class ContextEngineeringSupportMixin:
         if not isinstance(pipeline_config, dict):
             raise ValueError(f"Pipeline config must contain a JSON object: {path}")
         self.pipeline_config_path = path.resolve()
+        self.pipeline_task_instance = self._load_pipeline_task_instance()
         return pipeline_config
 
-    def task_id(self) -> str:
-        value = self.config.get("taskId")
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError("Task config must contain non-empty string: taskId")
+    def _load_pipeline_task_instance(self) -> dict[str, Any] | None:
+        raw_value = os.environ.get("CAUTOMATION_PIPELINE_TASK_INSTANCE")
+        if raw_value in (None, ""):
+            return None
+        value = json.loads(raw_value)
+        if not isinstance(value, dict):
+            raise ValueError("CAUTOMATION_PIPELINE_TASK_INSTANCE must contain a JSON object.")
         return value
 
+    def task_definition_id(self) -> str:
+        if isinstance(getattr(self, "pipeline_task_instance", None), dict):
+            value = self.pipeline_task_instance.get("taskDefinitionId")
+        else:
+            value = self.config.get("taskDefinitionId", self.config.get("taskId"))
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("Task config or task instance must contain taskDefinitionId.")
+        return value
+
+    def pipeline_task_id(self) -> str:
+        if isinstance(getattr(self, "pipeline_task_instance", None), dict):
+            value = self.pipeline_task_instance.get("pipelineTaskId")
+        else:
+            value = self.config.get("pipelineTaskId", self.task_definition_id())
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("Task config or task instance must contain pipelineTaskId.")
+        return value
+
+    def task_id(self) -> str:
+        return self.task_definition_id()
+
     def task_version(self) -> str:
-        value = self.config.get("taskVersion")
+        if isinstance(getattr(self, "pipeline_task_instance", None), dict):
+            value = self.pipeline_task_instance.get("taskVersion", self.config.get("taskVersion"))
+        else:
+            value = self.config.get("taskVersion")
         if not isinstance(value, str) or not value.strip():
             raise ValueError("Task config must contain non-empty string: taskVersion")
         return value
@@ -83,30 +112,42 @@ class ContextEngineeringSupportMixin:
             raise ValueError(f"Pipeline config must contain object: {name}")
         return value
 
-    def pipeline_task_config(self, task_id: str) -> dict[str, Any]:
-        tasks = self.pipeline_config.get("tasks")
-        if not isinstance(tasks, list):
-            raise ValueError("Pipeline config must contain a tasks array.")
-        for task in tasks:
-            if isinstance(task, dict) and task.get("taskId") == task_id:
-                return task
-        raise ValueError(f"Pipeline config does not define task: {task_id}")
+    def task_instances(self) -> list[dict[str, Any]]:
+        value = self.pipeline_config.get("taskInstances")
+        if not isinstance(value, list):
+            raise ValueError("Pipeline config must contain a taskInstances array.")
+        return [item for item in value if isinstance(item, dict)]
 
-    def pipeline_task_state_file(self, task_id: str) -> str:
-        task_config = self.pipeline_task_config(task_id)
+    def pipeline_task_config(self, pipeline_task_id_or_definition_id: str) -> dict[str, Any]:
+        for task_instance in self.task_instances():
+            if (
+                task_instance.get("pipelineTaskId") == pipeline_task_id_or_definition_id
+                or task_instance.get("taskDefinitionId") == pipeline_task_id_or_definition_id
+            ):
+                return task_instance
+        raise ValueError(f"Pipeline config does not define task instance: {pipeline_task_id_or_definition_id}")
+
+    def pipeline_task_state_file(self, pipeline_task_id_or_definition_id: str) -> str:
+        task_config = self.pipeline_task_config(pipeline_task_id_or_definition_id)
         value = task_config.get("stateFile")
         if not isinstance(value, str) or not value.strip():
-            raise ValueError(f"Pipeline task config must contain non-empty stateFile: {task_id}")
+            raise ValueError(f"Pipeline task instance config must contain non-empty stateFile: {pipeline_task_id_or_definition_id}")
         return value
 
     def current_task_state_file(self) -> str:
-        return self.pipeline_task_state_file(self.task_id())
+        if isinstance(getattr(self, "pipeline_task_instance", None), dict):
+            value = self.pipeline_task_instance.get("stateFile")
+            if isinstance(value, str) and value.strip():
+                return value
+        return self.pipeline_task_state_file(self.pipeline_task_id())
 
     def resolve_placeholders(self, value: str) -> str:
         replacements = {
             "projectId": self.project_id(),
             "moduleId": self.module_id(),
             "pipelineId": self.pipeline_id(),
+            "pipelineTaskId": self.pipeline_task_id(),
+            "taskDefinitionId": self.task_definition_id(),
             "taskId": self.task_id(),
         }
         resolved = value
@@ -187,6 +228,8 @@ class ContextEngineeringSupportMixin:
         return {
             "scriptName": self.script_name,
             "pipelineId": self.pipeline_id(),
+            "pipelineTaskId": self.pipeline_task_id(),
+            "taskDefinitionId": self.task_definition_id(),
             "taskId": self.task_id(),
             "taskVersion": self.task_version(),
             "status": status,
@@ -198,6 +241,8 @@ class ContextEngineeringSupportMixin:
                 "pipelineConfigPath": self.to_project_relative_path(self.pipeline_config_path),
                 "projectId": self.project_id(),
                 "moduleId": self.module_id(),
+                "pipelineTaskId": self.pipeline_task_id(),
+                "taskDefinitionId": self.task_definition_id(),
             },
         }
 
