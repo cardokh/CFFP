@@ -65,6 +65,7 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 "pipelineId": self.pipeline_id(),
                 "pipelineName": self.pipeline_config.get("pipelineName"),
                 "pipelineVersion": self.pipeline_config.get("pipelineVersion"),
+                "executionId": self.pipeline_execution_id(),
                 "status": status,
                 "startedAtUtc": started_at_utc,
                 "finishedAtUtc": utc_now_iso(),
@@ -75,6 +76,9 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 "taskDefinitions": task_definitions,
                 "taskInstances": self.pipeline_config.get("taskInstances", []),
                 "contextPackageDirectory": package_dir,
+                "currentRunRoot": self.to_project_relative_path(self.state_root()),
+                "executionHistoryRoot": self.to_project_relative_path(self.execution_history_root()) if self.execution_history_root() is not None else None,
+                "archivedExecutionRoot": self.to_project_relative_path(self.archived_execution_root()) if self.archived_execution_root() is not None else None,
                 "summary": {
                     "configuredTaskDefinitionCount": len(task_definitions) if isinstance(task_definitions, list) else 0,
                     "configuredTaskInstanceCount": len(self.pipeline_config.get("taskInstances", [])) if isinstance(self.pipeline_config.get("taskInstances"), list) else 0,

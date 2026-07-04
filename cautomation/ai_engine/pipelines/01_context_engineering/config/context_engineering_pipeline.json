@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-006",
+  "pipelineVersion": "mvp-007",
   "projectId": "cffp",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
@@ -18,7 +18,9 @@
     "cleanPackageBeforeWrite": true,
     "pipelineStateRoot": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run",
     "taskReportsDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run/task_reports",
-    "finalReportDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output"
+    "finalReportDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output",
+    "executionHistoryRoot": "cautomation/ai_engine/pipelines/01_context_engineering/output/executions",
+    "archiveCurrentRun": true
   },
   "contextFiles": {
     "globalContext": "global-context.md",

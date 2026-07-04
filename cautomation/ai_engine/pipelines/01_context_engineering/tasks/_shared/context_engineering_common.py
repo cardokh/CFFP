@@ -157,14 +157,22 @@ class ContextEngineeringSupportMixin:
                 return value
         return self.pipeline_task_state_file(self.pipeline_task_id())
 
+    def pipeline_execution_id(self) -> str:
+        value = os.environ.get("CAUTOMATION_PIPELINE_EXECUTION_ID")
+        if isinstance(value, str) and value.strip():
+            return value
+        return getattr(self, "timestamp", utc_now_iso().replace(":", "").replace("-", ""))
+
     def resolve_placeholders(self, value: str) -> str:
         replacements = {
             "projectId": self.project_id(),
             "moduleId": self.module_id(),
             "pipelineId": self.pipeline_id(),
+            "executionId": self.pipeline_execution_id(),
             "pipelineTaskId": self.pipeline_task_id(),
             "taskDefinitionId": self.task_definition_id(),
             "taskId": self.task_id(),
+            "executionId": self.pipeline_execution_id(),
         }
         resolved = value
         for key, replacement in replacements.items():
@@ -184,6 +192,18 @@ class ContextEngineeringSupportMixin:
     def task_reports_directory(self) -> Path:
         configured = self.group("output")["taskReportsDirectory"]
         return self.resolve_project_path(configured)
+
+    def execution_history_root(self) -> Path | None:
+        configured = self.group("output").get("executionHistoryRoot")
+        if not isinstance(configured, str) or not configured.strip():
+            return None
+        return self.resolve_project_path(configured)
+
+    def archived_execution_root(self) -> Path | None:
+        root = self.execution_history_root()
+        if root is None:
+            return None
+        return root / self.pipeline_execution_id()
 
     def cautomation_root(self) -> Path:
         return self.resolve_project_path(self.group("input")["cautomationRoot"])
@@ -244,6 +264,7 @@ class ContextEngineeringSupportMixin:
         return {
             "scriptName": self.script_name,
             "pipelineId": self.pipeline_id(),
+            "executionId": self.pipeline_execution_id(),
             "pipelineTaskId": self.pipeline_task_id(),
             "taskDefinitionId": self.task_definition_id(),
             "taskId": self.task_id(),

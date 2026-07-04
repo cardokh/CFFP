@@ -57,6 +57,14 @@ class ContextEngineeringPipeline(BaseScript):
         self.task_definitions = self._required_task_definitions()
         self.task_instances = self._required_task_instances()
         self.state_root = self._resolve_project_path(self.output_config["pipelineStateRoot"])
+        self.execution_id = self.timestamp
+        self.archive_current_run = self.output_config.get("archiveCurrentRun", True) is True
+        self.execution_history_root = self._optional_execution_history_root()
+        self.archived_execution_root = (
+            self.execution_history_root / self.execution_id
+            if self.archive_current_run and self.execution_history_root is not None
+            else None
+        )
 
     def run(self) -> None:
         started = time.perf_counter()
@@ -87,6 +95,7 @@ class ContextEngineeringPipeline(BaseScript):
             report_path = self.write_json_report(report)
             stable_report_path = self.state_root / "orchestrator_report.json"
             write_json_file(stable_report_path, report)
+            self._archive_current_run()
             self._print_status(final_status, report_path)
         except Exception as exc:  # noqa: BLE001
             report = self._build_pipeline_report("FAILED", round(time.perf_counter() - started, 3), task_results)
@@ -104,6 +113,7 @@ class ContextEngineeringPipeline(BaseScript):
         started = time.perf_counter()
         environment = os.environ.copy()
         environment["CAUTOMATION_PIPELINE_TASK_INSTANCE"] = json.dumps(task_instance)
+        environment["CAUTOMATION_PIPELINE_EXECUTION_ID"] = self.execution_id
         completed = subprocess.run(
             [sys.executable, str(script_path)],
             cwd=self.project_root,
@@ -151,12 +161,30 @@ class ContextEngineeringPipeline(BaseScript):
             shutil.rmtree(self.state_root)
         self.state_root.mkdir(parents=True, exist_ok=True)
         (self.state_root / "task_reports").mkdir(parents=True, exist_ok=True)
+        if self.archive_current_run and self.execution_history_root is not None:
+            self.execution_history_root.mkdir(parents=True, exist_ok=True)
+            if self.archived_execution_root is not None and self.archived_execution_root.exists():
+                shutil.rmtree(self.archived_execution_root)
+
+    def _archive_current_run(self) -> None:
+        if not self.archive_current_run or self.archived_execution_root is None:
+            return
+        if self.archived_execution_root.exists():
+            shutil.rmtree(self.archived_execution_root)
+        shutil.copytree(self.state_root, self.archived_execution_root)
+
+    def _optional_execution_history_root(self) -> Path | None:
+        configured = self.output_config.get("executionHistoryRoot")
+        if not isinstance(configured, str) or not configured.strip():
+            return None
+        return self._resolve_project_path(configured)
 
     def _build_pipeline_report(self, status: str, elapsed_seconds: float, task_results: list[dict[str, Any]]) -> dict[str, Any]:
-        return {
+        report = {
             "scriptName": self.script_name,
             "pipelineId": self.pipeline_id,
             "pipelineVersion": self.pipeline_version,
+            "executionId": self.execution_id,
             "status": status,
             "startedAtUtc": self.started_at_utc,
             "finishedAtUtc": self._utc_now_iso(),
@@ -166,7 +194,13 @@ class ContextEngineeringPipeline(BaseScript):
             "taskRegistryPath": self.to_project_relative_path(self.task_registry_path),
             "taskResults": task_results,
             "stateRoot": self.to_project_relative_path(self.state_root),
+            "currentRunRoot": self.to_project_relative_path(self.state_root),
         }
+        if self.execution_history_root is not None:
+            report["executionHistoryRoot"] = self.to_project_relative_path(self.execution_history_root)
+        if self.archived_execution_root is not None:
+            report["archivedExecutionRoot"] = self.to_project_relative_path(self.archived_execution_root)
+        return report
 
     def _print_status(self, status: str, report_path: Path) -> None:
         message = f"{self.pipeline_id} {status}; report {self.to_project_relative_path(report_path)}"

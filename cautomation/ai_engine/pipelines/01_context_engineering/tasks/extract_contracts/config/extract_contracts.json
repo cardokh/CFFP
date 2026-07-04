@@ -1,5 +1,5 @@
 {
   "pipelineConfigPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json",
-  "taskVersion": "mvp-006",
+  "taskVersion": "mvp-007",
   "taskDefinitionId": "extract_contracts"
 }

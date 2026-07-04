@@ -58,10 +58,16 @@ The context package is written to the configured project output folder:
 cautomation/projects/cffp/output/context_packages/cffp_pipeline_management_context_package/
 ```
 
-Pipeline runtime state and task reports are written to:
+Pipeline runtime state and task reports are written to the latest-run folder:
 
 ```text
 cautomation/ai_engine/pipelines/01_context_engineering/output/current_run/
+```
+
+After each run, the latest-run folder is archived to execution history:
+
+```text
+cautomation/ai_engine/pipelines/01_context_engineering/output/executions/<execution_id>/
 ```
 
 The pipeline also writes timestamped reports to the orchestrator and task output folders, following the shared scripting infrastructure.
