@@ -1,21 +1,18 @@
-# 01 Context Engineering Tasks
+# Pipeline 01 Tasks
 
-Tasks are the executable units of this pipeline.
+The Context Engineering pipeline is split into small task units:
 
-Current task:
+1. `01_load_configuration` - validates pipeline-level configuration.
+2. `02_validate_inputs` - validates required project/module inputs and records non-blocking warnings.
+3. `03_extract_contracts` - extracts SRS and ATS DOCX contracts into deterministic Markdown state files.
+4. `04_build_context_package` - builds the generated context package.
+5. `05_validate_context_package` - validates the generated package artifacts.
+6. `06_write_execution_report` - aggregates task state into the final execution report.
 
-```text
-context_engineering/
-├── context_engineering.py
-├── config/
-│   └── context_engineering.json
-└── output/
-```
+Each task:
 
-Each task must follow the repository scripting infrastructure:
-
-- extend `scripts.shared.base_script.BaseScript`,
-- read settings from its local JSON config file,
-- avoid hard-coded project/module/file paths,
-- write execution reports to its own output folder,
-- write domain artifacts only to configured output locations.
+- extends the shared `BaseScript` infrastructure,
+- has its own `config/` folder,
+- writes its own report to its local `output/` folder,
+- writes shared pipeline state to `01_context_engineering/output/current_run/`,
+- can be executed independently for focused debugging.

@@ -1,55 +1,63 @@
-# 01 Context Engineering
+# Pipeline 01 - Context Engineering
 
-Context Engineering is the first executable pipeline in the CAutomation package.
+Pipeline 01 converts the approved Pipeline Management module contracts into a deterministic context package for downstream automation pipelines.
 
-Its first runnable task is:
+This pipeline is intentionally decomposed into small, testable task units.
 
 ```text
-01_context_engineering/
-└── tasks/
-    └── context_engineering/
-        ├── context_engineering.py
-        ├── config/
-        │   └── context_engineering.json
-        └── output/
+Pipeline 01 - Context Engineering
+├── Task 01 - Load Configuration
+├── Task 02 - Validate Inputs
+├── Task 03 - Extract Contracts
+├── Task 04 - Build Context Package
+├── Task 05 - Validate Context Package
+└── Task 06 - Write Execution Report
 ```
 
-## Responsibility
-
-The `context_engineering` task reads the approved Pipeline Management module SRS and ATS and produces a deterministic context package for downstream planning and generation.
-
-It does not generate application code and it does not apply changes to the repository.
-
-## Run
+## Run the pipeline
 
 Run from the repository root:
 
 ```bash
-python cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/context_engineering.py
+python cautomation/ai_engine/pipelines/01_context_engineering/context_engineering_pipeline.py
 ```
+
+## Run an individual task
+
+Each task is independently executable from the repository root. For example:
+
+```bash
+python cautomation/ai_engine/pipelines/01_context_engineering/tasks/02_validate_inputs/validate_inputs.py
+```
+
+Individual tasks are intended for focused validation and debugging. In normal use, run the pipeline orchestrator.
 
 ## Configuration
 
-All project/module/path settings are loaded from:
+The pipeline-level configuration is stored in:
 
 ```text
-cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/config/context_engineering.json
+cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json
 ```
 
-The task must not hard-code project IDs, module IDs, input paths, output paths, or file names.
+Each task has its own small task config under its task folder. The task config points to the pipeline config and declares the task identity/version.
 
-## Outputs
+## Output
 
-The task writes two kinds of output:
+The context package is written to the configured project output folder:
 
 ```text
-cautomation/projects/cffp/output/context_packages/<context-package-id>/
+cautomation/projects/cffp/output/context_packages/cffp_pipeline_management_context_package/
 ```
 
-and an execution report under the task output folder:
+Pipeline runtime state and task reports are written to:
 
 ```text
-cautomation/ai_engine/pipelines/01_context_engineering/tasks/context_engineering/output/
+cautomation/ai_engine/pipelines/01_context_engineering/output/current_run/
 ```
 
-The execution report follows the repository scripting infrastructure provided by `scripts/shared/base_script.py`.
+The pipeline also writes timestamped reports to the orchestrator and task output folders, following the shared scripting infrastructure.
+
+## Scope
+
+This pipeline is scoped to the CAutomation first deliverable. The Pipeline Management module is the reference module used to validate the automation package.

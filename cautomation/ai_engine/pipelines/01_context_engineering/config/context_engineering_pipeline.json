@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
-  "taskId": "context_engineering",
-  "taskVersion": "mvp-002",
+  "pipelineName": "Pipeline 01 - Context Engineering",
+  "pipelineVersion": "mvp-003",
   "projectId": "cffp",
   "moduleId": "pipeline_management",
   "input": {
@@ -14,7 +14,10 @@
   "output": {
     "contextPackageRoot": "projects/{projectId}/output/context_packages",
     "contextPackageId": "{projectId}_{moduleId}_context_package",
-    "cleanPackageBeforeWrite": true
+    "cleanPackageBeforeWrite": true,
+    "pipelineStateRoot": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run",
+    "taskReportsDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output/current_run/task_reports",
+    "finalReportDirectory": "cautomation/ai_engine/pipelines/01_context_engineering/output"
   },
   "contextFiles": {
     "globalContext": "global-context.md",
@@ -45,5 +48,37 @@
     "04_validation"
   ],
   "scopeBoundary": "Only the Pipeline Management reference module is in scope for this context package.",
-  "firstDeliverable": "The first deliverable is the executable CAutomation package, validated through the Pipeline Management reference module."
+  "firstDeliverable": "The first deliverable is the executable CAutomation package, validated through the Pipeline Management reference module.",
+  "tasks": [
+    {
+      "taskId": "01_load_configuration",
+      "script": "tasks/01_load_configuration/load_configuration.py",
+      "blocking": true
+    },
+    {
+      "taskId": "02_validate_inputs",
+      "script": "tasks/02_validate_inputs/validate_inputs.py",
+      "blocking": true
+    },
+    {
+      "taskId": "03_extract_contracts",
+      "script": "tasks/03_extract_contracts/extract_contracts.py",
+      "blocking": true
+    },
+    {
+      "taskId": "04_build_context_package",
+      "script": "tasks/04_build_context_package/build_context_package.py",
+      "blocking": true
+    },
+    {
+      "taskId": "05_validate_context_package",
+      "script": "tasks/05_validate_context_package/validate_context_package.py",
+      "blocking": true
+    },
+    {
+      "taskId": "06_write_execution_report",
+      "script": "tasks/06_write_execution_report/write_execution_report.py",
+      "blocking": true
+    }
+  ]
 }

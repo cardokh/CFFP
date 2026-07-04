@@ -1,0 +1,5 @@
+{
+  "pipelineConfigPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json",
+  "taskId": "01_load_configuration",
+  "taskVersion": "mvp-003"
+}
