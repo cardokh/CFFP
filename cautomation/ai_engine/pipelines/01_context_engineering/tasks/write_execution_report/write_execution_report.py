@@ -34,12 +34,13 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
         errors: list[dict[str, str]] = []
         task_states: list[dict[str, Any]] = []
         try:
+            current_task_id = self.task_id()
             state_files = [
-                "01_load_configuration.json",
-                "02_validate_inputs.json",
-                "03_extract_contracts.json",
-                "04_build_context_package.json",
-                "05_validate_context_package.json",
+                task["stateFile"]
+                for task in sorted(self.pipeline_config.get("tasks", []), key=lambda item: item.get("sequence", 0))
+                if isinstance(task, dict)
+                and task.get("taskId") != current_task_id
+                and isinstance(task.get("stateFile"), str)
             ]
             for file_name in state_files:
                 path = self.state_file(file_name)
@@ -51,8 +52,8 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 warnings.extend(state.get("warnings", []))
                 errors.extend(state.get("errors", []))
 
-            build_state = next((item["state"] for item in task_states if item["stateFile"].endswith("04_build_context_package.json")), {})
-            validation_state = next((item["state"] for item in task_states if item["stateFile"].endswith("05_validate_context_package.json")), {})
+            build_state = next((item["state"] for item in task_states if item["stateFile"].endswith(self.pipeline_task_state_file("build_context_package"))), {})
+            validation_state = next((item["state"] for item in task_states if item["stateFile"].endswith(self.pipeline_task_state_file("validate_context_package"))), {})
             package_dir = build_state.get("contextPackageDirectory", self.to_project_relative_path(self.context_package_dir()))
             warnings = self._unique_messages(warnings)
             errors = self._unique_messages(errors)
@@ -69,7 +70,8 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 "moduleId": self.module_id(),
                 "contextPackageDirectory": package_dir,
                 "summary": {
-                    "taskCount": len(task_states),
+                    "configuredTaskCount": len(self.pipeline_config.get("tasks", [])) if isinstance(self.pipeline_config.get("tasks"), list) else 0,
+                    "aggregatedTaskStateCount": len(task_states),
                     "generatedFileCount": len(build_state.get("generatedFiles", [])) if isinstance(build_state, dict) else 0,
                     "warningCount": len(warnings),
                     "errorCount": len(errors),
@@ -80,7 +82,7 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 "errors": errors,
             }
             final_report_path = self.write_json_report(final_report)
-            self.write_state_json("06_write_execution_report.json", {"status": status, "finalReportPath": self.to_project_relative_path(final_report_path)})
+            self.write_state_json(self.current_task_state_file(), {"status": status, "finalReportPath": self.to_project_relative_path(final_report_path)})
             # Also write a stable report name for humans and downstream tools.
             stable_path = self.state_root() / "pipeline_execution_report.json"
             write_json_file(stable_path, final_report)
@@ -88,16 +90,16 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
             report.update({"summary": final_report["summary"], "finalReportPath": self.to_project_relative_path(final_report_path)})
             task_report_path = self.write_task_report(report)
             if status == "FAILED":
-                print_failed(f"06_write_execution_report FAILED; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
+                print_failed(f"write_execution_report FAILED; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
             elif status == "PASSED_WITH_WARNINGS":
-                print_warning(f"06_write_execution_report PASSED_WITH_WARNINGS; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
+                print_warning(f"write_execution_report PASSED_WITH_WARNINGS; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
             else:
-                print_passed(f"06_write_execution_report PASSED; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
+                print_passed(f"write_execution_report PASSED; report {self.to_project_relative_path(task_report_path)}; final {self.to_project_relative_path(final_report_path)}")
         except Exception as exc:  # noqa: BLE001
             report = self.base_report("FAILED", started_at_utc, round(time.perf_counter() - started, 3))
             report.update({"errors": [{"code": "unexpected_error", "message": str(exc)}], "exceptionType": type(exc).__name__})
             report_path = self.write_task_report(report)
-            print_failed(f"06_write_execution_report FAILED; report {self.to_project_relative_path(report_path)}")
+            print_failed(f"write_execution_report FAILED; report {self.to_project_relative_path(report_path)}")
             raise
 
     def _unique_messages(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:

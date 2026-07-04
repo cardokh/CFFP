@@ -71,8 +71,8 @@ class ContextEngineeringPipeline(BaseScript):
             # The final report task is responsible for the authoritative execution report.
             # If a blocking task failed before the final report task, try to run it anyway so
             # the current_run folder still contains an aggregate report.
-            if final_status == "FAILED" and not any(result["taskId"] == "06_write_execution_report" for result in task_results):
-                final_task = next((task for task in self.tasks if task.get("taskId") == "06_write_execution_report"), None)
+            if final_status == "FAILED" and not any(result["taskId"] == "write_execution_report" for result in task_results):
+                final_task = next((task for task in self.tasks if task.get("taskId") == "write_execution_report"), None)
                 if final_task is not None:
                     final_result = self._run_task(final_task)
                     task_results.append(final_result)

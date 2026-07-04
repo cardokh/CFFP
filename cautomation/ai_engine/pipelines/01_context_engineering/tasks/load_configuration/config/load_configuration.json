@@ -1,5 +1,5 @@
 {
   "pipelineConfigPath": "cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json",
-  "taskId": "02_validate_inputs",
-  "taskVersion": "mvp-003"
+  "taskId": "load_configuration",
+  "taskVersion": "mvp-004"
 }

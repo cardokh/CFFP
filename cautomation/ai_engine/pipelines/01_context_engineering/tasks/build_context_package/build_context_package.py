@@ -34,8 +34,8 @@ class BuildContextPackageTask(ContextEngineeringSupportMixin, BaseScript):
         warnings: list[dict[str, str]] = []
         errors: list[dict[str, str]] = []
         try:
-            validation_state = self.read_state_json("02_validate_inputs.json")
-            extraction_state = self.read_state_json("03_extract_contracts.json")
+            validation_state = self.read_state_json(self.pipeline_task_state_file("validate_inputs"))
+            extraction_state = self.read_state_json(self.pipeline_task_state_file("extract_contracts"))
             warnings.extend(validation_state.get("warnings", []))
             if validation_state.get("status") == "FAILED" or extraction_state.get("status") == "FAILED":
                 errors.append({"code": "previous_task_failed", "message": "Cannot build context package because a previous task failed."})
@@ -67,7 +67,7 @@ class BuildContextPackageTask(ContextEngineeringSupportMixin, BaseScript):
                 self._write_json_package_file(package_dir, structured_files["provenance"], provenance)
                 self._write_json_package_file(package_dir, structured_files["validationReport"], validation_report)
                 self.write_state_json(
-                    "04_build_context_package.json",
+                    self.pipeline_task_state_file("build_context_package"),
                     {
                         "status": validation_status,
                         "contextPackageDirectory": self.to_project_relative_path(package_dir),
@@ -80,21 +80,21 @@ class BuildContextPackageTask(ContextEngineeringSupportMixin, BaseScript):
 
             status = self.status_from(warnings, errors)
             if errors:
-                self.write_state_json("04_build_context_package.json", {"status": status, "warnings": warnings, "errors": errors})
+                self.write_state_json(self.pipeline_task_state_file("build_context_package"), {"status": status, "warnings": warnings, "errors": errors})
             report = self.base_report(status, started_at_utc, round(time.perf_counter() - started, 3))
             report.update({"summary": {"generatedFileCount": len(self.generated_files)}, "generatedFiles": self.generated_files, "warnings": warnings, "errors": errors})
             report_path = self.write_task_report(report)
             if status == "FAILED":
-                print_failed(f"04_build_context_package FAILED; report {self.to_project_relative_path(report_path)}")
+                print_failed(f"build_context_package FAILED; report {self.to_project_relative_path(report_path)}")
             elif status == "PASSED_WITH_WARNINGS":
-                print_warning(f"04_build_context_package PASSED_WITH_WARNINGS; report {self.to_project_relative_path(report_path)}")
+                print_warning(f"build_context_package PASSED_WITH_WARNINGS; report {self.to_project_relative_path(report_path)}")
             else:
-                print_passed(f"04_build_context_package PASSED; report {self.to_project_relative_path(report_path)}")
+                print_passed(f"build_context_package PASSED; report {self.to_project_relative_path(report_path)}")
         except Exception as exc:  # noqa: BLE001
             report = self.base_report("FAILED", started_at_utc, round(time.perf_counter() - started, 3))
             report.update({"errors": [{"code": "unexpected_error", "message": str(exc)}], "exceptionType": type(exc).__name__})
             report_path = self.write_task_report(report)
-            print_failed(f"04_build_context_package FAILED; report {self.to_project_relative_path(report_path)}")
+            print_failed(f"build_context_package FAILED; report {self.to_project_relative_path(report_path)}")
             raise
 
     def _build_context_outputs(self, project: dict[str, Any], srs_markdown: str, ats_markdown: str, warnings: list[dict[str, str]]) -> dict[str, str]:

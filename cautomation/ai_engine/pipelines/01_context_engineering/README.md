@@ -27,7 +27,7 @@ python cautomation/ai_engine/pipelines/01_context_engineering/context_engineerin
 Each task is independently executable from the repository root. For example:
 
 ```bash
-python cautomation/ai_engine/pipelines/01_context_engineering/tasks/02_validate_inputs/validate_inputs.py
+python cautomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/validate_inputs.py
 ```
 
 Individual tasks are intended for focused validation and debugging. In normal use, run the pipeline orchestrator.
@@ -41,6 +41,8 @@ cautomation/ai_engine/pipelines/01_context_engineering/config/context_engineerin
 ```
 
 Each task has its own small task config under its task folder. The task config points to the pipeline config and declares the task identity/version.
+
+Task folders are reusable component names. Execution order is defined only by the `tasks` array in the pipeline configuration.
 
 ## Output
 

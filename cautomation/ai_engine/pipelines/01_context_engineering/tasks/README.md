@@ -2,12 +2,12 @@
 
 The Context Engineering pipeline is split into small task units:
 
-1. `01_load_configuration` - validates pipeline-level configuration.
-2. `02_validate_inputs` - validates required project/module inputs and records non-blocking warnings.
-3. `03_extract_contracts` - extracts SRS and ATS DOCX contracts into deterministic Markdown state files.
-4. `04_build_context_package` - builds the generated context package.
-5. `05_validate_context_package` - validates the generated package artifacts.
-6. `06_write_execution_report` - aggregates task state into the final execution report.
+1. `load_configuration` - validates pipeline-level configuration.
+2. `validate_inputs` - validates required project/module inputs and records non-blocking warnings.
+3. `extract_contracts` - extracts SRS and ATS DOCX contracts into deterministic Markdown state files.
+4. `build_context_package` - builds the generated context package.
+5. `validate_context_package` - validates the generated package artifacts.
+6. `write_execution_report` - aggregates task state into the final execution report.
 
 Each task:
 

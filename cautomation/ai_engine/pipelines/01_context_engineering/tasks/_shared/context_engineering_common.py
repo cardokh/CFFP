@@ -83,6 +83,25 @@ class ContextEngineeringSupportMixin:
             raise ValueError(f"Pipeline config must contain object: {name}")
         return value
 
+    def pipeline_task_config(self, task_id: str) -> dict[str, Any]:
+        tasks = self.pipeline_config.get("tasks")
+        if not isinstance(tasks, list):
+            raise ValueError("Pipeline config must contain a tasks array.")
+        for task in tasks:
+            if isinstance(task, dict) and task.get("taskId") == task_id:
+                return task
+        raise ValueError(f"Pipeline config does not define task: {task_id}")
+
+    def pipeline_task_state_file(self, task_id: str) -> str:
+        task_config = self.pipeline_task_config(task_id)
+        value = task_config.get("stateFile")
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"Pipeline task config must contain non-empty stateFile: {task_id}")
+        return value
+
+    def current_task_state_file(self) -> str:
+        return self.pipeline_task_state_file(self.task_id())
+
     def resolve_placeholders(self, value: str) -> str:
         replacements = {
             "projectId": self.project_id(),
