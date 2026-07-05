@@ -52,9 +52,8 @@
         "[placeholder]"
       ],
       "requiredHierarchyTerms": [
-        "Pipeline Management",
-        "CCore",
         "CAutomation",
+        "CCore",
         "Pipeline Management"
       ],
       "manualInputDocuments": [
