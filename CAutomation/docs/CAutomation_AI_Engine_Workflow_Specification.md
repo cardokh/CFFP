@@ -1,6 +1,6 @@
 # CAutomation AI Engine Workflow Specification
 
-Version: Draft 3  
+Version: Draft 4  
 Status: Review Draft  
 Scope: CAutomation AI Engine workflow, pipeline responsibilities, artifact flow, reference-project contract, and approval gates  
 Reference Project: Pipeline Management  
@@ -8,7 +8,65 @@ Last Updated: July 2026
 
 ---
 
-## 1. Purpose of This Document
+## 1. Executive Summary
+
+**CAutomation is a generic AI-assisted software engineering framework.**
+
+Its purpose is to transform a small set of manually authored project specifications into a complete, deliverable web application through a sequence of deterministic automation pipelines. The framework does not treat AI as a one-shot code generator. Instead, it uses AI as part of a structured engineering workflow where every stage has explicit inputs, explicit outputs, validation, traceability, and human approval gates.
+
+The current reference project is **Pipeline Management**. Pipeline Management is used to validate the AI Engine workflow because it is both a realistic software project and the future web-based operational interface for CAutomation itself. Through Pipeline Management, users should eventually be able to create projects, define pipelines, configure tasks, execute pipelines, inspect outputs, review validation results, and approve generated artifacts.
+
+The intended end-to-end flow is:
+
+```text
+Reference Project: Pipeline Management
+│
+├── WHAT document
+├── HOW document
+└── selected supporting documents
+        ↓
+01 Context Engineering
+        ↓
+Context Package
+        ↓
+02 Agile Artifact Generation
+        ↓
+Epics, Features, User Stories, Tasks, Acceptance Criteria
+        ↓
+Human Review and Approval
+        ↓
+03 Implementation Planning
+        ↓
+Technical implementation plan and generation contract
+        ↓
+04 Generation
+        ↓
+Generated implementation artifacts in staging
+        ↓
+05 Validation
+        ↓
+Validated generated artifacts
+        ↓
+Human Approval to Apply
+        ↓
+06 Apply
+        ↓
+Applied repository/project changes
+        ↓
+07 Verification
+        ↓
+Verified deliverable web application
+```
+
+The most important early rule is:
+
+> After Context Engineering, the next pipeline generates Agile artifacts only. It does not generate code or implementation plans.
+
+This document should be treated as the architectural workflow contract for future pipeline implementation.
+
+---
+
+## 2. Purpose of This Document
 
 This document describes the intended workflow for the **CAutomation AI Engine**.
 
@@ -20,7 +78,7 @@ This is not a Python implementation guide. It is a workflow, artifact, and pipel
 
 ---
 
-## 2. Background and Inspiration
+## 3. Background and Inspiration
 
 The CAutomation AI Engine is inspired by the article **Professional Grade AI-Assisted Coding: Context Is Everything with BMAD and Spec Kit** by Bill Catlan, published in CODE Magazine.
 
@@ -36,7 +94,7 @@ The AI Engine should transform manually authored project specifications into inc
 
 ---
 
-## 3. Vision
+## 4. Vision
 
 The long-term vision is to create software that can be given a small set of manually authored project documents and then use AI-assisted software engineering to progressively produce the artifacts required to deliver an end-to-end web application.
 
@@ -59,7 +117,7 @@ The AI Engine should be reusable across projects. The current reference project 
 
 ---
 
-## 4. Reference Project: Pipeline Management
+## 5. Reference Project: Pipeline Management
 
 CAutomation should be described as a generic AI-assisted software engineering framework.
 
@@ -71,6 +129,15 @@ Pipeline Management
 
 Pipeline Management is used as the first project that the AI Engine will process end-to-end. It provides realistic requirements and technical constraints without making the AI Engine itself project-specific.
 
+Pipeline Management is not merely a sample application. It is intended to become the web-based operational interface for CAutomation. The module should eventually allow users to create and manage AI-assisted software engineering projects, define pipelines, configure reusable task definitions, configure pipeline task instances, execute pipelines, inspect execution history, review generated artifacts, inspect validation results, and approve or reject artifacts before downstream pipelines continue.
+
+In that sense, Pipeline Management has two roles:
+
+1. **Reference project** — it is the first realistic project used to validate that the AI Engine can transform manually authored project specifications into a complete deliverable web application.
+2. **Operational control plane** — it is the future user interface through which humans operate, supervise, and govern CAutomation workflows.
+
+CAutomation is the automation engine. Pipeline Management is the cockpit used to configure, visualize, execute, and control that engine.
+
 For the reference project, the human provides two manually authored documents:
 
 ```text
@@ -80,7 +147,7 @@ HOW document
 
 These two documents are the authoritative inputs for the reference project.
 
-### 4.1 WHAT Document
+### 5.1 WHAT Document
 
 The WHAT document describes what the software should do.
 
@@ -99,7 +166,7 @@ It should focus on product intent and business functionality. Typical content in
 
 The WHAT document should not primarily describe implementation technology. Its purpose is to define the product and functional intent.
 
-### 4.2 HOW Document
+### 5.2 HOW Document
 
 The HOW document describes how the software should be implemented.
 
@@ -120,7 +187,7 @@ It should focus on technical direction, architecture, implementation constraints
 
 The HOW document does not replace the WHAT document. It constrains and guides the implementation of the functionality described in the WHAT document.
 
-### 4.3 Supporting Documents
+### 5.3 Supporting Documents
 
 Future projects may include additional manually authored documents, such as:
 
@@ -137,7 +204,7 @@ Supporting documents must be explicitly selected. The AI Engine should not read 
 
 ---
 
-## 5. End-to-End Workflow
+## 6. End-to-End Workflow
 
 The high-level workflow is:
 
@@ -185,7 +252,7 @@ The Agile artifacts define the work. Only after those artifacts are reviewed and
 
 ---
 
-## 6. Core Design Principles
+## 7. Core Design Principles
 
 ### 6.1 Automate Software Engineering, Not Prompting
 
@@ -221,7 +288,7 @@ AI-generated artifacts must be validated, inspected, and approved before they be
 
 ---
 
-## 7. Pipeline Contract Overview
+## 8. Pipeline Contract Overview
 
 | Pipeline | Purpose | Primary Inputs | Primary Outputs | Approval Gate |
 |---|---|---|---|---|
@@ -235,7 +302,7 @@ AI-generated artifacts must be validated, inspected, and approved before they be
 
 ---
 
-## 8. Project Artifact Location Model
+## 9. Project Artifact Location Model
 
 The AI Engine runtime and pipeline definitions live under:
 
@@ -261,7 +328,7 @@ Durable project artifacts should be written under the relevant project folder.
 
 ---
 
-## 9. Reference Project Folder Sketch
+## 10. Reference Project Folder Sketch
 
 A conceptual project folder for the Pipeline Management reference project is:
 
@@ -311,7 +378,7 @@ This is a target model. The implementation may introduce these folders increment
 
 ---
 
-## 10. Pipeline 01: Context Engineering
+## 11. Pipeline 01: Context Engineering
 
 ### Purpose
 
@@ -358,7 +425,7 @@ Pipeline 01 must not create Agile artifacts, implementation plans, database meta
 
 ---
 
-## 11. Pipeline 02: Agile Artifact Generation
+## 12. Pipeline 02: Agile Artifact Generation
 
 ### Purpose
 
@@ -429,7 +496,7 @@ Downstream implementation pipelines should consume approved Agile artifacts, not
 
 ---
 
-## 12. Pipeline 03: Implementation Planning
+## 13. Pipeline 03: Implementation Planning
 
 ### Purpose
 
@@ -486,7 +553,7 @@ Pipeline 03 must not generate final source code, apply repository changes, or by
 
 ---
 
-## 13. Pipeline 04: Generation
+## 14. Pipeline 04: Generation
 
 ### Purpose
 
@@ -531,7 +598,7 @@ Pipeline 04 must not invent unapproved stories, rewrite Agile scope, apply files
 
 ---
 
-## 14. Pipeline 05: Validation
+## 15. Pipeline 05: Validation
 
 ### Purpose
 
@@ -573,7 +640,7 @@ Pipeline 05 must not apply changes to the live repository or silently fix genera
 
 ---
 
-## 15. Pipeline 06: Apply
+## 16. Pipeline 06: Apply
 
 ### Purpose
 
@@ -612,7 +679,7 @@ Pipeline 06 must not generate new implementation artifacts, bypass validation, o
 
 ---
 
-## 16. Pipeline 07: Verification
+## 17. Pipeline 07: Verification
 
 ### Purpose
 
@@ -647,7 +714,7 @@ Pipeline 07 should run post-apply checks, verify expected files exist, run tests
 
 ---
 
-## 17. Artifact Flow and Traceability
+## 18. Artifact Flow and Traceability
 
 The desired traceability chain is:
 
@@ -679,7 +746,51 @@ Every downstream artifact should be traceable to upstream artifacts. This allows
 
 ---
 
-## 18. Approval Gates
+## 19. Artifact Lifecycle
+
+Generated artifacts should move through a clear lifecycle before they become authoritative inputs for downstream pipelines.
+
+```text
+Draft
+    ↓
+Generated
+    ↓
+Validated
+    ↓
+Reviewed
+    ↓
+Approved
+    ↓
+Authoritative
+    ↓
+Consumed by downstream pipeline
+```
+
+An artifact is not authoritative simply because it was generated. It becomes authoritative only after the required validation and approval steps for that artifact type have been completed.
+
+For example, Agile artifacts generated by Pipeline 02 should remain draft artifacts until they have been reviewed and approved by a human. Only then should they be promoted into the approved Agile artifact location and consumed by Implementation Planning.
+
+This lifecycle is important because it prevents downstream pipelines from consuming unreviewed or untrusted AI output.
+
+---
+
+## 20. Human Role and Approval Responsibilities
+
+The human role is part of the architecture, not an external afterthought. CAutomation should automate repeatable engineering work, but humans remain responsible for direction, judgement, approval, and final acceptance.
+
+For each major stage, the workflow should make clear:
+
+- what the AI Engine produces,
+- what the human reviews,
+- what the human approves or rejects,
+- what artifact becomes authoritative after approval,
+- which downstream pipeline is allowed to consume the approved artifact.
+
+The most important approval gate in the early workflow is the approval of Agile artifacts. Once approved, the Agile backlog defines the work that later implementation and generation pipelines are allowed to execute.
+
+---
+
+## 21. Approval Gates
 
 Recommended approval gates are:
 
@@ -695,7 +806,7 @@ The most important early gate is after Pipeline 02, because generated Agile arti
 
 ---
 
-## 19. Pipeline Runtime Model
+## 22. Pipeline Runtime Model
 
 The AI Engine uses reusable runtime infrastructure under:
 
@@ -723,7 +834,7 @@ The orchestrator should aggregate task reports into a pipeline execution report.
 
 ---
 
-## 20. Pipeline Folder Model
+## 23. Pipeline Folder Model
 
 Pipeline definitions live under:
 
@@ -746,7 +857,7 @@ Conceptual lifecycle folders:
 
 The exact numbering and folder names may be adjusted incrementally, but responsibility boundaries should remain explicit.
 
-### 20.1 runtime vs 00_shared
+### 23.1 runtime vs 00_shared
 
 ```text
 runtime    = shared engine execution code
@@ -757,7 +868,7 @@ runtime    = shared engine execution code
 
 ---
 
-## 21. Critical Boundary: Agile Planning vs Implementation Planning
+## 24. Critical Boundary: Agile Planning vs Implementation Planning
 
 This boundary is non-negotiable.
 
@@ -791,7 +902,7 @@ The Agile pipeline defines the work. The Implementation Planning pipeline define
 
 ---
 
-## 22. Expected Review Questions for External AI Models
+## 25. Expected Review Questions for External AI Models
 
 This document should be given to other AI models for review and audit, together with the Pipeline Management WHAT and HOW documents.
 
@@ -811,7 +922,7 @@ Suggested review questions:
 
 ---
 
-## 23. Current Implementation Position
+## 26. Current Implementation Position
 
 At the time this document is drafted, Pipeline 01 is the reference implementation for the framework.
 
@@ -838,7 +949,27 @@ Pipeline 02 = Agile Artifact Generation only
 
 ---
 
-## 24. Summary
+## 27. Success Criteria
+
+The AI Engine workflow should be considered successful when it can use the approved WHAT and HOW documents for the Pipeline Management reference project to produce a validated, deliverable web application while preserving traceability and human control throughout the process.
+
+Success means that the workflow can demonstrate all of the following:
+
+- the WHAT and HOW documents are transformed into a curated Context Package,
+- Agile artifacts are generated before implementation work begins,
+- Agile artifacts are reviewed and approved before implementation planning,
+- implementation plans are derived from approved Agile artifacts,
+- generated artifacts are created in staging rather than applied directly,
+- validation happens before apply,
+- apply is controlled and traceable,
+- verification confirms the applied result,
+- every important generated artifact can be traced back to its upstream source.
+
+The goal is not only to generate code. The goal is to demonstrate a repeatable AI-assisted software engineering workflow that can produce a complete, reviewed, validated, and deliverable web application.
+
+---
+
+## 28. Summary
 
 CAutomation should not jump directly from context engineering to code generation.
 
