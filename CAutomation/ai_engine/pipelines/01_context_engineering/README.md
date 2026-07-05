@@ -14,12 +14,114 @@ Pipeline 01 - Context Engineering
 └── Task 06 - Write Execution Report
 ```
 
+## Quick Start Commands
+
+Run all commands from the repository root.
+
+### Pipeline 01 - Context Engineering
+
+Execute Pipeline 01 - Context Engineering:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/run_pipeline.py
+```
+
+Execute Pipeline 01 - Context Engineering tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/run_pipeline_tests.py
+```
+
+### Task 01 - Load Configuration
+
+Execute Task 01 - Load Configuration:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/load_configuration/run_task.py
+```
+
+Execute Task 01 - Load Configuration tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/load_configuration/run_task_tests.py
+```
+
+### Task 02 - Validate Inputs
+
+Execute Task 02 - Validate Inputs:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task.py
+```
+
+Execute Task 02 - Validate Inputs tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task_tests.py
+```
+
+### Task 03 - Extract Contracts
+
+Execute Task 03 - Extract Contracts:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/extract_contracts/run_task.py
+```
+
+Execute Task 03 - Extract Contracts tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/extract_contracts/run_task_tests.py
+```
+
+### Task 04 - Build Context Package
+
+Execute Task 04 - Build Context Package:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/build_context_package/run_task.py
+```
+
+Execute Task 04 - Build Context Package tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/build_context_package/run_task_tests.py
+```
+
+### Task 05 - Validate Context Package
+
+Execute Task 05 - Validate Context Package:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_context_package/run_task.py
+```
+
+Execute Task 05 - Validate Context Package tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_context_package/run_task_tests.py
+```
+
+### Task 06 - Write Execution Report
+
+Execute Task 06 - Write Execution Report:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/write_execution_report/run_task.py
+```
+
+Execute Task 06 - Write Execution Report tests:
+
+```bash
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/write_execution_report/run_task_tests.py
+```
+
 ## Run the pipeline
 
 Run from the repository root:
 
 ```bash
-python CAutomation/ai_engine/pipelines/01_context_engineering/context_engineering_pipeline.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/run_pipeline.py
 ```
 
 ## Run an individual task
@@ -27,7 +129,7 @@ python CAutomation/ai_engine/pipelines/01_context_engineering/context_engineerin
 Each task is independently executable from the repository root. For example:
 
 ```bash
-python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/validate_inputs.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task.py
 ```
 
 Individual tasks are intended for focused validation and debugging. In normal use, run the pipeline orchestrator.
