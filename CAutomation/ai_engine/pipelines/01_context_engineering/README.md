@@ -75,3 +75,10 @@ The pipeline also writes timestamped reports to the orchestrator and task output
 ## Scope
 
 This pipeline is scoped to the CAutomation first deliverable. The Pipeline Management module is the reference module used to validate the automation package.
+
+## Validation Gate
+
+Task 02 - Validate Inputs is a hard perimeter gate. It validates the manually authored module specification documents before extraction or context compilation starts. Invalid, incomplete, ambiguous, inconsistent, or template-nonconformant inputs stop downstream processing. The pipeline still runs the reporting path so the final execution report contains machine-readable gap details instead of failing with an unhandled crash.
+
+Task 05 - Validate Context Package remains separate. Task 02 validates raw human-authored documents; Task 05 validates the compiled context package.
+

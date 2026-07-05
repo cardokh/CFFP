@@ -37,15 +37,25 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
         try:
             current_pipeline_task_id = self.pipeline_task_id()
             task_instances = sorted(self.pipeline_config.get("taskInstances", []), key=lambda item: item.get("sequence", 0) if isinstance(item, dict) else 0)
-            state_files = [
-                task["stateFile"]
-                for task in task_instances
-                if isinstance(task, dict)
-                and task.get("pipelineTaskId") != current_pipeline_task_id
-                and isinstance(task.get("stateFile"), str)
-            ]
-            for file_name in state_files:
+            previous_blocking_failure = False
+            skipped_tasks: list[dict[str, Any]] = []
+            for task in task_instances:
+                if not isinstance(task, dict) or task.get("pipelineTaskId") == current_pipeline_task_id:
+                    continue
+                file_name = task.get("stateFile")
+                if not isinstance(file_name, str):
+                    continue
                 path = self.state_file(file_name)
+                if previous_blocking_failure and not path.exists():
+                    skipped_tasks.append({
+                        "pipelineTaskId": task.get("pipelineTaskId"),
+                        "taskDefinitionId": task.get("taskDefinitionId"),
+                        "taskInstanceName": task.get("taskInstanceName"),
+                        "stateFile": self.to_project_relative_path(path),
+                        "status": "SKIPPED",
+                        "reason": "Skipped because an earlier blocking task failed.",
+                    })
+                    continue
                 if not path.exists():
                     errors.append({"code": "missing_task_state", "message": f"Missing task state file: {path}"})
                     continue
@@ -53,6 +63,8 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                 task_states.append({"stateFile": self.to_project_relative_path(path), "state": state})
                 warnings.extend(state.get("warnings", []))
                 errors.extend(state.get("errors", []))
+                if state.get("status") == "FAILED" and task.get("blocking", True) is True:
+                    previous_blocking_failure = True
 
             build_state = next((item["state"] for item in task_states if item["stateFile"].endswith(self.pipeline_task_state_file("build_context_package"))), {})
             validation_state = next((item["state"] for item in task_states if item["stateFile"].endswith(self.pipeline_task_state_file("validate_context_package"))), {})
@@ -83,11 +95,13 @@ class WriteExecutionReportTask(ContextEngineeringSupportMixin, BaseScript):
                     "configuredTaskDefinitionCount": len(task_definitions) if isinstance(task_definitions, list) else 0,
                     "configuredTaskInstanceCount": len(self.pipeline_config.get("taskInstances", [])) if isinstance(self.pipeline_config.get("taskInstances"), list) else 0,
                     "aggregatedTaskStateCount": len(task_states),
+                    "skippedTaskCount": len(skipped_tasks),
                     "generatedFileCount": len(build_state.get("generatedFiles", [])) if isinstance(build_state, dict) else 0,
                     "warningCount": len(warnings),
                     "errorCount": len(errors),
                 },
                 "taskStates": task_states,
+                "skippedTasks": skipped_tasks,
                 "contextPackageValidation": validation_state,
                 "warnings": warnings,
                 "errors": errors,

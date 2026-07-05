@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sys
 import time
 from pathlib import Path
@@ -11,7 +12,12 @@ _TASKS_ROOT = Path(__file__).resolve().parents[1]
 if str(_TASKS_ROOT) not in sys.path:
     sys.path.insert(0, str(_TASKS_ROOT))
 
-from _shared.context_engineering_common import ContextEngineeringSupportMixin, configure_project_import_path, utc_now_iso  # noqa: E402
+from _shared.context_engineering_common import (  # noqa: E402
+    ContextEngineeringSupportMixin,
+    configure_project_import_path,
+    read_docx_as_markdown,
+    utc_now_iso,
+)
 
 configure_project_import_path(__file__)
 
@@ -20,7 +26,7 @@ from scripts.shared.script_console_utils import print_failed, print_passed, prin
 
 
 class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
-    """Validates required project and module input contracts."""
+    """Validates required project and module input contracts as a hard gate."""
 
     def __init__(self) -> None:
         super().__init__(__file__)
@@ -32,6 +38,7 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
         checks: list[dict[str, Any]] = []
         warnings: list[dict[str, str]] = []
         errors: list[dict[str, str]] = []
+        extracted_documents: dict[str, str] = {}
         try:
             srs_path, ats_path = self.contract_paths()
             required_paths = {
@@ -42,18 +49,15 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
                 "module_ats_exists": ats_path,
             }
             for name, path in required_paths.items():
-                passed = path.exists()
-                checks.append({
-                    "name": name,
-                    "path": self.to_project_relative_path(path) if path.exists() else str(path),
-                    "passed": passed,
-                    "blocking": True,
-                })
-                if not passed:
-                    errors.append({"code": name, "message": f"Required path missing: {path}"})
+                self._record_path_check(name, path, checks, errors)
+
+            validation_config = self.group("validation")
+            quality_gate = validation_config.get("inputQualityGate", {})
+            if isinstance(quality_gate, dict) and quality_gate.get("enabled", True) is True:
+                self._validate_manual_input_documents(quality_gate, checks, errors, extracted_documents)
+                self._validate_cross_document_rules(quality_gate, checks, errors, extracted_documents)
 
             project_input = self.project_input_root()
-            validation_config = self.group("validation")
             if validation_config.get("warnWhenProjectClientContractsMissing", True) is True:
                 self._warn_when_no_contract_files(
                     root=project_input / "client",
@@ -70,14 +74,22 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
                 )
 
             status = self.status_from(warnings, errors)
-            state_payload = {"status": status, "checks": checks, "warnings": warnings, "errors": errors}
+            state_payload = {
+                "status": status,
+                "gateType": "hard_input_quality_gate",
+                "gateDecision": "REJECTED" if errors else "ACCEPTED",
+                "checks": checks,
+                "warnings": warnings,
+                "errors": errors,
+            }
             self.write_state_json(self.pipeline_task_state_file("validate_inputs"), state_payload)
             report = self.base_report(status, started_at_utc, round(time.perf_counter() - started, 3))
             report.update({"validation": state_payload})
             report_path = self.write_task_report(report)
             if status == "FAILED":
                 print_failed(f"validate_inputs FAILED; report {self.to_project_relative_path(report_path)}")
-            elif status == "PASSED_WITH_WARNINGS":
+                sys.exit(1)
+            if status == "PASSED_WITH_WARNINGS":
                 print_warning(f"validate_inputs PASSED_WITH_WARNINGS; report {self.to_project_relative_path(report_path)}")
             else:
                 print_passed(f"validate_inputs PASSED; report {self.to_project_relative_path(report_path)}")
@@ -88,10 +100,197 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
             print_failed(f"validate_inputs FAILED; report {self.to_project_relative_path(report_path)}")
             raise
 
+    def _record_path_check(self, name: str, path: Path, checks: list[dict[str, Any]], errors: list[dict[str, str]]) -> None:
+        passed = path.exists()
+        checks.append({
+            "name": name,
+            "category": "structural_completeness",
+            "path": self.to_project_relative_path(path) if path.exists() else str(path),
+            "passed": passed,
+            "blocking": True,
+        })
+        if not passed:
+            errors.append({"code": name, "message": f"Required path missing: {path}"})
+
+    def _validate_manual_input_documents(
+        self,
+        quality_gate: dict[str, Any],
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+        extracted_documents: dict[str, str],
+    ) -> None:
+        input_config = self.group("input")
+        documents = quality_gate.get("manualInputDocuments", [])
+        if not isinstance(documents, list):
+            errors.append({"code": "invalid_input_quality_gate_config", "message": "inputQualityGate.manualInputDocuments must be an array."})
+            return
+
+        minimum_characters = int(quality_gate.get("minimumExtractedCharacters", 1))
+        forbidden_tokens = [str(token) for token in quality_gate.get("forbiddenPlaceholderTokens", []) if str(token).strip()]
+        hierarchy_terms = [str(term) for term in quality_gate.get("requiredHierarchyTerms", []) if str(term).strip()]
+
+        for document in documents:
+            if not isinstance(document, dict):
+                continue
+            document_id = str(document.get("documentId", "")).strip()
+            file_name_key = str(document.get("fileNameKey", "")).strip()
+            display_name = str(document.get("displayName", document_id)).strip() or document_id
+            file_name = input_config.get(file_name_key)
+            if not document_id or not isinstance(file_name, str) or not file_name.strip():
+                errors.append({"code": "invalid_document_profile", "message": f"Invalid manual input document profile: {document}"})
+                continue
+            path = self.module_input_root() / file_name
+            text = self._read_document_text(document_id, display_name, path, checks, errors)
+            extracted_documents[document_id] = text
+            if not text:
+                continue
+            self._record_text_length_check(document_id, display_name, text, minimum_characters, checks, errors)
+            self._record_required_terms_check(document_id, display_name, text, document.get("requiredTerms", []), "template_section_coverage", checks, errors)
+            self._record_required_terms_check(document_id, display_name, text, hierarchy_terms, "context_path_alignment", checks, errors)
+            self._record_forbidden_tokens_check(document_id, display_name, text, forbidden_tokens, checks, errors)
+
+    def _read_document_text(
+        self,
+        document_id: str,
+        display_name: str,
+        path: Path,
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+    ) -> str:
+        if not path.exists():
+            return ""
+        try:
+            text = read_docx_as_markdown(path).strip()
+        except Exception as exc:  # noqa: BLE001
+            checks.append({
+                "name": f"{document_id}_readable_docx",
+                "category": "structural_integrity",
+                "path": self.to_project_relative_path(path),
+                "passed": False,
+                "blocking": True,
+            })
+            errors.append({"code": f"{document_id}_unreadable_docx", "message": f"{display_name} could not be read as DOCX: {exc}"})
+            return ""
+        passed = bool(text)
+        checks.append({
+            "name": f"{document_id}_readable_docx",
+            "category": "structural_integrity",
+            "path": self.to_project_relative_path(path),
+            "passed": passed,
+            "blocking": True,
+        })
+        if not passed:
+            errors.append({"code": f"{document_id}_empty_document", "message": f"{display_name} does not contain extractable text."})
+        return text
+
+    def _record_text_length_check(
+        self,
+        document_id: str,
+        display_name: str,
+        text: str,
+        minimum_characters: int,
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+    ) -> None:
+        passed = len(text) >= minimum_characters
+        checks.append({
+            "name": f"{document_id}_minimum_content_length",
+            "category": "structural_completeness",
+            "minimumCharacters": minimum_characters,
+            "actualCharacters": len(text),
+            "passed": passed,
+            "blocking": True,
+        })
+        if not passed:
+            errors.append({"code": f"{document_id}_insufficient_content", "message": f"{display_name} is below the minimum extracted content length."})
+
+    def _record_required_terms_check(
+        self,
+        document_id: str,
+        display_name: str,
+        text: str,
+        terms: Any,
+        category: str,
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+    ) -> None:
+        if not isinstance(terms, list):
+            errors.append({"code": f"{document_id}_invalid_required_terms", "message": f"Required terms for {display_name} must be an array."})
+            return
+        for term in [str(value) for value in terms if str(value).strip()]:
+            passed = self._contains_term(text, term)
+            checks.append({
+                "name": f"{document_id}_contains_{self._safe_check_name(term)}",
+                "category": category,
+                "term": term,
+                "passed": passed,
+                "blocking": True,
+            })
+            if not passed:
+                errors.append({"code": f"{document_id}_missing_required_term", "message": f"{display_name} is missing required template/context term: {term}"})
+
+    def _record_forbidden_tokens_check(
+        self,
+        document_id: str,
+        display_name: str,
+        text: str,
+        tokens: list[str],
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+    ) -> None:
+        for token in tokens:
+            pattern = re.compile(re.escape(token), re.IGNORECASE)
+            passed = pattern.search(text) is None
+            checks.append({
+                "name": f"{document_id}_no_{self._safe_check_name(token)}",
+                "category": "ambiguity_and_gap_minimization",
+                "token": token,
+                "passed": passed,
+                "blocking": True,
+            })
+            if not passed:
+                errors.append({"code": f"{document_id}_placeholder_token_found", "message": f"{display_name} contains unresolved placeholder token: {token}"})
+
+    def _validate_cross_document_rules(
+        self,
+        quality_gate: dict[str, Any],
+        checks: list[dict[str, Any]],
+        errors: list[dict[str, str]],
+        extracted_documents: dict[str, str],
+    ) -> None:
+        references = quality_gate.get("crossDocumentReferences", [])
+        if not isinstance(references, list):
+            errors.append({"code": "invalid_cross_document_reference_config", "message": "inputQualityGate.crossDocumentReferences must be an array."})
+            return
+        for rule in references:
+            if not isinstance(rule, dict):
+                continue
+            source_document_id = str(rule.get("sourceDocumentId", "")).strip()
+            required_term = str(rule.get("requiredTerm", "")).strip()
+            text = extracted_documents.get(source_document_id, "")
+            passed = bool(text) and self._contains_term(text, required_term)
+            checks.append({
+                "name": f"{source_document_id}_cross_references_{self._safe_check_name(required_term)}",
+                "category": "referential_integrity",
+                "sourceDocumentId": source_document_id,
+                "requiredTerm": required_term,
+                "passed": passed,
+                "blocking": True,
+            })
+            if not passed:
+                errors.append({"code": "missing_cross_document_reference", "message": f"Document '{source_document_id}' must reference '{required_term}'."})
+
     def _warn_when_no_contract_files(self, root: Path, warning_code: str, message: str, warnings: list[dict[str, str]]) -> None:
         files = [path for path in root.glob("*.*") if path.name != ".gitkeep"] if root.exists() else []
         if not files:
             warnings.append({"code": warning_code, "message": message})
+
+    def _contains_term(self, text: str, term: str) -> bool:
+        return re.search(re.escape(term), text, re.IGNORECASE) is not None
+
+    def _safe_check_name(self, value: str) -> str:
+        safe = re.sub(r"[^a-zA-Z0-9]+", "_", value.strip().lower()).strip("_")
+        return safe or "value"
 
 
 if __name__ == "__main__":

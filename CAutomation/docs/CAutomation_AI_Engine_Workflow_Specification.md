@@ -258,35 +258,35 @@ The Agile artifacts define the work. Only after those artifacts are reviewed and
 
 ## 7. Core Design Principles
 
-### 7.1 Automate Software Engineering, Not Prompting
+### 6.1 Automate Software Engineering, Not Prompting
 
 CAutomation should automate a staged engineering workflow. It should not behave like an unconstrained coding assistant.
 
-### 7.2 Project Artifacts Are the Source of Truth
+### 6.2 Project Artifacts Are the Source of Truth
 
 Conversation history must not be authoritative. Pipelines should consume declared artifacts and produce declared artifacts.
 
-### 7.3 Context Engineering Comes First
+### 6.3 Context Engineering Comes First
 
 The AI model should not generate planning or implementation artifacts from vague context. The first stage must create a curated context package from the human-authored project inputs.
 
-### 7.4 Agile Artifacts Before Implementation
+### 6.4 Agile Artifacts Before Implementation
 
 The workflow treats software engineering as an Agile process. After context engineering, the AI Engine should first produce Agile planning artifacts. These must be reviewed and approved before implementation planning or code generation begins.
 
-### 7.5 Provenance Must Be Preserved
+### 6.5 Provenance Must Be Preserved
 
 Every important generated artifact should be traceable back to its inputs.
 
-### 7.6 Pipelines Have One Clear Responsibility
+### 6.6 Pipelines Have One Clear Responsibility
 
 Each pipeline must do one kind of work. A pipeline should not perform work that belongs to a later stage.
 
-### 7.7 Human Approval Gates Are Part of the Workflow
+### 6.7 Human Approval Gates Are Part of the Workflow
 
 Generated outputs are not automatically trusted. Important artifacts must be reviewed and approved before downstream pipelines consume them.
 
-### 7.8 AI Output Is Untrusted Until Validated
+### 6.8 AI Output Is Untrusted Until Validated
 
 AI-generated artifacts must be validated, inspected, and approved before they become authoritative inputs for later stages.
 
@@ -422,6 +422,16 @@ context_summary.md
 ### Responsibilities
 
 Pipeline 01 should validate required inputs, extract relevant content, preserve source provenance, separate functional intent from technical constraints, build the context package, validate it, and write execution reports.
+
+Pipeline 01 is the perimeter defense for context quality. It must not extract, transform, or compile manually authored project specifications until those specifications have passed input validation. Input validation is a hard binary gate: incomplete, contradictory, ambiguous, inconsistent, structurally invalid, or template-nonconformant specifications must be rejected before the Context Package is created.
+
+Task 02, Validate Inputs, validates the raw human-authored specification documents before extraction. Its validation responsibilities are implementation-agnostic and template-driven. It checks the structural completeness, consistency, referential integrity, traceability readiness, ambiguity/gap indicators, and conformance rules required by the active Project Profile Specification Template. The architectural contract must not hard-code module-specific artifacts; instead, the active template defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
+
+Task 05, Validate Context Package, remains separate from Task 02. Task 02 validates the raw source specifications. Task 05 validates the assembled context package after extraction and compilation. This separation preserves single responsibility and makes it possible to distinguish human input defects from context-engine compilation defects.
+
+Validation failures must not cause unhandled runtime crashes. When Task 02 rejects the inputs, downstream extraction and compilation tasks must not run, but Pipeline 01 must still execute the reporting path and produce a structured, machine-readable execution report that explains the validation gaps and the final failed status.
+
+Repository-state comparison is intentionally out of scope for Pipeline 01. Pipeline 01 maps approved intent into trusted context; comparison between new intent and an existing generated or deployed codebase belongs to a later validation, synchronization, or apply-stage concern.
 
 ### Non-Responsibilities
 

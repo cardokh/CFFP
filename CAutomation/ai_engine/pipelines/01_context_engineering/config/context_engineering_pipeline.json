@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-007",
+  "pipelineVersion": "mvp-008",
   "projectId": "cffp",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
@@ -39,7 +39,63 @@
   },
   "validation": {
     "warnWhenProjectClientContractsMissing": true,
-    "warnWhenProjectEngineeringContractsMissing": true
+    "warnWhenProjectEngineeringContractsMissing": true,
+    "inputQualityGate": {
+      "enabled": true,
+      "minimumExtractedCharacters": 500,
+      "forbiddenPlaceholderTokens": [
+        "TBD",
+        "TODO",
+        "FIXME",
+        "???",
+        "<placeholder>",
+        "[placeholder]"
+      ],
+      "requiredHierarchyTerms": [
+        "CFFP",
+        "CCore",
+        "CAutomation",
+        "Pipeline Management"
+      ],
+      "manualInputDocuments": [
+        {
+          "documentId": "srs",
+          "fileNameKey": "srsFileName",
+          "displayName": "Software Requirements Specification",
+          "requiredTerms": [
+            "Purpose",
+            "Scope",
+            "Business Context",
+            "Workflow",
+            "Validation",
+            "Acceptance"
+          ]
+        },
+        {
+          "documentId": "ats",
+          "fileNameKey": "atsFileName",
+          "displayName": "Architecture and Technical Specification",
+          "requiredTerms": [
+            "Architecture",
+            "Traceability",
+            "Database",
+            "API",
+            "Validation",
+            "Testing"
+          ]
+        }
+      ],
+      "crossDocumentReferences": [
+        {
+          "sourceDocumentId": "srs",
+          "requiredTerm": "ATS"
+        },
+        {
+          "sourceDocumentId": "ats",
+          "requiredTerm": "SRS"
+        }
+      ]
+    }
   },
   "downstreamConsumers": [
     "02_planning",
