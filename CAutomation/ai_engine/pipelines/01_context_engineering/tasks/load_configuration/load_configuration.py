@@ -37,6 +37,7 @@ class LoadConfigurationTask(ContextEngineeringSupportMixin, BaseScript):
 
         configured_path = self.pipeline_config.get("taskRegistryPath")
         if not isinstance(configured_path, str) or not configured_path.strip():
+            self.task_registry_path = self.project_root.resolve()
             return {}
         resolved_path = configured_path
         for key in ("projectId", "moduleId", "pipelineId"):
