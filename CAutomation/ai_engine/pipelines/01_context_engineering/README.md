@@ -55,7 +55,7 @@ Task folders are reusable task definitions. The pipeline configuration now conta
 The context package is written to the configured project output folder:
 
 ```text
-CAutomation/projects/cffp/output/context_packages/cffp_pipeline_management_context_package/
+CAutomation/projects/pipeline_management/output/context_packages/pipeline_management_pipeline_management_context_package/
 ```
 
 Pipeline runtime state and task reports are written to the latest-run folder:

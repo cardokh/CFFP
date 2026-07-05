@@ -2,7 +2,7 @@
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
   "pipelineVersion": "mvp-008",
-  "projectId": "cffp",
+  "projectId": "pipeline_management",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
   "input": {
@@ -52,7 +52,7 @@
         "[placeholder]"
       ],
       "requiredHierarchyTerms": [
-        "CFFP",
+        "Pipeline Management",
         "CCore",
         "CAutomation",
         "Pipeline Management"

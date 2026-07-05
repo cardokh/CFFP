@@ -25,7 +25,7 @@ Apply
 Verification
 ```
 
-CFFP is the reference project used to design, test, and evolve this platform. The automation must remain generic enough to support future projects.
+Pipeline Management is the reference project used to design, test, and evolve this platform. The automation must remain generic enough to support future projects.
 
 ## Top-Level Areas
 
