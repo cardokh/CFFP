@@ -1,0 +1,21 @@
+{
+    "projectRoot": ".",
+    "backendPath": "{projectRoot}/backend",
+    "dbFolderPath": "{backendPath}/data",
+    "database": "{dbFolderPath}/auth.db",
+    "scriptsPath": "{projectRoot}/scripts",
+    "databaseScriptsPath": "{scriptsPath}/db",
+    "sharedScriptsPath": "{scriptsPath}/shared",
+    "inspectionsPath": "{scriptsPath}/inspections",
+    "inspectionSharedPath": "{inspectionsPath}/shared",
+    "inspectionRulesPath": "{inspectionsPath}/blueprint_rules",
+    "inspectionConfigPath": "{inspectionsPath}/config",
+    "testsPath": "{scriptsPath}/tests",
+    "exampleRelativePaths": [
+        "scripts",
+        "scripts/shared",
+        "scripts/shared/script_path_utils.py",
+        "scripts/shared/config/script_path_utils.json",
+        "scripts/tests/shared/test_script_path_utils.py"
+    ]
+}
