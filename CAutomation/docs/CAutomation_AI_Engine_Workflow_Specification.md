@@ -396,11 +396,14 @@ What do we know, and what context is safe and relevant for downstream AI-assiste
 
 ### Inputs
 
+For the Pipeline Management reference project, Pipeline 01 currently consumes the manually authored module specification documents declared by the pipeline configuration:
+
 ```text
-CAutomation/projects/pipeline_management/input/WHAT.md
-CAutomation/projects/pipeline_management/input/HOW.md
-CAutomation/projects/pipeline_management/input/supporting/
+CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx
+CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx
 ```
+
+Future project profiles may declare different WHAT/HOW or supporting-document inputs, but Pipeline 01 must consume only explicitly configured project/module input artifacts.
 
 ### Outputs
 
@@ -418,6 +421,36 @@ context_sources.json
 context_validation_report.json
 context_summary.md
 ```
+
+### Task Sequence
+
+Pipeline 01 is implemented as six ordered tasks:
+
+1. **Load Configuration**
+2. **Validate Inputs**
+3. **Extract Contracts**
+4. **Build Context Package**
+5. **Validate Context Package**
+6. **Write Execution Report**
+
+#### Task 01 - Load Configuration
+
+Task 01 loads and validates the configured Pipeline 01 execution contract before any input validation, extraction, or context-package work begins.
+
+Task 01 must:
+
+- load the pipeline-level configuration,
+- load the reusable task-definition registry,
+- verify required pipeline configuration groups,
+- verify required pipeline identity values,
+- verify that reusable task definitions exist,
+- verify that pipeline task instances exist,
+- verify that every task instance references a known task definition,
+- write a machine-readable task state file,
+- write a task execution report,
+- return a failed task status when the configuration contract is invalid.
+
+Task 01 does not validate the content of the manually authored project specification documents. That responsibility belongs to Task 02.
 
 ### Responsibilities
 

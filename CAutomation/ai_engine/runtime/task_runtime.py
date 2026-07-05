@@ -12,15 +12,16 @@ from pathlib import Path
 from typing import Any
 
 def configure_project_import_path(script_file: str) -> Path:
-    """Adds the repository root to sys.path and returns it."""
+    """Adds the CAutomation root and its parent to sys.path and returns the CAutomation root."""
     project_root = next(
         (parent for parent in Path(script_file).resolve().parents if (parent / "scripts" / "shared").is_dir()),
         None,
     )
     if project_root is None:
         raise RuntimeError("Could not locate project root containing scripts/shared.")
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
+    for import_root in (project_root, project_root.parent):
+        if str(import_root) not in sys.path:
+            sys.path.insert(0, str(import_root))
     return project_root
 
 

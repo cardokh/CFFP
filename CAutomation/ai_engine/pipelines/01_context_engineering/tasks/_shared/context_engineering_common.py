@@ -13,8 +13,13 @@ _PROJECT_ROOT = next(
     (parent for parent in Path(__file__).resolve().parents if (parent / "scripts" / "shared").is_dir()),
     None,
 )
-if _PROJECT_ROOT is not None and str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
+if _PROJECT_ROOT is not None:
+    # Tasks import shared scripts as scripts.shared.* and runtime modules as
+    # CAutomation.ai_engine.*. Both the CAutomation root and its parent must
+    # be importable when tasks are executed directly from the repository root.
+    for import_root in (_PROJECT_ROOT, _PROJECT_ROOT.parent):
+        if str(import_root) not in sys.path:
+            sys.path.insert(0, str(import_root))
 
 from CAutomation.ai_engine.runtime.task_runtime import (  # noqa: E402
     RuntimeTaskSupportMixin,
