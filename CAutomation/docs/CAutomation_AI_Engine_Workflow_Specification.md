@@ -138,6 +138,10 @@ In that sense, Pipeline Management has two roles:
 
 CAutomation is the automation engine. Pipeline Management is the cockpit used to configure, visualize, execute, and control that engine.
 
+As the operational web interface, Pipeline Management should make the automation workflow visible and manageable. A user should not need to understand or manually run the underlying Python pipelines in order to operate the system. Instead, the web interface should expose the major concepts of the AI Engine in user-facing form: projects, input documents, context packages, pipelines, task definitions, task instances, executions, generated artifacts, validation results, approval gates, and execution history.
+
+This means the Pipeline Management module is both the first project generated through the AI Engine and the interface that later allows humans to manage the AI Engine itself. It should provide the visibility, control, review, approval, and audit capabilities required for human-supervised AI-assisted software engineering.
+
 For the reference project, the human provides two manually authored documents:
 
 ```text
@@ -254,35 +258,35 @@ The Agile artifacts define the work. Only after those artifacts are reviewed and
 
 ## 7. Core Design Principles
 
-### 6.1 Automate Software Engineering, Not Prompting
+### 7.1 Automate Software Engineering, Not Prompting
 
 CAutomation should automate a staged engineering workflow. It should not behave like an unconstrained coding assistant.
 
-### 6.2 Project Artifacts Are the Source of Truth
+### 7.2 Project Artifacts Are the Source of Truth
 
 Conversation history must not be authoritative. Pipelines should consume declared artifacts and produce declared artifacts.
 
-### 6.3 Context Engineering Comes First
+### 7.3 Context Engineering Comes First
 
 The AI model should not generate planning or implementation artifacts from vague context. The first stage must create a curated context package from the human-authored project inputs.
 
-### 6.4 Agile Artifacts Before Implementation
+### 7.4 Agile Artifacts Before Implementation
 
 The workflow treats software engineering as an Agile process. After context engineering, the AI Engine should first produce Agile planning artifacts. These must be reviewed and approved before implementation planning or code generation begins.
 
-### 6.5 Provenance Must Be Preserved
+### 7.5 Provenance Must Be Preserved
 
 Every important generated artifact should be traceable back to its inputs.
 
-### 6.6 Pipelines Have One Clear Responsibility
+### 7.6 Pipelines Have One Clear Responsibility
 
 Each pipeline must do one kind of work. A pipeline should not perform work that belongs to a later stage.
 
-### 6.7 Human Approval Gates Are Part of the Workflow
+### 7.7 Human Approval Gates Are Part of the Workflow
 
 Generated outputs are not automatically trusted. Important artifacts must be reviewed and approved before downstream pipelines consume them.
 
-### 6.8 AI Output Is Untrusted Until Validated
+### 7.8 AI Output Is Untrusted Until Validated
 
 AI-generated artifacts must be validated, inspected, and approved before they become authoritative inputs for later stages.
 
