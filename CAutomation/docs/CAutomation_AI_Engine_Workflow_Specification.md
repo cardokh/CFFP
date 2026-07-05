@@ -879,6 +879,88 @@ Tasks should be independently executable and should produce their own reports.
 
 The orchestrator should aggregate task reports into a pipeline execution report.
 
+### 22.1 Standard Task and Pipeline Execution Layers
+
+All pipeline and task implementations must expose a standard execution surface before higher-level AI Engine or CAutomation runners are introduced. This standard is part of the architectural contract and applies to every current and future pipeline.
+
+#### Task-level execution standard
+
+Every task folder must contain:
+
+```text
+run_task.py
+run_task_tests.py
+```
+
+`run_task.py` is the only standard entry point for executing one task directly. It must:
+
+- execute exactly one task implementation,
+- preserve the configured task instance identity when the task is launched by a pipeline,
+- produce a standard task execution result,
+- produce a machine-readable task execution report,
+- expose status, return code, elapsed time, stdout, stderr, task identity, pipeline identity, execution id, and report paths,
+- return a non-zero process exit code when the task execution status is failed.
+
+`run_task_tests.py` is the only standard entry point for executing one task test suite. It must:
+
+- execute the task unit tests,
+- execute the task functional tests,
+- execute the task validation tests,
+- aggregate the three test categories,
+- produce a standard task test report,
+- expose status, return code, elapsed time, stdout, stderr, test category, and report paths,
+- return a non-zero process exit code when any required task test category fails.
+
+Each task test suite must be organized into the following categories:
+
+```text
+unit/
+functional/
+validation/
+```
+
+The test report structure must remain stable enough to be consumed later by the planned CAutomation web GUI.
+
+#### Pipeline-level execution standard
+
+Every pipeline folder must contain:
+
+```text
+run_pipeline.py
+run_pipeline_tests.py
+```
+
+`run_pipeline.py` is the only standard entry point for executing one pipeline directly. It must:
+
+- execute every configured task in sequence,
+- call each task through its `run_task.py` entry point,
+- respect configured task order and blocking dependencies,
+- aggregate task execution results,
+- produce a standard pipeline execution report,
+- expose status, execution id, elapsed time, task results, stdout, stderr, and report paths,
+- return a non-zero process exit code when the pipeline execution status is failed.
+
+`run_pipeline_tests.py` is the only standard entry point for executing one pipeline test suite. It must:
+
+- execute every configured task through that task's `run_task_tests.py` entry point,
+- aggregate task test reports,
+- produce a standard pipeline test report,
+- expose status, elapsed time, task test results, stdout, stderr, and report paths,
+- return a non-zero process exit code when any required task test runner fails.
+
+#### Future execution levels
+
+The following higher-level execution entry points are planned but are not part of the current implementation scope:
+
+```text
+run_ai_engine.py
+run_ai_engine_tests.py
+run_cautomation.py
+run_cautomation_tests.py
+```
+
+They must later consume the task and pipeline reports defined above instead of introducing a conflicting report model.
+
 ---
 
 ## 23. Pipeline Folder Model
