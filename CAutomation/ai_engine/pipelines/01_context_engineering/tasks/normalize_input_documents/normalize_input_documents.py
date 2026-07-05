@@ -16,7 +16,6 @@ if str(_TASKS_ROOT) not in sys.path:
 from _shared.context_engineering_common import (  # noqa: E402
     ContextEngineeringSupportMixin,
     configure_project_import_path,
-    read_supported_document_as_markdown,
     source_record,
     utc_now_iso,
 )
@@ -26,6 +25,8 @@ configure_project_import_path(__file__)
 from scripts.shared.base_script import BaseScript  # noqa: E402
 from scripts.shared.script_console_utils import print_failed, print_passed, print_warning  # noqa: E402
 
+from document_normalizers import DocumentNormalizerRegistry  # noqa: E402
+
 
 class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
     """Normalizes source input contracts into the canonical downstream input format."""
@@ -33,6 +34,7 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
     def __init__(self) -> None:
         super().__init__(__file__)
         self.pipeline_config: dict[str, Any] = self.load_pipeline_config()
+        self.document_normalizers = DocumentNormalizerRegistry()
 
     def run(self) -> None:
         started = time.perf_counter()
@@ -155,7 +157,8 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             errors.append({"code": "invalid_input_quality_gate_config", "message": "inputQualityGate.manualInputDocuments must be an array."})
             return
 
-        supported_formats = [str(value).lower().lstrip(".") for value in quality_gate.get("supportedSourceFormats", ["docx", "pdf"]) if str(value).strip()]
+        configured_formats = [str(value).lower().lstrip(".") for value in quality_gate.get("supportedSourceFormats", self.document_normalizers.supported_formats()) if str(value).strip()]
+        supported_formats = [source_format for source_format in configured_formats if self.document_normalizers.supports(source_format)]
         minimum_characters = int(quality_gate.get("minimumExtractedCharacters", 1))
         forbidden_tokens = [str(token) for token in quality_gate.get("forbiddenPlaceholderTokens", []) if str(token).strip()]
         hierarchy_terms = [str(term) for term in quality_gate.get("requiredHierarchyTerms", []) if str(term).strip()]
@@ -174,7 +177,7 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             path = self.module_input_root() / file_name
             source_format = path.suffix.lower().lstrip(".")
             self._record_supported_format_check(document_id, display_name, path, source_format, supported_formats, checks, errors)
-            text = self._read_document_text(document_id, display_name, path, checks, errors)
+            text = self._normalize_document_text(document_id, display_name, path, checks, errors)
             normalized_documents[document_id] = {
                 "documentId": document_id,
                 "displayName": display_name,
@@ -214,11 +217,12 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
         if not passed:
             errors.append({"code": f"{document_id}_unsupported_source_format", "message": f"{display_name} has unsupported source format: {source_format or '<none>'}."})
 
-    def _read_document_text(self, document_id: str, display_name: str, path: Path, checks: list[dict[str, Any]], errors: list[dict[str, str]]) -> str:
+    def _normalize_document_text(self, document_id: str, display_name: str, path: Path, checks: list[dict[str, Any]], errors: list[dict[str, str]]) -> str:
         if not path.exists():
             return ""
         try:
-            text = read_supported_document_as_markdown(path).strip()
+            result = self.document_normalizers.normalize(path)
+            text = result.markdown.strip()
         except Exception as exc:  # noqa: BLE001
             checks.append({
                 "name": f"{document_id}_readable_source_document",

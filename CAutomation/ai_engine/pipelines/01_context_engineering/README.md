@@ -182,5 +182,7 @@ This pipeline is scoped to the CAutomation first deliverable. The Pipeline Manag
 
 Task 02 - Normalize Input Documents is the hard minimum viable input quality gate. It validates the manually authored source documents, verifies supported source formats, extracts machine-readable content, writes the canonical `normalized_input/` workspace, and stops downstream processing if the minimum trusted input contract is not met. After Task 02 succeeds, downstream tasks must consume `normalized_input/` instead of raw `input/` source files.
 
+Task 02 delegates source-format parsing to document normalizers. Current normalizer implementations cover DOCX, PDF, and Markdown, while the downstream pipeline continues to consume only the generated `normalized_input/` Markdown and metadata.
+
 Task 05 - Validate Context Package remains separate. Task 02 validates and normalizes source documents; Task 05 validates the compiled context package.
 

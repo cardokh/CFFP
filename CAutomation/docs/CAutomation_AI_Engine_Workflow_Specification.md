@@ -460,6 +460,8 @@ Pipeline 01 is the perimeter defense for context quality. It must not allow raw 
 
 Task 02, Normalize Input Documents, is the hard minimum viable input quality gate. It validates the required source documents, verifies that their formats are supported, proves that their content can be extracted, rejects unreadable/empty/template-nonconformant inputs, and writes a canonical normalized input workspace before any downstream task continues. If Task 02 passes, the pipeline has the minimum trusted normalized input required to continue. If Task 02 fails, the pipeline must stop before any context package can be created.
 
+Task 02 must use a source-format normalizer abstraction. The task orchestration layer detects each source document format, delegates extraction to the matching normalizer implementation, and writes the canonical Markdown plus metadata outputs. Format-specific parsing rules belong inside dedicated normalizers, such as PDF, DOCX, and Markdown normalizers. Downstream tasks must remain isolated from source-format parsing details.
+
 The canonical normalized workspace is written under the project folder, next to the raw `input/` folder:
 
 ```text

@@ -64,3 +64,26 @@ def test_normalize_input_documents_safe_check_names_are_stable(monkeypatch):
 
     assert task._safe_check_name("Pipeline Management") == "pipeline_management"
     assert task._safe_check_name("???") == "value"
+
+
+def test_normalize_input_documents_uses_document_normalizer_registry(monkeypatch):
+    cautomation_root = _cautomation_root()
+    monkeypatch.chdir(cautomation_root.parent)
+
+    task = _load_task_class()()
+
+    assert task.document_normalizers.supports("docx")
+    assert task.document_normalizers.supports("pdf")
+    assert task.document_normalizers.supports("md")
+
+
+def test_normalize_input_documents_supported_formats_are_configured_and_registered(monkeypatch):
+    cautomation_root = _cautomation_root()
+    monkeypatch.chdir(cautomation_root.parent)
+
+    task = _load_task_class()()
+    quality_gate = task.pipeline_config["validation"]["inputQualityGate"]
+    configured_formats = set(quality_gate["supportedSourceFormats"])
+
+    assert {"pdf", "docx"}.issubset(configured_formats)
+    assert all(task.document_normalizers.supports(source_format) for source_format in configured_formats)
