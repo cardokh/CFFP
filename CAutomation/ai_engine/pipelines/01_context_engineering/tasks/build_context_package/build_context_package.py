@@ -249,7 +249,7 @@ The downstream stages should be able to derive:
             "project_id": self.project_id(),
             "project_name": project.get("name", self.project_id()),
             "module_id": self.module_id(),
-            "source_input_root": self.to_project_relative_path(self.CAutomation_root() / "projects" / self.project_id() / "input"),
+            "source_input_root": self.to_project_relative_path(self.project_input_root()),
             "validation_status": validation_status,
             "included_context_files": context_output_names,
             "structured_outputs": list(self.group("structuredFiles").values()),

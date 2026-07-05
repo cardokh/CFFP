@@ -203,6 +203,18 @@ class RuntimeTaskSupportMixin:
     def CAutomation_root(self) -> Path:
         return self.resolve_project_path(self.group("input")["CAutomationRoot"])
 
+    def projects_root(self) -> Path:
+        return self.CAutomation_root() / "projects"
+
+    def project_directory(self) -> Path:
+        return self.projects_root() / self.project_id()
+
+    def project_input_root(self) -> Path:
+        return self.project_directory() / "input"
+
+    def project_output_root(self) -> Path:
+        return self.project_directory() / "output"
+
     def project_config_path(self) -> Path:
         return self.CAutomation_root() / self.resolve_placeholders(self.group("input")["projectConfigPath"])
 

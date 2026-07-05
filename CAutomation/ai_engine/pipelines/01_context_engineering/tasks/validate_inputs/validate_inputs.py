@@ -52,7 +52,7 @@ class ValidateInputsTask(ContextEngineeringSupportMixin, BaseScript):
                 if not passed:
                     errors.append({"code": name, "message": f"Required path missing: {path}"})
 
-            project_input = self.CAutomation_root() / "projects" / self.project_id() / "input"
+            project_input = self.project_input_root()
             validation_config = self.group("validation")
             if validation_config.get("warnWhenProjectClientContractsMissing", True) is True:
                 self._warn_when_no_contract_files(
