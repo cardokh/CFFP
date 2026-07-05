@@ -396,14 +396,14 @@ What do we know, and what context is safe and relevant for downstream AI-assiste
 
 ### Inputs
 
-For the Pipeline Management reference project, Pipeline 01 currently consumes the manually authored module specification documents declared by the pipeline configuration:
+For the Pipeline Management reference project, Pipeline 01 consumes the manually authored module specification documents declared by the pipeline configuration. Source documents may be authored in supported external formats, with PDF as the preferred client-facing contract format and DOCX/Markdown supported as development/reference formats where configured.
 
 ```text
-CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx
-CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx
+CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured WHAT/SRS source document>
+CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured HOW/ATS source document>
 ```
 
-Future project profiles may declare different WHAT/HOW or supporting-document inputs, but Pipeline 01 must consume only explicitly configured project/module input artifacts.
+Future project profiles may declare different WHAT/HOW or supporting-document inputs, but Pipeline 01 must consume only explicitly configured project/module input artifacts. Raw source documents are never the canonical input for downstream tasks. Task 02 must normalize supported source formats into `normalized_input/`, and later tasks must consume that normalized workspace.
 
 ### Outputs
 
@@ -427,7 +427,7 @@ context_summary.md
 Pipeline 01 is implemented as six ordered tasks:
 
 1. **Load Configuration**
-2. **Validate Inputs**
+2. **Normalize Input Documents**
 3. **Extract Contracts**
 4. **Build Context Package**
 5. **Validate Context Package**
@@ -450,21 +450,33 @@ Task 01 must:
 - write a task execution report,
 - return a failed task status when the configuration contract is invalid.
 
-Task 01 does not validate the content of the manually authored project specification documents. That responsibility belongs to Task 02.
+Task 01 does not read, validate, or normalize the content of the manually authored project specification documents. That responsibility belongs to Task 02.
 
 ### Responsibilities
 
 Pipeline 01 should validate required inputs, extract relevant content, preserve source provenance, separate functional intent from technical constraints, build the context package, validate it, and write execution reports.
 
-Pipeline 01 is the perimeter defense for context quality. It must not extract, transform, or compile manually authored project specifications until those specifications have passed input validation. Input validation is a hard binary gate: incomplete, contradictory, ambiguous, inconsistent, structurally invalid, or template-nonconformant specifications must be rejected before the Context Package is created.
+Pipeline 01 is the perimeter defense for context quality. It must not allow raw human-authored files to leak into later tasks. Raw documents can be PDF, DOCX, Markdown, or another explicitly supported format, but downstream tasks must consume one canonical internal format.
 
-Task 02, Validate Inputs, validates the raw human-authored specification documents before extraction. Its validation responsibilities are implementation-agnostic and template-driven. It checks the structural completeness, basic format eligibility, readability, non-empty extracted content, required section coverage, placeholder indicators, and basic cross-document readiness required by the active Project Profile Specification Template. The architectural contract must not hard-code module-specific artifacts; instead, the active template defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
+Task 02, Normalize Input Documents, is the hard minimum viable input quality gate. It validates the required source documents, verifies that their formats are supported, proves that their content can be extracted, rejects unreadable/empty/template-nonconformant inputs, and writes a canonical normalized input workspace before any downstream task continues. If Task 02 passes, the pipeline has the minimum trusted normalized input required to continue. If Task 02 fails, the pipeline must stop before any context package can be created.
 
-For the current Pipeline Management reference profile, the configured source documents are DOCX files. Task 02 must prove that each configured document exists, can be read, and can be converted into non-empty Markdown-like extracted text before Task 03 performs deeper contract extraction. Task 02 must reject documents that are missing, unreadable, empty, below the configured minimum content length, missing required template sections, or containing unresolved placeholder markers such as TBD/TODO/FIXME. Task 02 may perform simple cross-document readiness checks declared by configuration, such as requiring the WHAT/SRS input to reference the HOW/ATS input and vice versa.
+The canonical normalized workspace is written under the project folder, next to the raw `input/` folder:
 
-Task 03, Extract Contracts, owns the deeper extraction-phase checks identified by the external review. After Task 02 has accepted the raw input files as eligible, Task 03 must extract normalized contracts and validate the extracted Markdown/contract content for richer semantic quality. This includes Markdown linting, acronym and reference validation, cross-reference validation, conflicting technical-parameter detection, and rejection of undefined acronyms before any context_package.json artifact is compiled.
+```text
+CAutomation/projects/<project_id>/normalized_input/modules/<module_id>/
+├── module_srs.md
+├── module_ats.md
+├── normalization_manifest.json
+└── normalization_report.json
+```
 
-Task 05, Validate Context Package, remains separate from Task 02 and Task 03. Task 02 validates the raw source specifications. Task 03 validates the extracted contracts. Task 05 validates the assembled context package after extraction and compilation. This separation preserves single responsibility and makes it possible to distinguish human input defects from extraction defects and context-engine compilation defects.
+After Task 02 succeeds, later Pipeline 01 tasks must consume `normalized_input/` and must not read raw `input/` source documents directly. This rule isolates source-format complexity in one task and gives PDF, DOCX, Markdown, and future supported formats a single downstream representation. PDF is the preferred client-facing contract format; DOCX and Markdown may remain supported where configured for development/reference workflows.
+
+Task 02 validation responsibilities are implementation-agnostic and template-driven. It checks structural completeness, source-format eligibility, readability/extractability, non-empty normalized content, required section coverage, placeholder indicators, and basic cross-document readiness required by the active Project Profile Specification Template. The architectural contract must not hard-code module-specific artifacts; instead, the active template defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
+
+Task 03, Extract Contracts, owns the deeper extraction-phase checks identified by the external review against the normalized Markdown inputs. After Task 02 has created the canonical normalized workspace, Task 03 must validate and extract contract content for richer semantic quality. This includes Markdown linting, acronym and reference validation, cross-reference validation, conflicting technical-parameter detection, and rejection of undefined acronyms before any context_package.json artifact is compiled.
+
+Task 05, Validate Context Package, remains separate from Task 02 and Task 03. Task 02 validates and normalizes source specifications. Task 03 validates and extracts normalized contracts. Task 05 validates the assembled context package after extraction and compilation. This separation preserves single responsibility and makes it possible to distinguish human input defects, normalization defects, extraction defects, and context-package compilation defects.
 
 Validation failures must not cause unhandled runtime crashes. When Task 02 rejects the inputs, downstream extraction and compilation tasks must not run, but Pipeline 01 must still execute the reporting path and produce a structured, machine-readable execution report that explains the validation gaps and the final failed status.
 

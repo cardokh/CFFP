@@ -1,6 +1,6 @@
 {
   "taskRegistryId": "context_engineering_task_registry",
-  "taskRegistryVersion": "mvp-007",
+  "taskRegistryVersion": "mvp-008",
   "taskDefinitions": [
     {
       "taskDefinitionId": "load_configuration",
@@ -10,11 +10,11 @@
       "taskVersion": "mvp-007"
     },
     {
-      "taskDefinitionId": "validate_inputs",
-      "taskName": "Validate Inputs",
-      "script": "tasks/validate_inputs/validate_inputs.py",
+      "taskDefinitionId": "normalize_input_documents",
+      "taskName": "Normalize Input Documents",
+      "script": "tasks/normalize_input_documents/normalize_input_documents.py",
       "defaultBlocking": true,
-      "taskVersion": "mvp-007"
+      "taskVersion": "mvp-008"
     },
     {
       "taskDefinitionId": "extract_contracts",

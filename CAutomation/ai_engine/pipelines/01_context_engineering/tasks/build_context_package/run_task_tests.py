@@ -32,7 +32,7 @@ def _utc_now_iso() -> str:
 def _task_test_folder_name(task_dir: Path) -> str:
     sequence_by_task = {
         "load_configuration": "01",
-        "validate_inputs": "02",
+        "normalize_input_documents": "02",
         "extract_contracts": "03",
         "build_context_package": "04",
         "validate_context_package": "05",

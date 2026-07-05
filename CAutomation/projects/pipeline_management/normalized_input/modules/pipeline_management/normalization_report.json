@@ -1,0 +1,357 @@
+{
+  "status": "PASSED_WITH_WARNINGS",
+  "gateType": "hard_normalized_input_quality_gate",
+  "gateDecision": "ACCEPTED",
+  "normalizedInputRoot": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management",
+  "normalizationManifestPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json",
+  "normalizationReportPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_report.json",
+  "documents": {
+    "srs": {
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "sourceFormat": "docx",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
+      "characterCount": 24142
+    },
+    "ats": {
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "sourceFormat": "docx",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
+      "characterCount": 36607
+    }
+  },
+  "checks": [
+    {
+      "name": "CAutomation_root_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_config_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/project.json",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "module_input_root_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "module_srs_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "module_ats_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_supported_source_format",
+      "category": "source_format_eligibility",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "sourceFormat": "docx",
+      "supportedFormats": [
+        "pdf",
+        "docx",
+        "md"
+      ],
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_readable_source_document",
+      "category": "structural_integrity",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_minimum_content_length",
+      "category": "structural_completeness",
+      "minimumCharacters": 500,
+      "actualCharacters": 24142,
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_purpose",
+      "category": "template_section_coverage",
+      "term": "Purpose",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_scope",
+      "category": "template_section_coverage",
+      "term": "Scope",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_business_context",
+      "category": "template_section_coverage",
+      "term": "Business Context",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_workflow",
+      "category": "template_section_coverage",
+      "term": "Workflow",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_validation",
+      "category": "template_section_coverage",
+      "term": "Validation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_acceptance",
+      "category": "template_section_coverage",
+      "term": "Acceptance",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_cautomation",
+      "category": "context_path_alignment",
+      "term": "CAutomation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_ccore",
+      "category": "context_path_alignment",
+      "term": "CCore",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_contains_pipeline_management",
+      "category": "context_path_alignment",
+      "term": "Pipeline Management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_tbd",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TBD",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_todo",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TODO",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_fixme",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "FIXME",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_value",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "???",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "<placeholder>",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "[placeholder]",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_supported_source_format",
+      "category": "source_format_eligibility",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "sourceFormat": "docx",
+      "supportedFormats": [
+        "pdf",
+        "docx",
+        "md"
+      ],
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_readable_source_document",
+      "category": "structural_integrity",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_minimum_content_length",
+      "category": "structural_completeness",
+      "minimumCharacters": 500,
+      "actualCharacters": 36607,
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_architecture",
+      "category": "template_section_coverage",
+      "term": "Architecture",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_traceability",
+      "category": "template_section_coverage",
+      "term": "Traceability",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_database",
+      "category": "template_section_coverage",
+      "term": "Database",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_api",
+      "category": "template_section_coverage",
+      "term": "API",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_validation",
+      "category": "template_section_coverage",
+      "term": "Validation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_testing",
+      "category": "template_section_coverage",
+      "term": "Testing",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_cautomation",
+      "category": "context_path_alignment",
+      "term": "CAutomation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_ccore",
+      "category": "context_path_alignment",
+      "term": "CCore",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_contains_pipeline_management",
+      "category": "context_path_alignment",
+      "term": "Pipeline Management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_tbd",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TBD",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_todo",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TODO",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_fixme",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "FIXME",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_value",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "???",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "<placeholder>",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "[placeholder]",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "srs_cross_references_ats",
+      "category": "referential_integrity",
+      "sourceDocumentId": "srs",
+      "requiredTerm": "ATS",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "ats_cross_references_srs",
+      "category": "referential_integrity",
+      "sourceDocumentId": "ats",
+      "requiredTerm": "SRS",
+      "passed": true,
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    {
+      "code": "project_client_contracts_missing",
+      "message": "No project-level client contracts are present. This run is valid as a module-reference context package."
+    },
+    {
+      "code": "project_engineering_contracts_missing",
+      "message": "No project-level engineering contracts are present. Module ATS is used as the implementation contract for this reference run."
+    }
+  ],
+  "errors": [],
+  "generatedFiles": [
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json"
+  ]
+}

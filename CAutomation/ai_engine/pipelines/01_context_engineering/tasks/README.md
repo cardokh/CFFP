@@ -3,8 +3,8 @@
 The Context Engineering pipeline is composed from reusable task definitions:
 
 1. `load_configuration` - validates pipeline-level configuration.
-2. `validate_inputs` - validates required project/module inputs and records non-blocking warnings.
-3. `extract_contracts` - extracts SRS and ATS DOCX contracts into deterministic Markdown state files.
+2. `normalize_input_documents` - validates required project/module source inputs and writes the canonical normalized_input workspace.
+3. `extract_contracts` - extracts normalized SRS and ATS Markdown contracts into deterministic pipeline state files.
 4. `build_context_package` - builds the generated context package.
 5. `validate_context_package` - validates the generated package artifacts.
 6. `write_execution_report` - aggregates task state into the final execution report.

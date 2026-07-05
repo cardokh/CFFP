@@ -34,7 +34,7 @@ class BuildContextPackageTask(ContextEngineeringSupportMixin, BaseScript):
         warnings: list[dict[str, str]] = []
         errors: list[dict[str, str]] = []
         try:
-            validation_state = self.read_state_json(self.pipeline_task_state_file("validate_inputs"))
+            validation_state = self.read_state_json(self.pipeline_task_state_file("normalize_input_documents"))
             extraction_state = self.read_state_json(self.pipeline_task_state_file("extract_contracts"))
             warnings.extend(validation_state.get("warnings", []))
             if validation_state.get("status") == "FAILED" or extraction_state.get("status") == "FAILED":

@@ -1,0 +1,45 @@
+{
+  "manifestType": "normalized_input_manifest",
+  "pipelineId": "01_context_engineering",
+  "projectId": "pipeline_management",
+  "moduleId": "pipeline_management",
+  "normalizedInputRoot": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management",
+  "documents": [
+    {
+      "documentId": "srs",
+      "displayName": "Software Requirements Specification",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "sourceFormat": "docx",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
+      "characterCount": 24142
+    },
+    {
+      "documentId": "ats",
+      "displayName": "Architecture and Technical Specification",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "sourceFormat": "docx",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
+      "characterCount": 36607
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "category": "srs",
+      "file_type": "docx",
+      "sha256": "1fb0eb9bad0a5106ea11f25239817ccba3451f4bbd96026c1fb6006d98a1a8c5",
+      "size_bytes": 47571
+    },
+    {
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "category": "ats",
+      "file_type": "docx",
+      "sha256": "f82a52d3167c8367cdff3f81ebb75a41d0cf04004d08c7c830a51a3638aaf34b",
+      "size_bytes": 52695
+    }
+  ],
+  "generatedFiles": [
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md"
+  ]
+}

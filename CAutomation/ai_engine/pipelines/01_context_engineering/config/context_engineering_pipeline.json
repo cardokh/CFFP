@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-008",
+  "pipelineVersion": "mvp-009",
   "projectId": "pipeline_management",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
@@ -10,7 +10,8 @@
     "projectConfigPath": "projects/{projectId}/project.json",
     "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}",
     "srsFileName": "Software_Requirements_Specification.docx",
-    "atsFileName": "Architecture_and_Technical_Specification.docx"
+    "atsFileName": "Architecture_and_Technical_Specification.docx",
+    "normalizedInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}"
   },
   "output": {
     "contextPackageRoot": "projects/{projectId}/output/context_packages",
@@ -68,7 +69,8 @@
             "Workflow",
             "Validation",
             "Acceptance"
-          ]
+          ],
+          "normalizedFileName": "module_srs.md"
         },
         {
           "documentId": "ats",
@@ -81,7 +83,8 @@
             "API",
             "Validation",
             "Testing"
-          ]
+          ],
+          "normalizedFileName": "module_ats.md"
         }
       ],
       "crossDocumentReferences": [
@@ -93,6 +96,11 @@
           "sourceDocumentId": "ats",
           "requiredTerm": "SRS"
         }
+      ],
+      "supportedSourceFormats": [
+        "pdf",
+        "docx",
+        "md"
       ]
     }
   },
@@ -119,10 +127,10 @@
     },
     {
       "sequence": 2,
-      "pipelineTaskId": "context_engineering.validate_inputs",
-      "taskDefinitionId": "validate_inputs",
-      "taskInstanceName": "Validate Inputs",
-      "stateFile": "validate_inputs.json",
+      "pipelineTaskId": "context_engineering.normalize_input_documents",
+      "taskDefinitionId": "normalize_input_documents",
+      "taskInstanceName": "Normalize Input Documents",
+      "stateFile": "normalize_input_documents.json",
       "blocking": true,
       "configuration": {}
     },

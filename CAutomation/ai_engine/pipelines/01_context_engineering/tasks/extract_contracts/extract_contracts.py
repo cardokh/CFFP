@@ -14,7 +14,6 @@ if str(_TASKS_ROOT) not in sys.path:
 from _shared.context_engineering_common import (  # noqa: E402
     ContextEngineeringSupportMixin,
     configure_project_import_path,
-    read_docx_as_markdown,
     source_record,
     utc_now_iso,
 )
@@ -27,7 +26,7 @@ from scripts.shared.script_json_utils import read_json_file  # noqa: E402
 
 
 class ExtractContractsTask(ContextEngineeringSupportMixin, BaseScript):
-    """Extracts configured SRS and ATS DOCX contracts to deterministic Markdown state files."""
+    """Copies normalized input contracts into deterministic extraction state files."""
 
     def __init__(self) -> None:
         super().__init__(__file__)
@@ -40,26 +39,32 @@ class ExtractContractsTask(ContextEngineeringSupportMixin, BaseScript):
         errors: list[dict[str, str]] = []
         generated_files: list[str] = []
         try:
-            validation_state = self.read_state_json(self.pipeline_task_state_file("validate_inputs"))
-            if validation_state.get("status") == "FAILED":
-                errors.append({"code": "input_validation_failed", "message": "Cannot extract contracts because input validation failed."})
+            normalization_state = self.read_state_json(self.pipeline_task_state_file("normalize_input_documents"))
+            if normalization_state.get("status") == "FAILED":
+                errors.append({"code": "input_normalization_failed", "message": "Cannot extract contracts because input normalization failed."})
             else:
-                srs_path, ats_path = self.contract_paths()
+                normalized_documents = normalization_state.get("documents", {})
+                srs_markdown_path = self._required_normalized_path(normalized_documents, "srs")
+                ats_markdown_path = self._required_normalized_path(normalized_documents, "ats")
                 extracted_dir = self.ensure_state_root() / "extracted_contracts"
                 extracted_dir.mkdir(parents=True, exist_ok=True)
-                srs_markdown = read_docx_as_markdown(srs_path)
-                ats_markdown = read_docx_as_markdown(ats_path)
+                srs_markdown = srs_markdown_path.read_text(encoding="utf-8")
+                ats_markdown = ats_markdown_path.read_text(encoding="utf-8")
                 srs_output = extracted_dir / "module_srs.md"
                 ats_output = extracted_dir / "module_ats.md"
                 srs_output.write_text(srs_markdown, encoding="utf-8", newline="\n")
                 ats_output.write_text(ats_markdown, encoding="utf-8", newline="\n")
                 generated_files.extend([self.to_project_relative_path(srs_output), self.to_project_relative_path(ats_output)])
                 project = read_json_file(self.project_config_path())
-                sources = [
-                    source_record(self, srs_path, "module_srs", "docx"),
-                    source_record(self, ats_path, "module_ats", "docx"),
+                source_files = []
+                manifest_path_value = normalization_state.get("normalizationManifestPath")
+                if isinstance(manifest_path_value, str) and manifest_path_value:
+                    source_files.append(source_record(self, self.CAutomation_root().parent / manifest_path_value, "normalized_input_manifest", "json"))
+                source_files.extend([
+                    source_record(self, srs_markdown_path, "module_srs", "markdown"),
+                    source_record(self, ats_markdown_path, "module_ats", "markdown"),
                     source_record(self, self.project_config_path(), "project_config", "json"),
-                ]
+                ])
                 self.write_state_json(
                     self.pipeline_task_state_file("extract_contracts"),
                     {
@@ -67,7 +72,8 @@ class ExtractContractsTask(ContextEngineeringSupportMixin, BaseScript):
                         "project": project,
                         "srsMarkdownPath": self.to_project_relative_path(srs_output),
                         "atsMarkdownPath": self.to_project_relative_path(ats_output),
-                        "sourceFiles": sources,
+                        "normalizedInputRoot": normalization_state.get("normalizedInputRoot"),
+                        "sourceFiles": source_files,
                         "generatedFiles": generated_files,
                     },
                 )
@@ -88,6 +94,20 @@ class ExtractContractsTask(ContextEngineeringSupportMixin, BaseScript):
             report_path = self.write_task_report(report)
             print_failed(f"extract_contracts FAILED; report {self.to_project_relative_path(report_path)}")
             raise
+
+    def _required_normalized_path(self, documents: Any, document_id: str) -> Path:
+        if not isinstance(documents, dict):
+            raise RuntimeError("Normalization state does not contain documents object.")
+        document = documents.get(document_id)
+        if not isinstance(document, dict):
+            raise RuntimeError(f"Normalization state is missing document: {document_id}")
+        value = document.get("normalizedPath")
+        if not isinstance(value, str) or not value.strip():
+            raise RuntimeError(f"Normalization state is missing normalizedPath for document: {document_id}")
+        path = self.CAutomation_root().parent / value
+        if not path.exists():
+            raise RuntimeError(f"Normalized document does not exist: {path}")
+        return path
 
 
 if __name__ == "__main__":

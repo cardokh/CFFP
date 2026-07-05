@@ -41,6 +41,11 @@ class ContextEngineeringSupportMixin(RuntimeTaskSupportMixin):
         module_root = self.module_input_root()
         return module_root / input_config["srsFileName"], module_root / input_config["atsFileName"]
 
+    def normalized_input_root(self) -> Path:
+        input_config = self.group("input")
+        configured_path = input_config.get("normalizedInputPath", "projects/{projectId}/normalized_input/modules/{moduleId}")
+        return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
+
     def context_package_dir(self) -> Path:
         output_config = self.group("output")
         package_root = self.CAutomation_root() / self.resolve_placeholders(output_config["contextPackageRoot"])
@@ -103,3 +108,30 @@ def table_as_markdown(table: ET.Element) -> str:
     lines = ["| " + " | ".join(header) + " |", "| " + " | ".join(separator) + " |"]
     lines.extend("| " + " | ".join(row) + " |" for row in body)
     return "\n".join(lines)
+
+
+def read_supported_document_as_markdown(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix == ".docx":
+        return read_docx_as_markdown(path)
+    if suffix == ".md":
+        return path.read_text(encoding="utf-8")
+    if suffix == ".pdf":
+        return read_pdf_as_markdown(path)
+    raise RuntimeError(f"Unsupported source document format: {path.suffix or '<none>'}")
+
+
+def read_pdf_as_markdown(path: Path) -> str:
+    try:
+        from pypdf import PdfReader  # type: ignore[import-not-found]
+    except ImportError as exc:
+        raise RuntimeError("PDF normalization requires the optional pypdf dependency.") from exc
+
+    reader = PdfReader(str(path))
+    pages: list[str] = []
+    for index, page in enumerate(reader.pages, start=1):
+        text = page.extract_text() or ""
+        text = text.strip()
+        if text:
+            pages.append(f"<!-- page: {index} -->\n\n{text}")
+    return "\n\n".join(pages).strip() + "\n"

@@ -7,7 +7,7 @@ This pipeline is intentionally decomposed into small, testable task units.
 ```text
 Pipeline 01 - Context Engineering
 ├── Task 01 - Load Configuration
-├── Task 02 - Validate Inputs
+├── Task 02 - Normalize Input Documents
 ├── Task 03 - Extract Contracts
 ├── Task 04 - Build Context Package
 ├── Task 05 - Validate Context Package
@@ -46,18 +46,18 @@ Execute Task 01 - Load Configuration tests:
 python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/load_configuration/run_task_tests.py
 ```
 
-### Task 02 - Validate Inputs
+### Task 02 - Normalize Input Documents
 
-Execute Task 02 - Validate Inputs:
+Execute Task 02 - Normalize Input Documents:
 
 ```bash
-python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/run_task.py
 ```
 
-Execute Task 02 - Validate Inputs tests:
+Execute Task 02 - Normalize Input Documents tests:
 
 ```bash
-python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task_tests.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/run_task_tests.py
 ```
 
 ### Task 03 - Extract Contracts
@@ -129,7 +129,7 @@ python CAutomation/ai_engine/pipelines/01_context_engineering/run_pipeline.py
 Each task is independently executable from the repository root. For example:
 
 ```bash
-python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/run_task.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/run_task.py
 ```
 
 Individual tasks are intended for focused validation and debugging. In normal use, run the pipeline orchestrator.
@@ -180,7 +180,7 @@ This pipeline is scoped to the CAutomation first deliverable. The Pipeline Manag
 
 ## Validation Gate
 
-Task 02 - Validate Inputs is a hard perimeter gate. It validates the manually authored module specification documents before extraction or context compilation starts. Invalid, incomplete, ambiguous, inconsistent, or template-nonconformant inputs stop downstream processing. The pipeline still runs the reporting path so the final execution report contains machine-readable gap details instead of failing with an unhandled crash.
+Task 02 - Normalize Input Documents is the hard minimum viable input quality gate. It validates the manually authored source documents, verifies supported source formats, extracts machine-readable content, writes the canonical `normalized_input/` workspace, and stops downstream processing if the minimum trusted input contract is not met. After Task 02 succeeds, downstream tasks must consume `normalized_input/` instead of raw `input/` source files.
 
-Task 05 - Validate Context Package remains separate. Task 02 validates raw human-authored documents; Task 05 validates the compiled context package.
+Task 05 - Validate Context Package remains separate. Task 02 validates and normalizes source documents; Task 05 validates the compiled context package.
 

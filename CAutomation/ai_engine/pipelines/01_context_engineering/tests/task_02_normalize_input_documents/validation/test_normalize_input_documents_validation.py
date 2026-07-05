@@ -21,7 +21,7 @@ def _copy_repo(tmp_path: Path) -> Path:
 
 
 def _run_task(cautomation_root: Path) -> subprocess.CompletedProcess[str]:
-    script_path = cautomation_root / "ai_engine/pipelines/01_context_engineering/tasks/validate_inputs/validate_inputs.py"
+    script_path = cautomation_root / "ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/normalize_input_documents.py"
     return subprocess.run([sys.executable, str(script_path)], cwd=cautomation_root.parent, text=True, capture_output=True, check=False)
 
 
@@ -34,7 +34,7 @@ def _module_root(cautomation_root: Path) -> Path:
 
 
 def _state_path(cautomation_root: Path) -> Path:
-    return cautomation_root / "ai_engine/pipelines/01_context_engineering/output/current_run/validate_inputs.json"
+    return cautomation_root / "ai_engine/pipelines/01_context_engineering/output/current_run/normalize_input_documents.json"
 
 
 def _read_pipeline_config(cautomation_root: Path) -> dict:
@@ -94,7 +94,7 @@ def _replace_reference_docs(cautomation_root: Path, srs_text: str | None = None,
         _write_minimal_docx(_module_root(cautomation_root) / "Architecture_and_Technical_Specification.docx", [ats_text])
 
 
-def test_validate_inputs_accepts_structured_readable_non_empty_documents(tmp_path):
+def test_normalize_input_documents_accepts_structured_readable_non_empty_documents(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     _replace_reference_docs(cautomation_root, _valid_srs_text(), _valid_ats_text())
 
@@ -107,7 +107,7 @@ def test_validate_inputs_accepts_structured_readable_non_empty_documents(tmp_pat
     assert not state["errors"]
 
 
-def test_validate_inputs_rejects_missing_required_input_document(tmp_path):
+def test_normalize_input_documents_rejects_missing_required_input_document(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     (_module_root(cautomation_root) / "Software_Requirements_Specification.docx").unlink()
 
@@ -117,17 +117,17 @@ def test_validate_inputs_rejects_missing_required_input_document(tmp_path):
     assert "module_srs_exists" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_unreadable_docx_input(tmp_path):
+def test_normalize_input_documents_rejects_unreadable_docx_input(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     (_module_root(cautomation_root) / "Software_Requirements_Specification.docx").write_text("not a zip file", encoding="utf-8")
 
     result = _run_task(cautomation_root)
 
     assert result.returncode == 1
-    assert "srs_unreadable_docx" in _error_codes(cautomation_root)
+    assert "srs_unreadable_source_document" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_empty_extractable_document(tmp_path):
+def test_normalize_input_documents_rejects_empty_extractable_document(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     _write_minimal_docx(_module_root(cautomation_root) / "Software_Requirements_Specification.docx", [])
 
@@ -137,7 +137,7 @@ def test_validate_inputs_rejects_empty_extractable_document(tmp_path):
     assert "srs_empty_document" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_document_below_minimum_content_length(tmp_path):
+def test_normalize_input_documents_rejects_document_below_minimum_content_length(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     _replace_reference_docs(cautomation_root, "Purpose Scope Business Context Workflow Validation Acceptance CAutomation CCore Pipeline Management ATS")
 
@@ -147,7 +147,7 @@ def test_validate_inputs_rejects_document_below_minimum_content_length(tmp_path)
     assert "srs_insufficient_content" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_missing_required_template_section(tmp_path):
+def test_normalize_input_documents_rejects_missing_required_template_section(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     missing_acceptance = _valid_srs_text().replace("Acceptance", "")
     _replace_reference_docs(cautomation_root, missing_acceptance, _valid_ats_text())
@@ -158,7 +158,7 @@ def test_validate_inputs_rejects_missing_required_template_section(tmp_path):
     assert "srs_missing_required_term" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_unresolved_placeholder_tokens(tmp_path):
+def test_normalize_input_documents_rejects_unresolved_placeholder_tokens(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     _replace_reference_docs(cautomation_root, _valid_srs_text() + " TODO")
 
@@ -168,7 +168,7 @@ def test_validate_inputs_rejects_unresolved_placeholder_tokens(tmp_path):
     assert "srs_placeholder_token_found" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_missing_cross_document_reference(tmp_path):
+def test_normalize_input_documents_rejects_missing_cross_document_reference(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     srs_without_ats = _valid_srs_text().replace("ATS", "architecture specification")
     _replace_reference_docs(cautomation_root, srs_without_ats, _valid_ats_text())
@@ -179,7 +179,7 @@ def test_validate_inputs_rejects_missing_cross_document_reference(tmp_path):
     assert "missing_cross_document_reference" in _error_codes(cautomation_root)
 
 
-def test_validate_inputs_rejects_invalid_quality_gate_document_profile(tmp_path):
+def test_normalize_input_documents_rejects_invalid_quality_gate_document_profile(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
     config = _read_pipeline_config(cautomation_root)
     config["validation"]["inputQualityGate"]["manualInputDocuments"] = "not-an-array"
@@ -189,3 +189,33 @@ def test_validate_inputs_rejects_invalid_quality_gate_document_profile(tmp_path)
 
     assert result.returncode == 1
     assert "invalid_input_quality_gate_config" in _error_codes(cautomation_root)
+
+
+def test_normalize_input_documents_writes_canonical_normalized_input_folder(tmp_path):
+    cautomation_root = _copy_repo(tmp_path)
+    _replace_reference_docs(cautomation_root, _valid_srs_text(), _valid_ats_text())
+
+    result = _run_task(cautomation_root)
+
+    assert result.returncode == 0
+    normalized_root = cautomation_root / "projects/pipeline_management/normalized_input/modules/pipeline_management"
+    assert (normalized_root / "module_srs.md").exists()
+    assert (normalized_root / "module_ats.md").exists()
+    assert (normalized_root / "normalization_manifest.json").exists()
+    assert (normalized_root / "normalization_report.json").exists()
+    manifest = json.loads((normalized_root / "normalization_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["manifestType"] == "normalized_input_manifest"
+    assert {document["documentId"] for document in manifest["documents"]} == {"srs", "ats"}
+
+
+def test_normalize_input_documents_rejects_unsupported_source_format(tmp_path):
+    cautomation_root = _copy_repo(tmp_path)
+    config = _read_pipeline_config(cautomation_root)
+    config["input"]["srsFileName"] = "Software_Requirements_Specification.txt"
+    _write_pipeline_config(cautomation_root, config)
+    (_module_root(cautomation_root) / "Software_Requirements_Specification.txt").write_text(_valid_srs_text(), encoding="utf-8")
+
+    result = _run_task(cautomation_root)
+
+    assert result.returncode == 1
+    assert "srs_unsupported_source_format" in _error_codes(cautomation_root)
