@@ -1,18 +1,34 @@
 {
-  "status": "PASSED_WITH_WARNINGS",
+  "status": "PASSED",
   "gateType": "hard_normalized_input_quality_gate",
   "gateDecision": "ACCEPTED",
   "normalizedInputRoot": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management",
   "normalizationManifestPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json",
   "normalizationReportPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_report.json",
   "documents": {
+    "project_client_contract": {
+      "sourceRoot": "project_client",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "sourceFormat": "pdf",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
+      "characterCount": 3764
+    },
+    "project_engineering_contract": {
+      "sourceRoot": "project_engineering",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "sourceFormat": "pdf",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
+      "characterCount": 3572
+    },
     "srs": {
+      "sourceRoot": "module",
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
       "characterCount": 23254
     },
     "ats": {
+      "sourceRoot": "module",
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
@@ -35,9 +51,37 @@
       "blocking": true
     },
     {
+      "name": "project_client_input_root_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/client",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_input_root_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/engineering",
+      "passed": true,
+      "blocking": true
+    },
+    {
       "name": "module_input_root_exists",
       "category": "structural_completeness",
       "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_exists",
+      "category": "structural_completeness",
+      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
       "passed": true,
       "blocking": true
     },
@@ -52,6 +96,272 @@
       "name": "module_ats_exists",
       "category": "structural_completeness",
       "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_supported_source_format",
+      "category": "source_format_eligibility",
+      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "sourceFormat": "pdf",
+      "supportedFormats": [
+        "pdf",
+        "docx",
+        "md"
+      ],
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_readable_source_document",
+      "category": "structural_integrity",
+      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_minimum_content_length",
+      "category": "structural_completeness",
+      "minimumCharacters": 500,
+      "actualCharacters": 3764,
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_purpose",
+      "category": "template_section_coverage",
+      "term": "Purpose",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_scope",
+      "category": "template_section_coverage",
+      "term": "Scope",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_business_context",
+      "category": "template_section_coverage",
+      "term": "Business Context",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_project",
+      "category": "template_section_coverage",
+      "term": "Project",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_module",
+      "category": "template_section_coverage",
+      "term": "Module",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_acceptance",
+      "category": "template_section_coverage",
+      "term": "Acceptance",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_cautomation",
+      "category": "context_path_alignment",
+      "term": "CAutomation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_ccore",
+      "category": "context_path_alignment",
+      "term": "CCore",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_contains_pipeline_management",
+      "category": "context_path_alignment",
+      "term": "Pipeline Management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_tbd",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TBD",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_todo",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TODO",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_fixme",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "FIXME",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_value",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "???",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "<placeholder>",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_client_contract_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "[placeholder]",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_supported_source_format",
+      "category": "source_format_eligibility",
+      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "sourceFormat": "pdf",
+      "supportedFormats": [
+        "pdf",
+        "docx",
+        "md"
+      ],
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_readable_source_document",
+      "category": "structural_integrity",
+      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_minimum_content_length",
+      "category": "structural_completeness",
+      "minimumCharacters": 500,
+      "actualCharacters": 3572,
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_architecture",
+      "category": "template_section_coverage",
+      "term": "Architecture",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_engineering",
+      "category": "template_section_coverage",
+      "term": "Engineering",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_traceability",
+      "category": "template_section_coverage",
+      "term": "Traceability",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_validation",
+      "category": "template_section_coverage",
+      "term": "Validation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_testing",
+      "category": "template_section_coverage",
+      "term": "Testing",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_pipeline",
+      "category": "template_section_coverage",
+      "term": "Pipeline",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_cautomation",
+      "category": "context_path_alignment",
+      "term": "CAutomation",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_ccore",
+      "category": "context_path_alignment",
+      "term": "CCore",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_contains_pipeline_management",
+      "category": "context_path_alignment",
+      "term": "Pipeline Management",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_tbd",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TBD",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_todo",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "TODO",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_fixme",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "FIXME",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_value",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "???",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "<placeholder>",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_no_placeholder",
+      "category": "ambiguity_and_gap_minimization",
+      "token": "[placeholder]",
       "passed": true,
       "blocking": true
     },
@@ -322,6 +632,22 @@
       "blocking": true
     },
     {
+      "name": "project_client_contract_cross_references_project_engineering_contract",
+      "category": "referential_integrity",
+      "sourceDocumentId": "project_client_contract",
+      "requiredTerm": "Project Engineering Contract",
+      "passed": true,
+      "blocking": true
+    },
+    {
+      "name": "project_engineering_contract_cross_references_project_client_contract",
+      "category": "referential_integrity",
+      "sourceDocumentId": "project_engineering_contract",
+      "requiredTerm": "Project Client Contract",
+      "passed": true,
+      "blocking": true
+    },
+    {
       "name": "srs_cross_references_ats",
       "category": "referential_integrity",
       "sourceDocumentId": "srs",
@@ -338,18 +664,11 @@
       "blocking": true
     }
   ],
-  "warnings": [
-    {
-      "code": "project_client_contracts_missing",
-      "message": "No project-level client contracts are present. This run is valid as a module-reference context package."
-    },
-    {
-      "code": "project_engineering_contracts_missing",
-      "message": "No project-level engineering contracts are present. Module ATS is used as the implementation contract for this reference run."
-    }
-  ],
+  "warnings": [],
   "errors": [],
   "generatedFiles": [
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
     "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
     "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
     "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json"

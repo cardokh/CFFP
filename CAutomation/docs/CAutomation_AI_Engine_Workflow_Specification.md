@@ -462,17 +462,26 @@ Task 02, Normalize Input Documents, is the hard minimum viable input quality gat
 
 Task 02 must use a source-format normalizer abstraction. The task orchestration layer detects each source document format, delegates extraction to the matching normalizer implementation, and writes the canonical Markdown plus metadata outputs. Format-specific parsing rules belong inside dedicated normalizers, such as PDF, DOCX, and Markdown normalizers. Downstream tasks must remain isolated from source-format parsing details.
 
-The canonical normalized workspace is written under the project folder, next to the raw `input/` folder:
+The canonical normalized workspace is written under the project folder, next to the raw `input/` folder. For the current CAutomation reference project, Task 02 normalizes both project-level and module-level contracts into the same canonical workspace:
 
 ```text
 CAutomation/projects/<project_id>/normalized_input/modules/<module_id>/
+├── project_client_contract.md
+├── project_engineering_contract.md
 ├── module_srs.md
 ├── module_ats.md
 ├── normalization_manifest.json
 └── normalization_report.json
 ```
 
-After Task 02 succeeds, later Pipeline 01 tasks must consume `normalized_input/` and must not read raw `input/` source documents directly. This rule isolates source-format complexity in one task and gives PDF, DOCX, Markdown, and future supported formats a single downstream representation. PDF is the preferred client-facing contract format; DOCX and Markdown may remain supported where configured for development/reference workflows.
+After Task 02 succeeds, later Pipeline 01 tasks must consume `normalized_input/` and must not read raw `input/` source documents directly. This rule isolates source-format complexity in one task and gives PDF, DOCX, Markdown, and future supported formats a single downstream representation. PDF is the primary source-document format for the current CAutomation development path and reference tests. DOCX and Markdown remain supported by existing normalizers, but they are not the main engineering focus of this phase.
+
+Task 02 treats the following source PDFs as required minimum input contracts for the Pipeline Management reference project:
+
+- `input/client/Project_Client_Contract.pdf`
+- `input/engineering/Project_Engineering_Contract.pdf`
+- `input/modules/<module_id>/Software_Requirements_Specification.pdf`
+- `input/modules/<module_id>/Architecture_and_Technical_Specification.pdf`
 
 Task 02 validation responsibilities are implementation-agnostic and template-driven. It checks structural completeness, source-format eligibility, readability/extractability, non-empty normalized content, required section coverage, placeholder indicators, and basic cross-document readiness required by the active Project Profile Specification Template. The architectural contract must not hard-code module-specific artifacts; instead, the active template defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
 

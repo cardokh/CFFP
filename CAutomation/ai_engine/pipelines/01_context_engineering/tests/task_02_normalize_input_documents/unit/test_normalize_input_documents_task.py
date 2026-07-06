@@ -40,8 +40,8 @@ def test_normalize_input_documents_resolves_required_contract_paths(monkeypatch)
     task = _load_task_class()()
     srs_path, ats_path = task.contract_paths()
 
-    assert srs_path.name == "Software_Requirements_Specification.docx"
-    assert ats_path.name == "Architecture_and_Technical_Specification.docx"
+    assert srs_path.name == "Software_Requirements_Specification.pdf"
+    assert ats_path.name == "Architecture_and_Technical_Specification.pdf"
     assert "projects/pipeline_management/input/modules/pipeline_management" in task.to_project_relative_path(srs_path)
 
 
@@ -85,5 +85,5 @@ def test_normalize_input_documents_supported_formats_are_configured_and_register
     quality_gate = task.pipeline_config["validation"]["inputQualityGate"]
     configured_formats = set(quality_gate["supportedSourceFormats"])
 
-    assert {"pdf", "docx"}.issubset(configured_formats)
+    assert "pdf" in configured_formats
     assert all(task.document_normalizers.supports(source_format) for source_format in configured_formats)

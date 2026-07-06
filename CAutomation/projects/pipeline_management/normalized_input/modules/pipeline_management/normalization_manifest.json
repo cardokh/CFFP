@@ -6,8 +6,27 @@
   "normalizedInputRoot": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management",
   "documents": [
     {
+      "documentId": "project_client_contract",
+      "displayName": "Project Client Contract",
+      "sourceRoot": "project_client",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "sourceFormat": "pdf",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
+      "characterCount": 3764
+    },
+    {
+      "documentId": "project_engineering_contract",
+      "displayName": "Project Engineering Contract",
+      "sourceRoot": "project_engineering",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "sourceFormat": "pdf",
+      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
+      "characterCount": 3572
+    },
+    {
       "documentId": "srs",
       "displayName": "Software Requirements Specification",
+      "sourceRoot": "module",
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
@@ -16,6 +35,7 @@
     {
       "documentId": "ats",
       "displayName": "Architecture and Technical Specification",
+      "sourceRoot": "module",
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
@@ -23,6 +43,20 @@
     }
   ],
   "sourceFiles": [
+    {
+      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "category": "project_client_contract",
+      "file_type": "pdf",
+      "sha256": "c5a590129ca0479c1b14220188ca6af357231c3439a1672144c1cef8247616c7",
+      "size_bytes": 2583
+    },
+    {
+      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "category": "project_engineering_contract",
+      "file_type": "pdf",
+      "sha256": "5f7681e3eaf1d7ef3bec8362d1b84a4c9da9064e2133ebd49760c1ea4fc0d5d3",
+      "size_bytes": 2793
+    },
     {
       "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "category": "srs",
@@ -39,6 +73,8 @@
     }
   ],
   "generatedFiles": [
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
+    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
     "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
     "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md"
   ]

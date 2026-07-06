@@ -4,7 +4,6 @@ import json
 import shutil
 import subprocess
 import sys
-import zipfile
 from pathlib import Path
 
 
@@ -53,20 +52,18 @@ def _error_codes(cautomation_root: Path) -> set[str]:
     return {error["code"] for error in _read_state(cautomation_root)["errors"]}
 
 
-def _write_minimal_docx(path: Path, paragraphs: list[str]) -> None:
+def _write_minimal_pdf(path: Path, paragraphs: list[str]) -> None:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+
     path.parent.mkdir(parents=True, exist_ok=True)
-    body = "".join(
-        f"<w:p><w:r><w:t>{paragraph}</w:t></w:r></w:p>"
-        for paragraph in paragraphs
-    )
-    document_xml = (
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-        '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-        f"<w:body>{body}</w:body>"
-        "</w:document>"
-    )
-    with zipfile.ZipFile(path, "w") as archive:
-        archive.writestr("word/document.xml", document_xml)
+    styles = getSampleStyleSheet()
+    story = []
+    for paragraph in paragraphs:
+        story.append(Paragraph(paragraph, styles["BodyText"]))
+        story.append(Spacer(1, 8))
+    SimpleDocTemplate(str(path), pagesize=A4).build(story)
 
 
 def _valid_srs_text() -> str:
@@ -89,9 +86,9 @@ def _valid_ats_text() -> str:
 
 def _replace_reference_docs(cautomation_root: Path, srs_text: str | None = None, ats_text: str | None = None) -> None:
     if srs_text is not None:
-        _write_minimal_docx(_module_root(cautomation_root) / "Software_Requirements_Specification.docx", [srs_text])
+        _write_minimal_pdf(_module_root(cautomation_root) / "Software_Requirements_Specification.pdf", [srs_text])
     if ats_text is not None:
-        _write_minimal_docx(_module_root(cautomation_root) / "Architecture_and_Technical_Specification.docx", [ats_text])
+        _write_minimal_pdf(_module_root(cautomation_root) / "Architecture_and_Technical_Specification.pdf", [ats_text])
 
 
 def test_normalize_input_documents_accepts_structured_readable_non_empty_documents(tmp_path):
@@ -109,7 +106,7 @@ def test_normalize_input_documents_accepts_structured_readable_non_empty_documen
 
 def test_normalize_input_documents_rejects_missing_required_input_document(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
-    (_module_root(cautomation_root) / "Software_Requirements_Specification.docx").unlink()
+    (_module_root(cautomation_root) / "Software_Requirements_Specification.pdf").unlink()
 
     result = _run_task(cautomation_root)
 
@@ -117,9 +114,9 @@ def test_normalize_input_documents_rejects_missing_required_input_document(tmp_p
     assert "module_srs_exists" in _error_codes(cautomation_root)
 
 
-def test_normalize_input_documents_rejects_unreadable_docx_input(tmp_path):
+def test_normalize_input_documents_rejects_unreadable_pdf_input(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
-    (_module_root(cautomation_root) / "Software_Requirements_Specification.docx").write_text("not a zip file", encoding="utf-8")
+    (_module_root(cautomation_root) / "Software_Requirements_Specification.pdf").write_text("not a pdf file", encoding="utf-8")
 
     result = _run_task(cautomation_root)
 
@@ -129,7 +126,7 @@ def test_normalize_input_documents_rejects_unreadable_docx_input(tmp_path):
 
 def test_normalize_input_documents_rejects_empty_extractable_document(tmp_path):
     cautomation_root = _copy_repo(tmp_path)
-    _write_minimal_docx(_module_root(cautomation_root) / "Software_Requirements_Specification.docx", [])
+    _write_minimal_pdf(_module_root(cautomation_root) / "Software_Requirements_Specification.pdf", [])
 
     result = _run_task(cautomation_root)
 
@@ -199,13 +196,15 @@ def test_normalize_input_documents_writes_canonical_normalized_input_folder(tmp_
 
     assert result.returncode == 0
     normalized_root = cautomation_root / "projects/pipeline_management/normalized_input/modules/pipeline_management"
+    assert (normalized_root / "project_client_contract.md").exists()
+    assert (normalized_root / "project_engineering_contract.md").exists()
     assert (normalized_root / "module_srs.md").exists()
     assert (normalized_root / "module_ats.md").exists()
     assert (normalized_root / "normalization_manifest.json").exists()
     assert (normalized_root / "normalization_report.json").exists()
     manifest = json.loads((normalized_root / "normalization_manifest.json").read_text(encoding="utf-8"))
     assert manifest["manifestType"] == "normalized_input_manifest"
-    assert {document["documentId"] for document in manifest["documents"]} == {"srs", "ats"}
+    assert {document["documentId"] for document in manifest["documents"]} == {"project_client_contract", "project_engineering_contract", "srs", "ats"}
 
 
 def test_normalize_input_documents_rejects_unsupported_source_format(tmp_path):

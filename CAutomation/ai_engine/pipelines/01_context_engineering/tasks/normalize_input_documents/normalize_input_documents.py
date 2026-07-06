@@ -46,10 +46,15 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
         generated_files: list[str] = []
         try:
             srs_path, ats_path = self.contract_paths()
+            input_config = self.group("input")
             required_paths = {
                 "CAutomation_root_exists": self.CAutomation_root(),
                 "project_config_exists": self.project_config_path(),
+                "project_client_input_root_exists": self.project_client_input_root(),
+                "project_engineering_input_root_exists": self.project_engineering_input_root(),
                 "module_input_root_exists": self.module_input_root(),
+                "project_client_contract_exists": self.project_client_input_root() / input_config["projectClientContractFileName"],
+                "project_engineering_contract_exists": self.project_engineering_input_root() / input_config["projectEngineeringContractFileName"],
                 "module_srs_exists": srs_path,
                 "module_ats_exists": ats_path,
             }
@@ -61,22 +66,6 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             if isinstance(quality_gate, dict) and quality_gate.get("enabled", True) is True:
                 self._normalize_manual_input_documents(quality_gate, checks, errors, normalized_documents)
                 self._validate_cross_document_rules(quality_gate, checks, errors, normalized_documents)
-
-            project_input = self.project_input_root()
-            if validation_config.get("warnWhenProjectClientContractsMissing", True) is True:
-                self._warn_when_no_contract_files(
-                    root=project_input / "client",
-                    warning_code="project_client_contracts_missing",
-                    message="No project-level client contracts are present. This run is valid as a module-reference context package.",
-                    warnings=warnings,
-                )
-            if validation_config.get("warnWhenProjectEngineeringContractsMissing", True) is True:
-                self._warn_when_no_contract_files(
-                    root=project_input / "engineering",
-                    warning_code="project_engineering_contracts_missing",
-                    message="No project-level engineering contracts are present. Module ATS is used as the implementation contract for this reference run.",
-                    warnings=warnings,
-                )
 
             status = self.status_from(warnings, errors)
             normalized_root = self.normalized_input_root()
@@ -97,6 +86,7 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                 "normalizationReportPath": self.to_project_relative_path(normalization_report_path),
                 "documents": {
                     document_id: {
+                        "sourceRoot": data.get("sourceRoot", "module"),
                         "sourcePath": data["sourcePath"],
                         "sourceFormat": data["sourceFormat"],
                         "normalizedPath": data.get("normalizedPath"),
@@ -170,17 +160,24 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             file_name_key = str(document.get("fileNameKey", "")).strip()
             display_name = str(document.get("displayName", document_id)).strip() or document_id
             normalized_file_name = str(document.get("normalizedFileName", f"{document_id}.md")).strip() or f"{document_id}.md"
+            source_root_key = str(document.get("sourceRoot", "module")).strip() or "module"
             file_name = input_config.get(file_name_key)
             if not document_id or not isinstance(file_name, str) or not file_name.strip():
                 errors.append({"code": "invalid_document_profile", "message": f"Invalid manual input document profile: {document}"})
                 continue
-            path = self.module_input_root() / file_name
+            try:
+                source_root = self.document_source_root(source_root_key)
+            except ValueError as exc:
+                errors.append({"code": "invalid_document_source_root", "message": str(exc)})
+                continue
+            path = source_root / file_name
             source_format = path.suffix.lower().lstrip(".")
             self._record_supported_format_check(document_id, display_name, path, source_format, supported_formats, checks, errors)
             text = self._normalize_document_text(document_id, display_name, path, checks, errors)
             normalized_documents[document_id] = {
                 "documentId": document_id,
                 "displayName": display_name,
+                "sourceRoot": source_root_key,
                 "sourcePath": self.to_project_relative_path(path),
                 "sourceFormat": source_format,
                 "normalizedFileName": normalized_file_name,
@@ -270,6 +267,7 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                 {
                     "documentId": data["documentId"],
                     "displayName": data["displayName"],
+                    "sourceRoot": data.get("sourceRoot", "module"),
                     "sourcePath": data["sourcePath"],
                     "sourceFormat": data["sourceFormat"],
                     "normalizedPath": data.get("normalizedPath"),

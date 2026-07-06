@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-009",
+  "pipelineVersion": "mvp-010",
   "projectId": "pipeline_management",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
@@ -11,7 +11,11 @@
     "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}",
     "srsFileName": "Software_Requirements_Specification.pdf",
     "atsFileName": "Architecture_and_Technical_Specification.pdf",
-    "normalizedInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}"
+    "normalizedInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}",
+    "projectClientInputPath": "projects/{projectId}/input/client",
+    "projectEngineeringInputPath": "projects/{projectId}/input/engineering",
+    "projectClientContractFileName": "Project_Client_Contract.pdf",
+    "projectEngineeringContractFileName": "Project_Engineering_Contract.pdf"
   },
   "output": {
     "contextPackageRoot": "projects/{projectId}/output/context_packages",
@@ -39,8 +43,8 @@
     "validationReport": "validation_report.json"
   },
   "validation": {
-    "warnWhenProjectClientContractsMissing": true,
-    "warnWhenProjectEngineeringContractsMissing": true,
+    "warnWhenProjectClientContractsMissing": false,
+    "warnWhenProjectEngineeringContractsMissing": false,
     "inputQualityGate": {
       "enabled": true,
       "minimumExtractedCharacters": 500,
@@ -59,7 +63,38 @@
       ],
       "manualInputDocuments": [
         {
+          "documentId": "project_client_contract",
+          "sourceRoot": "project_client",
+          "fileNameKey": "projectClientContractFileName",
+          "displayName": "Project Client Contract",
+          "requiredTerms": [
+            "Purpose",
+            "Scope",
+            "Business Context",
+            "Project",
+            "Module",
+            "Acceptance"
+          ],
+          "normalizedFileName": "project_client_contract.md"
+        },
+        {
+          "documentId": "project_engineering_contract",
+          "sourceRoot": "project_engineering",
+          "fileNameKey": "projectEngineeringContractFileName",
+          "displayName": "Project Engineering Contract",
+          "requiredTerms": [
+            "Architecture",
+            "Engineering",
+            "Traceability",
+            "Validation",
+            "Testing",
+            "Pipeline"
+          ],
+          "normalizedFileName": "project_engineering_contract.md"
+        },
+        {
           "documentId": "srs",
+          "sourceRoot": "module",
           "fileNameKey": "srsFileName",
           "displayName": "Software Requirements Specification",
           "requiredTerms": [
@@ -74,6 +109,7 @@
         },
         {
           "documentId": "ats",
+          "sourceRoot": "module",
           "fileNameKey": "atsFileName",
           "displayName": "Architecture and Technical Specification",
           "requiredTerms": [
@@ -89,6 +125,14 @@
       ],
       "crossDocumentReferences": [
         {
+          "sourceDocumentId": "project_client_contract",
+          "requiredTerm": "Project Engineering Contract"
+        },
+        {
+          "sourceDocumentId": "project_engineering_contract",
+          "requiredTerm": "Project Client Contract"
+        },
+        {
           "sourceDocumentId": "srs",
           "requiredTerm": "ATS"
         },
@@ -101,7 +145,8 @@
         "pdf",
         "docx",
         "md"
-      ]
+      ],
+      "primarySourceFormat": "pdf"
     }
   },
   "downstreamConsumers": [

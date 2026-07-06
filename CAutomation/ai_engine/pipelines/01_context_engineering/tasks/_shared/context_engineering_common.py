@@ -36,6 +36,26 @@ class ContextEngineeringSupportMixin(RuntimeTaskSupportMixin):
         module_root = self.module_input_root()
         return module_root / input_config["srsFileName"], module_root / input_config["atsFileName"]
 
+    def project_client_input_root(self) -> Path:
+        input_config = self.group("input")
+        configured_path = input_config.get("projectClientInputPath", "projects/{projectId}/input/client")
+        return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
+
+    def project_engineering_input_root(self) -> Path:
+        input_config = self.group("input")
+        configured_path = input_config.get("projectEngineeringInputPath", "projects/{projectId}/input/engineering")
+        return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
+
+    def document_source_root(self, source_root: str) -> Path:
+        normalized = source_root.strip().lower()
+        if normalized == "project_client":
+            return self.project_client_input_root()
+        if normalized == "project_engineering":
+            return self.project_engineering_input_root()
+        if normalized == "module":
+            return self.module_input_root()
+        raise ValueError(f"Unsupported document source root: {source_root}")
+
     def normalized_input_root(self) -> Path:
         input_config = self.group("input")
         configured_path = input_config.get("normalizedInputPath", "projects/{projectId}/normalized_input/modules/{moduleId}")

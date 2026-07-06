@@ -7,3 +7,4 @@ psycopg2-binary==2.9.12
 pypdf==6.14.2
 pytest==9.1.1
 requests==2.33.1
+reportlab==5.0.0
