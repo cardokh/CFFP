@@ -339,7 +339,7 @@ The canonical reference project folder is:
 ```text
 CAutomation/
 └── projects/
-    └── cautomation/
+    └── CAutomation/
         ├── project.json
         ├── input/
         │   ├── project/
@@ -977,19 +977,6 @@ run_pipeline_tests.py
 - produce a standard pipeline test report,
 - expose status, elapsed time, task test results, stdout, stderr, and report paths,
 - return a non-zero process exit code when any required task test runner fails.
-
-#### Future execution levels
-
-The following higher-level execution entry points are planned but are not part of the current implementation scope:
-
-```text
-run_ai_engine.py
-run_ai_engine_tests.py
-run_cautomation.py
-run_cautomation_tests.py
-```
-
-They must later consume the task and pipeline reports defined above instead of introducing a conflicting report model.
 
 ---
 
