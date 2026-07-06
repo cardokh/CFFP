@@ -7,16 +7,16 @@
   "normalizationReportPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_report.json",
   "documents": {
     "srs": {
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
-      "sourceFormat": "docx",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
-      "characterCount": 24142
+      "characterCount": 23254
     },
     "ats": {
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
-      "sourceFormat": "docx",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
-      "characterCount": 36607
+      "characterCount": 34373
     }
   },
   "checks": [
@@ -44,22 +44,22 @@
     {
       "name": "module_srs_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "module_ats_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "srs_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
-      "sourceFormat": "docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
         "docx",
@@ -71,7 +71,7 @@
     {
       "name": "srs_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "passed": true,
       "blocking": true
     },
@@ -79,7 +79,7 @@
       "name": "srs_minimum_content_length",
       "category": "structural_completeness",
       "minimumCharacters": 500,
-      "actualCharacters": 24142,
+      "actualCharacters": 23254,
       "passed": true,
       "blocking": true
     },
@@ -191,8 +191,8 @@
     {
       "name": "ats_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
-      "sourceFormat": "docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
         "docx",
@@ -204,7 +204,7 @@
     {
       "name": "ats_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "passed": true,
       "blocking": true
     },
@@ -212,7 +212,7 @@
       "name": "ats_minimum_content_length",
       "category": "structural_completeness",
       "minimumCharacters": 500,
-      "actualCharacters": 36607,
+      "actualCharacters": 34373,
       "passed": true,
       "blocking": true
     },

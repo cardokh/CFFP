@@ -9,8 +9,8 @@
     "CAutomationRoot": "CAutomation",
     "projectConfigPath": "projects/{projectId}/project.json",
     "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}",
-    "srsFileName": "Software_Requirements_Specification.docx",
-    "atsFileName": "Architecture_and_Technical_Specification.docx",
+    "srsFileName": "Software_Requirements_Specification.pdf",
+    "atsFileName": "Architecture_and_Technical_Specification.pdf",
     "normalizedInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}"
   },
   "output": {

@@ -8,34 +8,34 @@
     {
       "documentId": "srs",
       "displayName": "Software Requirements Specification",
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
-      "sourceFormat": "docx",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
-      "characterCount": 24142
+      "characterCount": 23254
     },
     {
       "documentId": "ats",
       "displayName": "Architecture and Technical Specification",
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
-      "sourceFormat": "docx",
+      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
-      "characterCount": 36607
+      "characterCount": 34373
     }
   ],
   "sourceFiles": [
     {
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "category": "srs",
-      "file_type": "docx",
-      "sha256": "1fb0eb9bad0a5106ea11f25239817ccba3451f4bbd96026c1fb6006d98a1a8c5",
-      "size_bytes": 47571
+      "file_type": "pdf",
+      "sha256": "a9aa06a0ae8b856927b06719d51d9fcf811dcbc39189fa8f85a808af5f638f59",
+      "size_bytes": 251370
     },
     {
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.docx",
+      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "category": "ats",
-      "file_type": "docx",
-      "sha256": "f82a52d3167c8367cdff3f81ebb75a41d0cf04004d08c7c830a51a3638aaf34b",
-      "size_bytes": 52695
+      "file_type": "pdf",
+      "sha256": "159b2d33c86911785d2d6af78bd483301f09f5444c6ef58805772be45473b672",
+      "size_bytes": 334587
     }
   ],
   "generatedFiles": [
