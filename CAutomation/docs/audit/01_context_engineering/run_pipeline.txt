@@ -1,0 +1,10 @@
+pipeline:
+python CAutomation/ai_engine/pipelines/01_context_engineering/run_pipeline.py
+
+task1:
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/load_configuration/run_task.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/load_configuration/run_task_tests.py
+
+task2:
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/run_task.py
+python CAutomation/ai_engine/pipelines/01_context_engineering/tasks/normalize_input_documents/run_task_tests.py
