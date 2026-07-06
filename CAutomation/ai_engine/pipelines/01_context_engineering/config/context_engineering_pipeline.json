@@ -1,21 +1,23 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-011",
-  "projectId": "pipeline_management",
+  "pipelineVersion": "mvp-012",
+  "projectId": "CAutomation",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
   "input": {
     "CAutomationRoot": "CAutomation",
     "projectConfigPath": "projects/{projectId}/project.json",
-    "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}",
+    "moduleInputPath": "projects/{projectId}/input/modules/{moduleId}/contracts",
     "srsFileName": "Software_Requirements_Specification.pdf",
     "atsFileName": "Architecture_and_Technical_Specification.pdf",
-    "normalizedInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}",
-    "projectClientInputPath": "projects/{projectId}/input/client",
-    "projectEngineeringInputPath": "projects/{projectId}/input/engineering",
+    "normalizedInputPath": "projects/{projectId}/normalized_input",
+    "projectClientInputPath": "projects/{projectId}/input/project/contracts/client",
+    "projectEngineeringInputPath": "projects/{projectId}/input/project/contracts/engineering",
     "projectClientContractFileName": "Project_Client_Contract.pdf",
-    "projectEngineeringContractFileName": "Project_Engineering_Contract.pdf"
+    "projectEngineeringContractFileName": "Project_Engineering_Contract.pdf",
+    "normalizedProjectInputPath": "projects/{projectId}/normalized_input/project/contracts",
+    "normalizedModuleInputPath": "projects/{projectId}/normalized_input/modules/{moduleId}/contracts"
   },
   "output": {
     "contextPackageRoot": "projects/{projectId}/output/context_packages",
@@ -236,8 +238,8 @@
     "03_generation/deployment",
     "04_validation"
   ],
-  "scopeBoundary": "Only the Pipeline Management reference module is in scope for this context package.",
-  "firstDeliverable": "The first deliverable is the executable CAutomation package, validated through the Pipeline Management reference module.",
+  "scopeBoundary": "CAutomation is the multi-module reference project. Pipeline Management is the active reference module for this pipeline execution; User & Client Management is present as the second reference module structure.",
+  "firstDeliverable": "The first deliverable is the executable CAutomation package, validated through the Pipeline Management module inside the multi-module CAutomation reference project.",
   "taskInstances": [
     {
       "sequence": 1,
@@ -293,5 +295,25 @@
       "blocking": true,
       "configuration": {}
     }
-  ]
+  ],
+  "referenceProject": {
+    "projectId": "CAutomation",
+    "projectName": "CAutomation",
+    "projectLevelContracts": [
+      "project_client_contract",
+      "project_engineering_contract"
+    ],
+    "modules": [
+      {
+        "moduleId": "pipeline_management",
+        "name": "Pipeline Management",
+        "activeForPipeline01": true
+      },
+      {
+        "moduleId": "user_client_management",
+        "name": "User & Client Management",
+        "activeForPipeline01": false
+      }
+    ]
+  }
 }

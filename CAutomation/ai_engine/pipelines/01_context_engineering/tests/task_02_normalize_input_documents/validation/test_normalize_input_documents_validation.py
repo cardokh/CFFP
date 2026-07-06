@@ -29,7 +29,7 @@ def _pipeline_config_path(cautomation_root: Path) -> Path:
 
 
 def _module_root(cautomation_root: Path) -> Path:
-    return cautomation_root / "projects/pipeline_management/input/modules/pipeline_management"
+    return cautomation_root / "projects/CAutomation/input/modules/pipeline_management/contracts"
 
 
 def _state_path(cautomation_root: Path) -> Path:
@@ -195,16 +195,25 @@ def test_normalize_input_documents_writes_canonical_normalized_input_folder(tmp_
     result = _run_task(cautomation_root)
 
     assert result.returncode == 0
-    normalized_root = cautomation_root / "projects/pipeline_management/normalized_input/modules/pipeline_management"
-    assert (normalized_root / "project_client_contract.md").exists()
-    assert (normalized_root / "project_engineering_contract.md").exists()
-    assert (normalized_root / "module_srs.md").exists()
-    assert (normalized_root / "module_ats.md").exists()
+    normalized_root = cautomation_root / "projects/CAutomation/normalized_input"
+    project_contract_root = normalized_root / "project/contracts"
+    module_contract_root = normalized_root / "modules/pipeline_management/contracts"
+    assert (project_contract_root / "project_client_contract.md").exists()
+    assert (project_contract_root / "project_engineering_contract.md").exists()
+    assert (module_contract_root / "module_srs.md").exists()
+    assert (module_contract_root / "module_ats.md").exists()
     assert (normalized_root / "normalization_manifest.json").exists()
     assert (normalized_root / "normalization_report.json").exists()
     manifest = json.loads((normalized_root / "normalization_manifest.json").read_text(encoding="utf-8"))
     assert manifest["manifestType"] == "normalized_input_manifest"
-    assert {document["documentId"] for document in manifest["documents"]} == {"project_client_contract", "project_engineering_contract", "srs", "ats"}
+    assert manifest["projectId"] == "CAutomation"
+    assert manifest["moduleId"] == "pipeline_management"
+    assert manifest["normalizedProjectInputRoot"].endswith("projects/CAutomation/normalized_input/project/contracts")
+    assert manifest["normalizedModuleInputRoot"].endswith("projects/CAutomation/normalized_input/modules/pipeline_management/contracts")
+    documents = {document["documentId"]: document for document in manifest["documents"]}
+    assert set(documents) == {"project_client_contract", "project_engineering_contract", "srs", "ats"}
+    assert documents["project_client_contract"]["contractScope"] == "project"
+    assert documents["srs"]["contractScope"] == "module"
 
 
 def test_normalize_input_documents_rejects_unsupported_source_format(tmp_path):

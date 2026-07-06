@@ -34,7 +34,7 @@ def test_load_configuration_loads_pipeline_config_and_task_registry(monkeypatch)
     task = _load_task_class()()
 
     assert task.pipeline_config["pipelineId"] == "01_context_engineering"
-    assert task.pipeline_config["projectId"] == "pipeline_management"
+    assert task.pipeline_config["projectId"] == "CAutomation"
     assert task.pipeline_config["moduleId"] == "pipeline_management"
     assert task.task_registry["taskDefinitions"]
     assert len(task.task_registry["taskDefinitions"]) == 6

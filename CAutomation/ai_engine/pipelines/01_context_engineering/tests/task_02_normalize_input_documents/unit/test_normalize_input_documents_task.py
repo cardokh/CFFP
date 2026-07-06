@@ -42,7 +42,7 @@ def test_normalize_input_documents_resolves_required_contract_paths(monkeypatch)
 
     assert srs_path.name == "Software_Requirements_Specification.pdf"
     assert ats_path.name == "Architecture_and_Technical_Specification.pdf"
-    assert "projects/pipeline_management/input/modules/pipeline_management" in task.to_project_relative_path(srs_path)
+    assert "projects/CAutomation/input/modules/pipeline_management/contracts" in task.to_project_relative_path(srs_path)
 
 
 def test_normalize_input_documents_term_matching_is_case_insensitive(monkeypatch):

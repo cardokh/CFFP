@@ -42,7 +42,7 @@ def test_load_configuration_runs_successfully_and_writes_state(tmp_path):
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["status"] == "PASSED"
     assert state["pipelineId"] == "01_context_engineering"
-    assert state["projectId"] == "pipeline_management"
+    assert state["projectId"] == "CAutomation"
     assert state["moduleId"] == "pipeline_management"
     assert state["taskDefinitionCount"] == 6
     assert state["taskInstanceCount"] == 6

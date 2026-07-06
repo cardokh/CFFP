@@ -157,7 +157,7 @@ Task folders are reusable task definitions. The pipeline configuration now conta
 The context package is written to the configured project output folder:
 
 ```text
-CAutomation/projects/pipeline_management/output/context_packages/pipeline_management_pipeline_management_context_package/
+CAutomation/projects/CAutomation/output/context_packages/cautomation_pipeline_management_context_package/
 ```
 
 Pipeline runtime state and task reports are written to the latest-run folder:
@@ -182,7 +182,7 @@ This pipeline is scoped to the CAutomation first deliverable. The Pipeline Manag
 
 Task 02 - Normalize Input Documents is the hard minimum viable input quality gate. It validates the manually authored source documents, verifies supported source formats, extracts machine-readable content, writes the canonical `normalized_input/` workspace, and stops downstream processing if the minimum trusted input contract is not met. After Task 02 succeeds, downstream tasks must consume `normalized_input/` instead of raw `input/` source files.
 
-For the Pipeline Management reference project, Task 02 now normalizes four required contract profiles into one canonical workspace: project-level client contract, project-level engineering contract, module SRS, and module ATS. PDF is the primary execution and test path for this phase. DOCX and Markdown normalizers remain available as existing support, but current Task 02 engineering effort is PDF-first.
+For the CAutomation reference project, Task 02 now normalizes four required contract profiles while preserving hierarchy: project-level client contract, project-level engineering contract, module SRS, and module ATS. PDF is the primary execution and test path for this phase. DOCX and Markdown normalizers remain available as existing support, but current Task 02 engineering effort is PDF-first.
 
 The Task 02 configuration also declares disabled optional extension profiles for future UI, database, API, UX, and security specifications. Optional profiles are not normalized or quality-gated until explicitly enabled by the active project configuration.
 

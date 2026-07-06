@@ -2,18 +2,20 @@
   "status": "PASSED",
   "gateType": "hard_normalized_input_quality_gate",
   "gateDecision": "ACCEPTED",
-  "normalizedInputRoot": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management",
-  "normalizationManifestPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json",
-  "normalizationReportPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_report.json",
+  "normalizedInputRoot": "CAutomation/projects/CAutomation/normalized_input",
+  "normalizedProjectInputRoot": "CAutomation/projects/CAutomation/normalized_input/project/contracts",
+  "normalizedModuleInputRoot": "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts",
+  "normalizationManifestPath": "CAutomation/projects/CAutomation/normalized_input/normalization_manifest.json",
+  "normalizationReportPath": "CAutomation/projects/CAutomation/normalized_input/normalization_report.json",
   "documents": {
     "project_client_contract": {
       "sourceRoot": "project_client",
       "contractScope": "project",
       "contractRole": "client_contract",
       "required": true,
-      "sourcePath": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "sourcePath": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "sourceFormat": "pdf",
-      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
+      "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_client_contract.md",
       "characterCount": 3764
     },
     "project_engineering_contract": {
@@ -21,9 +23,9 @@
       "contractScope": "project",
       "contractRole": "engineering_contract",
       "required": true,
-      "sourcePath": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "sourcePath": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "sourceFormat": "pdf",
-      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
+      "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_engineering_contract.md",
       "characterCount": 3572
     },
     "srs": {
@@ -31,9 +33,9 @@
       "contractScope": "module",
       "contractRole": "software_requirements_specification",
       "required": true,
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "sourcePath": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
-      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
+      "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_srs.md",
       "characterCount": 23254
     },
     "ats": {
@@ -41,9 +43,9 @@
       "contractScope": "module",
       "contractRole": "architecture_and_technical_specification",
       "required": true,
-      "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "sourcePath": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
-      "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
+      "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_ats.md",
       "characterCount": 34373
     }
   },
@@ -58,63 +60,63 @@
     {
       "name": "project_config_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/project.json",
+      "path": "CAutomation/projects/CAutomation/project.json",
       "passed": true,
       "blocking": true
     },
     {
       "name": "project_client_input_root_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/client",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/client",
       "passed": true,
       "blocking": true
     },
     {
       "name": "project_engineering_input_root_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/engineering",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/engineering",
       "passed": true,
       "blocking": true
     },
     {
       "name": "module_input_root_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts",
       "passed": true,
       "blocking": true
     },
     {
       "name": "project_client_contract_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "project_engineering_contract_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "module_srs_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "module_ats_exists",
       "category": "structural_completeness",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "passed": true,
       "blocking": true
     },
     {
       "name": "project_client_contract_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
@@ -127,7 +129,7 @@
     {
       "name": "project_client_contract_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "passed": true,
       "blocking": true
     },
@@ -247,7 +249,7 @@
     {
       "name": "project_engineering_contract_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
@@ -260,7 +262,7 @@
     {
       "name": "project_engineering_contract_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
+      "path": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "passed": true,
       "blocking": true
     },
@@ -380,7 +382,7 @@
     {
       "name": "srs_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
@@ -393,7 +395,7 @@
     {
       "name": "srs_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "passed": true,
       "blocking": true
     },
@@ -513,7 +515,7 @@
     {
       "name": "ats_supported_source_format",
       "category": "source_format_eligibility",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
       "supportedFormats": [
         "pdf",
@@ -526,7 +528,7 @@
     {
       "name": "ats_readable_source_document",
       "category": "structural_integrity",
-      "path": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
+      "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "passed": true,
       "blocking": true
     },
@@ -679,10 +681,10 @@
   "warnings": [],
   "errors": [],
   "generatedFiles": [
-    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
-    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
-    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
-    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",
-    "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/normalization_manifest.json"
+    "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_client_contract.md",
+    "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_engineering_contract.md",
+    "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_srs.md",
+    "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_ats.md",
+    "CAutomation/projects/CAutomation/normalized_input/normalization_manifest.json"
   ]
 }

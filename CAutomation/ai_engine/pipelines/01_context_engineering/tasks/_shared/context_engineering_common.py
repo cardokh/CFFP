@@ -58,7 +58,17 @@ class ContextEngineeringSupportMixin(RuntimeTaskSupportMixin):
 
     def normalized_input_root(self) -> Path:
         input_config = self.group("input")
-        configured_path = input_config.get("normalizedInputPath", "projects/{projectId}/normalized_input/modules/{moduleId}")
+        configured_path = input_config.get("normalizedInputPath", "projects/{projectId}/normalized_input")
+        return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
+
+    def normalized_project_input_root(self) -> Path:
+        input_config = self.group("input")
+        configured_path = input_config.get("normalizedProjectInputPath", "projects/{projectId}/normalized_input/project/contracts")
+        return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
+
+    def normalized_module_input_root(self) -> Path:
+        input_config = self.group("input")
+        configured_path = input_config.get("normalizedModuleInputPath", "projects/{projectId}/normalized_input/modules/{moduleId}/contracts")
         return (self.CAutomation_root() / self.resolve_placeholders(str(configured_path))).resolve()
 
     def context_package_dir(self) -> Path:

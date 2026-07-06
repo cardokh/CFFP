@@ -3,7 +3,7 @@
 Version: Draft 4  
 Status: Review Draft  
 Scope: CAutomation AI Engine workflow, pipeline responsibilities, artifact flow, reference-project contract, and approval gates  
-Reference Project: Pipeline Management  
+Reference Project: CAutomation  
 Last Updated: July 2026
 
 ---
@@ -14,12 +14,12 @@ Last Updated: July 2026
 
 Its purpose is to transform a small set of manually authored project specifications into a complete, deliverable web application through a sequence of deterministic automation pipelines. The framework does not treat AI as a one-shot code generator. Instead, it uses AI as part of a structured engineering workflow where every stage has explicit inputs, explicit outputs, validation, traceability, and human approval gates.
 
-The current reference project is **Pipeline Management**. Pipeline Management is used to validate the AI Engine workflow because it is both a realistic software project and the future web-based operational interface for CAutomation itself. Through Pipeline Management, users should eventually be able to create projects, define pipelines, configure tasks, execute pipelines, inspect outputs, review validation results, and approve generated artifacts.
+The current reference project is **CAutomation**. CAutomation is treated as a realistic multi-module web application used to validate the AI Engine workflow. Pipeline Management is the first reference module and future operational control plane. User & Client Management is the second reference module and establishes the project/module hierarchy before additional normalization logic is expanded.
 
 The intended end-to-end flow is:
 
 ```text
-Reference Project: Pipeline Management
+Reference Project: CAutomation
 │
 ├── WHAT document
 ├── HOW document
@@ -113,43 +113,43 @@ The intended final result is not only source code. The complete result should in
 - verification reports,
 - traceability records.
 
-The AI Engine should be reusable across projects. The current reference project is **Pipeline Management**, which is used to validate the framework and demonstrate the complete workflow.
+The AI Engine should be reusable across projects. The current reference project is **CAutomation**, a realistic multi-module web application used to validate the framework and demonstrate the complete workflow.
 
 ---
 
-## 5. Reference Project: Pipeline Management
+## 5. Reference Project: CAutomation
 
-CAutomation should be described as a generic AI-assisted software engineering framework.
+CAutomation is the canonical reference project used to design, validate, and prove the AI Engine. It must be treated as a realistic multi-module web application, not as a single standalone module.
 
-The framework itself should not be tied to any specific business application. To validate the framework, the current reference project is:
+The project is:
+
+```text
+CAutomation
+```
+
+The initial reference modules are:
 
 ```text
 Pipeline Management
+User & Client Management
 ```
 
-Pipeline Management is used as the first project that the AI Engine will process end-to-end. It provides realistic requirements and technical constraints without making the AI Engine itself project-specific.
+Project-level contracts describe the CAutomation platform as a whole, including business objectives, platform architecture, global engineering principles, technology stack, security principles, quality requirements, cross-module rules, and client/platform concepts.
 
-Pipeline Management is not merely a sample application. It is intended to become the web-based operational interface for CAutomation. The module should eventually allow users to create and manage AI-assisted software engineering projects, define pipelines, configure reusable task definitions, configure pipeline task instances, execute pipelines, inspect execution history, review generated artifacts, inspect validation results, and approve or reject artifacts before downstream pipelines continue.
+Module-level contracts describe only an individual module. Pipeline Management remains the active first reference module for Pipeline 01 execution. User & Client Management is added as the second reference module so the repository, configuration, tests, and normalized input model preserve the project/module distinction from the beginning.
 
-In that sense, Pipeline Management has two roles:
+Pipeline Management is responsible for pipeline creation, pipeline configuration, pipeline execution, orchestration, monitoring, status, history, and reports. It is also the future operational control plane through which humans operate, supervise, and govern CAutomation workflows.
 
-1. **Reference project** — it is the first realistic project used to validate that the AI Engine can transform manually authored project specifications into a complete deliverable web application.
-2. **Operational control plane** — it is the future user interface through which humans operate, supervise, and govern CAutomation workflows.
+User & Client Management is responsible for authentication, authorization, platform owners, client users, client management, project creation, project ownership, role-based access, project visibility, and deliverable visibility. Its contract files are structural templates at this stage and must not be expanded as part of Task 02 Iteration 2.
 
-CAutomation is the automation engine. Pipeline Management is the cockpit used to configure, visualize, execute, and control that engine.
-
-As the operational web interface, Pipeline Management should make the automation workflow visible and manageable. A user should not need to understand or manually run the underlying Python pipelines in order to operate the system. Instead, the web interface should expose the major concepts of the AI Engine in user-facing form: projects, input documents, context packages, pipelines, task definitions, task instances, executions, generated artifacts, validation results, approval gates, and execution history.
-
-This means the Pipeline Management module is both the first project generated through the AI Engine and the interface that later allows humans to manage the AI Engine itself. It should provide the visibility, control, review, approval, and audit capabilities required for human-supervised AI-assisted software engineering.
-
-For the reference project, the human provides two manually authored documents:
+For each active module, the human provides two manually authored module contracts:
 
 ```text
-WHAT document
-HOW document
+WHAT/SRS document
+HOW/ATS document
 ```
 
-These two documents are the authoritative inputs for the reference project.
+These module contracts are authoritative only for that module. They do not replace the project-level CAutomation contracts.
 
 ### 5.1 WHAT Document
 
@@ -323,7 +323,7 @@ CAutomation/projects/<project_id>/
 For the reference project:
 
 ```text
-CAutomation/projects/pipeline_management/
+CAutomation/projects/CAutomation/
 ```
 
 Pipeline folders contain reusable pipeline definitions, tasks, configuration, and runtime logic. They are not the primary location for durable project artifacts.
@@ -334,53 +334,47 @@ Durable project artifacts should be written under the relevant project folder.
 
 ## 10. Reference Project Folder Sketch
 
-A conceptual project folder for the Pipeline Management reference project is:
+The canonical reference project folder is:
 
 ```text
 CAutomation/
 └── projects/
-    └── pipeline_management/
+    └── cautomation/
         ├── project.json
         ├── input/
-        │   ├── WHAT.md
-        │   ├── HOW.md
-        │   └── supporting/
-        │
+        │   ├── project/
+        │   │   └── contracts/
+        │   │       ├── client/
+        │   │       │   └── Project_Client_Contract.pdf
+        │   │       └── engineering/
+        │   │           └── Project_Engineering_Contract.pdf
+        │   └── modules/
+        │       ├── pipeline_management/
+        │       │   └── contracts/
+        │       │       ├── Software_Requirements_Specification.pdf
+        │       │       └── Architecture_and_Technical_Specification.pdf
+        │       └── user_client_management/
+        │           └── contracts/
+        │               ├── Software_Requirements_Specification.md
+        │               └── Architecture_and_Technical_Specification.md
+        ├── normalized_input/
+        │   ├── project/
+        │   │   └── contracts/
+        │   └── modules/
+        │       ├── pipeline_management/
+        │       │   └── contracts/
+        │       └── user_client_management/
+        │           └── contracts/
         ├── context/
-        │   ├── current/
-        │   ├── approved/
-        │   └── history/
-        │
         ├── agile/
-        │   ├── current/
-        │   ├── approved/
-        │   └── history/
-        │
         ├── implementation/
-        │   ├── current/
-        │   ├── approved/
-        │   └── history/
-        │
         ├── generation/
-        │   ├── current/
-        │   └── history/
-        │
         ├── validation/
-        │   ├── current/
-        │   └── history/
-        │
         ├── apply/
-        │   ├── current/
-        │   └── history/
-        │
         └── verification/
-            ├── current/
-            └── history/
 ```
 
-This is a target model. The implementation may introduce these folders incrementally.
-
----
+This folder model is the architectural contract for distinguishing project-level contracts from module-level contracts. The implementation may introduce downstream artifact folders incrementally, but Task 02 must preserve this input hierarchy in its normalized output.
 
 ## 11. Pipeline 01: Context Engineering
 
@@ -396,13 +390,13 @@ What do we know, and what context is safe and relevant for downstream AI-assiste
 
 ### Inputs
 
-For the Pipeline Management reference project, Pipeline 01 consumes only the manually authored project and module contract documents declared by the pipeline configuration. Source documents may be authored in supported external formats, with PDF as the primary contract format and DOCX/Markdown retained as secondary development/reference formats where configured.
+For the CAutomation reference project, Pipeline 01 consumes only the manually authored project and module contract documents declared by the pipeline configuration. Source documents may be authored in supported external formats, with PDF as the primary contract format and DOCX/Markdown retained as secondary development/reference formats where configured.
 
 ```text
-CAutomation/projects/pipeline_management/input/client/<configured project client contract>
-CAutomation/projects/pipeline_management/input/engineering/<configured project engineering contract>
-CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured WHAT/SRS source document>
-CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured HOW/ATS source document>
+CAutomation/projects/CAutomation/input/project/contracts/client/<configured project client contract>
+CAutomation/projects/CAutomation/input/project/contracts/engineering/<configured project engineering contract>
+CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/<configured WHAT/SRS source document>
+CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/<configured HOW/ATS source document>
 ```
 
 Task 02 input contracts are defined as explicit document profiles. Required profiles are blocking inputs. Optional profiles are extension points that must be declared, disabled by default, and ignored unless explicitly enabled by configuration. Future project profiles may enable supporting-document inputs such as UI Specification, Database Specification, API Contract, UX Specification, or Security Specification, but Pipeline 01 must consume only explicitly configured project/module input artifacts. Raw source documents are never the canonical input for downstream tasks. Task 02 must normalize supported source formats into `normalized_input/`, and later tasks must consume that normalized workspace.
@@ -410,7 +404,7 @@ Task 02 input contracts are defined as explicit document profiles. Required prof
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/context/current/
+CAutomation/projects/CAutomation/context/current/
 ```
 
 Expected artifacts may include:
@@ -464,26 +458,31 @@ Task 02, Normalize Input Documents, is the hard minimum viable input quality gat
 
 Task 02 must use a source-format normalizer abstraction. The task orchestration layer detects each source document format, delegates extraction to the matching normalizer implementation, and writes the canonical Markdown plus metadata outputs. Format-specific parsing rules belong inside dedicated normalizers, such as PDF, DOCX, and Markdown normalizers. Downstream tasks must remain isolated from source-format parsing details.
 
-The canonical normalized workspace is written under the project folder, next to the raw `input/` folder. For the current CAutomation reference project, Task 02 normalizes both project-level and module-level contracts into the same canonical workspace:
+The canonical normalized workspace is written under the project folder, next to the raw `input/` folder. For the current CAutomation reference project, Task 02 must normalize project-level and module-level contracts while preserving their hierarchy:
 
 ```text
-CAutomation/projects/<project_id>/normalized_input/modules/<module_id>/
-├── project_client_contract.md
-├── project_engineering_contract.md
-├── module_srs.md
-├── module_ats.md
+CAutomation/projects/<project_id>/normalized_input/
+├── project/
+│   └── contracts/
+│       ├── project_client_contract.md
+│       └── project_engineering_contract.md
+├── modules/
+│   └── <module_id>/
+│       └── contracts/
+│           ├── module_srs.md
+│           └── module_ats.md
 ├── normalization_manifest.json
 └── normalization_report.json
 ```
 
 After Task 02 succeeds, later Pipeline 01 tasks must consume `normalized_input/` and must not read raw `input/` source documents directly. This rule isolates source-format complexity in one task and gives PDF, DOCX, Markdown, and future supported formats a single downstream representation. PDF is the primary source-document format for the current CAutomation development path and reference tests. DOCX and Markdown remain supported by existing normalizers, but they are not the main engineering focus of this phase.
 
-Task 02 treats the following source PDFs as required minimum input contracts for the Pipeline Management reference project:
+Task 02 treats the following source PDFs as required minimum input contracts for the active Pipeline Management module inside the CAutomation reference project:
 
-- `input/client/Project_Client_Contract.pdf` - required project-level client contract.
-- `input/engineering/Project_Engineering_Contract.pdf` - required project-level engineering contract.
-- `input/modules/<module_id>/Software_Requirements_Specification.pdf` - required module-level WHAT/SRS contract.
-- `input/modules/<module_id>/Architecture_and_Technical_Specification.pdf` - required module-level HOW/ATS contract.
+- `input/project/contracts/client/Project_Client_Contract.pdf` - required project-level client contract.
+- `input/project/contracts/engineering/Project_Engineering_Contract.pdf` - required project-level engineering contract.
+- `input/modules/<module_id>/contracts/Software_Requirements_Specification.pdf` - required module-level WHAT/SRS contract.
+- `input/modules/<module_id>/contracts/Architecture_and_Technical_Specification.pdf` - required module-level HOW/ATS contract.
 
 Task 02 also defines disabled optional document-profile extension points for future UI, database, API, UX, and security specifications. These optional profiles do not participate in the quality gate until enabled by the active project configuration.
 
@@ -520,13 +519,13 @@ This pipeline is about Agile planning, not technical implementation planning.
 ### Inputs
 
 ```text
-CAutomation/projects/pipeline_management/context/current/
+CAutomation/projects/CAutomation/context/current/
 ```
 
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/agile/current/
+CAutomation/projects/CAutomation/agile/current/
 ```
 
 Expected artifacts may include:
@@ -567,7 +566,7 @@ Pipeline 02 must be followed by human review and approval.
 Approved Agile artifacts should be promoted to:
 
 ```text
-CAutomation/projects/pipeline_management/agile/approved/
+CAutomation/projects/CAutomation/agile/approved/
 ```
 
 Downstream implementation pipelines should consume approved Agile artifacts, not draft Agile artifacts.
@@ -591,14 +590,14 @@ This is the first stage where database metadata, API plans, backend plans, front
 ### Inputs
 
 ```text
-CAutomation/projects/pipeline_management/agile/approved/
-CAutomation/projects/pipeline_management/context/current/
+CAutomation/projects/CAutomation/agile/approved/
+CAutomation/projects/CAutomation/context/current/
 ```
 
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/implementation/current/
+CAutomation/projects/CAutomation/implementation/current/
 ```
 
 Expected artifacts may include:
@@ -640,15 +639,15 @@ Pipeline 04 generates implementation artifacts from the approved implementation 
 ### Inputs
 
 ```text
-CAutomation/projects/pipeline_management/implementation/approved/
-CAutomation/projects/pipeline_management/context/current/
-CAutomation/projects/pipeline_management/agile/approved/
+CAutomation/projects/CAutomation/implementation/approved/
+CAutomation/projects/CAutomation/context/current/
+CAutomation/projects/CAutomation/agile/approved/
 ```
 
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/generation/current/
+CAutomation/projects/CAutomation/generation/current/
 ```
 
 Expected artifacts may include:
@@ -694,7 +693,7 @@ Pipeline 05 validates generated artifacts before they are applied.
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/validation/current/
+CAutomation/projects/CAutomation/validation/current/
 ```
 
 Expected artifacts may include:
@@ -735,7 +734,7 @@ Pipeline 06 applies validated generated artifacts to the target repository or ta
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/apply/current/
+CAutomation/projects/CAutomation/apply/current/
 ```
 
 Expected artifacts may include:
@@ -774,7 +773,7 @@ Pipeline 07 verifies the repository after changes have been applied.
 ### Outputs
 
 ```text
-CAutomation/projects/pipeline_management/verification/current/
+CAutomation/projects/CAutomation/verification/current/
 ```
 
 Expected artifacts may include:
@@ -1077,7 +1076,7 @@ Suggested review questions:
 7. Is the separation between project artifacts and pipeline runtime artifacts clear?
 8. Are the approval gates in the right places?
 9. Does the workflow support deterministic AI-assisted software engineering?
-10. Does the Pipeline Management reference project provide enough information to validate the workflow?
+10. Does the CAutomation reference project provide enough information to validate the workflow?
 11. What risks or inconsistencies should be addressed before implementing Pipeline 02?
 
 ---
@@ -1111,7 +1110,7 @@ Pipeline 02 = Agile Artifact Generation only
 
 ## 27. Success Criteria
 
-The AI Engine workflow should be considered successful when it can use the approved WHAT and HOW documents for the Pipeline Management reference project to produce a validated, deliverable web application while preserving traceability and human control throughout the process.
+The AI Engine workflow should be considered successful when it can use the approved project-level and module-level contracts for the CAutomation reference project to produce a validated, deliverable web application while preserving traceability and human control throughout the process.
 
 Success means that the workflow can demonstrate all of the following:
 

@@ -1,0 +1,23 @@
+{
+  "projectId": "CAutomation",
+  "name": "CAutomation",
+  "description": "Reference multi-module web application used to design, validate, and prove the CAutomation AI Engine.",
+  "contractHierarchy": {
+    "projectLevel": "input/project/contracts",
+    "moduleLevel": "input/modules/{moduleId}/contracts"
+  },
+  "modules": [
+    {
+      "moduleId": "pipeline_management",
+      "name": "Pipeline Management",
+      "status": "reference_module",
+      "contractPath": "input/modules/pipeline_management/contracts"
+    },
+    {
+      "moduleId": "user_client_management",
+      "name": "User & Client Management",
+      "status": "reference_module_placeholder",
+      "contractPath": "input/modules/user_client_management/contracts"
+    }
+  ]
+}

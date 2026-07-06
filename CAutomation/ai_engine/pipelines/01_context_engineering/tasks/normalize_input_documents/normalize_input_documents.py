@@ -82,6 +82,8 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                 "gateType": "hard_normalized_input_quality_gate",
                 "gateDecision": "REJECTED" if errors else "ACCEPTED",
                 "normalizedInputRoot": self.to_project_relative_path(normalized_root),
+                "normalizedProjectInputRoot": self.to_project_relative_path(self.normalized_project_input_root()),
+                "normalizedModuleInputRoot": self.to_project_relative_path(self.normalized_module_input_root()),
                 "normalizationManifestPath": self.to_project_relative_path(manifest_path) if not errors else None,
                 "normalizationReportPath": self.to_project_relative_path(normalization_report_path),
                 "documents": {
@@ -280,13 +282,24 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
 
     def _write_normalized_documents(self, normalized_documents: dict[str, dict[str, Any]], normalized_root: Path) -> list[str]:
         normalized_root.mkdir(parents=True, exist_ok=True)
+        self.normalized_project_input_root().mkdir(parents=True, exist_ok=True)
+        self.normalized_module_input_root().mkdir(parents=True, exist_ok=True)
         generated_files: list[str] = []
         for data in normalized_documents.values():
-            output_path = normalized_root / data["normalizedFileName"]
+            output_root = self._normalized_contract_output_root(str(data.get("contractScope", "module")))
+            output_path = output_root / data["normalizedFileName"]
             output_path.write_text(data["markdown"].strip() + "\n", encoding="utf-8", newline="\n")
             data["normalizedPath"] = self.to_project_relative_path(output_path)
             generated_files.append(data["normalizedPath"])
         return generated_files
+
+    def _normalized_contract_output_root(self, contract_scope: str) -> Path:
+        normalized_scope = contract_scope.strip().lower()
+        if normalized_scope == "project":
+            return self.normalized_project_input_root()
+        if normalized_scope == "module":
+            return self.normalized_module_input_root()
+        raise ValueError(f"Unsupported normalized contract scope: {contract_scope}")
 
     def _build_manifest(self, normalized_documents: dict[str, dict[str, Any]], generated_files: list[str]) -> dict[str, Any]:
         sources = []
@@ -299,6 +312,8 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             "projectId": self.project_id(),
             "moduleId": self.module_id(),
             "normalizedInputRoot": self.to_project_relative_path(self.normalized_input_root()),
+            "normalizedProjectInputRoot": self.to_project_relative_path(self.normalized_project_input_root()),
+            "normalizedModuleInputRoot": self.to_project_relative_path(self.normalized_module_input_root()),
             "documents": [
                 {
                     "documentId": data["documentId"],
