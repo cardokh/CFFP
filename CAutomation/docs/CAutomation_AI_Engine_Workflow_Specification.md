@@ -396,14 +396,16 @@ What do we know, and what context is safe and relevant for downstream AI-assiste
 
 ### Inputs
 
-For the Pipeline Management reference project, Pipeline 01 consumes the manually authored module specification documents declared by the pipeline configuration. Source documents may be authored in supported external formats, with PDF as the preferred client-facing contract format and DOCX/Markdown supported as development/reference formats where configured.
+For the Pipeline Management reference project, Pipeline 01 consumes only the manually authored project and module contract documents declared by the pipeline configuration. Source documents may be authored in supported external formats, with PDF as the primary contract format and DOCX/Markdown retained as secondary development/reference formats where configured.
 
 ```text
+CAutomation/projects/pipeline_management/input/client/<configured project client contract>
+CAutomation/projects/pipeline_management/input/engineering/<configured project engineering contract>
 CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured WHAT/SRS source document>
 CAutomation/projects/pipeline_management/input/modules/pipeline_management/<configured HOW/ATS source document>
 ```
 
-Future project profiles may declare different WHAT/HOW or supporting-document inputs, but Pipeline 01 must consume only explicitly configured project/module input artifacts. Raw source documents are never the canonical input for downstream tasks. Task 02 must normalize supported source formats into `normalized_input/`, and later tasks must consume that normalized workspace.
+Task 02 input contracts are defined as explicit document profiles. Required profiles are blocking inputs. Optional profiles are extension points that must be declared, disabled by default, and ignored unless explicitly enabled by configuration. Future project profiles may enable supporting-document inputs such as UI Specification, Database Specification, API Contract, UX Specification, or Security Specification, but Pipeline 01 must consume only explicitly configured project/module input artifacts. Raw source documents are never the canonical input for downstream tasks. Task 02 must normalize supported source formats into `normalized_input/`, and later tasks must consume that normalized workspace.
 
 ### Outputs
 
@@ -478,12 +480,14 @@ After Task 02 succeeds, later Pipeline 01 tasks must consume `normalized_input/`
 
 Task 02 treats the following source PDFs as required minimum input contracts for the Pipeline Management reference project:
 
-- `input/client/Project_Client_Contract.pdf`
-- `input/engineering/Project_Engineering_Contract.pdf`
-- `input/modules/<module_id>/Software_Requirements_Specification.pdf`
-- `input/modules/<module_id>/Architecture_and_Technical_Specification.pdf`
+- `input/client/Project_Client_Contract.pdf` - required project-level client contract.
+- `input/engineering/Project_Engineering_Contract.pdf` - required project-level engineering contract.
+- `input/modules/<module_id>/Software_Requirements_Specification.pdf` - required module-level WHAT/SRS contract.
+- `input/modules/<module_id>/Architecture_and_Technical_Specification.pdf` - required module-level HOW/ATS contract.
 
-Task 02 validation responsibilities are implementation-agnostic and template-driven. It checks structural completeness, source-format eligibility, readability/extractability, non-empty normalized content, required section coverage, placeholder indicators, and basic cross-document readiness required by the active Project Profile Specification Template. The architectural contract must not hard-code module-specific artifacts; instead, the active template defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
+Task 02 also defines disabled optional document-profile extension points for future UI, database, API, UX, and security specifications. These optional profiles do not participate in the quality gate until enabled by the active project configuration.
+
+Task 02 validation responsibilities are implementation-agnostic and profile-driven. It checks structural completeness, source-format eligibility, readability/extractability, non-empty normalized content, required section coverage, placeholder indicators, and basic cross-document readiness required by the active document profiles. The architectural contract must not hard-code module-specific artifacts; instead, the active configuration defines which specification artifacts, sections, identifiers, and relationships are mandatory for the current project/module type.
 
 Task 03, Extract Contracts, owns the deeper extraction-phase checks identified by the external review against the normalized Markdown inputs. After Task 02 has created the canonical normalized workspace, Task 03 must validate and extract contract content for richer semantic quality. This includes Markdown linting, acronym and reference validation, cross-reference validation, conflicting technical-parameter detection, and rejection of undefined acronyms before any context_package.json artifact is compiled.
 

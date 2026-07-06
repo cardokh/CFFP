@@ -8,6 +8,9 @@
   "documents": {
     "project_client_contract": {
       "sourceRoot": "project_client",
+      "contractScope": "project",
+      "contractRole": "client_contract",
+      "required": true,
       "sourcePath": "CAutomation/projects/pipeline_management/input/client/Project_Client_Contract.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_client_contract.md",
@@ -15,6 +18,9 @@
     },
     "project_engineering_contract": {
       "sourceRoot": "project_engineering",
+      "contractScope": "project",
+      "contractRole": "engineering_contract",
+      "required": true,
       "sourcePath": "CAutomation/projects/pipeline_management/input/engineering/Project_Engineering_Contract.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/project_engineering_contract.md",
@@ -22,6 +28,9 @@
     },
     "srs": {
       "sourceRoot": "module",
+      "contractScope": "module",
+      "contractRole": "software_requirements_specification",
+      "required": true,
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_srs.md",
@@ -29,6 +38,9 @@
     },
     "ats": {
       "sourceRoot": "module",
+      "contractScope": "module",
+      "contractRole": "architecture_and_technical_specification",
+      "required": true,
       "sourcePath": "CAutomation/projects/pipeline_management/input/modules/pipeline_management/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/pipeline_management/normalized_input/modules/pipeline_management/module_ats.md",

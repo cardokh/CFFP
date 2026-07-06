@@ -87,3 +87,48 @@ def test_normalize_input_documents_supported_formats_are_configured_and_register
 
     assert "pdf" in configured_formats
     assert all(task.document_normalizers.supports(source_format) for source_format in configured_formats)
+
+
+def test_normalize_input_documents_declares_required_and_optional_contract_profiles(monkeypatch):
+    cautomation_root = _cautomation_root()
+    monkeypatch.chdir(cautomation_root.parent)
+
+    task = _load_task_class()()
+    quality_gate = task.pipeline_config["validation"]["inputQualityGate"]
+    required_documents = quality_gate["manualInputDocuments"]
+    optional_documents = quality_gate["optionalManualInputDocuments"]
+
+    assert {document["documentId"] for document in required_documents} == {
+        "project_client_contract",
+        "project_engineering_contract",
+        "srs",
+        "ats",
+    }
+    assert all(document["required"] is True for document in required_documents)
+    assert {document["contractScope"] for document in required_documents} == {"project", "module"}
+    assert {document["documentId"] for document in optional_documents} == {
+        "ui_specification",
+        "database_specification",
+        "api_contract",
+        "ux_specification",
+        "security_specification",
+    }
+    assert all(document["required"] is False for document in optional_documents)
+    assert all(document["enabled"] is False for document in optional_documents)
+
+
+def test_normalize_input_documents_only_loads_enabled_optional_profiles(monkeypatch):
+    cautomation_root = _cautomation_root()
+    monkeypatch.chdir(cautomation_root.parent)
+
+    task = _load_task_class()()
+    quality_gate = task.pipeline_config["validation"]["inputQualityGate"]
+    configured_documents = task._configured_manual_input_documents(quality_gate, [])
+
+    assert configured_documents is not None
+    assert {document["documentId"] for document in configured_documents} == {
+        "project_client_contract",
+        "project_engineering_contract",
+        "srs",
+        "ats",
+    }

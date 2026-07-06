@@ -87,6 +87,9 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                 "documents": {
                     document_id: {
                         "sourceRoot": data.get("sourceRoot", "module"),
+                        "contractScope": data.get("contractScope"),
+                        "contractRole": data.get("contractRole"),
+                        "required": data.get("required", True),
                         "sourcePath": data["sourcePath"],
                         "sourceFormat": data["sourceFormat"],
                         "normalizedPath": data.get("normalizedPath"),
@@ -142,9 +145,8 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
         normalized_documents: dict[str, dict[str, Any]],
     ) -> None:
         input_config = self.group("input")
-        documents = quality_gate.get("manualInputDocuments", [])
-        if not isinstance(documents, list):
-            errors.append({"code": "invalid_input_quality_gate_config", "message": "inputQualityGate.manualInputDocuments must be an array."})
+        documents = self._configured_manual_input_documents(quality_gate, errors)
+        if documents is None:
             return
 
         configured_formats = [str(value).lower().lstrip(".") for value in quality_gate.get("supportedSourceFormats", self.document_normalizers.supported_formats()) if str(value).strip()]
@@ -161,6 +163,9 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             display_name = str(document.get("displayName", document_id)).strip() or document_id
             normalized_file_name = str(document.get("normalizedFileName", f"{document_id}.md")).strip() or f"{document_id}.md"
             source_root_key = str(document.get("sourceRoot", "module")).strip() or "module"
+            contract_scope = str(document.get("contractScope", source_root_key)).strip() or source_root_key
+            contract_role = str(document.get("contractRole", document_id)).strip() or document_id
+            required = bool(document.get("required", True))
             file_name = input_config.get(file_name_key)
             if not document_id or not isinstance(file_name, str) or not file_name.strip():
                 errors.append({"code": "invalid_document_profile", "message": f"Invalid manual input document profile: {document}"})
@@ -178,6 +183,9 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                 "documentId": document_id,
                 "displayName": display_name,
                 "sourceRoot": source_root_key,
+                "contractScope": contract_scope,
+                "contractRole": contract_role,
+                "required": required,
                 "sourcePath": self.to_project_relative_path(path),
                 "sourceFormat": source_format,
                 "normalizedFileName": normalized_file_name,
@@ -190,6 +198,34 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
             self._record_required_terms_check(document_id, display_name, text, document.get("requiredTerms", []), "template_section_coverage", checks, errors)
             self._record_required_terms_check(document_id, display_name, text, hierarchy_terms, "context_path_alignment", checks, errors)
             self._record_forbidden_tokens_check(document_id, display_name, text, forbidden_tokens, checks, errors)
+
+    def _configured_manual_input_documents(self, quality_gate: dict[str, Any], errors: list[dict[str, str]]) -> list[dict[str, Any]] | None:
+        required_documents = quality_gate.get("manualInputDocuments", [])
+        optional_documents = quality_gate.get("optionalManualInputDocuments", [])
+        if not isinstance(required_documents, list):
+            errors.append({"code": "invalid_input_quality_gate_config", "message": "inputQualityGate.manualInputDocuments must be an array."})
+            return None
+        if not isinstance(optional_documents, list):
+            errors.append({"code": "invalid_optional_input_documents_config", "message": "inputQualityGate.optionalManualInputDocuments must be an array when provided."})
+            return None
+
+        configured_documents: list[dict[str, Any]] = []
+        for document in required_documents:
+            if isinstance(document, dict):
+                normalized_document = dict(document)
+                normalized_document["required"] = bool(normalized_document.get("required", True))
+                configured_documents.append(normalized_document)
+
+        for document in optional_documents:
+            if not isinstance(document, dict):
+                continue
+            if not bool(document.get("enabled", False)):
+                continue
+            normalized_document = dict(document)
+            normalized_document["required"] = bool(normalized_document.get("required", False))
+            configured_documents.append(normalized_document)
+
+        return configured_documents
 
     def _record_supported_format_check(
         self,
@@ -268,6 +304,9 @@ class NormalizeInputDocumentsTask(ContextEngineeringSupportMixin, BaseScript):
                     "documentId": data["documentId"],
                     "displayName": data["displayName"],
                     "sourceRoot": data.get("sourceRoot", "module"),
+                    "contractScope": data.get("contractScope"),
+                    "contractRole": data.get("contractRole"),
+                    "required": data.get("required", True),
                     "sourcePath": data["sourcePath"],
                     "sourceFormat": data["sourceFormat"],
                     "normalizedPath": data.get("normalizedPath"),

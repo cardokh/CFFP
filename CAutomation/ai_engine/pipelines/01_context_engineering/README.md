@@ -182,7 +182,9 @@ This pipeline is scoped to the CAutomation first deliverable. The Pipeline Manag
 
 Task 02 - Normalize Input Documents is the hard minimum viable input quality gate. It validates the manually authored source documents, verifies supported source formats, extracts machine-readable content, writes the canonical `normalized_input/` workspace, and stops downstream processing if the minimum trusted input contract is not met. After Task 02 succeeds, downstream tasks must consume `normalized_input/` instead of raw `input/` source files.
 
-For the Pipeline Management reference project, Task 02 now normalizes the required project-level client contract, project-level engineering contract, module SRS, and module ATS into one canonical workspace. PDF is the primary execution and test path for this phase. DOCX and Markdown normalizers remain available as existing support, but current Task 02 engineering effort is PDF-first.
+For the Pipeline Management reference project, Task 02 now normalizes four required contract profiles into one canonical workspace: project-level client contract, project-level engineering contract, module SRS, and module ATS. PDF is the primary execution and test path for this phase. DOCX and Markdown normalizers remain available as existing support, but current Task 02 engineering effort is PDF-first.
+
+The Task 02 configuration also declares disabled optional extension profiles for future UI, database, API, UX, and security specifications. Optional profiles are not normalized or quality-gated until explicitly enabled by the active project configuration.
 
 Task 02 delegates source-format parsing to document normalizers. Current normalizer implementations cover DOCX, PDF, and Markdown, while the downstream pipeline continues to consume only the generated `normalized_input/` Markdown and metadata.
 

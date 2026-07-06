@@ -1,7 +1,7 @@
 {
   "pipelineId": "01_context_engineering",
   "pipelineName": "Pipeline 01 - Context Engineering",
-  "pipelineVersion": "mvp-010",
+  "pipelineVersion": "mvp-011",
   "projectId": "pipeline_management",
   "moduleId": "pipeline_management",
   "taskRegistryPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/task_definitions.json",
@@ -75,7 +75,11 @@
             "Module",
             "Acceptance"
           ],
-          "normalizedFileName": "project_client_contract.md"
+          "normalizedFileName": "project_client_contract.md",
+          "required": true,
+          "contractScope": "project",
+          "contractRole": "client_contract",
+          "canonicalConsumer": "normalized_input"
         },
         {
           "documentId": "project_engineering_contract",
@@ -90,7 +94,11 @@
             "Testing",
             "Pipeline"
           ],
-          "normalizedFileName": "project_engineering_contract.md"
+          "normalizedFileName": "project_engineering_contract.md",
+          "required": true,
+          "contractScope": "project",
+          "contractRole": "engineering_contract",
+          "canonicalConsumer": "normalized_input"
         },
         {
           "documentId": "srs",
@@ -105,7 +113,11 @@
             "Validation",
             "Acceptance"
           ],
-          "normalizedFileName": "module_srs.md"
+          "normalizedFileName": "module_srs.md",
+          "required": true,
+          "contractScope": "module",
+          "contractRole": "software_requirements_specification",
+          "canonicalConsumer": "normalized_input"
         },
         {
           "documentId": "ats",
@@ -120,7 +132,11 @@
             "Validation",
             "Testing"
           ],
-          "normalizedFileName": "module_ats.md"
+          "normalizedFileName": "module_ats.md",
+          "required": true,
+          "contractScope": "module",
+          "contractRole": "architecture_and_technical_specification",
+          "canonicalConsumer": "normalized_input"
         }
       ],
       "crossDocumentReferences": [
@@ -146,7 +162,69 @@
         "docx",
         "md"
       ],
-      "primarySourceFormat": "pdf"
+      "primarySourceFormat": "pdf",
+      "optionalManualInputDocuments": [
+        {
+          "documentId": "ui_specification",
+          "displayName": "UI Specification",
+          "contractScope": "module",
+          "contractRole": "ui_specification",
+          "required": false,
+          "enabled": false,
+          "sourceRoot": "module",
+          "fileNameKey": "uiSpecificationFileName",
+          "normalizedFileName": "module_ui_specification.md",
+          "extensionPoint": true
+        },
+        {
+          "documentId": "database_specification",
+          "displayName": "Database Specification",
+          "contractScope": "module",
+          "contractRole": "database_specification",
+          "required": false,
+          "enabled": false,
+          "sourceRoot": "module",
+          "fileNameKey": "databaseSpecificationFileName",
+          "normalizedFileName": "module_database_specification.md",
+          "extensionPoint": true
+        },
+        {
+          "documentId": "api_contract",
+          "displayName": "API Contract",
+          "contractScope": "module",
+          "contractRole": "api_contract",
+          "required": false,
+          "enabled": false,
+          "sourceRoot": "module",
+          "fileNameKey": "apiContractFileName",
+          "normalizedFileName": "module_api_contract.md",
+          "extensionPoint": true
+        },
+        {
+          "documentId": "ux_specification",
+          "displayName": "UX Specification",
+          "contractScope": "module",
+          "contractRole": "ux_specification",
+          "required": false,
+          "enabled": false,
+          "sourceRoot": "module",
+          "fileNameKey": "uxSpecificationFileName",
+          "normalizedFileName": "module_ux_specification.md",
+          "extensionPoint": true
+        },
+        {
+          "documentId": "security_specification",
+          "displayName": "Security Specification",
+          "contractScope": "module",
+          "contractRole": "security_specification",
+          "required": false,
+          "enabled": false,
+          "sourceRoot": "module",
+          "fileNameKey": "securitySpecificationFileName",
+          "normalizedFileName": "module_security_specification.md",
+          "extensionPoint": true
+        }
+      ]
     }
   },
   "downstreamConsumers": [

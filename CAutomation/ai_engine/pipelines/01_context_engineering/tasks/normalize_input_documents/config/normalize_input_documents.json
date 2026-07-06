@@ -1,5 +1,5 @@
 {
   "pipelineConfigPath": "CAutomation/ai_engine/pipelines/01_context_engineering/config/context_engineering_pipeline.json",
-  "taskVersion": "mvp-008",
+  "taskVersion": "mvp-009",
   "taskDefinitionId": "normalize_input_documents"
 }
