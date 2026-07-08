@@ -1,11 +1,11 @@
 # CAutomation AI Engine Workflow Specification
 
-Version: 2.0  
-Status: Final Contract Candidate  
+Version: 3.0  
+Status: Final / Frozen Architecture Contract  
 Scope: CAutomation AI Engine workflow, execution architecture, pipeline responsibilities, task architecture, artifact flow, project-management publishing, approval gates, and verification model  
 Reference Project: CAutomation  
 Last Updated: July 2026  
-Supersedes: Draft 5 / Version 1 review draft
+Supersedes: Version 2.0 Final Contract Candidate
 
 ---
 
@@ -99,7 +99,7 @@ This is not a Python implementation guide. It is a workflow, artifact, task, pip
 
 ## 2A. Version 2 Contract Completion Baseline
 
-Version 2 completes the architectural review cycle for the AI Engine workflow and incorporates the approved findings from the independent Gemini audit and the subsequent architecture-board decisions.
+Version 2 substantially completed the architectural review cycle for the AI Engine workflow and incorporates the approved findings from the independent Gemini audit and the subsequent architecture-board decisions.
 
 This version does not broaden the product scope. It tightens execution determinism, closes ambiguity around the transition from Planning to Generation, formalizes shared frontend and reporting contracts, and defines controlled exceptions to tenant filtering for authenticated platform-level operations.
 
@@ -115,7 +115,24 @@ The following Version 2 improvements are normative:
 - shared functionality must be promoted from task-owned code to pipeline shared code or AI Engine shared libraries when reuse criteria are met;
 - lifecycle status values are domain-specific unless explicitly declared as shared enumerations.
 
-Future architectural changes after this version is frozen must be handled as controlled change requests against this specification rather than silent implementation drift.
+Future architectural changes after Version 3 is frozen must be handled as controlled change requests against this specification rather than silent implementation drift.
+## 2B. Version 3 Final Freeze Baseline
+
+Version 3 is the final narrow authoring iteration after review of Version 2 and the Gemini Review 1 and Gemini Review 2 audit findings.
+
+This version does not introduce new product scope, new external dependencies, new runtime brokers, new frontend libraries, or new module responsibilities. It closes the final determinism gaps needed before the AI Engine workflow specification can be treated as the frozen architecture contract.
+
+The following Version 3 changes are normative:
+
+- persisted background execution state must include an explicit `executing_worker_id` so process-local FastAPI background work is safe under multi-worker deployments;
+- persisted background execution state must include heartbeat ownership data sufficient to distinguish active sibling workers from stale or terminated workers;
+- startup reconciliation must only terminate executions owned by the current worker or by expired workers whose heartbeat has exceeded the configured stale-worker threshold;
+- frontend tenant or project context switches must atomically invalidate and unmount the scoped React component tree before any new client-scoped or project-scoped fetch is allowed;
+- status lookups shared across modules must use the canonical shared lifecycle enum `ACTIVE`, `INACTIVE`, `ARCHIVED`;
+- domain-specific status values may exist only when explicitly scoped, named, mapped, and prevented from masquerading as shared lifecycle states.
+
+Version 3 is therefore the frozen baseline for synchronizing the AI Engine implementation, tests, execution reports, and downstream documentation. Future changes must be handled as explicit controlled change requests.
+
 ## 3. Background and Inspiration
 
 The CAutomation AI Engine is inspired by professional-grade AI-assisted coding approaches that emphasize context engineering, provenance preservation, structured artifacts, focused context sessions, staged software engineering work, and validation before trust.
@@ -484,18 +501,47 @@ The following promotion triggers apply:
 
 Shared-component promotion must preserve deterministic behavior. Promotion must not introduce hidden runtime coupling, undeclared configuration dependencies, or cross-project state.
 
-### 6.14 Domain-Specific Enumeration Rule
+### 6.14 Shared and Domain-Specific Enumeration Rule
 
-Lifecycle status values are domain-specific unless explicitly declared as shared enumerations in a project-level or AI Engine-wide contract.
-
-For example:
+The canonical shared lifecycle enum for cross-module lifecycle rendering, filtering, reporting, and generic frontend state handling is:
 
 ```text
-membership_status: Active, Suspended, Archived
-pipeline_task_status: Active, Disabled, Archived
+ACTIVE
+INACTIVE
+ARCHIVED
 ```
 
-These are not automatically equivalent. Similar label names across modules do not imply shared behavior, shared validation logic, or shared interception rules. If a status set is intended to be shared, the owning contract must explicitly define the shared enumeration name, values, semantics, allowed transitions, and consumers.
+When a lifecycle state is intended to be consumed by shared infrastructure, shared frontend components, shared report renderers, generic filters, or cross-module utilities, it must use this shared enum exactly.
+
+Domain-specific status values may still exist, but only when the owning contract explicitly defines:
+
+```text
+status_name
+owning_domain
+allowed_values
+semantics
+allowed_transitions
+shared_lifecycle_mapping
+consumers
+validation_rules
+```
+
+Domain-specific values must not be treated as shared lifecycle values unless they are explicitly mapped to the canonical shared enum. Similar wording across modules does not imply shared behavior.
+
+The following mappings are normative for the current CAutomation reference modules:
+
+```text
+membership_status.Active      -> ACTIVE
+membership_status.Suspended   -> INACTIVE
+membership_status.Archived    -> ARCHIVED
+
+pipeline_task_status.Active   -> ACTIVE
+pipeline_task_status.Disabled -> INACTIVE
+pipeline_task_status.Archived -> ARCHIVED
+```
+
+Generated code must preserve the domain-specific values where required by the owning module contract, but shared UI filters, shared reports, shared lifecycle badges, and shared cross-module utilities must consume the canonical enum mapping. Generation must not invent additional lifecycle states or silently collapse domain-specific values without the explicit mapping above.
+
 ## 7. End-to-End Workflow
 
 The high-level workflow is:
@@ -1446,12 +1492,14 @@ module_id where applicable
 pipeline_id where applicable
 task_id where applicable
 execution_id
+executing_worker_id where applicable
 story_id where applicable
 source_requirement_ids
 source_validation_ids
 source_artifact_paths
 produced_artifact_paths
 started_at
+last_heartbeat_at where applicable
 finished_at
 status
 severity
@@ -1552,7 +1600,7 @@ Pipelines are orchestrators only. They execute reusable task definitions through
 ---
 
 
-## 23A. Background Execution Resilience and Startup Reconciliation
+## 23A. Background Execution Resilience, Worker Ownership, and Startup Reconciliation
 
 The CAutomation runtime may use native FastAPI `BackgroundTasks` for process-local asynchronous execution where the approved engineering contract allows it. This decision does not imply that in-memory task state is authoritative.
 
@@ -1570,7 +1618,11 @@ active_client_id where applicable
 status
 requested_at
 started_at
-last_heartbeat_at where applicable
+executing_worker_id
+worker_started_at
+last_heartbeat_at
+heartbeat_interval_seconds
+stale_worker_timeout_seconds
 finished_at
 input_artifact_refs
 output_artifact_refs
@@ -1579,23 +1631,30 @@ recovery_action
 recovery_report_path
 ```
 
-Native `BackgroundTasks` are best-effort process-local workers. They must not be treated as durable queues. A hard process crash, deployment restart, OOM event, or host termination may stop execution without running application-level exception handlers.
+`executing_worker_id` is a mandatory stable identifier for the application worker process that accepted and is executing the background operation. It must be assigned before the operation moves into a transient execution state such as `Pending`, `Running`, `Applying`, or `RollingBack`.
 
-Therefore, application startup must run deterministic reconciliation for persisted executions left in transient states such as `Pending`, `Running`, `Applying`, or `RollingBack`.
+Native `BackgroundTasks` are best-effort process-local workers. They must not be treated as durable queues. A hard process crash, deployment restart, OOM event, host termination, or worker recycle may stop execution without running application-level exception handlers.
+
+The runtime must therefore maintain persisted heartbeat ownership for long-running executions. Heartbeat data is the only allowed mechanism for distinguishing an active sibling worker from a stale or terminated worker when multiple FastAPI worker processes are running.
 
 Startup reconciliation must:
 
+- generate or load the current worker's `executing_worker_id` before accepting background work;
 - scan persisted executions in transient states;
-- compare timestamps, heartbeat data where available, and configured timeout rules;
-- classify each stale execution as `Failed`, `Aborted`, or `Restartable` according to the owning operation contract;
+- compare `executing_worker_id`, `last_heartbeat_at`, `heartbeat_interval_seconds`, and `stale_worker_timeout_seconds`;
+- reconcile only executions owned by the current initialization worker, or executions whose owning worker heartbeat has exceeded the configured stale-worker timeout;
+- never mark an execution owned by another worker as stale while that worker heartbeat is still valid;
+- classify each stale execution as `Failed`, `Aborted`, `StaleTerminated`, or `Restartable` according to the owning operation contract;
 - write a recovery report for every reconciled execution;
+- include `executing_worker_id` in recovery reports and administrative reports where applicable;
 - update execution status before accepting dependent downstream work;
 - prevent duplicate application of non-idempotent operations;
 - require explicit configuration before any automatic restart is attempted.
 
-The default recovery behavior is fail closed. If an execution cannot be proven safe to restart, it must be marked `Failed` or `Aborted` and require a new explicit execution request.
+The default recovery behavior is fail closed. If an execution cannot be proven safe to restart, it must be marked `Failed`, `Aborted`, or `StaleTerminated` and require a new explicit execution request.
 
-This resilience model preserves the project decision not to introduce external brokers such as Celery or Redis while preventing permanently stuck `Running` or `Pending` records from becoming invisible operational hazards.
+This resilience model preserves the project decision not to introduce external brokers such as Celery or Redis while preventing permanently stuck `Running` or `Pending` records from becoming invisible operational hazards or being incorrectly terminated under multi-worker deployment.
+
 ## 24. Pipeline Folder Model
 
 Pipeline definitions live under:
@@ -1679,7 +1738,7 @@ Such operations may bypass the default repository-level `WHERE client_id = :acti
 
 Bypass must be explicit in code and visible in review. Hidden flags, optional `client_id = None` behavior, or silent repository filter suppression are prohibited.
 
-### 25A.3 Frontend Session and Context State Contract
+### 25A.3 Frontend Session, Context State, and Atomic Teardown Contract
 
 The React TypeScript frontend must use a shared application context model for:
 
@@ -1695,6 +1754,19 @@ permission state
 The frontend must not invent independent tenant or project state per screen.
 
 The active client and active project context must be resolved through approved backend APIs and stored in a shared frontend context provider. Navigation, forms, API clients, and screen-level components must consume this shared context.
+
+Every global tenant or project context alteration must immediately trigger atomic teardown of the scoped React component tree before any new client-scoped or project-scoped fetch is allowed.
+
+The frontend shell must enforce this through an explicit boundary wrapper around all tenant-scoped and project-scoped routes/components. When `active_client_id` or `active_project_id` changes, the boundary must:
+
+- synchronously invalidate the previous scoped context version;
+- cancel, ignore, or reject unresolved fetch promises associated with the previous context version;
+- clear scoped screen state, cached view models, selected rows, form drafts, and transient validation state;
+- render a neutral loading or empty boundary state rather than stale tenant/project data;
+- remount the scoped component tree only after the new context has been resolved and authorized;
+- ensure that data fetched under Tenant A or Project A cannot render inside Tenant B or Project B, even briefly.
+
+Generated frontend code must treat this as a tenant-isolation rule, not as a cosmetic loading-state preference. If the Planning pipeline has not produced a concrete implementation plan for this boundary, Generation must stop and report a planning defect rather than inventing an ad hoc state strategy.
 
 ### 25A.4 Token Propagation Contract
 
@@ -1834,3 +1906,11 @@ It preserves provenance, maintains human control, validates AI output, supports 
 Version 2 completes the final architectural hardening iteration before implementation synchronization. The AI Engine now has an explicit planning freeze boundary, controlled publishing-to-generation transition, deterministic recovery model for process-local background execution, a platform-authority bypass contract, a shared frontend state and token propagation contract, common reporting metadata, shared-component promotion governance, and freeze criteria.
 
 The next engineering phase is implementation synchronization: inspect the current AI Engine implementation pipeline by pipeline, compare it to this frozen workflow contract, and bring the code, configuration, tests, reports, and documentation into conformance.
+
+---
+
+## 30. Final Audit Closure
+
+This Version 3 document incorporates the final narrow audit corrections from Gemini Review 1, Gemini Review 2, and the final architecture recommendation.
+
+The specification is now frozen as the authoritative AI Engine workflow and execution architecture contract for CAutomation. Implementation work must synchronize code, configuration, tests, execution reports, and documentation to this document rather than allowing implementation drift.
