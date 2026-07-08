@@ -10,18 +10,19 @@ Each pipeline converts a defined set of inputs into a defined set of outputs. A 
 00_shared
 01_context_engineering
 02_planning
-03_generation
-04_validation
-05_apply
-06_verification
+03_project_management_publishing
+04_generation
+05_validation
+06_apply
+07_verification
 ```
 
 ## Generation Targets
 
-`03_generation/` contains specialized generation targets:
+`04_generation/` contains specialized generation targets:
 
 ```text
-03_generation/
+04_generation/
 ├── db/
 ├── backend/
 ├── frontend/
@@ -29,7 +30,7 @@ Each pipeline converts a defined set of inputs into a defined set of outputs. A 
 └── deployment/
 ```
 
-These are not separate lifecycle phases. They are specialized generators that consume the validated context package and the implementation plan.
+These are not separate lifecycle phases. They are specialized generators that consume the validated context package and the frozen implementation plan.
 
 ## Shared Rule
 
@@ -41,4 +42,9 @@ Every stage must declare:
 - validation rules
 - provenance requirements
 
-This keeps the platform deterministic, auditable, and reusable across projects.
+Every completed task must also pass against all available reference modules. For the current project this means at least:
+
+- Pipeline Management
+- User & Client Management
+
+This keeps the platform deterministic, auditable, and reusable across projects and modules.

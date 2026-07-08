@@ -1,6 +1,6 @@
-# 03 Generation / Testing
+# 03 Generation / Backend
 
-Testing generation produces unit, integration, endpoint, GUI, and regression tests where required.
+Backend generation produces APIs, services, repositories, domain objects, DTOs, validators, and backend tests where required.
 
 ## Consumes
 
@@ -19,4 +19,4 @@ Testing generation produces unit, integration, endpoint, GUI, and regression tes
 
 This generator must only produce artifacts for its own target area.
 
-It must not apply files to the live repository. Application is owned by `05_apply`.
+It must not apply files to the live repository. Application is owned by `06_apply`.

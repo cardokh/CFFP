@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -55,12 +56,15 @@ def _run_pytest(cautomation_root: Path, test_path: Path, category: str) -> dict[
             "stdout": "",
             "stderr": f"Required {category} test folder does not exist.",
         }
+    env = os.environ.copy()
+    env.setdefault("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
     completed = subprocess.run(
         [sys.executable, "-m", "pytest", str(test_path)],
         cwd=cautomation_root.parent,
         text=True,
         capture_output=True,
         check=False,
+        env=env,
     )
     return {
         "category": category,

@@ -1,6 +1,6 @@
-# 03 Generation / Deployment
+# 03 Generation / Testing
 
-Deployment generation produces deployment, environment, CI/CD, and operational artifacts where required.
+Testing generation produces unit, integration, endpoint, GUI, and regression tests where required.
 
 ## Consumes
 
@@ -19,4 +19,4 @@ Deployment generation produces deployment, environment, CI/CD, and operational a
 
 This generator must only produce artifacts for its own target area.
 
-It must not apply files to the live repository. Application is owned by `05_apply`.
+It must not apply files to the live repository. Application is owned by `06_apply`.

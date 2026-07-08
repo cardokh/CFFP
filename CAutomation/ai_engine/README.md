@@ -11,27 +11,31 @@ The engine is based on context engineering rather than free-form prompting. The 
         ↓
 02_planning
         ↓
-03_generation
+03_project_management_publishing
+        ↓
+04_generation
         ├── db
         ├── backend
         ├── frontend
         ├── testing
         └── deployment
         ↓
-04_validation
+05_validation
         ↓
-05_apply
+06_apply
         ↓
-06_verification
+07_verification
 ```
 
 ## Important Distinction
 
 The lifecycle stages are not the same thing as database/backend/frontend generation.
 
-Database, backend, frontend, testing, and deployment are generation targets inside `03_generation/`.
+Database, backend, frontend, testing, and deployment are generation targets inside `04_generation/`.
 
-The overall lifecycle runs once for a project, module, feature, or story generation run. Within the generation stage, specialized generators may run sequentially or independently depending on the plan.
+Project Management Publishing is its own lifecycle pipeline. It publishes approved planning artifacts; it does not create planning content and does not generate code.
+
+The overall lifecycle runs once for a project, module, feature, or story generation run. Within the generation stage, specialized generators may run sequentially or independently depending on the frozen plan.
 
 ## Pipeline Principles
 
@@ -43,11 +47,10 @@ The overall lifecycle runs once for a project, module, feature, or story generat
 - Generated artifacts are untrusted until validated and approved.
 - Human-authored and approved generated documents remain the source of truth.
 - Downstream stages consume validated context packages rather than arbitrary repository files.
+- Every completed task must be validated against all available reference modules before it is considered complete.
 
 ## Current Implementation Status
 
-This iteration hardens the first executable pipeline: `01_context_engineering`.
-
-The executable task now lives under the pipeline `tasks/` folder, uses the repository `BaseScript` infrastructure, reads execution settings from JSON configuration, writes a task execution report to its own output folder, and writes the generated context package to the configured project output location.
+This baseline synchronization iteration aligns the repository structure with the frozen seven-pipeline architecture.
 
 The immediate priority remains to validate `01_context_engineering` end-to-end because all downstream stages depend on its output.

@@ -5,7 +5,7 @@ Generation produces implementation artifacts from the validated Context Package 
 Generation is split into specialized targets.
 
 ```text
-03_generation/
+04_generation/
 ├── db/
 ├── backend/
 ├── frontend/

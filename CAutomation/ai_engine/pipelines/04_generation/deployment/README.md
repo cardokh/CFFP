@@ -1,6 +1,6 @@
-# 03 Generation / Backend
+# 03 Generation / Deployment
 
-Backend generation produces APIs, services, repositories, domain objects, DTOs, validators, and backend tests where required.
+Deployment generation produces deployment, environment, CI/CD, and operational artifacts where required.
 
 ## Consumes
 
@@ -19,4 +19,4 @@ Backend generation produces APIs, services, repositories, domain objects, DTOs, 
 
 This generator must only produce artifacts for its own target area.
 
-It must not apply files to the live repository. Application is owned by `05_apply`.
+It must not apply files to the live repository. Application is owned by `06_apply`.

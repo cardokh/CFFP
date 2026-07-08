@@ -44,10 +44,36 @@ The following principles shall guide every implementation iteration:
 - Produce comprehensive unit, integration, functional, and validation tests.
 - Preserve the seven-pipeline architecture without responsibility leakage.
 - Avoid introducing technologies or architectural concepts not defined by the engineering contracts.
+- Validate every completed task against all available reference modules before marking it complete.
 
 ---
 
 # Planned Implementation Roadmap
+
+## Iteration 0 – Baseline Synchronization
+
+Objective:
+
+Align the repository with the frozen seven-pipeline architecture before new implementation work begins.
+
+Planned work:
+
+- Add the missing `03_project_management_publishing` pipeline placeholder.
+- Rename and restructure later pipeline folders so the lifecycle matches the frozen seven-pipeline contract.
+- Update README files to reflect the final seven-pipeline architecture.
+- Align the project input contract layout with the Pipeline 01 configuration.
+- Run Pipeline 01 tests and confirm the current baseline is executable.
+- Record the reference-module validation rule: every completed task must pass against all available reference modules.
+
+Deliverable:
+
+A synchronized repository baseline that is safe to use as the starting point for implementation.
+
+Status:
+
+✅ Completed
+
+---
 
 ## Iteration 1 – Shared Foundation
 

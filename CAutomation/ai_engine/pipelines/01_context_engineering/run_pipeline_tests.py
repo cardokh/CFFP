@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -55,7 +56,9 @@ def main() -> int:
             continue
         task_script = pipeline_root / str(definition["script"])
         runner = task_script.parent / "run_task_tests.py"
-        completed = subprocess.run([sys.executable, str(runner)], cwd=cautomation_root.parent, text=True, capture_output=True, check=False)
+        env = os.environ.copy()
+        env.setdefault("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
+        completed = subprocess.run([sys.executable, str(runner)], cwd=cautomation_root.parent, text=True, capture_output=True, check=False, env=env)
         task_test_results.append({
             "pipelineTaskId": task_instance.get("pipelineTaskId"),
             "taskDefinitionId": task_definition_id,

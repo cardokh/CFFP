@@ -19,4 +19,4 @@ Database generation produces schema, migrations, seed data, and data contracts w
 
 This generator must only produce artifacts for its own target area.
 
-It must not apply files to the live repository. Application is owned by `05_apply`.
+It must not apply files to the live repository. Application is owned by `06_apply`.

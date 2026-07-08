@@ -17,7 +17,7 @@
       "sourcePath": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_client_contract.md",
-      "characterCount": 3764
+      "characterCount": 17229
     },
     {
       "documentId": "project_engineering_contract",
@@ -29,7 +29,7 @@
       "sourcePath": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/project/contracts/project_engineering_contract.md",
-      "characterCount": 3572
+      "characterCount": 18004
     },
     {
       "documentId": "srs",
@@ -41,7 +41,7 @@
       "sourcePath": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_srs.md",
-      "characterCount": 23254
+      "characterCount": 25132
     },
     {
       "documentId": "ats",
@@ -53,7 +53,7 @@
       "sourcePath": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "sourceFormat": "pdf",
       "normalizedPath": "CAutomation/projects/CAutomation/normalized_input/modules/pipeline_management/contracts/module_ats.md",
-      "characterCount": 34373
+      "characterCount": 38225
     }
   ],
   "sourceFiles": [
@@ -61,29 +61,29 @@
       "path": "CAutomation/projects/CAutomation/input/project/contracts/client/Project_Client_Contract.pdf",
       "category": "project_client_contract",
       "file_type": "pdf",
-      "sha256": "ede4d215f0d03c94bab42fe79ed4dd59b37e5058befc5f311cd752a0efcc3a7a",
-      "size_bytes": 2657
+      "sha256": "629dcf912a01b5cf4f8b77a6b3011c43739874187bf77b5789902c907f403f88",
+      "size_bytes": 17835
     },
     {
       "path": "CAutomation/projects/CAutomation/input/project/contracts/engineering/Project_Engineering_Contract.pdf",
       "category": "project_engineering_contract",
       "file_type": "pdf",
-      "sha256": "5812146052acfab5ccc597625540af5f2b9c00edae6ff26f9fba6f94e8559df8",
-      "size_bytes": 2867
+      "sha256": "6abd0917e9c8b8c347f6a7c5a9ae6902aa8f1c25c3d2c8b4fc84510d4bc40238",
+      "size_bytes": 17138
     },
     {
       "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Software_Requirements_Specification.pdf",
       "category": "srs",
       "file_type": "pdf",
-      "sha256": "a9aa06a0ae8b856927b06719d51d9fcf811dcbc39189fa8f85a808af5f638f59",
-      "size_bytes": 251370
+      "sha256": "a5d2c60cbd61b191bbd06fa1045ea8e63c1d879ab930b6c0353cb5d2fcdca072",
+      "size_bytes": 288562
     },
     {
       "path": "CAutomation/projects/CAutomation/input/modules/pipeline_management/contracts/Architecture_and_Technical_Specification.pdf",
       "category": "ats",
       "file_type": "pdf",
-      "sha256": "159b2d33c86911785d2d6af78bd483301f09f5444c6ef58805772be45473b672",
-      "size_bytes": 334587
+      "sha256": "8f430fe3d9494fad4ddede4844d9b921f62cab21e90b5ce035017a21efb295d6",
+      "size_bytes": 549728
     }
   ],
   "generatedFiles": [
